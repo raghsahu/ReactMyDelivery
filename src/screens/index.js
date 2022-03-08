@@ -17,6 +17,7 @@ import AddProductCommision from './AddProductCommision';
 import AddProductSummary from './AddProductSummary';
 import SummaryTransaction from './SummaryTransaction';
 import RatingReview from './RatingReview';
+import ExchangeSuccessSummary from './ExchangeSuccessSummary';
 
 
 export {
@@ -39,4 +40,5 @@ export {
   AddProductSummary,
   SummaryTransaction,
   RatingReview,
+  ExchangeSuccessSummary,
 };

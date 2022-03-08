@@ -22,17 +22,18 @@ import {
   AddProductSummary,
   SummaryTransaction,
   RatingReview,
+  ExchangeSuccessSummary,
 } from './src/screens';
 //TABBAR
-import { TabBar } from './src/components'
+import {TabBar} from './src/components';
 //PACKAGES
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { LocalizationProvider } from "./src/context/LocalizationProvider";
+import {LocalizationProvider} from './src/context/LocalizationProvider';
 
 const {Navigator, Screen} = createStackNavigator();
- const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 const BottomBar = () => {
   return (
@@ -49,7 +50,7 @@ const BottomBar = () => {
 
 const App = () => {
   return (
-     <LocalizationProvider>
+    <LocalizationProvider>
       <NavigationContainer>
         <Navigator
           screenOptions={{
@@ -72,13 +73,13 @@ const App = () => {
           <Screen name="AddProduct" component={AddProduct} />
           <Screen name="AddProductCommision" component={AddProductCommision} />
           <Screen name="AddProductSummary" component={AddProductSummary} />
-           <Screen name="SummaryTransaction" component={SummaryTransaction} />
-            <Screen name="RatingReview" component={RatingReview} />
+          <Screen name="SummaryTransaction" component={SummaryTransaction} />
+          <Screen name="RatingReview" component={RatingReview} />
+          <Screen name="ExchangeSuccessSummary" component={ExchangeSuccessSummary} />
         </Navigator>
       </NavigationContainer>
     </LocalizationProvider>
   );
 };
-
 
 export default App;

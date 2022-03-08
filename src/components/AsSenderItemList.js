@@ -58,7 +58,7 @@ const AsSenderItemList = props => {
             },
           ]}
           title={'Evaluation done'}
-          type={1}
+          type={2}
           onPress={() => {props.onSummary()}}
         />
         }

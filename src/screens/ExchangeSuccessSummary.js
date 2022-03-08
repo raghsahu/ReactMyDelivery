@@ -29,19 +29,7 @@ import {
 const {height, width} = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
-function SummaryTransaction(props) {
-  const [name, setName] = useState('');
-  const [isSelected, setSelection] = useState(false);
-  const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
-
-  const TxnCodeModalVisibility = () => {
-    setTxnCodeModalVisible(!isTxnCodeModalVisible);
-  };
-
-  const setCheck = checkStatus => {
-    setSelection(checkStatus);
-  };
-
+function ExchangeSuccessSummary(props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
@@ -57,140 +45,108 @@ function SummaryTransaction(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
+          <Image
+            source={IMAGES.right_tick_icon}
+            style={{
+              height: 60,
+              width: 60,
+              marginTop: 20,
+              alignSelf: 'center',
+              justifyContent: 'center',
+            }}
+          />
           <Text
-            style={[styles.inputView, {marginTop: 20}]}
-            size="18"
-            weight="500"
-            align="left"
-            color={COLORS.textColor}>
-            {'Code Exchange'}
+            style={[styles.inputView, {width: 298, marginTop: 20}]}
+            size="20"
+            weight="600"
+            align="center"
+            color={COLORS.black}>
+            {'Exchange Completed Successfully'}
           </Text>
 
           <View
-            style={{
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 20,
-              width: '85%',
-              height: 80,
-              shadowColor: 'black',
-              shadowOpacity: 0.26,
-              shadowOffset: {width: 0, height: 2},
-              shadowRadius: 10,
-              elevation: 3,
-              borderRadius: 12,
-              backgroundColor: 'white',
-              flex: 1,
-            }}>
+            style={[
+              styles.inputView,
+              {
+                backgroundColor: COLORS.lightGray,
+                marginTop: 15,
+                height: 120,
+                justifyContent: 'center',
+                alignItems: 'center',
+                //alignSelf: 'center'
+                padding: 10,
+              },
+            ]}>
             <Text
-              style={[
+              style={
                 {
-                  width: 154,
-                  padding: 20,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#FEC107',
-                },
-              ]}
+                  //marginLeft: 10,
+                }
+              }
+              color={COLORS.primaryColor}
+              size="16"
+              weight="500">
+              {'€600 + €32,4 + €8,1 = €638'}
+            </Text>
+
+            <Text
+              style={{justifyContent: 'center', alignSelf: 'center'}}
+              color={COLORS.black}
               size="18"
-              weight="500"
-              align="center"
-              color={COLORS.black}>
-              {'BsVonq1bDv'}
+              weight="500">
+              {'is credited to the account of John Ben'}
             </Text>
           </View>
 
           <Text
-            style={[styles.inputView, {marginTop: 20}]}
-            size="18"
-            weight="500"
-            align="left"
-            color={COLORS.textColor}>
-            {'Delivery man Details'}
+            style={[styles.inputView, {width: 298, marginTop: 20}]}
+            size="20"
+            weight="600"
+            align="center"
+            color={COLORS.black}>
+            {'Thank you! for having used'}
           </Text>
+
+          <Text
+            style={[styles.inputView]}
+            size="20"
+            weight="600"
+            align="center"
+            color={COLORS.primaryColor}>
+            {'DelivrEx'}
+          </Text>
+
+          <Button
+            style={{
+              marginHorizontal: 20,
+              marginBottom: 20,
+              marginTop: 20,
+              justifyContent: 'center',
+              alignSelf: 'center',
+              width: 240,
+            }}
+            title={'Comment & Rating'}
+            type={1}
+            onPress={() => {
+              props.navigation.navigate('RatingReview');
+            }}
+          />
 
           <View
             style={{
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 20,
-              width: '85%',
-              height: 80,
-              shadowColor: 'black',
-              shadowOpacity: 0.26,
-              shadowOffset: {width: 0, height: 2},
-              shadowRadius: 10,
-              elevation: 3,
-              borderRadius: 12,
-              backgroundColor: 'white',
-              flex: 1,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                margin: 5,
-                backgroundColor: COLORS.white,
-              }}>
-              <Image
-                style={{
-                  width: 64,
-                  height: 64,
-                  margin: 5,
-                  borderRadius: 32,
-                  resizeMode: 'contain',
-                }}
-                source={IMAGES.circle_placeholder}
-              />
-
-              <View
-                style={{
-                  flex: 1,
-                  margin: 5,
-                }}>
-                <Text color={COLORS.black} size="16" weight="500">
-                  {'Souad Bentchikou'}
-                </Text>
-
-                <Text
-                  style={{marginTop: 10}}
-                  color={COLORS.black}
-                  size="16"
-                  weight="500">
-                  {'0 * 0 Ratings'}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <Text
-            style={[styles.inputView, {marginTop: 20}]}
-            size="18"
-            weight="500"
-            align="left"
-            color={COLORS.textColor}>
-            {'Product(s) Details'}
-          </Text>
-
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}
-            source={IMAGES.product_placeholder}
-          />
+              height: 10,
+              backgroundColor: COLORS.lightGray,
+              marginTop: 10,
+            }}></View>
 
           <View style={[styles.inputView, {marginTop: 20}]}>
             <Text
               // style={[styles.inputView]}
-              size="20"
+              size="18"
               weight="500"
               align="left"
               color={COLORS.textColor}>
-              {'souris'}
+              {'Summary of transaction'}
             </Text>
 
             <View
@@ -398,7 +354,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'Constantine Constantine Algerie'}
+                {'Warje, Pune'}
               </Text>
             </View>
           </View>
@@ -416,18 +372,8 @@ function SummaryTransaction(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Details :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.Darkgray}
-                size="16"
-                weight="500">
-                {''}
+              <Text style={{}} color={COLORS.black} size="18" weight="500">
+                {'Delivery Details'}
               </Text>
             </View>
 
@@ -544,138 +490,22 @@ function SummaryTransaction(props) {
             </Text>
           </View>
 
-          {/* //hide & show button with conditions */}
-
-          {/* <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Evaluation Done'}
-            // type={1}
-            onPress={() => {
-              
-            }}
-          /> */}
-
-          {/* <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Rating'}
-            // type={1}
-            onPress={() => {
-              
-            }}
-          /> */}
-
-          {/* //change hide & show button with conditions */}
           <View
             style={{
               marginHorizontal: 20,
               marginBottom: 20,
               marginTop: 30,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // position: 'absolute',
+              justifyContent: 'center',
             }}>
-            {/* <Button
-                style={[{width: 156}]}
-                title={'Complaint'} //or Change Delivery Date (according to condition)
-                onPress={() => {
-                  props.navigation.navigate('SendSuggestion', {
-                    headerTitle: 'Complain',
-                  });
-                }}
-              /> */}
-
             <Button
-              style={[{width: 156}]}
-              title={'Transaction Code'} //or Change Delivery Date (according to condition)
+              title={'Done'}
               onPress={() => {
-                TxnCodeModalVisibility();
-              }}
-            />
-
-            <Button
-              style={[{width: 156}]}
-              title={'Chat'}
-              onPress={() => {
-                props.navigation.navigate('SendSuggestion', {
-                  headerTitle: 'Chat',
-                });
+                props.navigation.navigate('Home')
               }}
             />
           </View>
         </ScrollView>
       </SafeAreaView>
-
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isTxnCodeModalVisible}
-        presentationStyle="overFullScreen"
-        onDismiss={isTxnCodeModalVisible}>
-        <View style={styles.viewWrapper}>
-          <View style={styles.modalView1}>
-            <Image
-              source={IMAGES.right_tick_icon}
-              style={{
-                height: 56,
-                width: 56,
-                marginTop: 20,
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-            />
-
-            <Text
-              style={{marginTop: 20}}
-              size="18"
-              weight="500"
-              align="center"
-              color={COLORS.black}>
-              {'Please confirm transaction'}
-            </Text>
-
-            <OTPInputView
-              style={[{height: 32, marginTop: 24}]}
-              pinCount={10}
-              autoFocusOnLoad
-              codeInputFieldStyle={styles.underlineStyleBase}
-              codeInputHighlightStyle={styles.underlineStyleHighLighted}
-              // placeholderCharacter=''
-              // placeholderTextColor={'rgba(64,86,124,1)'}
-              onCodeFilled={code => {
-                //console.log(`Code is ${code}, you are good to go!`);
-              }}
-            />
-
-            <View
-              style={{
-                marginHorizontal: 20,
-                marginTop: 30,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                // position: 'absolute',
-              }}>
-              <Button
-                style={[
-                  styles.inputView,
-                  {width: 100, justifyContent: 'center'},
-                ]}
-                title={'Cancel'}
-                onPress={() => {
-                  TxnCodeModalVisibility();
-                }}
-              />
-
-              <Button
-                style={[{width: 100}]}
-                title={'Confirm'}
-                onPress={() => {
-                   TxnCodeModalVisibility();
-                  props.navigation.navigate('ExchangeSuccessSummary')}}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -723,4 +553,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SummaryTransaction;
+export default ExchangeSuccessSummary;

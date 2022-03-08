@@ -31,7 +31,7 @@ const Button = (props) => {
                             source={props.left}
                             resizeMode='contain' />
                     }
-                    {props.type == 1 ? <LabelBlue title={props.title} /> : <Label title={props.title} />}
+                    {props.type == 1 ? <LabelBlue title={props.title} />  : props.type == 2 ? <LabelBlack title={props.title} />  : <Label title={props.title} />}
                     {props.right &&
                         <Image
                             style={[styles.image, { marginLeft: props.height ? 5 : 15, height: props.size, width: props.size }]}
@@ -56,13 +56,25 @@ const Label = (props) => {
     )
 }
 
-const LabelBlue = (props) => {
+const LabelBlack = (props) => {
     return (
         <Text
             style={[{ alignSelf: 'center' }]}
             size="16"
             weight="500"
             color={COLORS.black}>
+            {props.title}
+        </Text>
+    )
+}
+
+const LabelBlue = (props) => {
+    return (
+        <Text
+            style={[{ alignSelf: 'center' }]}
+            size="16"
+            weight="500"
+            color={COLORS.primaryColor }>
             {props.title}
         </Text>
     )
@@ -85,7 +97,7 @@ const styles = StyleSheet.create({
     },
     border: {
         borderColor: COLORS.primaryColor,
-       // borderWidth: 1,
+        borderWidth: 1,
         backgroundColor: COLORS.white,
         borderRadius: 24,
     },
