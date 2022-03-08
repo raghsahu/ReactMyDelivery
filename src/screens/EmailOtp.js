@@ -43,7 +43,7 @@ function EmailOtp(props) {
             style={{
               height: 274,
               width: 274,
-              margin: 30,
+              margin: 60,
               alignSelf: 'center',
               justifyContent: 'center',
             }}

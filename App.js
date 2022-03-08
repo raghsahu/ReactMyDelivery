@@ -21,6 +21,7 @@ import {
   AddProductCommision,
   AddProductSummary,
   SummaryTransaction,
+  RatingReview,
 } from './src/screens';
 //TABBAR
 import { TabBar } from './src/components'
@@ -28,6 +29,7 @@ import { TabBar } from './src/components'
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { LocalizationProvider } from "./src/context/LocalizationProvider";
 
 const {Navigator, Screen} = createStackNavigator();
  const Tab = createBottomTabNavigator();
@@ -47,7 +49,7 @@ const BottomBar = () => {
 
 const App = () => {
   return (
-    // <APPProvider>
+     <LocalizationProvider>
       <NavigationContainer>
         <Navigator
           screenOptions={{
@@ -71,9 +73,10 @@ const App = () => {
           <Screen name="AddProductCommision" component={AddProductCommision} />
           <Screen name="AddProductSummary" component={AddProductSummary} />
            <Screen name="SummaryTransaction" component={SummaryTransaction} />
+            <Screen name="RatingReview" component={RatingReview} />
         </Navigator>
       </NavigationContainer>
-    // </APPProvider>
+    </LocalizationProvider>
   );
 };
 

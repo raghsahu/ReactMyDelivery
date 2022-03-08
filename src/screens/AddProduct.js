@@ -22,8 +22,10 @@ function AddProduct(props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
-
-      <SafeAreaView style={styles.container}>
+      <BottomBackground></BottomBackground>
+      <SafeAreaView
+      // style={styles.container}
+      >
         <Header
           title={'Describe Product(s)      1/5'}
           onBack={() => {
@@ -31,10 +33,8 @@ function AddProduct(props) {
           }}
         />
         <ScrollView
-          style={styles.container}
+          //  style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <BottomBackground></BottomBackground>
-
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="22"
@@ -137,7 +137,7 @@ function AddProduct(props) {
             }}
           />
           <Input
-            style={[styles.inputView, styles.inputContainer, ]}
+            style={[styles.inputView, styles.inputContainer]}
             type={1}
             multiline={true}
             placeholder={'Additional product information :'}

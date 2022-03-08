@@ -27,14 +27,15 @@ import {
 } from '../components';
 
 const {height, width} = Dimensions.get('screen');
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function SummaryTransaction(props) {
   const [name, setName] = useState('');
   const [isSelected, setSelection] = useState(false);
-  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
 
-  const logoutModalVisibility = () => {
-    setLogoutModalVisible(!isLogoutModalVisible);
+  const TxnCodeModalVisibility = () => {
+    setTxnCodeModalVisible(!isTxnCodeModalVisible);
   };
 
   const setCheck = checkStatus => {
@@ -150,9 +151,11 @@ function SummaryTransaction(props) {
                   {'Souad Bentchikou'}
                 </Text>
 
-                <Text 
-                style={{ marginTop: 10}}  
-                color={COLORS.black} size="16" weight="500">
+                <Text
+                  style={{marginTop: 10}}
+                  color={COLORS.black}
+                  size="16"
+                  weight="500">
                   {'0 * 0 Ratings'}
                 </Text>
               </View>
@@ -541,7 +544,7 @@ function SummaryTransaction(props) {
             </Text>
           </View>
 
-        {/* //hide & show button with conditions */}
+          {/* //hide & show button with conditions */}
 
           {/* <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
@@ -552,7 +555,7 @@ function SummaryTransaction(props) {
             }}
           /> */}
 
-           {/* <Button
+          {/* <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={'Rating'}
             // type={1}
@@ -561,17 +564,17 @@ function SummaryTransaction(props) {
             }}
           /> */}
 
-{/* //change hide & show button with conditions */}
-             <View
-              style={{
-                marginHorizontal: 20,
-                marginBottom: 20,
-                marginTop: 30, 
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                // position: 'absolute',
-              }}>
-              <Button
+          {/* //change hide & show button with conditions */}
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginBottom: 20,
+              marginTop: 30,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // position: 'absolute',
+            }}>
+            {/* <Button
                 style={[{width: 156}]}
                 title={'Complaint'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -579,95 +582,74 @@ function SummaryTransaction(props) {
                     headerTitle: 'Complain',
                   });
                 }}
-              />
+              /> */}
 
-              <Button
-                style={[{width: 156}]}
-                title={'Chat'}
-                onPress={() => {
-                 // logoutModalVisibility();
-                }}
-              />
-            </View>
+            <Button
+              style={[{width: 156}]}
+              title={'Transaction Code'} //or Change Delivery Date (according to condition)
+              onPress={() => {
+                TxnCodeModalVisibility();
+              }}
+            />
+
+            <Button
+              style={[{width: 156}]}
+              title={'Chat'}
+              onPress={() => {
+                props.navigation.navigate('SendSuggestion', {
+                  headerTitle: 'Chat',
+                });
+              }}
+            />
+          </View>
         </ScrollView>
       </SafeAreaView>
 
       <Modal
         animationType="slide"
         transparent
-        visible={isLogoutModalVisible}
+        visible={isTxnCodeModalVisible}
         presentationStyle="overFullScreen"
-        onDismiss={logoutModalVisibility}>
+        onDismiss={isTxnCodeModalVisible}>
         <View style={styles.viewWrapper}>
           <View style={styles.modalView1}>
-            <Text
+            <Image
+              source={IMAGES.right_tick_icon}
               style={{
+                height: 56,
+                width: 56,
+                marginTop: 20,
                 alignSelf: 'center',
                 justifyContent: 'center',
-                height: 40,
-                padding: 5,
-                backgroundColor: COLORS.primaryColor,
-                width: '100%',
               }}
+            />
+
+            <Text
+              style={{marginTop: 20}}
               size="18"
               weight="500"
               align="center"
-              color={COLORS.white}>
-              {'Payment'}
+              color={COLORS.black}>
+              {'Please confirm transaction'}
             </Text>
 
-            <TouchableOpacity
-              style={{
-                width: 24,
-                height: 24,
-                position: 'absolute',
-                margin: 5,
-                justifyContent: 'center',
-                right: 0,
+            <OTPInputView
+              style={[{height: 32, marginTop: 24}]}
+              pinCount={10}
+              autoFocusOnLoad
+              codeInputFieldStyle={styles.underlineStyleBase}
+              codeInputHighlightStyle={styles.underlineStyleHighLighted}
+              // placeholderCharacter=''
+              // placeholderTextColor={'rgba(64,86,124,1)'}
+              onCodeFilled={code => {
+                //console.log(`Code is ${code}, you are good to go!`);
               }}
-              onPress={() => {
-                logoutModalVisibility();
-              }}>
-              <Image
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-                source={IMAGES.close}
-              />
-            </TouchableOpacity>
-
-            <Text
-              style={{marginTop: 10}}
-              size="18"
-              weight="500"
-              align="center"
-              color={COLORS.darkGray}>
-              {'Total Payment'}
-            </Text>
-
-            <Text
-              style={{marginTop: 10}}
-              size="18"
-              weight="500"
-              align="center"
-              color={COLORS.primaryColor}>
-              {'€ 4.00'}
-            </Text>
-
-            <Text
-              style={{marginTop: 10}}
-              size="16"
-              weight="400"
-              align="center"
-              color={COLORS.darkGray}>
-              {'Redirecting to Payment...'}
-            </Text>
+            />
 
             <View
               style={{
                 marginHorizontal: 20,
-                marginTop: 20,
+                marginTop: 30,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 // position: 'absolute',
@@ -675,21 +657,19 @@ function SummaryTransaction(props) {
               <Button
                 style={[
                   styles.inputView,
-                  {width: 200, justifyContent: 'center'},
+                  {width: 100, justifyContent: 'center'},
                 ]}
-                title={'Ok'}
+                title={'Cancel'}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  TxnCodeModalVisibility();
                 }}
               />
 
-              {/* <Button
-                style={[{width: 104}]}
-                title={'No'}
-                onPress={() => {
-                 // logoutModalVisibility();
-                }}
-              /> */}
+              <Button
+                style={[{width: 100}]}
+                title={'Confirm'}
+                onPress={() => {}}
+              />
             </View>
           </View>
         </View>
@@ -719,10 +699,25 @@ const styles = StyleSheet.create({
     left: '50%',
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
-    height: 250,
-    width: width * 0.85,
+    height: 320,
+    width: width * 0.83,
     backgroundColor: '#fff',
     borderRadius: 7,
+  },
+  otpView: {
+    marginHorizontal: 5,
+    alignSelf: 'center',
+  },
+  underlineStyleBase: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: COLORS.lightGray,
+    color: COLORS.black,
+  },
+  underlineStyleHighLighted: {
+    borderColor: COLORS.primaryColor,
+    color: COLORS.black,
   },
 });
 

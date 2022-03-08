@@ -1064,6 +1064,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@react-native-async-storage/async-storage@^1.15.14":
+  "integrity" "sha512-eJF2horabXazwszCyyXDe4w7sBSWlB0WPA8akKXuN2n7WXKHYeQJPN41lS9OahrhSZuZwqftNFE9VWgPXA8wyA=="
+  "resolved" "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.15.14.tgz"
+  "version" "1.15.14"
+  dependencies:
+    "merge-options" "^3.0.4"
+
 "@react-native-clipboard/clipboard@^1.8.5":
   "integrity" "sha512-o2RPDwP9JMnLece1Qq6a3Fsz/VxfA9auLckkGOor7WcI82DWaWiJ6Uiyu7H1xpaUyqWc+ypVKRX680GYS36HjA=="
   "resolved" "https://registry.npmjs.org/@react-native-clipboard/clipboard/-/clipboard-1.8.5.tgz"
@@ -3503,6 +3510,11 @@
   "resolved" "https://registry.npmjs.org/human-signals/-/human-signals-2.1.0.tgz"
   "version" "2.1.0"
 
+"i18n-js@^3.8.0":
+  "integrity" "sha512-hDsGgPuvw/2P+lXSbOafAwspK8Ste8YrwuuUg17W3wEcO1JkQxBlPgsN1t2+852nTnz4YSYTjZc/1nAA2PC/nw=="
+  "resolved" "https://registry.npmjs.org/i18n-js/-/i18n-js-3.8.0.tgz"
+  "version" "3.8.0"
+
 "iconv-lite@0.4.24":
   "integrity" "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="
   "resolved" "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz"
@@ -3757,6 +3769,11 @@
   "integrity" "sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng=="
   "resolved" "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   "version" "7.0.0"
+
+"is-plain-obj@^2.1.0":
+  "integrity" "sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA=="
+  "resolved" "https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-2.1.0.tgz"
+  "version" "2.1.0"
 
 "is-plain-object@^2.0.3", "is-plain-object@^2.0.4":
   "integrity" "sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og=="
@@ -4707,6 +4724,13 @@
   "version" "1.0.0"
   dependencies:
     "object-visit" "^1.0.0"
+
+"merge-options@^3.0.4":
+  "integrity" "sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ=="
+  "resolved" "https://registry.npmjs.org/merge-options/-/merge-options-3.0.4.tgz"
+  "version" "3.0.4"
+  dependencies:
+    "is-plain-obj" "^2.1.0"
 
 "merge-stream@^2.0.0":
   "integrity" "sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w=="

@@ -35,6 +35,7 @@ function MyAccount(props) {
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(1);
   const [index1, setIndex1] = useState(3);
+  const [tabStatus, setTabStatus] = useState();
 
   const deleteAccountModalVisibility = () => {
     setModalVisible(!isModalVisible);
@@ -53,8 +54,10 @@ function MyAccount(props) {
       //Return the SecondScreen as a child to set in Parent View
       return <Published />;
     } else if (index === 3) {
-      return <CompletedElement />;
+      setTabStatus('inProgress')
+      return <CompletedElement/>;
     } else {
+       setTabStatus('completed')
       return <CompletedElement />;
     }
   };
@@ -147,14 +150,27 @@ function MyAccount(props) {
       return <AsSender />;
     } else if (index1 === 3) {
       //Return the SecondScreen as a child to set in Parent View
-      return (
-              <AsSender
-                onSummary={() => {
-                  props.navigation.navigate('SummaryTransaction')
-                }}
-               
-              />
-            );
+        if (tabStatus === 'completed') {
+          return (
+            <AsSender
+              onSummary={() => {
+                props.navigation.navigate('SummaryTransaction');
+              }}
+              onRating={() => {
+                props.navigation.navigate('RatingReview');
+              }}
+            />
+          );
+        } else {
+          return (
+            <AsSender
+              onSummary={() => {
+                props.navigation.navigate('SummaryTransaction');
+              }}
+            />
+          );
+        }
+      
     }
   };
 
@@ -166,9 +182,9 @@ function MyAccount(props) {
         <View
           style={{
             backgroundColor: COLORS.primaryColor,
-            flex: 1,
+            //flex: 1,
             Top: 0,
-            height: 350,
+            height: 393,
             width: '100%',
             position: 'absolute',
           }}></View>

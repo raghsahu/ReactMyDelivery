@@ -13,6 +13,8 @@ import {
 //ASSETS
 import {COLORS, IMAGES} from '../assets';
 
+import {LocalizationContext} from '../context/LocalizationProvider';
+
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 
@@ -20,38 +22,40 @@ function Login(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
+  const {getTranslation} = useContext(LocalizationContext);
+
   return (
     <View style={styles.container}>
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={COLORS.primaryColor}
       />
-
-      <SafeAreaView style={styles.container}>
+      <BottomBackground></BottomBackground>
+      <SafeAreaView
+      //style={styles.container}
+      >
         <ScrollView
-          style={styles.container}
+          // style={styles.container}
           showsVerticalScrollIndicator={false}>
-        <BottomBackground></BottomBackground>
-
           <Image
             source={IMAGES.logo_with_shadow}
             style={{
               height: 258,
               width: 258,
-              margin: 15,
+              marginTop: 25,
               alignSelf: 'center',
               justifyContent: 'center',
             }}
           />
 
           <Text
-            // style={[styles.inputContainer]}
+            style={[styles.inputContainer]}
             size="24"
             weight="700"
             align="center"
             color={COLORS.black}
             onPress={() => {}}>
-            {'Login'}
+            {getTranslation('login')}
           </Text>
 
           <Text
@@ -61,7 +65,7 @@ function Login(props) {
             align="center"
             color={COLORS.lightTextColor}
             onPress={() => {}}>
-            {'Login to your account'}
+            {getTranslation('login_to_your_account')}
           </Text>
 
           <Input
@@ -90,12 +94,12 @@ function Login(props) {
             style={[styles.inputView, {marginTop: 40}]}
             title={'Login'}
             onPress={() => {
-               props.navigation.navigate('BottomBar')
+              props.navigation.navigate('BottomBar');
             }}
           />
 
           <Text
-            style={[styles.inputContainer]}
+            style={[{marginTop: 20}]}
             size="16"
             weight="600"
             align="center"
@@ -112,7 +116,7 @@ function Login(props) {
               {
                 flexDirection: 'row',
                 alignSelf: 'center',
-                marginTop: 20,
+                marginTop: 30,
                 marginBottom: 20,
               },
             ]}>
@@ -138,6 +142,18 @@ function Login(props) {
               {'Sign Up'}
             </Text>
           </View>
+
+          {/* <Text
+            style={[{bottom: 0}]}
+            size="14"
+            weight="400"
+            align="center"
+            color={COLORS.primaryColor}
+            onPress={() => {
+              //props.navigation.navigate('ForgotPassword');
+            }}>
+            {'Design By - Prometteur Solutions pvt. ltd'}
+          </Text> */}
         </ScrollView>
       </SafeAreaView>
     </View>

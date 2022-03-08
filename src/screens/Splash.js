@@ -15,29 +15,53 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Button, Header, Text, Input} from '../components';
 
+import {LocalizationContext} from '../context/LocalizationProvider';
+//PACKAGES
+import { CommonActions } from '@react-navigation/native';
+
 function Splash(props) {
+  const {getUserLanguage, setI18nConfig, getTranslation} =
+    useContext(LocalizationContext);
 
-  useEffect(() => {
-        setTimeout(() => {
-            moveToNext()
-        }, 2000);
-        return () => { }
-    }, [])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     moveToNext();
+  //   }, 2000);
+  //   return () => {};
+  // }, []);
 
-     const moveToNext = () => {
-        // AsyncStorage.getItem('login_user_details', (err, result) => {
-        //     if (result) {
-        //         let obj = JSON.parse(result)
-        //         setLoggedInUser(obj)
-        //         setTimeout(() => {
-        //             navigate({ props, name: 'HomeScreen', index: 0, navType: 'reset' });
-        //         }, 3000);
+  useEffect(async () => {
+    getUserLanguage(res => {
+      setI18nConfig(res);
+       moveToNext();
+    });
+  }, []);
 
-        //     } else {
-                props.navigation.navigate({ props, name: 'Login', index: 0, navType: 'reset' });
-           // }
-       // })
-    }
+  const moveToNext = () => {
+    // AsyncStorage.getItem('login_user_details', (err, result) => {
+    //     if (result) {
+    //         let obj = JSON.parse(result)
+    //         setLoggedInUser(obj)
+            // setTimeout(() => {
+            //     navigate({ props, name: 'HomeScreen', index: 0, navType: 'reset' });
+            // }, 3000);
+
+    //     } else {
+            setTimeout(() => {
+                  props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'Login' }
+                    ],
+                })
+            );
+            }, 3000);
+  
+  
+    // }
+    // })
+  };
 
   return (
     <View style={styles.container}>
@@ -46,15 +70,13 @@ function Splash(props) {
         backgroundColor={COLORS.primaryColor}
       />
 
-        <ImageBackground
-          source={IMAGES.splash}
-          style={{
-            height: "100%",
-            width: "100%",
-           
-          }}
-        />
-
+      <ImageBackground
+        source={IMAGES.splash}
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+      />
     </View>
   );
 }
@@ -66,27 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputView: {
-    marginHorizontal: 30,
-  },
-  inputContainer: {
-    marginTop: 16,
-  },
-  otpView: {
-    marginHorizontal: 20,
-    alignSelf: 'center',
-  },
-  underlineStyleBase: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.lightGray,
-    color: COLORS.black,
-  },
-  underlineStyleHighLighted: {
-    borderColor: COLORS.primaryColor,
-    color: COLORS.black,
-  },
+ 
 });
 
 export default Splash;

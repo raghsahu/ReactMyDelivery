@@ -14,6 +14,7 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
+import { CommonActions } from '@react-navigation/native';
 
 function SuccessScreen(props) {
   return (
@@ -50,7 +51,15 @@ function SuccessScreen(props) {
           style={[styles.inputView, {marginTop: 50, width: 270}]}
           title={'Done'}
           onPress={() => {
-            props.navigation.navigate('Login');
+           // props.navigation.navigate('Login');
+                props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'Splash' }
+                    ],
+                })
+            );
           }}
         />
       </View>

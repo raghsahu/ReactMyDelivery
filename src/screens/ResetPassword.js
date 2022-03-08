@@ -26,16 +26,16 @@ function ResetPassword(props) {
         backgroundColor={COLORS.primaryColor}
       />
 
-    <BottomBackground></BottomBackground>
+      <BottomBackground></BottomBackground>
 
-      <SafeAreaView 
+      <SafeAreaView
       //style={styles.container}
       >
         <ScrollView
-         // style={styles.container}
+          // style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
-            style={{marginHorizontal: 10, marginTop: 20}}
+            style={{marginHorizontal: 10, marginTop: 73}}
             size="24"
             weight="400"
             align="center"
@@ -47,9 +47,9 @@ function ResetPassword(props) {
           <Image
             source={IMAGES.reset_pw_icon}
             style={{
-              height: 300,
+              height: 347,
               width: '100%',
-              marginTop: 10,
+              marginTop: 20,
               alignSelf: 'center',
               justifyContent: 'center',
             }}
@@ -85,13 +85,11 @@ function ResetPassword(props) {
             style={[styles.inputView, {marginTop: 40}]}
             title={'Change Password'}
             onPress={() => {
-               props.navigation.navigate('Login')
+              props.navigation.navigate('Login');
             }}
           />
         </ScrollView>
       </SafeAreaView>
-
-    
     </View>
   );
 }

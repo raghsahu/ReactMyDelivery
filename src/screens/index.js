@@ -16,6 +16,7 @@ import AddProduct from './AddProduct';
 import AddProductCommision from './AddProductCommision';
 import AddProductSummary from './AddProductSummary';
 import SummaryTransaction from './SummaryTransaction';
+import RatingReview from './RatingReview';
 
 
 export {
@@ -37,4 +38,5 @@ export {
   AddProductCommision,
   AddProductSummary,
   SummaryTransaction,
+  RatingReview,
 };

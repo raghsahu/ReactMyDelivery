@@ -26,6 +26,25 @@ const AsSenderItemList = props => {
           right: 0,
           marginTop: 5,
         }}>
+     
+        {props.onRating? 
+          <Button
+          style={[
+            {
+              width: 100,
+              height: 29,
+              borderRadius: 0,
+              alignSelf: 'center',
+              justifyContent: 'center',
+              padding: 5,
+              //backgroundColor: COLORS.primaryColor,
+            },
+          ]}
+          title={'Rating'}
+          //type={1}
+          onPress={() => {props.onRating()}}
+        />
+        :
         <Button
           style={[
             {
@@ -42,6 +61,8 @@ const AsSenderItemList = props => {
           type={1}
           onPress={() => {props.onSummary()}}
         />
+        }
+       
       </View>
 
       <View

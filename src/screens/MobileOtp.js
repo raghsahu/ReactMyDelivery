@@ -42,7 +42,7 @@ function MobileOtp(props) {
             style={{
               height: 221,
               width: 221,
-              margin: 15,
+              marginTop: 90,
               alignSelf: 'center',
               justifyContent: 'center',
             }}

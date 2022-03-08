@@ -39,15 +39,29 @@ function AsSender(props) {
           data={['', '', '', '', '']}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
-            return (
-              <AsSenderItemList
-                onSummary={() => {
-                 // navigation.navigate('SummaryTransaction')
-                 props.onSummary()
-                }}
-               
-              />
-            );
+            if (props.onRating) {
+              return (
+                <AsSenderItemList
+                  onSummary={() => {
+                    // navigation.navigate('SummaryTransaction')
+                    props.onSummary();
+                  }}
+                  onRating={() => {
+                    // navigation.navigate('SummaryTransaction')
+                    props.onRating();
+                  }}
+                />
+              );
+            } else {
+              return (
+                <AsSenderItemList
+                  onSummary={() => {
+                    // navigation.navigate('SummaryTransaction')
+                    props.onSummary();
+                  }}
+                />
+              );
+            }
           }}
         />
       </SafeAreaView>
@@ -78,7 +92,14 @@ function AsSender(props) {
                 // position: 'absolute',
               }}>
               <Button
-                style={[{width: 90,  height: 41, alignSelf: 'center', justifyContent: 'center'}]}
+                style={[
+                  {
+                    width: 90,
+                    height: 41,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
                 title={'Yes'}
                 onPress={() => {
                   // props.navigation.navigate('Market')

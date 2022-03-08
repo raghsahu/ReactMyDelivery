@@ -25,12 +25,12 @@ import {
 
 const options = [
   {
-    key: 'Male',
-    text: 'Male',
+    key: 'Man',
+    text: 'Man',
   },
   {
-    key: 'Female',
-    text: 'Female',
+    key: 'Women',
+    text: 'Women',
   },
   {
     key: 'Both',
@@ -53,8 +53,10 @@ function AddProductCommision(props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
-
-      <SafeAreaView style={styles.container}>
+      <BottomBackground></BottomBackground>
+      <SafeAreaView
+      //style={styles.container}
+      >
         <Header
           title={'Describe Product(s) Commission'}
           onBack={() => {
@@ -62,10 +64,8 @@ function AddProductCommision(props) {
           }}
         />
         <ScrollView
-          style={styles.container}
+          // style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <BottomBackground></BottomBackground>
-
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
@@ -84,6 +84,24 @@ function AddProductCommision(props) {
           />
 
           <Text
+            style={[styles.inputView, {marginTop: 20}]}
+            size="16"
+            weight="400"
+            align="left"
+            color={COLORS.textColor}>
+            {'Deliveryman Commission'}
+          </Text>
+
+          <View
+            style={[
+              {
+                marginTop: 20,
+                backgroundColor: COLORS.lightGray,
+                borderWidth: 0.4,
+              },
+            ]}></View>
+
+          <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
             weight="500"
@@ -99,6 +117,15 @@ function AddProductCommision(props) {
               setName(text);
             }}
           />
+
+          <View
+            style={[
+              {
+                marginTop: 20,
+                backgroundColor: COLORS.lightGray,
+                borderWidth: 0.4,
+              },
+            ]}></View>
 
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
@@ -117,6 +144,15 @@ function AddProductCommision(props) {
             />
           </View>
 
+          <View
+            style={[
+              {
+                marginTop: 20,
+                backgroundColor: COLORS.lightGray,
+                borderWidth: 0.4,
+              },
+            ]}></View>
+
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
@@ -132,23 +168,23 @@ function AddProductCommision(props) {
               styles.inputContainer,
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
-            <Input
-              style={[{width: 100, alignSelf: 'center'}]}
-              placeholder={'Day'}
-              onChangeText={text => {
-                //setPassword(text);
-              }}
-            />
+            <Text
+              style={[styles.inputView, styles.day_hour]}
+              size="16"
+              weight="400"
+              align="center"
+              color={COLORS.textColor}>
+              {'Day'}
+            </Text>
 
-            <Input
-              style={[
-                {width: 100, alignSelf: 'center', justifyContent: 'center'},
-              ]}
-              placeholder={'Hour'}
-              onChangeText={text => {
-                //setPassword(text);
-              }}
-            />
+            <Text
+              style={[styles.inputView, styles.day_hour]}
+              size="16"
+              weight="400"
+              align="center"
+              color={COLORS.textColor}>
+              {'Hour'}
+            </Text>
           </View>
 
           <Text
@@ -159,30 +195,29 @@ function AddProductCommision(props) {
             color={COLORS.textColor}>
             {'Limit Delivery'}
           </Text>
-
           <View
             style={[
               styles.inputView,
-              styles.inputContainer,
+              //styles.inputContainer,
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
-            <Input
-              style={[{width: 100, alignSelf: 'center'}]}
-              placeholder={'Day'}
-              onChangeText={text => {
-                //setPassword(text);
-              }}
-            />
+            <Text
+              style={[styles.inputView, styles.day_hour]}
+              size="16"
+              weight="400"
+              align="center"
+              color={COLORS.textColor}>
+              {'Day'}
+            </Text>
 
-            <Input
-              style={[
-                {width: 100, alignSelf: 'center', justifyContent: 'center'},
-              ]}
-              placeholder={'Hour'}
-              onChangeText={text => {
-                //setPassword(text);
-              }}
-            />
+            <Text
+              style={[styles.inputView, styles.day_hour]}
+              size="16"
+              weight="400"
+              align="center"
+              color={COLORS.textColor}>
+              {'Hour'}
+            </Text>
           </View>
 
           <Button
@@ -208,6 +243,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 16,
+  },
+  day_hour: {
+    marginTop: 20,
+    alignSelf: 'center',
+    backgroundColor: COLORS.lightGray,
+    padding: 10,
+    width: 120,
+    borderRadius: 20,
   },
 });
 

@@ -12,6 +12,7 @@ import IncompleteItemList from "./IncompleteItemList";
 import PublishedItemList from "./PublishedItemList";
 import AsSenderItemList from "./AsSenderItemList";
 import NotificationItemList from "./NotificationItemList";
+import CustomRatingBar from "./CustomRatingBar";
 
 export {
    Text,
@@ -28,4 +29,5 @@ export {
    PublishedItemList,
    AsSenderItemList,
    NotificationItemList,
+   CustomRatingBar,
 }

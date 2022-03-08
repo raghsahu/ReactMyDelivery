@@ -26,63 +26,61 @@ function ForgotPassword(props) {
         backgroundColor={COLORS.primaryColor}
       />
 
-         <BottomBackground></BottomBackground>
+      <BottomBackground></BottomBackground>
 
-      <SafeAreaView>
-        <ScrollView
-          //style={styles.container}
-          showsVerticalScrollIndicator={false}>
-          <Image
-            source={IMAGES.logo_with_shadow}
-            style={{
-              height: 258,
-              width: 259,
-              marginTop: 15,
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
+      <View
+      // style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
+      >
+        <Image
+          source={IMAGES.logo_with_shadow}
+          style={{
+            height: 258,
+            width: 259,
+            marginTop: 99,
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+        />
 
-          <Text
-            style={{marginTop: 10}}
-            size="24"
-            weight="700"
-            align="center"
-            color={COLORS.black}
-            onPress={() => {}}>
-            {'Forgot Password?'}
-          </Text>
+        <Text
+          style={[styles.inputContainer]}
+          size="24"
+          weight="700"
+          align="center"
+          color={COLORS.black}
+          onPress={() => {}}>
+          {'Forgot Password?'}
+        </Text>
 
-          <Text
-            style={{marginHorizontal: 10, marginTop: 10}}
-            size="16"
-            weight="600"
-            align="center"
-            color={COLORS.lightTextColor}
-            onPress={() => {}}>
-            {
-              'Please enter your register email id. You will recieve a code to create a new password via email id.'
-            }
-          </Text>
+        <Text
+          style={[styles.inputContainer, {marginHorizontal: 10}]}
+          size="16"
+          weight="600"
+          align="center"
+          color={COLORS.lightTextColor}
+          onPress={() => {}}>
+          {
+            'Please enter your register email id. You will recieve a code to create a new password.'
+          }
+        </Text>
 
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Enter Email or Mobile'}
-            isLeft={IMAGES.message_icon}
-            onChangeText={text => {
-              setName(text);
-            }}
-          />
+        <Input
+          style={[styles.inputView, {marginTop: 20}]}
+          placeholder={'Enter Email or Mobile'}
+          isLeft={IMAGES.message_icon}
+          onChangeText={text => {
+            setName(text);
+          }}
+        />
 
-          <Button
-            style={[styles.inputView, {marginTop: 40}]}
-            title={'Send'}
-            onPress={() => {
-              props.navigation.navigate('ResetPassword');
-            }}
-          />
-        </ScrollView>
-      </SafeAreaView>
+        <Button
+          style={[styles.inputView, {marginTop: 40}]}
+          title={'Send'}
+          onPress={() => {
+            props.navigation.navigate('ResetPassword');
+          }}
+        />
+      </View>
     </View>
   );
 }

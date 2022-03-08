@@ -44,26 +44,38 @@ function AddProductSummary(props) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
-
-      <SafeAreaView style={styles.container}>
+         <BottomBackground></BottomBackground>
+      <SafeAreaView
+       style={styles.container}
+       >
         <Header
           title={'Summary'}
           onBack={() => {
             props.navigation.goBack();
           }}
         />
-        <BottomBackground></BottomBackground>
+
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[{backgroundColor: COLORS.white, padding: 10}]}
             size="18"
             weight="500"
             align="center"
             color={COLORS.textColor}>
             {'Summary'}
           </Text>
+
+          <View
+            style={[
+              {
+                // marginTop: 20,
+                backgroundColor: COLORS.lightGray,
+                // borderWidth: 0.4,
+                height: 10,
+              },
+            ]}></View>
 
           <Image
             style={{
@@ -73,6 +85,7 @@ function AddProductSummary(props) {
               marginHorizontal: 5,
               justifyContent: 'center',
               alignSelf: 'center',
+              marginTop: 5,
             }}
             source={IMAGES.product_placeholder}
           />
@@ -172,7 +185,7 @@ function AddProductSummary(props) {
             style={{
               backgroundColor: COLORS.gray,
               height: 2,
-              marginTop: 10,
+              marginTop: 20,
             }}></View>
 
           <View style={[styles.inputView, {marginTop: 20}]}>
@@ -181,7 +194,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {'Ad Seen By :'}
               </Text>
 
@@ -201,7 +214,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {'Acceptance Limit : '}
               </Text>
 
@@ -221,7 +234,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {'Delivery Limit:'}
               </Text>
 
@@ -241,7 +254,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {'Place of Delivery :'}
               </Text>
 
@@ -376,6 +389,15 @@ function AddProductSummary(props) {
             </Text>
           </View>
 
+          <Text
+            style={{marginRight: 20, marginTop: 10}}
+            color={COLORS.primaryColor}
+            size="16"
+            weight="500"
+            align={'right'}>
+            {'Info'}
+          </Text>
+
           <View
             style={[
               styles.inputView,
@@ -412,7 +434,9 @@ function AddProductSummary(props) {
               logoutModalVisibility();
             }}
           />
+
         </ScrollView>
+   
       </SafeAreaView>
 
       <Modal
@@ -492,28 +516,20 @@ function AddProductSummary(props) {
                 marginHorizontal: 20,
                 marginTop: 20,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
                 // position: 'absolute',
               }}>
               <Button
                 style={[
-                  styles.inputView,
-                  {width: 200, justifyContent: 'center'},
+                  // styles.inputView,
+                  {width: 200, justifyContent: 'center', alignSelf: 'center'},
                 ]}
                 title={'Ok'}
                 onPress={() => {
                   logoutModalVisibility();
-                   props.navigation.navigate('SummaryTransaction')
+                  props.navigation.navigate('SummaryTransaction');
                 }}
               />
-
-              {/* <Button
-                style={[{width: 104}]}
-                title={'No'}
-                onPress={() => {
-                 // logoutModalVisibility();
-                }}
-              /> */}
             </View>
           </View>
         </View>

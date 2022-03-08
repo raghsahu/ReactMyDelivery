@@ -79,7 +79,8 @@ const PublishedItemList = props => {
 
         <View
           style={{
-            margin: 5,
+            padding: 5,
+            marginTop: 10,
           }}>
           <Text style={{}} color={COLORS.black} size="18" weight="500">
             {'Test3'}

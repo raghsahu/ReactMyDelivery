@@ -40,7 +40,7 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={'Hello, Umar'}
+          title={'Hello, Omar Bentchikou'}
           onNotification={() => {
             props.navigation.navigate('Notification')
           }}

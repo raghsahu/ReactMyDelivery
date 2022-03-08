@@ -8,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
+  Alert,
 } from 'react-native';
 
 //ASSETS
@@ -26,14 +27,18 @@ import {
 
 import moment from 'moment'; // date format
 
+import { LocalizationContext } from '../context/LocalizationProvider';
+//PACKAGES
+import { CommonActions } from '@react-navigation/native';
+
 const options = [
   {
-    key: 'Male',
-    text: 'Male',
+    key: 'Man',
+    text: 'Man',
   },
   {
-    key: 'Female',
-    text: 'Female',
+    key: 'Women',
+    text: 'Women',
   },
 ];
 
@@ -66,6 +71,8 @@ function Register(props) {
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
+  let [selectedLanguage, setSelectedLanguage] = useState('en');
+  const { getTranslation, setI18nConfig, saveUserLanguage } = useContext(LocalizationContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -93,7 +100,43 @@ function Register(props) {
 
   const onValueChange = item => {
     setSelectedLang(item);
+    if (item == 'English') {
+      setSelectedLanguage('en')
+    }else if (item == 'French') {
+      setSelectedLanguage('fr')
+    }
+    if (item == 'Spanish') {
+      setSelectedLanguage('sp')
+    }
   };
+
+  
+    const onSelectLanguage = () => {
+        if (selectedLanguage) {
+            //setLoading(true)
+            setI18nConfig(selectedLanguage)
+            saveUserLanguage(selectedLanguage)
+            //AsyncStorage.setItem('is_first_time_install', 'true')
+           // setLoading(false)
+
+            // props.navigation.dispatch(
+            //     CommonActions.reset({
+            //         index: 0,
+            //         routes: [
+            //             { name: 'Splash' }
+            //         ],
+            //     })
+            // );
+
+        }
+        else {
+            Alert.alert('', 'Please select a language', [{
+                text: getTranslation('ok'), onPress: () => {
+
+                }
+            }])
+        }
+    }
 
   const setCheck = checkStatus => {
     setSelection(checkStatus);
@@ -110,9 +153,9 @@ function Register(props) {
           <ImageBackground
             source={IMAGES.signup_placeholder}
             style={{
-              height: 100,
-              width: 100,
-              marginTop: 20,
+              height: 160,
+              width: 160,
+              marginTop: 32,
               alignSelf: 'center',
               justifyContent: 'center',
               resizeMode: 'contain',
@@ -121,9 +164,9 @@ function Register(props) {
             <View
               style={{
                 backgroundColor: COLORS.primaryColor,
-                height: 40,
-                width: 40,
-                borderRadius: 20,
+                height: 60,
+                width: 60,
+                borderRadius: 30,
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'absolute', //Here is the trick
@@ -144,7 +187,7 @@ function Register(props) {
           </ImageBackground>
 
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[styles.inputView, {marginTop: 20, marginBottom: 10, alignSelf: 'center'}]}
             size="24"
             weight="500"
             align="center"
@@ -234,8 +277,8 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Select Country'}
-            isLeft={IMAGES.location}
+            placeholder={'Select your country'}
+           // isLeft={IMAGES.location}
             onChangeText={text => {
               setName(text);
             }}
@@ -281,10 +324,47 @@ function Register(props) {
             onChecked={setCheck}
           />
           <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
+            style={[styles.inputView, {marginTop: 30,}]}
             title={'Register'}
-            onPress={() => {props.navigation.navigate('EmailOtp')}}
+            onPress={() => {
+               onSelectLanguage()
+              props.navigation.navigate('EmailOtp')}}
           />
+
+           <View
+            style={[
+              styles.inputView,
+              {
+                flexDirection: 'row',
+                alignSelf: 'center',
+                marginTop: 30,
+                marginBottom: 20,
+              },
+            ]}>
+            <Text
+              style={{alignSelf: 'center'}}
+              size="16"
+              weight="600"
+              align="center"
+              color={COLORS.lightTextColor}
+              onPress={() => {}}>
+              {'Already have an account?'}
+            </Text>
+
+            <Text
+              style={{alignSelf: 'center', marginLeft: 5}}
+              size="18"
+              weight="600"
+              align="center"
+              color={COLORS.primaryColor}
+              onPress={() => {
+                props.navigation.navigate('Login');
+              }}>
+              {'Login'}
+            </Text>
+          </View>
+
+
         </ScrollView>
       </SafeAreaView>
 

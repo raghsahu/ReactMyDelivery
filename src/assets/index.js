@@ -40,6 +40,9 @@ export const IMAGES = {
   plus: require('./images/plus.png'),
   product_placeholder: require('./images/product_placeholder.png'),
   close: require('./images/close.png'),
+  starCorner: require('./images/star_corner.png'),
+  starFilled: require('./images/star_filled.png'),
+  share: require('./images/share.png'),
 };
 
 export const COLORS = {

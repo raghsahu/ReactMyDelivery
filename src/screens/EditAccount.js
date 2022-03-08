@@ -29,12 +29,12 @@ import moment from 'moment'; // date format
 
 const options = [
   {
-    key: 'Male',
-    text: 'Male',
+    key: 'Man',
+    text: 'Man',
   },
   {
-    key: 'Female',
-    text: 'Female',
+    key: 'Women',
+    text: 'Women',
   },
 ];
 
