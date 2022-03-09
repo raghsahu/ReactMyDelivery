@@ -14,10 +14,12 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function ForgotPassword(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -49,7 +51,7 @@ function ForgotPassword(props) {
           align="center"
           color={COLORS.black}
           onPress={() => {}}>
-          {'Forgot Password?'}
+          {getTranslation('forgot_pw')}
         </Text>
 
         <Text
@@ -60,13 +62,13 @@ function ForgotPassword(props) {
           color={COLORS.lightTextColor}
           onPress={() => {}}>
           {
-            'Please enter your register email id. You will recieve a code to create a new password.'
+            getTranslation('forgot_pw_screen_text')
           }
         </Text>
 
         <Input
           style={[styles.inputView, {marginTop: 20}]}
-          placeholder={'Enter Email or Mobile'}
+          placeholder={getTranslation('enter_email_mobile')}
           isLeft={IMAGES.message_icon}
           onChangeText={text => {
             setName(text);
@@ -75,7 +77,7 @@ function ForgotPassword(props) {
 
         <Button
           style={[styles.inputView, {marginTop: 40}]}
-          title={'Send'}
+          title={getTranslation('send')}
           onPress={() => {
             props.navigation.navigate('ResetPassword');
           }}

@@ -14,10 +14,12 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function ResetPassword(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+   const { getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -41,7 +43,7 @@ function ResetPassword(props) {
             align="center"
             color={COLORS.lightTextColor}
             onPress={() => {}}>
-            {'Please reset your password'}
+            {getTranslation('pls_reset_your_pw')}
           </Text>
 
           <Image
@@ -57,7 +59,7 @@ function ResetPassword(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Password'}
+            placeholder={getTranslation('password')}
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
@@ -70,7 +72,7 @@ function ResetPassword(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Confirm Password'}
+            placeholder={getTranslation('confirm_pw')}
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
@@ -83,7 +85,7 @@ function ResetPassword(props) {
 
           <Button
             style={[styles.inputView, {marginTop: 40}]}
-            title={'Change Password'}
+            title={getTranslation('change_pw')}
             onPress={() => {
               props.navigation.navigate('Login');
             }}

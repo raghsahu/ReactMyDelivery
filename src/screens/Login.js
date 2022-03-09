@@ -70,7 +70,7 @@ function Login(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Enter Email or Mobile'}
+            placeholder={getTranslation('enter_email_mobile')}
             isLeft={IMAGES.message_icon}
             onChangeText={text => {
               setName(text);
@@ -79,7 +79,7 @@ function Login(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Enter Password'}
+            placeholder={getTranslation('enter_pw')}
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
@@ -92,7 +92,7 @@ function Login(props) {
 
           <Button
             style={[styles.inputView, {marginTop: 40}]}
-            title={'Login'}
+            title={getTranslation('login')}
             onPress={() => {
               props.navigation.navigate('BottomBar');
             }}
@@ -107,7 +107,7 @@ function Login(props) {
             onPress={() => {
               props.navigation.navigate('ForgotPassword');
             }}>
-            {'Forgot your password?'}
+            {getTranslation('forgot_your_pw')}
           </Text>
 
           <View
@@ -127,7 +127,7 @@ function Login(props) {
               align="center"
               color={COLORS.lightTextColor}
               onPress={() => {}}>
-              {'Dont have an account?'}
+              {getTranslation('dont_have_account')}
             </Text>
 
             <Text
@@ -139,7 +139,7 @@ function Login(props) {
               onPress={() => {
                 props.navigation.navigate('Register');
               }}>
-              {'Sign Up'}
+              {getTranslation('sign_up')}
             </Text>
           </View>
 

@@ -14,8 +14,11 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function EmailSuccess(props) {
+  const { getTranslation} = useContext(LocalizationContext);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -43,7 +46,7 @@ function EmailSuccess(props) {
           weight="700"
           align="center"
           color={COLORS.black}>
-          {'Success'}
+          {getTranslation('success')}
         </Text>
 
         <Text
@@ -52,12 +55,12 @@ function EmailSuccess(props) {
           weight="500"
           align="center"
           color={COLORS.textColor}>
-          {'Your email address is confirmed'}
+          {getTranslation('your_email_confirmed')}
         </Text>
 
         <Button
           style={[{marginTop: 50}]}
-          title={'Confirm Phone Number'}
+          title={getTranslation('confirm_your_number')}
           onPress={() => {
             props.navigation.navigate('MobileOtp');
           }}

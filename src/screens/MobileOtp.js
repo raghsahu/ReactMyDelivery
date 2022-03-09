@@ -15,10 +15,12 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function MobileOtp(props) {
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   const onOTP = () => {
     // props.navigation.navigate('CreateNewPassword');
@@ -54,7 +56,7 @@ function MobileOtp(props) {
             weight="700"
             align="center"
             color={COLORS.black}>
-            {'Enter OTP'}
+            {getTranslation('enter_otp')}
           </Text>
 
           <Text
@@ -64,7 +66,7 @@ function MobileOtp(props) {
             align="center"
             color={COLORS.textColor}>
             {
-              'Please verify your mobile to continue. OTP sent on Mobile Number * +91 - 0123456789'
+              getTranslation('pls_verify_mobile_to_continue') + ' * +91 - 0123456789'
             }
           </Text>
 
@@ -87,7 +89,7 @@ function MobileOtp(props) {
             weight="600"
             align="center"
             color={COLORS.textColor}>
-            {'Or'}
+            {getTranslation('or')}
           </Text>
 
           <Text
@@ -96,12 +98,12 @@ function MobileOtp(props) {
             weight="600"
             align="right"
             color={COLORS.textColor}>
-            {'Resend (180 s)'}
+            {getTranslation('resend') +' (180 s)'}
           </Text>
 
           <Button
             style={[styles.inputView, {marginTop: 40}]}
-            title={'Verify'}
+            title={getTranslation('verify')}
             onPress={() => {
               props.navigation.navigate('SuccessScreen');
             }}

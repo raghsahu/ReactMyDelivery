@@ -11,6 +11,7 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES} from '../assets';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
@@ -20,6 +21,7 @@ function EmailOtp(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   const onOTP = () => {
    // props.navigation.navigate('CreateNewPassword');
@@ -65,7 +67,7 @@ function EmailOtp(props) {
             onPress={() => {
              // props.navigation.navigate('Register');
             }}>
-            {'Change'}
+            {getTranslation('change')}
           </Text>
 
           <Text
@@ -75,7 +77,7 @@ function EmailOtp(props) {
             align="left"
             color={COLORS.black}
             >
-            {'Verify your email'}
+            {getTranslation('verify_email')}
           </Text>
 
             <Text
@@ -85,7 +87,7 @@ function EmailOtp(props) {
             align="left"
             color={COLORS.textColor}
             >
-            {'Please enter the OTP sent to omarbentchikou@hotmail.com'}
+            { getTranslation('pls_enter_otp_sent_to') + ' omarbentchikou@hotmail.com'}
           </Text>
 
          <OTPInputView
@@ -108,7 +110,7 @@ function EmailOtp(props) {
             align="center"
             color={COLORS.textColor}
             >
-            {'Or'}
+            {getTranslation('or')}
           </Text>
 
           <Text
@@ -118,12 +120,12 @@ function EmailOtp(props) {
             align="right"
             color={COLORS.textColor}
             >
-            {'Resend (180 s)'}
+            {getTranslation('resend') +' (180 s)'}
           </Text>
 
           <Button
             style={[styles.inputView, {marginTop: 40, marginBottom: 20}]}
-            title={'Confirm'}
+            title={getTranslation('confirm')}
             onPress={() => {
               props.navigation.navigate('EmailSuccess')
             }}

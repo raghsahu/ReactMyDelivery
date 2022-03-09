@@ -11,12 +11,15 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES} from '../assets';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 import { CommonActions } from '@react-navigation/native';
 
 function SuccessScreen(props) {
+  const { getTranslation} = useContext(LocalizationContext);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -44,12 +47,12 @@ function SuccessScreen(props) {
           weight="700"
           align="center"
           color={COLORS.black}>
-          {'Success!'}
+          {getTranslation('success')}
         </Text>
 
         <Button
           style={[styles.inputView, {marginTop: 50, width: 270}]}
-          title={'Done'}
+          title={getTranslation('done')}
           onPress={() => {
            // props.navigation.navigate('Login');
                 props.navigation.dispatch(

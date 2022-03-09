@@ -192,12 +192,12 @@ function Register(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Create An Account'}
+            {getTranslation('create_account')}
           </Text>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'First Name'}
+            placeholder={getTranslation('first_name')}
             isLeft={IMAGES.name}
             onChangeText={text => {
               setName(text);
@@ -205,7 +205,7 @@ function Register(props) {
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Last Name'}
+            placeholder={getTranslation('last_name')}
             isLeft={IMAGES.name}
             onChangeText={text => {
               //setPassword(text);
@@ -214,7 +214,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'User Name'}
+            placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
             onChangeText={text => {
               setName(text);
@@ -232,7 +232,7 @@ function Register(props) {
          <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
             <Input
               style={[{marginTop: 18}]}
-              placeholder={'Date of Birth'}
+              placeholder={getTranslation('date_of_birth')}
               editable={false}
               isLeft={IMAGES.date}
               value={selectDate}
@@ -242,7 +242,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Email Id'}
+            placeholder={getTranslation('email_id')}
             isLeft={IMAGES.message_icon}
             onChangeText={text => {
               setName(text);
@@ -251,7 +251,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Mobile Number'}
+            placeholder={getTranslation('mobile_no')}
             isLeft={IMAGES.phone}
             onChangeText={text => {
               //setName(text);
@@ -260,7 +260,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Address'}
+            placeholder={getTranslation('address')}
             isLeft={IMAGES.home}
             onChangeText={text => {
               setName(text);
@@ -268,7 +268,7 @@ function Register(props) {
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'City'}
+            placeholder={getTranslation('city')}
             isLeft={IMAGES.location}
             onChangeText={text => {
               setName(text);
@@ -277,7 +277,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Select your country'}
+            placeholder={getTranslation('select_your_country')}
            // isLeft={IMAGES.location}
             onChangeText={text => {
               setName(text);
@@ -294,7 +294,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Password'}
+            placeholder={getTranslation('password')}
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
@@ -307,7 +307,7 @@ function Register(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Confirm Password'}
+            placeholder={getTranslation('confirm_pw')}
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
@@ -320,12 +320,12 @@ function Register(props) {
 
           <CheckBox
             isSelected={isSelected}
-            text={'Terms & Conditions'}
+            text={getTranslation('terms_conditions')}
             onChecked={setCheck}
           />
           <Button
             style={[styles.inputView, {marginTop: 30,}]}
-            title={'Register'}
+            title={getTranslation('register')}
             onPress={() => {
                onSelectLanguage()
               props.navigation.navigate('EmailOtp')}}
@@ -348,7 +348,7 @@ function Register(props) {
               align="center"
               color={COLORS.lightTextColor}
               onPress={() => {}}>
-              {'Already have an account?'}
+              {getTranslation('already_account')}
             </Text>
 
             <Text
@@ -360,7 +360,7 @@ function Register(props) {
               onPress={() => {
                 props.navigation.navigate('Login');
               }}>
-              {'Login'}
+              {getTranslation('login')}
             </Text>
           </View>
 
