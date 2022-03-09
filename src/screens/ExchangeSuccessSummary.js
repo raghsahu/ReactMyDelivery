@@ -10,6 +10,7 @@ import {
   ImageBackground,
   Modal,
   Dimensions,
+  FlatList,
 } from 'react-native';
 
 //ASSETS
@@ -24,6 +25,7 @@ import {
   BottomBackground,
   RadioButtons,
   CheckBox,
+  ProductsItemListCompleted,
 } from '../components';
 
 const {height, width} = Dimensions.get('screen');
@@ -35,12 +37,12 @@ function ExchangeSuccessSummary(props) {
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
 
       <SafeAreaView style={styles.container}>
-        <Header
+        {/* <Header
           title={'Summary of the Transaction'}
           onBack={() => {
             props.navigation.goBack();
           }}
-        />
+        /> */}
         <BottomBackground></BottomBackground>
         <ScrollView
           style={styles.container}
@@ -139,105 +141,25 @@ function ExchangeSuccessSummary(props) {
               marginTop: 10,
             }}></View>
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
-            <Text
-              // style={[styles.inputView]}
-              size="18"
-              weight="500"
-              align="left"
-              color={COLORS.textColor}>
-              {'Summary of transaction'}
-            </Text>
+          <Text
+            style={[styles.inputView, {marginTop: 20}]}
+            size="18"
+            weight="500"
+            align="left"
+            color={COLORS.textColor}>
+            {'Summary of transaction'}
+          </Text>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Web Link :'}
-              </Text>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={['', '']}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return <ProductsItemListCompleted />;
+            }}
+          />
 
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={'#35CCC1'}
-                size="16"
-                weight="500">
-                {'www.com'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place to Buy :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Price :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.primaryColor}
-                size="16"
-                weight="500">
-                {'€ 2.00 x 1 = € 2.00'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Additional Information:'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: COLORS.gray,
-              height: 2,
-              marginTop: 10,
-            }}></View>
-
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -366,7 +288,7 @@ function ExchangeSuccessSummary(props) {
               marginTop: 10,
             }}></View>
 
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -500,7 +422,7 @@ function ExchangeSuccessSummary(props) {
             <Button
               title={'Done'}
               onPress={() => {
-                props.navigation.navigate('Home')
+                props.navigation.navigate('Home');
               }}
             />
           </View>

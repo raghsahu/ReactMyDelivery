@@ -10,6 +10,7 @@ import {
   ImageBackground,
   Modal,
   Dimensions,
+  FlatList,
 } from 'react-native';
 
 //ASSETS
@@ -24,6 +25,7 @@ import {
   BottomBackground,
   RadioButtons,
   CheckBox,
+  ProductsItemList,
 } from '../components';
 
 const {height, width} = Dimensions.get('screen');
@@ -33,9 +35,15 @@ function SummaryTransaction(props) {
   const [name, setName] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
+  const [isDateModalVisible, setDateModalVisible] = useState(false);
+  const [enableTxnCodeBtn, setEnableTxnCodeBtn] = useState(false);
 
   const TxnCodeModalVisibility = () => {
     setTxnCodeModalVisible(!isTxnCodeModalVisible);
+  };
+
+  const ChangeDateModalVisibility = () => {
+    setDateModalVisible(!isDateModalVisible);
   };
 
   const setCheck = checkStatus => {
@@ -171,117 +179,16 @@ function SummaryTransaction(props) {
             {'Product(s) Details'}
           </Text>
 
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={['', '']}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return <ProductsItemList />;
             }}
-            source={IMAGES.product_placeholder}
           />
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
-            <Text
-              // style={[styles.inputView]}
-              size="20"
-              weight="500"
-              align="left"
-              color={COLORS.textColor}>
-              {'souris'}
-            </Text>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Web Link :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={'#35CCC1'}
-                size="16"
-                weight="500">
-                {'www.com'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place to Buy :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Price :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.primaryColor}
-                size="16"
-                weight="500">
-                {'€ 2.00 x 1 = € 2.00'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Additional Information:'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: COLORS.gray,
-              height: 2,
-              marginTop: 10,
-            }}></View>
-
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -410,7 +317,7 @@ function SummaryTransaction(props) {
               marginTop: 10,
             }}></View>
 
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -567,8 +474,8 @@ function SummaryTransaction(props) {
           {/* //change hide & show button with conditions */}
           <View
             style={{
-              marginHorizontal: 20,
-              marginBottom: 20,
+              marginHorizontal: 15,
+              marginBottom: 15,
               marginTop: 30,
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -584,17 +491,32 @@ function SummaryTransaction(props) {
                 }}
               /> */}
 
-            <Button
-              style={[{width: 156}]}
-              title={'Transaction Code'} //or Change Delivery Date (according to condition)
-              onPress={() => {
-                TxnCodeModalVisibility();
-              }}
-            />
+            {!enableTxnCodeBtn ? (
+              <Button
+                style={[
+                  {width: 160, justifyContent: 'center', alignSelf: 'center'},
+                ]}
+                title={'Change Delivery \nDate'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  ChangeDateModalVisibility();
+                }}
+              />
+            ) : null}
+
+            {enableTxnCodeBtn ? (
+              <Button
+                style={[{width: 156}]}
+                title={'Transaction Code'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  TxnCodeModalVisibility();
+                }}
+              />
+            ) : null}
 
             <Button
-              style={[{width: 156}]}
+              style={[{width: 160}]}
               title={'Chat'}
+              type={1}
               onPress={() => {
                 props.navigation.navigate('SendSuggestion', {
                   headerTitle: 'Chat',
@@ -669,8 +591,91 @@ function SummaryTransaction(props) {
                 style={[{width: 100}]}
                 title={'Confirm'}
                 onPress={() => {
-                   TxnCodeModalVisibility();
-                  props.navigation.navigate('ExchangeSuccessSummary')}}
+                  TxnCodeModalVisibility();
+                  props.navigation.navigate('ExchangeSuccessSummary');
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isDateModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={isDateModalVisible}>
+        <View style={styles.viewWrapper}>
+          <View style={styles.modalView}>
+            <Text
+              style={{
+                width: '100%',
+                backgroundColor: COLORS.primaryColor,
+                padding: 10,
+                alignSelf: 'center',
+              }}
+              size="18"
+              weight="500"
+              align="center"
+              color={COLORS.white}>
+              {'Change date and time'}
+            </Text>
+
+            <Text
+              style={{padding: 10, alignSelf: 'center'}}
+              size="18"
+              weight="500"
+              align="center"
+              color={COLORS.black}>
+              {'Proposal changing \n delivery date and time'}
+            </Text>
+
+            <Input
+              style={[styles.inputView, styles.inputContainer]}
+              placeholder={'Day'}
+              isLeft={IMAGES.date}
+              onChangeText={text => {
+                // setPassword(text);
+              }}
+            />
+
+            <Input
+              style={[styles.inputView, styles.inputContainer]}
+              placeholder={'Hour'}
+              isLeft={IMAGES.time}
+              onChangeText={text => {
+                // setPassword(text);
+              }}
+            />
+
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                style={[
+                  styles.inputView,
+                  {width: 100, justifyContent: 'center'},
+                ]}
+                title={'Cancel'}
+                onPress={() => {
+                  ChangeDateModalVisibility();
+                }}
+              />
+
+              <Button
+                style={[{width: 100}]}
+                title={'Propose'}
+                onPress={() => {
+                  ChangeDateModalVisibility();
+                  props.navigation.navigate('ProposalChangedDate');
+                  setEnableTxnCodeBtn(true);
+                }}
               />
             </View>
           </View>
@@ -697,11 +702,22 @@ const styles = StyleSheet.create({
   },
   modalView1: {
     position: 'absolute',
-    top: '50%',
+    top: '40%',
     left: '50%',
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
     height: 320,
+    width: width * 0.83,
+    backgroundColor: '#fff',
+    borderRadius: 7,
+  },
+  modalView: {
+    position: 'absolute',
+    top: '40%',
+    left: '50%',
+    elevation: 5,
+    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    height: 350,
     width: width * 0.83,
     backgroundColor: '#fff',
     borderRadius: 7,

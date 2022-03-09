@@ -13,6 +13,8 @@ import PublishedItemList from "./PublishedItemList";
 import AsSenderItemList from "./AsSenderItemList";
 import NotificationItemList from "./NotificationItemList";
 import CustomRatingBar from "./CustomRatingBar";
+import ProductsItemList from "./ProductsItemList";
+import ProductsItemListCompleted from "./ProductsItemListCompleted";
 
 export {
    Text,
@@ -30,4 +32,6 @@ export {
    AsSenderItemList,
    NotificationItemList,
    CustomRatingBar,
+   ProductsItemList,
+   ProductsItemListCompleted,
 }

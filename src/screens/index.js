@@ -18,6 +18,7 @@ import AddProductSummary from './AddProductSummary';
 import SummaryTransaction from './SummaryTransaction';
 import RatingReview from './RatingReview';
 import ExchangeSuccessSummary from './ExchangeSuccessSummary';
+import ProposalChangedDate from './ProposalChangedDate';
 
 
 export {
@@ -41,4 +42,5 @@ export {
   SummaryTransaction,
   RatingReview,
   ExchangeSuccessSummary,
+  ProposalChangedDate,
 };

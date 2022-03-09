@@ -43,6 +43,7 @@ export const IMAGES = {
   starCorner: require('./images/star_corner.png'),
   starFilled: require('./images/star_filled.png'),
   share: require('./images/share.png'),
+  time: require('./images/time.png'),
 };
 
 export const COLORS = {

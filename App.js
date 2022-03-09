@@ -23,6 +23,7 @@ import {
   SummaryTransaction,
   RatingReview,
   ExchangeSuccessSummary,
+  ProposalChangedDate,
 } from './src/screens';
 //TABBAR
 import {TabBar} from './src/components';
@@ -76,6 +77,7 @@ const App = () => {
           <Screen name="SummaryTransaction" component={SummaryTransaction} />
           <Screen name="RatingReview" component={RatingReview} />
           <Screen name="ExchangeSuccessSummary" component={ExchangeSuccessSummary} />
+          <Screen name="ProposalChangedDate" component={ProposalChangedDate} />
         </Navigator>
       </NavigationContainer>
     </LocalizationProvider>

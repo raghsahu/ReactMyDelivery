@@ -308,7 +308,9 @@ function EditAccount(props) {
           <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={'Save Changes'}
-            onPress={() => {props.navigation.navigate('EmailOtp')}}
+            onPress={() => {
+             // props.navigation.navigate('EmailOtp')
+              }}
           />
         </ScrollView>
       </SafeAreaView>
