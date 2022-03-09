@@ -52,7 +52,7 @@ function SummaryTransaction(props) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
+      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
 
       <SafeAreaView style={styles.container}>
         <Header
