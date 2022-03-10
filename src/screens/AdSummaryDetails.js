@@ -41,6 +41,7 @@ function AdSummaryDetails(props) {
   const [isWebLinkModalVisible, setWebLinkModalVisible] = useState(false);
   const [isPhotosModalVisible, setPhotosModalVisible] = useState(false);
   const [isChangePriceQuantityModalVisible, setChangePriceQuantityModalVisible] = useState(false);
+  const [isCommissionModalVisible, setCommissionModalVisible] = useState(false);
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -63,6 +64,10 @@ function AdSummaryDetails(props) {
 
   const changePriceQuantityModalVisibleModalVisibility = () => {
     setChangePriceQuantityModalVisible(!isChangePriceQuantityModalVisible);
+  };
+
+  const commissionModalVisibleModalVisibility = () => {
+    setCommissionModalVisible(!isCommissionModalVisible);
   };
 
   const setCheck = checkStatus => {
@@ -806,7 +811,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.black}>
                 {'Photos (New)'}
               </Text>
-             <View style={{alignItems:'center',marginHorizontal:20,marginTop:20,marginBottom:40,borderRadius:10, backgroundColor:COLORS.homeBg}}>
+              <View style={{ alignItems: 'center', marginHorizontal: 20, marginTop: 20, marginBottom: 40, borderRadius: 10, backgroundColor: COLORS.homeBg }}>
                 <Image
                   style={{
                     width: 34,
@@ -816,7 +821,7 @@ function AdSummaryDetails(props) {
                   source={IMAGES.photos}
                 />
                 <Text
-                  style={{ marginTop:10,marginBottom:20 }}
+                  style={{ marginTop: 10, marginBottom: 20 }}
                   size="18"
                   weight="500"
                   align="left"
@@ -824,7 +829,7 @@ function AdSummaryDetails(props) {
                   {'Upload Photos'}
                 </Text>
 
-             </View>
+              </View>
             </View>
             <View
               style={{
@@ -878,26 +883,60 @@ function AdSummaryDetails(props) {
                 color={COLORS.black}>
                 {'Price - Quantity (New)'}
               </Text>
-              <View style={{flexDirection:'row', }}>
-              <View style={{ alignItems: 'center',width:'50%', marginHorizontal: 20, marginTop: 20, marginBottom: 40, borderRadius: 10, backgroundColor: COLORS.homeBg }}>
-                <Image
-                  style={{
-                    width: 34,
-                    height: 34,
-                    marginTop: 20,
-                  }}
-                  source={IMAGES.photos}
-                />
-                <Text
-                  style={{ marginTop: 10, marginBottom: 20 }}
-                  size="18"
-                  weight="500"
-                  align="left"
-                  color={'#787878'}>
-                  {'Upload Photos'}
-                </Text>
-</View>
+              <View style={{ flexDirection: 'row', }}>
+                <View style={{ width: '50%', }}>
+                  <Text
+                    style={{ marginTop: 20, marginLeft: 20 }}
+                    size="14"
+                    weight="500"
+                    align="left"
+                    color={COLORS.black}>
+                    {'Enter price in €'}
+                  </Text>
+                  <Input
+                    style={{ marginTop: 7, marginHorizontal: 10 }}
+                    placeholder={''}
+                    isLeft={IMAGES.percentage}
+                    onChangeText={text => {
+                      // setDay(text);
+                    }}
+                  />
+                </View>
+                <View style={{ width: '50%', }}>
+                  <Text
+                    style={{ marginTop: 20, marginLeft: 5 }}
+                    size="14"
+                    weight="500"
+                    align="left"
+                    color={COLORS.black}>
+                    {'Quantity'}
+                  </Text>
+                  <Input
+                    style={{ marginTop: 7, marginEnd: 10 }}
+                    placeholder={''}
+                    isLeft={IMAGES.quantity}
+                    onChangeText={text => {
+                      // setDay(text);
+                    }}
+                  />
+                </View>
               </View>
+              <Text
+                style={{ alignSelf: 'center', marginTop: 20 }}
+                size="14"
+                weight="500"
+                align="left"
+                color={COLORS.primaryColor}>
+                {'Total Price'}
+              </Text>
+              <Text
+                style={{ marginHorizontal: 15, borderRadius: 50, paddingHorizontal: 20, paddingVertical: 15, marginTop: 5, backgroundColor: COLORS.lightGray, marginBottom: 20 }}
+                size="14"
+                weight="500"
+                align="center"
+                color={COLORS.primaryColor}>
+                {''}
+              </Text>
             </View>
             <View
               style={{
@@ -924,6 +963,94 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   changePriceQuantityModalVisibleModalVisibility();
+                  commissionModalVisibleModalVisibility();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isCommissionModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={commissionModalVisibleModalVisibility}>
+        <View style={[styles.viewWrapper]}>
+          <View style={styles.modalView1}>
+            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+              <Text
+                style={{ marginTop: 20, marginHorizontal: 20 }}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.black}>
+                {'Commission (New)'}
+              </Text>
+              <View>
+                <Text
+                  style={{ marginTop: 20, marginLeft: 20 }}
+                  size="14"
+                  weight="500"
+                  align="left"
+                  color={COLORS.black}>
+                  {'Enter Global Commission in €'}
+                </Text>
+                <Input
+                  style={{ marginTop: 7, marginHorizontal: 10 }}
+                  placeholder={''}
+                  isLeft={IMAGES.percentage}
+                  onChangeText={text => {
+                    // setDay(text);
+                  }}
+                />
+              </View>
+              <View style={{ justifyContent:'flex-end',marginVertical:20, flexDirection: 'row' }}>
+                <Text
+                  style={{ alignSelf: 'center', }}
+                  size="14"
+                  weight="500"
+                  align="left"
+                  color={COLORS.black}>
+                  {'Your commission'}
+                </Text>
+                <Text
+                  style={{ marginHorizontal: 15,paddingHorizontal: 10,}}
+                  size="14"
+                  weight="500"
+                  align="center"
+                  color={COLORS.primaryColor}>
+                  {'€ 50'}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginBottom: 20,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                type={1}
+                titleColor={COLORS.primaryColor}
+                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                title={'Cancel'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  commissionModalVisibleModalVisibility();
+
+                }}
+              />
+              <Button
+                style={[{ width: 146 }]}
+                title={'Confirm'}
+                onPress={() => {
+                  commissionModalVisibleModalVisibility();
                 }}
               />
             </View>

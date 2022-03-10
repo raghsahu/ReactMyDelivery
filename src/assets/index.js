@@ -48,6 +48,8 @@ export const IMAGES = {
   filterby: require('./images/filterby.png'),
   weblink: require('./images/weblink.png'),
   photos: require('./images/photos.png'),
+  percentage: require('./images/percentage.png'),
+  quantity: require('./images/quantity.png'),
 };
 
 export const COLORS = {
