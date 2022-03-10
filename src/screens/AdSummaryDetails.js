@@ -38,6 +38,9 @@ function AdSummaryDetails(props) {
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [isProposalToModificationOfAd, setProposalToModificationOfAd] = useState(false);
   const [isPlaceOfDeliveryModalVisible, setPlaceOfDeliveryModalVisible] = useState(false);
+  const [isWebLinkModalVisible, setWebLinkModalVisible] = useState(false);
+  const [isPhotosModalVisible, setPhotosModalVisible] = useState(false);
+  const [isChangePriceQuantityModalVisible, setChangePriceQuantityModalVisible] = useState(false);
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -49,6 +52,17 @@ function AdSummaryDetails(props) {
 
   const placeOfDeliveryModalVisibleModalVisibility = () => {
     setPlaceOfDeliveryModalVisible(!isPlaceOfDeliveryModalVisible);
+  };
+
+  const webLinkModalVisibleModalVisibility = () => {
+    setWebLinkModalVisible(!isWebLinkModalVisible);
+  };
+  const photosModalVisibleModalVisibility = () => {
+    setPhotosModalVisible(!isPhotosModalVisible);
+  };
+
+  const changePriceQuantityModalVisibleModalVisibility = () => {
+    setChangePriceQuantityModalVisible(!isChangePriceQuantityModalVisible);
   };
 
   const setCheck = checkStatus => {
@@ -655,7 +669,7 @@ function AdSummaryDetails(props) {
         onDismiss={placeOfDeliveryModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 5, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
               <Text
                 style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
@@ -699,12 +713,225 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
+                  webLinkModalVisibleModalVisibility();
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
+
+
+
+
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isWebLinkModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={webLinkModalVisibleModalVisibility}>
+        <View style={[styles.viewWrapper]}>
+          <View style={styles.modalView1}>
+            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+              <Text
+                style={{ marginTop: 20, marginHorizontal: 20 }}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.black}>
+                {'Web Link (New)'}
+              </Text>
+              <Input
+                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
+                placeholder={''}
+                isLeft={IMAGES.weblink}
+                onChangeText={text => {
+                  // setDay(text);
+                }}
+              />
+            </View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginBottom: 20,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                type={1}
+                titleColor={COLORS.primaryColor}
+                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                title={'Cancel'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  // props.navigation.navigate('SendSuggestion', {
+                  //   headerTitle: 'Complain',
+                  // });
+                }}
+              />
+
+              <Button
+                style={[{ width: 146 }]}
+                title={'Confirm'}
+                onPress={() => {
+                  webLinkModalVisibleModalVisibility();
+                  photosModalVisibleModalVisibility();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
+
+
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isPhotosModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={photosModalVisibleModalVisibility}>
+        <View style={[styles.viewWrapper]}>
+          <View style={styles.modalView1}>
+            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+              <Text
+                style={{ marginTop: 20, marginHorizontal: 20 }}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.black}>
+                {'Photos (New)'}
+              </Text>
+             <View style={{alignItems:'center',marginHorizontal:20,marginTop:20,marginBottom:40,borderRadius:10, backgroundColor:COLORS.homeBg}}>
+                <Image
+                  style={{
+                    width: 34,
+                    height: 34,
+                    marginTop: 20,
+                  }}
+                  source={IMAGES.photos}
+                />
+                <Text
+                  style={{ marginTop:10,marginBottom:20 }}
+                  size="18"
+                  weight="500"
+                  align="left"
+                  color={'#787878'}>
+                  {'Upload Photos'}
+                </Text>
+
+             </View>
+            </View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginBottom: 20,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                type={1}
+                titleColor={COLORS.primaryColor}
+                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                title={'Cancel'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  // props.navigation.navigate('SendSuggestion', {
+                  //   headerTitle: 'Complain',
+                  // });
+                }}
+              />
+              <Button
+                style={[{ width: 146 }]}
+                title={'Confirm'}
+                onPress={() => {
+                  photosModalVisibleModalVisibility();
+                  changePriceQuantityModalVisibleModalVisibility();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
+
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isChangePriceQuantityModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={changePriceQuantityModalVisibleModalVisibility}>
+        <View style={[styles.viewWrapper]}>
+          <View style={styles.modalView1}>
+            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+              <Text
+                style={{ marginTop: 20, marginHorizontal: 20 }}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.black}>
+                {'Price - Quantity (New)'}
+              </Text>
+              <View style={{flexDirection:'row', }}>
+              <View style={{ alignItems: 'center',width:'50%', marginHorizontal: 20, marginTop: 20, marginBottom: 40, borderRadius: 10, backgroundColor: COLORS.homeBg }}>
+                <Image
+                  style={{
+                    width: 34,
+                    height: 34,
+                    marginTop: 20,
+                  }}
+                  source={IMAGES.photos}
+                />
+                <Text
+                  style={{ marginTop: 10, marginBottom: 20 }}
+                  size="18"
+                  weight="500"
+                  align="left"
+                  color={'#787878'}>
+                  {'Upload Photos'}
+                </Text>
+</View>
+              </View>
+            </View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginBottom: 20,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                type={1}
+                titleColor={COLORS.primaryColor}
+                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                title={'Cancel'} //or Change Delivery Date (according to condition)
+                onPress={() => {
+                  // props.navigation.navigate('SendSuggestion', {
+                  //   headerTitle: 'Complain',
+                  // });
+                }}
+              />
+              <Button
+                style={[{ width: 146 }]}
+                title={'Confirm'}
+                onPress={() => {
+                  changePriceQuantityModalVisibleModalVisibility();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
     </View>
   );
 }

@@ -46,6 +46,8 @@ export const IMAGES = {
   time: require('./images/time.png'),
   department: require('./images/department.png'),
   filterby: require('./images/filterby.png'),
+  weblink: require('./images/weblink.png'),
+  photos: require('./images/photos.png'),
 };
 
 export const COLORS = {
