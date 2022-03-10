@@ -94,26 +94,32 @@ function Home(props) {
               </View>
              </TouchableOpacity> 
           
-              <View style={{}}>
-                <Image
-                  source={IMAGES.home_delivery_man}
-                  style={{
-                    height: 90,
-                    width: 90,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 5,
-                  }}
-                />
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('DescribePlaceOfDelivery');
+                }}>
+                <View style={{}}>
+                  <Image
+                    source={IMAGES.home_delivery_man}
+                    style={{
+                      height: 90,
+                      width: 90,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                      marginBottom: 5,
+                    }}
+                  />
 
-                <Text
-                  size="14"
-                  weight="500"
-                  align="center"
-                  color={COLORS.white}>
-                  {'Delivery Man'}
-                </Text>
-              </View>
+                  <Text
+                    size="14"
+                    weight="500"
+                    align="center"
+                    color={COLORS.white}>
+                    {'Delivery Man'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
               <View style={{}}>
                 <Image
                   source={IMAGES.home_sender}

@@ -15,6 +15,7 @@ import NotificationItemList from "./NotificationItemList";
 import CustomRatingBar from "./CustomRatingBar";
 import ProductsItemList from "./ProductsItemList";
 import ProductsItemListCompleted from "./ProductsItemListCompleted";
+import AdvertiseListItem from "./AdvertiseListItem";
 
 export {
    Text,
@@ -34,4 +35,5 @@ export {
    CustomRatingBar,
    ProductsItemList,
    ProductsItemListCompleted,
+   AdvertiseListItem,
 }

@@ -44,6 +44,8 @@ export const IMAGES = {
   starFilled: require('./images/star_filled.png'),
   share: require('./images/share.png'),
   time: require('./images/time.png'),
+  department: require('./images/department.png'),
+  filterby: require('./images/filterby.png'),
 };
 
 export const COLORS = {
@@ -53,11 +55,17 @@ export const COLORS = {
   primaryColor: '#9125FF',
   placeHolderTextColor: '#868686',
   textColor: '#333333',
-  lightTextColor: '#626161',
+  textColor2: '#131313',
+  textColor3: '#929292',
+  textColor4: '#A8A8A8',
+  titleColor: '#7D7D7D',
+    lightTextColor: '#626161',
   lightGray: '#F0F0F0',
   darkGray: '#828282',
   lightWhite: '#f6f6f6',
   blue: '#485B96',
   homeBg: '#E5E5E5',
   red: '#FF0000',
+  borderColor: '#AAAAAA',
+  borderColor2: '#363636',
 };

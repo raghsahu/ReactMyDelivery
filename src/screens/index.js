@@ -20,6 +20,10 @@ import RatingReview from './RatingReview';
 import ExchangeSuccessSummary from './ExchangeSuccessSummary';
 import ProposalChangedDate from './ProposalChangedDate';
 
+import DescribePlaceOfDelivery from './DescribePlaceOfDelivery';
+import RequestsListForPlaces from './RequestsListForPlaces';
+import AdSummaryDetails from './AdSummaryDetails';
+
 
 export {
   Splash,
@@ -43,4 +47,7 @@ export {
   RatingReview,
   ExchangeSuccessSummary,
   ProposalChangedDate,
+  DescribePlaceOfDelivery,
+  RequestsListForPlaces,
+  AdSummaryDetails,
 };
