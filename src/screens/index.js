@@ -19,10 +19,10 @@ import SummaryTransaction from './SummaryTransaction';
 import RatingReview from './RatingReview';
 import ExchangeSuccessSummary from './ExchangeSuccessSummary';
 import ProposalChangedDate from './ProposalChangedDate';
-
 import DescribePlaceOfDelivery from './DescribePlaceOfDelivery';
 import RequestsListForPlaces from './RequestsListForPlaces';
 import AdSummaryDetails from './AdSummaryDetails';
+import AdModificationProposal from './AdModificationProposal';
 
 
 export {
@@ -50,4 +50,5 @@ export {
   DescribePlaceOfDelivery,
   RequestsListForPlaces,
   AdSummaryDetails,
+  AdModificationProposal,
 };

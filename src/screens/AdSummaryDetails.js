@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, {useEffect, useContext, useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   ImageBackground,
   Modal,
-  Dimensions, TextInput
+  Dimensions,
+  TextInput,
 } from 'react-native';
 
 //ASSETS
-import { COLORS, IMAGES } from '../assets';
+import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -25,9 +26,9 @@ import {
   RadioButtons,
   CheckBox,
 } from '../components';
-import { Rating } from 'react-native-ratings';
+import {Rating} from 'react-native-ratings';
 
-const { height, width } = Dimensions.get('screen');
+const {height, width} = Dimensions.get('screen');
 
 function AdSummaryDetails(props) {
   const [name, setName] = useState('');
@@ -36,11 +37,16 @@ function AdSummaryDetails(props) {
   const [reasonToChange, setReasonToChange] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [isProposalToModificationOfAd, setProposalToModificationOfAd] = useState(false);
-  const [isPlaceOfDeliveryModalVisible, setPlaceOfDeliveryModalVisible] = useState(false);
+  const [isProposalToModificationOfAd, setProposalToModificationOfAd] =
+    useState(false);
+  const [isPlaceOfDeliveryModalVisible, setPlaceOfDeliveryModalVisible] =
+    useState(false);
   const [isWebLinkModalVisible, setWebLinkModalVisible] = useState(false);
   const [isPhotosModalVisible, setPhotosModalVisible] = useState(false);
-  const [isChangePriceQuantityModalVisible, setChangePriceQuantityModalVisible] = useState(false);
+  const [
+    isChangePriceQuantityModalVisible,
+    setChangePriceQuantityModalVisible,
+  ] = useState(false);
   const [isCommissionModalVisible, setCommissionModalVisible] = useState(false);
 
   const logoutModalVisibility = () => {
@@ -88,19 +94,32 @@ function AdSummaryDetails(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          {!isProposalToModificationOfAd &&
-            <View style={[styles.inputView, { marginTop: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between', elevation: 2, borderRadius: 15, backgroundColor: COLORS.white }]}>
+          {!isProposalToModificationOfAd && (
+            <View
+              style={[
+                styles.inputView,
+                {
+                  marginTop: 20,
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  elevation: 2,
+                  borderRadius: 15,
+                  backgroundColor: COLORS.white,
+                },
+              ]}>
               <Text
-                style={[{ marginStart: 15, marginTop: 15, marginBottom: 40 }]}
+                style={[{marginStart: 15, marginTop: 15, marginBottom: 40}]}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
                 {'User'}
               </Text>
-              <View style={{ marginStart: 15, marginTop: 15, flexDirection: 'row', }}>
+              <View
+                style={{marginStart: 15, marginTop: 15, flexDirection: 'row'}}>
                 <Text
-                  style={[{ marginStart: 15, }]}
+                  style={[{marginStart: 15}]}
                   size="18"
                   weight="500"
                   align="left"
@@ -108,17 +127,17 @@ function AdSummaryDetails(props) {
                   {'0'}
                 </Text>
                 <Rating
-                  type='custom'
-                  ratingColor='#04D9C5'
+                  type="custom"
+                  ratingColor="#04D9C5"
                   startingValue={1}
-                  ratingBackgroundColor='#04D9C5'
+                  ratingBackgroundColor="#04D9C5"
                   ratingCount={1}
                   imageSize={20}
                   // onFinishRating={this.ratingCompleted}
-                  style={{ marginTop: 1, marginStart: 15, paddingVertical: 1 }}
+                  style={{marginTop: 1, marginStart: 15, paddingVertical: 1}}
                 />
                 <Text
-                  style={[{ marginStart: 10, marginEnd: 15, }]}
+                  style={[{marginStart: 10, marginEnd: 15}]}
                   size="18"
                   weight="500"
                   align="left"
@@ -126,13 +145,11 @@ function AdSummaryDetails(props) {
                   {'0'}
                 </Text>
               </View>
-
             </View>
-          }
-
+          )}
 
           <Text
-            style={[styles.inputView, { marginTop: 20 }]}
+            style={[styles.inputView, {marginTop: 20}]}
             size="18"
             weight="500"
             align="left"
@@ -153,7 +170,7 @@ function AdSummaryDetails(props) {
             source={IMAGES.product_placeholder}
           />
 
-          <View style={[styles.inputView, { marginTop: 20 }]}>
+          <View style={[styles.inputView, {marginTop: 20}]}>
             <Text
               // style={[styles.inputView]}
               size="20"
@@ -162,21 +179,26 @@ function AdSummaryDetails(props) {
               color={COLORS.textColor}>
               {'souris'}
             </Text>
-            {isProposalToModificationOfAd && <Text
-              style={[styles.rightButtons, { position: 'absolute' }]}
-              size="16"
-              weight="500"
-              align="left"
-              color={COLORS.white}>
-              {'change photo'}
-            </Text>
-            }
+            {isProposalToModificationOfAd && (
+              <Text
+                style={[styles.rightButtons, {position: 'absolute'}]}
+                size="16"
+                weight="500"
+                align="left"
+                color={COLORS.white}
+                  onPress={() => {
+              
+                  photosModalVisibleModalVisibility();
+                }}>
+                {'change photo'}
+              </Text>
+            )}
 
             <View
               style={{
                 flexDirection: 'row',
                 marginTop: 5,
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}>
               <View
                 style={{
@@ -196,14 +218,20 @@ function AdSummaryDetails(props) {
                   {'hp.com'}
                 </Text>
               </View>
-              {isProposalToModificationOfAd && <Text
-                style={styles.rightButtons}
-                color={COLORS.white}
-                size="16"
-                weight="500">
-                {'change'}
-              </Text>
-              }
+              {isProposalToModificationOfAd && (
+                <Text
+                  style={styles.rightButtons}
+                  color={COLORS.white}
+                  size="16"
+                  weight="500"
+              
+                     onPress={() => {
+                        webLinkModalVisibleModalVisibility();
+                  }}
+                  >
+                  {'change'}
+                </Text>
+              )}
             </View>
 
             <View
@@ -230,7 +258,7 @@ function AdSummaryDetails(props) {
               style={{
                 flexDirection: 'row',
                 marginTop: 5,
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}>
               <View
                 style={{
@@ -250,14 +278,19 @@ function AdSummaryDetails(props) {
                   {'€ 6.00 x 1 = € 6.00'}
                 </Text>
               </View>
-              {isProposalToModificationOfAd && <Text
-                style={[styles.rightButtons]}
-                color={COLORS.white}
-                size="16"
-                weight="500">
-                {'change'}
-              </Text>
-              }
+              {isProposalToModificationOfAd && (
+                <Text
+                  style={[styles.rightButtons]}
+                  color={COLORS.white}
+                  size="16"
+                  weight="500"
+                  onPress={() => {
+                 
+                  changePriceQuantityModalVisibleModalVisibility();
+                }}>
+                  {'change'}
+                </Text>
+              )}
             </View>
 
             <View
@@ -288,14 +321,24 @@ function AdSummaryDetails(props) {
               marginTop: 10,
             }}></View>
 
-          <View style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}>
-            {isProposalToModificationOfAd && <Text
-              style={[styles.rightButtons, { position: 'absolute', marginTop: 10, paddingVertical: 10 }]}
-              color={COLORS.white}
-              size="16"
-              weight="500">
-              {'change'}
-            </Text>}
+          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+            {isProposalToModificationOfAd && (
+              <Text
+                style={[
+                  styles.rightButtons,
+                  {position: 'absolute', marginTop: 10, paddingVertical: 10},
+                ]}
+                color={COLORS.white}
+                size="16"
+                weight="500"
+                onPress={() => {
+                
+                  commissionModalVisibleModalVisibility();
+                }}
+                >
+                {'change'}
+              </Text>
+            )}
             <View
               style={{
                 flexDirection: 'row',
@@ -398,7 +441,7 @@ function AdSummaryDetails(props) {
             <View
               style={{
                 marginTop: 5,
-                flexDirection: 'row',
+               // flexDirection: 'row',
               }}>
               <View
                 style={{
@@ -419,23 +462,32 @@ function AdSummaryDetails(props) {
                   {'Constantine Constantine,'}
                 </Text>
               </View>
-              {isProposalToModificationOfAd && <Text
-                style={[styles.rightButtons]}
-                color={COLORS.white}
-                size="16"
-                weight="500">
-                {'change'}
-              </Text>
-              }
+              {isProposalToModificationOfAd && (
+                <Text
+                  style={[
+                    styles.rightButtons,
+                    { marginRight: 0},
+                  ]}
+                  color={COLORS.white}
+                  size="16"
+                  weight="500"
+                   onPress={() => {
+                    placeOfDeliveryModalVisibleModalVisibility();
+                  }}
+                  >
+                  {'change'}
+                </Text>
+              )}
             </View>
           </View>
 
-          {
-            !isProposalToModificationOfAd && <View><CheckBox
-              isSelected={isSelected}
-              text={'Terms & Conditions'}
-              onChecked={setCheck}
-            />
+          {!isProposalToModificationOfAd && (
+            <View>
+              <CheckBox
+                isSelected={isSelected}
+                text={'Terms & Conditions'}
+                onChecked={setCheck}
+              />
               <View
                 style={{
                   marginHorizontal: 20,
@@ -447,18 +499,15 @@ function AdSummaryDetails(props) {
                 }}>
                 <Button
                   type={1}
-                  titleColor={COLORS.primaryColor}
-                  style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 156 }]}
-                  title={'To Process'} //or Change Delivery Date (according to condition)
+                  style={[{width: 156}]}
+                  title={'To Propose'}
                   onPress={() => {
-                    // props.navigation.navigate('SendSuggestion', {
-                    //   headerTitle: 'Complain',
-                    // });
+                    proposalToModificationOfAd();
                   }}
                 />
 
                 <Button
-                  style={[{ width: 156 }]}
+                  style={[{width: 156}]}
                   title={'Accept'}
                   onPress={() => {
                     logoutModalVisibility();
@@ -466,16 +515,15 @@ function AdSummaryDetails(props) {
                 />
               </View>
             </View>
-          }
-          {isProposalToModificationOfAd &&
+          )}
+          {isProposalToModificationOfAd && (
             <View>
               <View
                 style={{
                   backgroundColor: COLORS.borderColor2,
                   height: 2,
                   marginTop: 10,
-                }}>
-              </View>
+                }}></View>
               <TextInput
                 placeholderTextColor={COLORS.placeHolderTextColor}
                 autoCapitalize="none"
@@ -483,20 +531,24 @@ function AdSummaryDetails(props) {
                 secureTextEntry={props.secureTextEntry && !open}
                 multiline
                 numberOfLines={6}
-                textAlign='left'
+                textAlign="left"
                 value={reasonToChange}
-                style={[styles.inputView, styles.inputContainer, {
-                  flex: 1,
-                  fontFamily: 'Poppins-Regular',
-                  fontWeight: '400',
-                  fontSize: 16,
-                  color: COLORS.black,
-                  paddingVertical: 1,
-                  paddingHorizontal: 20,
-                  borderRadius: 24,
-                  backgroundColor: "#F0F0F0",
-                  marginBottom: 20,
-                }]}
+                style={[
+                  styles.inputView,
+                  styles.inputContainer,
+                  {
+                    flex: 1,
+                    fontFamily: 'Poppins-Regular',
+                    fontWeight: '400',
+                    fontSize: 16,
+                    color: COLORS.black,
+                    paddingVertical: 1,
+                    paddingHorizontal: 20,
+                    borderRadius: 24,
+                    backgroundColor: '#F0F0F0',
+                    marginBottom: 20,
+                  },
+                ]}
                 placeholder={'Why this change...'}
                 onChangeText={text => {
                   setReasonToChange(text);
@@ -506,18 +558,23 @@ function AdSummaryDetails(props) {
                 style={{
                   backgroundColor: COLORS.borderColor2,
                   height: 2,
+                }}></View>
+              <View
+                style={{
+                  margin: 10,
+                  backgroundColor: COLORS.white,
+                  elevation: 5,
+                  borderRadius: 20,
                 }}>
-              </View>
-              <View style={{ margin: 10, backgroundColor: COLORS.white, elevation: 5, borderRadius: 20 }}>
                 <Text
-                  style={{ marginLeft: 20, marginTop: 40, marginBottom: 40, }}
+                  style={{marginLeft: 20, marginTop: 40, marginBottom: 40}}
                   color={COLORS.black}
                   size="18"
                   weight="500">
                   {'Expected Delivery'}
                 </Text>
                 <Input
-                  style={{ marginHorizontal: 10 }}
+                  style={{marginHorizontal: 10}}
                   placeholder={'Day'}
                   isLeft={IMAGES.date}
                   onChangeText={text => {
@@ -525,9 +582,9 @@ function AdSummaryDetails(props) {
                   }}
                 />
                 <Input
-                  style={{ marginVertical: 20, marginHorizontal: 10 }}
+                  style={{marginVertical: 20, marginHorizontal: 10}}
                   placeholder={'Hour'}
-                  isLeft={IMAGES.clock}
+                  isLeft={IMAGES.time}
                   onChangeText={text => {
                     setHour(text);
                   }}
@@ -545,25 +602,29 @@ function AdSummaryDetails(props) {
                 <Button
                   type={1}
                   titleColor={COLORS.primaryColor}
-                  style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 156 }]}
+                  style={[
+                    {
+                      borderColor: COLORS.primaryColor,
+                      borderWidth: 1.2,
+                      width: 156,
+                    },
+                  ]}
                   title={'To Cancel'} //or Change Delivery Date (according to condition)
                   onPress={() => {
-                    // props.navigation.navigate('SendSuggestion', {
-                    //   headerTitle: 'Complain',
-                    // });
+                      proposalToModificationOfAd();
                   }}
                 />
 
                 <Button
-                  style={[{ width: 156 }]}
-                  title={'To Process'}
+                  style={[{width: 156}]}
+                  title={'To Propose'}
                   onPress={() => {
-                    placeOfDeliveryModalVisibleModalVisibility();
+                    props.navigation.navigate('AdModificationProposal')
                   }}
                 />
               </View>
             </View>
-          }
+          )}
         </ScrollView>
       </SafeAreaView>
 
@@ -612,7 +673,7 @@ function AdSummaryDetails(props) {
             </TouchableOpacity>
 
             <Text
-              style={{ marginTop: 20 }}
+              style={{marginTop: 20}}
               size="18"
               weight="500"
               align="center"
@@ -621,7 +682,7 @@ function AdSummaryDetails(props) {
             </Text>
 
             <Text
-              style={{ marginTop: 20 }}
+              style={{marginTop: 20}}
               size="18"
               weight="500"
               align="center"
@@ -630,7 +691,7 @@ function AdSummaryDetails(props) {
             </Text>
 
             <Text
-              style={{ marginTop: 20, marginHorizontal: 20 }}
+              style={{marginTop: 20, marginHorizontal: 20}}
               size="16"
               weight="400"
               align="center"
@@ -639,7 +700,7 @@ function AdSummaryDetails(props) {
             </Text>
 
             <Text
-              style={{ marginTop: 20 }}
+              style={{marginTop: 20}}
               size="16"
               weight="400"
               align="center"
@@ -650,21 +711,22 @@ function AdSummaryDetails(props) {
             <Button
               style={[
                 styles.inputView,
-                { width: 200, marginTop: 10, marginBottom: 25, alignSelf: "center" },
+                {
+                  width: 200,
+                  marginTop: 10,
+                  marginBottom: 25,
+                  alignSelf: 'center',
+                },
               ]}
               title={'Ok'}
               onPress={() => {
                 logoutModalVisibility();
-                // props.navigation.navigate('Market')
-                proposalToModificationOfAd();
-
+                props.navigation.navigate('SummaryTransaction');
               }}
             />
           </View>
         </View>
       </Modal>
-
-
 
       <Modal
         animationType="slide"
@@ -674,9 +736,16 @@ function AdSummaryDetails(props) {
         onDismiss={placeOfDeliveryModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                elevation: 3,
+                marginHorizontal: 15,
+                marginTop: 20,
+                borderRadius: 20,
+              }}>
               <Text
-                style={{ marginTop: 20, marginHorizontal: 20 }}
+                style={{marginTop: 20, marginHorizontal: 20}}
                 size="18"
                 weight="500"
                 align="left"
@@ -684,7 +753,7 @@ function AdSummaryDetails(props) {
                 {'Place of Delivery (New)'}
               </Text>
               <Input
-                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
+                style={{marginTop: 30, marginBottom: 50, marginHorizontal: 10}}
                 placeholder={''}
                 isLeft={IMAGES.location}
                 onChangeText={text => {
@@ -704,7 +773,13 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                style={[
+                  {
+                    borderColor: COLORS.primaryColor,
+                    borderWidth: 1.2,
+                    width: 146,
+                  },
+                ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -714,21 +789,17 @@ function AdSummaryDetails(props) {
               />
 
               <Button
-                style={[{ width: 146 }]}
+                style={[{width: 146}]}
                 title={'Confirm'}
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
-                  webLinkModalVisibleModalVisibility();
+                 
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
-
-
-
-
 
       <Modal
         animationType="slide"
@@ -738,9 +809,16 @@ function AdSummaryDetails(props) {
         onDismiss={webLinkModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                elevation: 3,
+                marginHorizontal: 15,
+                marginTop: 20,
+                borderRadius: 20,
+              }}>
               <Text
-                style={{ marginTop: 20, marginHorizontal: 20 }}
+                style={{marginTop: 20, marginHorizontal: 20}}
                 size="18"
                 weight="500"
                 align="left"
@@ -748,7 +826,7 @@ function AdSummaryDetails(props) {
                 {'Web Link (New)'}
               </Text>
               <Input
-                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
+                style={{marginTop: 30, marginBottom: 50, marginHorizontal: 10}}
                 placeholder={''}
                 isLeft={IMAGES.weblink}
                 onChangeText={text => {
@@ -768,7 +846,13 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                style={[
+                  {
+                    borderColor: COLORS.primaryColor,
+                    borderWidth: 1.2,
+                    width: 146,
+                  },
+                ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -778,21 +862,17 @@ function AdSummaryDetails(props) {
               />
 
               <Button
-                style={[{ width: 146 }]}
+                style={[{width: 146}]}
                 title={'Confirm'}
                 onPress={() => {
                   webLinkModalVisibleModalVisibility();
-                  photosModalVisibleModalVisibility();
+                  
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
-
-
-
-
 
       <Modal
         animationType="slide"
@@ -802,16 +882,31 @@ function AdSummaryDetails(props) {
         onDismiss={photosModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                elevation: 3,
+                marginHorizontal: 15,
+                marginTop: 20,
+                borderRadius: 20,
+              }}>
               <Text
-                style={{ marginTop: 20, marginHorizontal: 20 }}
+                style={{marginTop: 20, marginHorizontal: 20}}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
                 {'Photos (New)'}
               </Text>
-              <View style={{ alignItems: 'center', marginHorizontal: 20, marginTop: 20, marginBottom: 40, borderRadius: 10, backgroundColor: COLORS.homeBg }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginHorizontal: 20,
+                  marginTop: 20,
+                  marginBottom: 40,
+                  borderRadius: 10,
+                  backgroundColor: COLORS.homeBg,
+                }}>
                 <Image
                   style={{
                     width: 34,
@@ -821,14 +916,13 @@ function AdSummaryDetails(props) {
                   source={IMAGES.photos}
                 />
                 <Text
-                  style={{ marginTop: 10, marginBottom: 20 }}
+                  style={{marginTop: 10, marginBottom: 20}}
                   size="18"
                   weight="500"
                   align="left"
                   color={'#787878'}>
                   {'Upload Photos'}
                 </Text>
-
               </View>
             </View>
             <View
@@ -843,7 +937,13 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                style={[
+                  {
+                    borderColor: COLORS.primaryColor,
+                    borderWidth: 1.2,
+                    width: 146,
+                  },
+                ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -852,19 +952,17 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                style={[{ width: 146 }]}
+                style={[{width: 146}]}
                 title={'Confirm'}
                 onPress={() => {
                   photosModalVisibleModalVisibility();
-                  changePriceQuantityModalVisibleModalVisibility();
+                 
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
-
-
 
       <Modal
         animationType="slide"
@@ -874,19 +972,26 @@ function AdSummaryDetails(props) {
         onDismiss={changePriceQuantityModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                elevation: 3,
+                marginHorizontal: 15,
+                marginTop: 20,
+                borderRadius: 20,
+              }}>
               <Text
-                style={{ marginTop: 20, marginHorizontal: 20 }}
+                style={{marginTop: 20, marginHorizontal: 20}}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
                 {'Price - Quantity (New)'}
               </Text>
-              <View style={{ flexDirection: 'row', }}>
-                <View style={{ width: '50%', }}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{width: '50%'}}>
                   <Text
-                    style={{ marginTop: 20, marginLeft: 20 }}
+                    style={{marginTop: 20, marginLeft: 20}}
                     size="14"
                     weight="500"
                     align="left"
@@ -894,7 +999,7 @@ function AdSummaryDetails(props) {
                     {'Enter price in €'}
                   </Text>
                   <Input
-                    style={{ marginTop: 7, marginHorizontal: 10 }}
+                    style={{marginTop: 7, marginHorizontal: 10}}
                     placeholder={''}
                     isLeft={IMAGES.percentage}
                     onChangeText={text => {
@@ -902,9 +1007,9 @@ function AdSummaryDetails(props) {
                     }}
                   />
                 </View>
-                <View style={{ width: '50%', }}>
+                <View style={{width: '50%'}}>
                   <Text
-                    style={{ marginTop: 20, marginLeft: 5 }}
+                    style={{marginTop: 20, marginLeft: 5}}
                     size="14"
                     weight="500"
                     align="left"
@@ -912,7 +1017,7 @@ function AdSummaryDetails(props) {
                     {'Quantity'}
                   </Text>
                   <Input
-                    style={{ marginTop: 7, marginEnd: 10 }}
+                    style={{marginTop: 7, marginEnd: 10}}
                     placeholder={''}
                     isLeft={IMAGES.quantity}
                     onChangeText={text => {
@@ -922,7 +1027,7 @@ function AdSummaryDetails(props) {
                 </View>
               </View>
               <Text
-                style={{ alignSelf: 'center', marginTop: 20 }}
+                style={{alignSelf: 'center', marginTop: 20}}
                 size="14"
                 weight="500"
                 align="left"
@@ -930,7 +1035,15 @@ function AdSummaryDetails(props) {
                 {'Total Price'}
               </Text>
               <Text
-                style={{ marginHorizontal: 15, borderRadius: 50, paddingHorizontal: 20, paddingVertical: 15, marginTop: 5, backgroundColor: COLORS.lightGray, marginBottom: 20 }}
+                style={{
+                  marginHorizontal: 15,
+                  borderRadius: 50,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                  marginTop: 5,
+                  backgroundColor: COLORS.lightGray,
+                  marginBottom: 20,
+                }}
                 size="14"
                 weight="500"
                 align="center"
@@ -950,7 +1063,13 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                style={[
+                  {
+                    borderColor: COLORS.primaryColor,
+                    borderWidth: 1.2,
+                    width: 146,
+                  },
+                ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -959,19 +1078,17 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                style={[{ width: 146 }]}
+                style={[{width: 146}]}
                 title={'Confirm'}
                 onPress={() => {
                   changePriceQuantityModalVisibleModalVisibility();
-                  commissionModalVisibleModalVisibility();
+                  
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
-
-
 
       <Modal
         animationType="slide"
@@ -981,9 +1098,16 @@ function AdSummaryDetails(props) {
         onDismiss={commissionModalVisibleModalVisibility}>
         <View style={[styles.viewWrapper]}>
           <View style={styles.modalView1}>
-            <View style={{ backgroundColor: COLORS.white, elevation: 3, marginHorizontal: 15, marginTop: 20, borderRadius: 20 }}>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                elevation: 3,
+                marginHorizontal: 15,
+                marginTop: 20,
+                borderRadius: 20,
+              }}>
               <Text
-                style={{ marginTop: 20, marginHorizontal: 20 }}
+                style={{marginTop: 20, marginHorizontal: 20}}
                 size="18"
                 weight="500"
                 align="left"
@@ -992,7 +1116,7 @@ function AdSummaryDetails(props) {
               </Text>
               <View>
                 <Text
-                  style={{ marginTop: 20, marginLeft: 20 }}
+                  style={{marginTop: 20, marginLeft: 20}}
                   size="14"
                   weight="500"
                   align="left"
@@ -1000,7 +1124,7 @@ function AdSummaryDetails(props) {
                   {'Enter Global Commission in €'}
                 </Text>
                 <Input
-                  style={{ marginTop: 7, marginHorizontal: 10 }}
+                  style={{marginTop: 7, marginHorizontal: 10}}
                   placeholder={''}
                   isLeft={IMAGES.percentage}
                   onChangeText={text => {
@@ -1008,9 +1132,14 @@ function AdSummaryDetails(props) {
                   }}
                 />
               </View>
-              <View style={{ justifyContent:'flex-end',marginVertical:20, flexDirection: 'row' }}>
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                }}>
                 <Text
-                  style={{ alignSelf: 'center', }}
+                  style={{alignSelf: 'center'}}
                   size="14"
                   weight="500"
                   align="left"
@@ -1018,7 +1147,7 @@ function AdSummaryDetails(props) {
                   {'Your commission'}
                 </Text>
                 <Text
-                  style={{ marginHorizontal: 15,paddingHorizontal: 10,}}
+                  style={{marginHorizontal: 15, paddingHorizontal: 10}}
                   size="14"
                   weight="500"
                   align="center"
@@ -1039,15 +1168,20 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[{ borderColor: COLORS.primaryColor, borderWidth: 1.2, width: 146 }]}
+                style={[
+                  {
+                    borderColor: COLORS.primaryColor,
+                    borderWidth: 1.2,
+                    width: 146,
+                  },
+                ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   commissionModalVisibleModalVisibility();
-
                 }}
               />
               <Button
-                style={[{ width: 146 }]}
+                style={[{width: 146}]}
                 title={'Confirm'}
                 onPress={() => {
                   commissionModalVisibleModalVisibility();
@@ -1057,8 +1191,6 @@ function AdSummaryDetails(props) {
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
 }
@@ -1066,10 +1198,10 @@ function AdSummaryDetails(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1.0,
-    backgroundColor: COLORS.homeBg,
+    backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: 20,
   },
   inputContainer: {
     marginTop: 16,
@@ -1081,10 +1213,10 @@ const styles = StyleSheet.create({
   modalView1: {
     // position: 'absolute',
     left: '40%',
-    top: '45%',
+    top: '35%',
     margin: 20,
     elevation: 5,
-    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
+    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
     // height: 250,
     // width: width * 0.85,
     backgroundColor: '#fff',
@@ -1096,7 +1228,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 2,
     paddingHorizontal: 10,
-    backgroundColor: COLORS.primaryColor
+    backgroundColor: COLORS.primaryColor,
   },
 });
 

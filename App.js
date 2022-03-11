@@ -26,7 +26,8 @@ import {
   ProposalChangedDate,
   DescribePlaceOfDelivery,
   RequestsListForPlaces,
-  AdSummaryDetails
+  AdSummaryDetails,
+  AdModificationProposal,
 } from './src/screens';
 //TABBAR
 import {TabBar} from './src/components';
@@ -79,11 +80,24 @@ const App = () => {
           <Screen name="AddProductSummary" component={AddProductSummary} />
           <Screen name="SummaryTransaction" component={SummaryTransaction} />
           <Screen name="RatingReview" component={RatingReview} />
-          <Screen name="ExchangeSuccessSummary" component={ExchangeSuccessSummary} />
+          <Screen
+            name="ExchangeSuccessSummary"
+            component={ExchangeSuccessSummary}
+          />
           <Screen name="ProposalChangedDate" component={ProposalChangedDate} />
-          <Screen name="DescribePlaceOfDelivery" component={DescribePlaceOfDelivery} />
-          <Screen name="RequestsListForPlaces" component={RequestsListForPlaces} />
+          <Screen
+            name="DescribePlaceOfDelivery"
+            component={DescribePlaceOfDelivery}
+          />
+          <Screen
+            name="RequestsListForPlaces"
+            component={RequestsListForPlaces}
+          />
           <Screen name="AdSummaryDetails" component={AdSummaryDetails} />
+          <Screen
+            name="AdModificationProposal"
+            component={AdModificationProposal}
+          />
         </Navigator>
       </NavigationContainer>
     </LocalizationProvider>

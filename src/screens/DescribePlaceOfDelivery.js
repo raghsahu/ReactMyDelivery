@@ -26,7 +26,10 @@ function DescribePlaceOfDelivery(props) {
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
 
-      <SafeAreaView style={styles.container}>
+      <BottomBackground></BottomBackground>
+      <SafeAreaView
+      // style={styles.container}
+      >
         <Header
           title={'Describe Place'}
           onBack={() => {
@@ -34,7 +37,7 @@ function DescribePlaceOfDelivery(props) {
           }}
         />
         <ScrollView
-          style={styles.container}
+          //style={styles.container}
           showsVerticalScrollIndicator={false}>
           
           <Text
@@ -96,7 +99,7 @@ function DescribePlaceOfDelivery(props) {
           />
         
         </ScrollView>
-        <BottomBackground></BottomBackground>
+       
       </SafeAreaView>
     </View>
   );

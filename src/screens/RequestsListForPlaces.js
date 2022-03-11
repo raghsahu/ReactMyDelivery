@@ -46,12 +46,13 @@ function RequestsListForPlaces(props) {
               {'Filter By'}
             </Text>
             <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
-              <ImageBackground source={IMAGES.rectangle_gray_border} resizeMode="cover" >
+              <ImageBackground
+               source={IMAGES.rectangle_gray_border} resizeMode="cover" >
                 <Image
                   style={{
                     width: 30,
                     height: 30,
-                    borderRadius: 35,
+                   // borderRadius: 35,
                     margin: 5,
                   }}
                   source={IMAGES.filterby}
@@ -156,7 +157,7 @@ function RequestsListForPlaces(props) {
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={['', '', '', '', '']}
+            data={['', '']}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (

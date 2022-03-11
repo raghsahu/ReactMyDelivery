@@ -113,6 +113,7 @@ const AsSenderItemList = props => {
               <Text
                 style={{
                   marginLeft: 5,
+                  width: 220,
                 }}
                 color={COLORS.primaryColor}
                 size="16"
@@ -214,6 +215,10 @@ const AsSenderItemList = props => {
           </View>
         </View>
       </View>
+
+      <View style={{
+                backgroundColor: COLORS.gray, height: 1,
+              }}></View> 
     </TouchableOpacity>
   );
 };

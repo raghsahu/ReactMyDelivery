@@ -63,6 +63,7 @@ export const COLORS = {
   textColor3: '#929292',
   textColor4: '#A8A8A8',
   titleColor: '#7D7D7D',
+  textColor5: '#76797C',
   lightTextColor: '#626161',
   lightGray: '#F0F0F0',
   darkGray: '#828282',
