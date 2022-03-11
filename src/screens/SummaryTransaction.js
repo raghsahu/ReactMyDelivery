@@ -30,6 +30,7 @@ import {
 
 const {height, width} = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {Rating} from 'react-native-ratings';
 
 function SummaryTransaction(props) {
   const [name, setName] = useState('');
@@ -52,7 +53,10 @@ function SummaryTransaction(props) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
 
       <SafeAreaView style={styles.container}>
         <Header
@@ -159,13 +163,34 @@ function SummaryTransaction(props) {
                   {'Souad Bentchikou'}
                 </Text>
 
-                <Text
-                  style={{marginTop: 10}}
-                  color={COLORS.black}
-                  size="16"
-                  weight="500">
-                  {'0 * 0 Ratings'}
-                </Text>
+                <View style={{marginTop: 10, flexDirection: 'row'}}>
+                  <Text
+                    style={[{marginStart: 15}]}
+                    size="18"
+                    weight="500"
+                    align="left"
+                    color={COLORS.black}>
+                    {'0'}
+                  </Text>
+                  <Rating
+                    type="custom"
+                    ratingColor="#04D9C5"
+                    startingValue={1}
+                    ratingBackgroundColor="#04D9C5"
+                    ratingCount={1}
+                    imageSize={20}
+                    // onFinishRating={this.ratingCompleted}
+                    style={{marginTop: 1, marginStart: 15, paddingVertical: 1}}
+                  />
+                  <Text
+                    style={[{marginStart: 10, marginEnd: 15}]}
+                    size="18"
+                    weight="500"
+                    align="left"
+                    color={COLORS.black}>
+                    {'0 Ratings'}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

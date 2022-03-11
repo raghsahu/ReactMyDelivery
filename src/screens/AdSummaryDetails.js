@@ -186,8 +186,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.white}
-                  onPress={() => {
-              
+                onPress={() => {
                   photosModalVisibleModalVisibility();
                 }}>
                 {'change photo'}
@@ -224,11 +223,9 @@ function AdSummaryDetails(props) {
                   color={COLORS.white}
                   size="16"
                   weight="500"
-              
-                     onPress={() => {
-                        webLinkModalVisibleModalVisibility();
-                  }}
-                  >
+                  onPress={() => {
+                    webLinkModalVisibleModalVisibility();
+                  }}>
                   {'change'}
                 </Text>
               )}
@@ -285,9 +282,8 @@ function AdSummaryDetails(props) {
                   size="16"
                   weight="500"
                   onPress={() => {
-                 
-                  changePriceQuantityModalVisibleModalVisibility();
-                }}>
+                    changePriceQuantityModalVisibleModalVisibility();
+                  }}>
                   {'change'}
                 </Text>
               )}
@@ -332,10 +328,8 @@ function AdSummaryDetails(props) {
                 size="16"
                 weight="500"
                 onPress={() => {
-                
                   commissionModalVisibleModalVisibility();
-                }}
-                >
+                }}>
                 {'change'}
               </Text>
             )}
@@ -441,7 +435,7 @@ function AdSummaryDetails(props) {
             <View
               style={{
                 marginTop: 5,
-               // flexDirection: 'row',
+                // flexDirection: 'row',
               }}>
               <View
                 style={{
@@ -464,17 +458,13 @@ function AdSummaryDetails(props) {
               </View>
               {isProposalToModificationOfAd && (
                 <Text
-                  style={[
-                    styles.rightButtons,
-                    { marginRight: 0},
-                  ]}
+                  style={[styles.rightButtons, {marginRight: 0}]}
                   color={COLORS.white}
                   size="16"
                   weight="500"
-                   onPress={() => {
+                  onPress={() => {
                     placeOfDeliveryModalVisibleModalVisibility();
-                  }}
-                  >
+                  }}>
                   {'change'}
                 </Text>
               )}
@@ -554,47 +544,12 @@ function AdSummaryDetails(props) {
                   setReasonToChange(text);
                 }}
               />
-              <View
-                style={{
-                  backgroundColor: COLORS.borderColor2,
-                  height: 2,
-                }}></View>
-              <View
-                style={{
-                  margin: 10,
-                  backgroundColor: COLORS.white,
-                  elevation: 5,
-                  borderRadius: 20,
-                }}>
-                <Text
-                  style={{marginLeft: 20, marginTop: 40, marginBottom: 40}}
-                  color={COLORS.black}
-                  size="18"
-                  weight="500">
-                  {'Expected Delivery'}
-                </Text>
-                <Input
-                  style={{marginHorizontal: 10}}
-                  placeholder={'Day'}
-                  isLeft={IMAGES.date}
-                  onChangeText={text => {
-                    setDay(text);
-                  }}
-                />
-                <Input
-                  style={{marginVertical: 20, marginHorizontal: 10}}
-                  placeholder={'Hour'}
-                  isLeft={IMAGES.time}
-                  onChangeText={text => {
-                    setHour(text);
-                  }}
-                />
-              </View>
+
               <View
                 style={{
                   marginHorizontal: 20,
                   marginBottom: 20,
-                  marginTop: 30,
+                  marginTop: 20,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   // position: 'absolute',
@@ -611,7 +566,7 @@ function AdSummaryDetails(props) {
                   ]}
                   title={'To Cancel'} //or Change Delivery Date (according to condition)
                   onPress={() => {
-                      proposalToModificationOfAd();
+                    proposalToModificationOfAd();
                   }}
                 />
 
@@ -619,7 +574,7 @@ function AdSummaryDetails(props) {
                   style={[{width: 156}]}
                   title={'To Propose'}
                   onPress={() => {
-                    props.navigation.navigate('AdModificationProposal')
+                    props.navigation.navigate('AdModificationProposal');
                   }}
                 />
               </View>
@@ -648,7 +603,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="left"
               color={COLORS.white}>
-              {'Payment'}
+              {'Accepted'}
             </Text>
 
             <TouchableOpacity
@@ -677,8 +632,8 @@ function AdSummaryDetails(props) {
               size="18"
               weight="500"
               align="center"
-              color={COLORS.darkGray}>
-              {'Total guarantee payment'}
+              color={COLORS.black}>
+              {'Payment de guarantee deposit'}
             </Text>
 
             <Text
@@ -686,8 +641,8 @@ function AdSummaryDetails(props) {
               size="18"
               weight="500"
               align="center"
-              color={COLORS.primaryColor}>
-              {'€ 2.00'}
+              color={COLORS.black}>
+              {'€ 2.00 + € 6.00 = € 8.00'}
             </Text>
 
             <Text
@@ -695,8 +650,8 @@ function AdSummaryDetails(props) {
               size="16"
               weight="400"
               align="center"
-              color={COLORS.darkGray}>
-              {'Sum blocked until the end of the transaction'}
+              color={COLORS.black}>
+              {'Sum blocked until the \nexchange delivery'}
             </Text>
 
             <Text
@@ -704,9 +659,26 @@ function AdSummaryDetails(props) {
               size="16"
               weight="400"
               align="center"
-              color={COLORS.darkGray}>
-              {'Redirecting to Payment...'}
+              color={COLORS.black}>
+              {'Specifying the date \nexpected delivery'}
             </Text>
+
+            <Input
+              style={{marginHorizontal: 10, marginTop: 20}}
+              placeholder={'Day'}
+              isLeft={IMAGES.date}
+              onChangeText={text => {
+                setDay(text);
+              }}
+            />
+            <Input
+              style={{marginVertical: 10, marginHorizontal: 10}}
+              placeholder={'Hour'}
+              isLeft={IMAGES.time}
+              onChangeText={text => {
+                setHour(text);
+              }}
+            />
 
             <Button
               style={[
@@ -714,7 +686,7 @@ function AdSummaryDetails(props) {
                 {
                   width: 200,
                   marginTop: 10,
-                  marginBottom: 25,
+                  marginBottom: 10,
                   alignSelf: 'center',
                 },
               ]}
@@ -793,7 +765,6 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
-                 
                 }}
               />
             </View>
@@ -866,7 +837,6 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   webLinkModalVisibleModalVisibility();
-                  
                 }}
               />
             </View>
@@ -956,7 +926,6 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   photosModalVisibleModalVisibility();
-                 
                 }}
               />
             </View>
@@ -1082,7 +1051,6 @@ function AdSummaryDetails(props) {
                 title={'Confirm'}
                 onPress={() => {
                   changePriceQuantityModalVisibleModalVisibility();
-                  
                 }}
               />
             </View>
@@ -1195,6 +1163,38 @@ function AdSummaryDetails(props) {
   );
 }
 
+//   <View
+//       style={{
+//         margin: 10,
+//         backgroundColor: COLORS.white,
+//         elevation: 5,
+//         borderRadius: 20,
+//       }}>
+//       <Text
+//         style={{marginLeft: 20, marginTop: 40, marginBottom: 40}}
+//         color={COLORS.black}
+//         size="18"
+//         weight="500">
+//         {'Expected Delivery'}
+//       </Text>
+//       <Input
+//         style={{marginHorizontal: 10}}
+//         placeholder={'Day'}
+//         isLeft={IMAGES.date}
+//         onChangeText={text => {
+//           setDay(text);
+//         }}
+//       />
+//       <Input
+//         style={{marginVertical: 20, marginHorizontal: 10}}
+//         placeholder={'Hour'}
+//         isLeft={IMAGES.time}
+//         onChangeText={text => {
+//           setHour(text);
+//         }}
+//       />
+// </View>
+
 const styles = StyleSheet.create({
   container: {
     flex: 1.0,
@@ -1213,7 +1213,7 @@ const styles = StyleSheet.create({
   modalView1: {
     // position: 'absolute',
     left: '40%',
-    top: '35%',
+    top: '30%',
     margin: 20,
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],

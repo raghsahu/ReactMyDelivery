@@ -169,7 +169,7 @@ function AddProductCommision(props) {
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
             <Text
-              style={[styles.inputView, styles.day_hour]}
+              style={[ styles.day_hour]}
               size="16"
               weight="400"
               align="center"
@@ -178,7 +178,7 @@ function AddProductCommision(props) {
             </Text>
 
             <Text
-              style={[styles.inputView, styles.day_hour]}
+              style={[ styles.day_hour]}
               size="16"
               weight="400"
               align="center"
@@ -202,7 +202,7 @@ function AddProductCommision(props) {
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
             <Text
-              style={[styles.inputView, styles.day_hour]}
+              style={[ styles.day_hour]}
               size="16"
               weight="400"
               align="center"
@@ -211,7 +211,7 @@ function AddProductCommision(props) {
             </Text>
 
             <Text
-              style={[styles.inputView, styles.day_hour]}
+              style={[ styles.day_hour]}
               size="16"
               weight="400"
               align="center"
@@ -227,6 +227,10 @@ function AddProductCommision(props) {
               props.navigation.navigate('AddProductSummary');
             }}
           />
+
+          <View
+           style={{marginBottom: 30}}
+          ></View>
         </ScrollView>
       </SafeAreaView>
     </View>

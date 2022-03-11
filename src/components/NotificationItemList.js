@@ -21,15 +21,24 @@ const NotificationItemList = props => {
         flexDirection: 'row',
         margin: 5,
         backgroundColor: COLORS.white,
+        borderRadius: 8,
       }}>
+
+      <View
+      style={{
+        backgroundColor: COLORS.primaryColor,
+        borderBottomLeftRadius: 8,
+        borderTopLeftRadius: 8,
+        width:5 ,
+      }}></View>
       <Image
         style={{
           width: 57,
           height: 76,
           margin: 5,
-          resizeMode: 'contain'
+          //resizeMode: 'contain'
         }}
-        source={IMAGES.circle_placeholder}
+        source={IMAGES.product_placeholder}
       />
 
       <View

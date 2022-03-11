@@ -172,6 +172,9 @@ function AddProduct(props) {
               }}
             />
           </View>
+          <View
+           style={{marginBottom: 30}}
+          ></View>
         </ScrollView>
       </SafeAreaView>
     </View>

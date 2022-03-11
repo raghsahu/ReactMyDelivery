@@ -90,6 +90,9 @@ function ResetPassword(props) {
               props.navigation.navigate('Login');
             }}
           />
+          <View
+           style={{marginBottom: 30}}
+          ></View>
         </ScrollView>
       </SafeAreaView>
     </View>

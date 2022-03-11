@@ -108,6 +108,9 @@ function MobileOtp(props) {
               props.navigation.navigate('SuccessScreen');
             }}
           />
+          <View
+           style={{marginBottom: 30}}
+          ></View>
         </ScrollView>
       </SafeAreaView>
     </View>
