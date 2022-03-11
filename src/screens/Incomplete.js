@@ -44,7 +44,9 @@ function Incomplete(props) {
                 onDelete={() => {
                   deleteModalVisibility();
                 }}
-                onModify={() => {}}
+                onModify={() => {
+                  props.onModify();
+                }}
               />
             );
           }}
@@ -80,7 +82,7 @@ function Incomplete(props) {
                 style={[{width: 90,  height: 41, alignSelf: 'center', justifyContent: 'center'}]}
                 title={'Yes'}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  deleteModalVisibility();
                 }}
               />
 

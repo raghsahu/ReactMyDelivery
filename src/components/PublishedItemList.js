@@ -63,7 +63,7 @@ const PublishedItemList = props => {
 
       <View
         style={{
-          flex: 1,
+         // flex: 1,
           flexDirection: 'row',
           marginTop: 20,
         }}>

@@ -54,12 +54,12 @@ function SuccessScreen(props) {
           style={[styles.inputView, {marginTop: 50, width: 270}]}
           title={getTranslation('done')}
           onPress={() => {
-           // props.navigation.navigate('Login');
+          // props.navigation.navigate('Home');
                 props.navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
                     routes: [
-                        { name: 'Splash' }
+                        { name: 'BottomBar' }
                     ],
                 })
             );

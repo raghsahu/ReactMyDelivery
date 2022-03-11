@@ -143,17 +143,6 @@ function Login(props) {
             </Text>
           </View>
 
-          {/* <Text
-            style={[{bottom: 0}]}
-            size="14"
-            weight="400"
-            align="center"
-            color={COLORS.primaryColor}
-            onPress={() => {
-              //props.navigation.navigate('ForgotPassword');
-            }}>
-            {'Design By - Prometteur Solutions pvt. ltd'}
-          </Text> */}
         </ScrollView>
       </SafeAreaView>
     </View>

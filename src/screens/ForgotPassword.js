@@ -31,14 +31,14 @@ function ForgotPassword(props) {
       <BottomBackground></BottomBackground>
 
       <View
-      // style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
+       style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
       >
         <Image
           source={IMAGES.logo_with_shadow}
           style={{
             height: 258,
             width: 259,
-            marginTop: 99,
+           // marginTop: 99,
             alignSelf: 'center',
             justifyContent: 'center',
           }}

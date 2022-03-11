@@ -72,6 +72,7 @@ const App = () => {
           <Screen name="EmailSuccess" component={EmailSuccess} />
           <Screen name="MobileOtp" component={MobileOtp} />
           <Screen name="SuccessScreen" component={SuccessScreen} />
+          <Screen name="MyAccount" component={MyAccount} />
           <Screen name="SendSuggestion" component={SendSuggestion} />
           <Screen name="EditAccount" component={EditAccount} />
           <Screen name="Notification" component={Notification} />

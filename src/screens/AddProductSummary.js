@@ -527,7 +527,7 @@ function AddProductSummary(props) {
                 title={'Ok'}
                 onPress={() => {
                   logoutModalVisibility();
-                  props.navigation.navigate('SummaryTransaction');
+                  props.navigation.navigate('MyAccount');
                 }}
               />
             </View>

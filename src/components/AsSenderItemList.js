@@ -10,12 +10,16 @@ const AsSenderItemList = props => {
   //const item = props.item;
 
   return (
+     <TouchableOpacity
+     onPress={() => {props.onSummary()}}
+     >
     <View
       style={{
         padding: 5,
         margin: 5,
         backgroundColor: COLORS.white,
-      }}>
+      }}
+      >
       <View
         style={{
           flex: 1.0,
@@ -45,7 +49,12 @@ const AsSenderItemList = props => {
           onPress={() => {props.onRating()}}
         />
         :
-        <Button
+        null
+    
+        }
+       
+      </View>
+          {/* <Button
           style={[
             {
              // width: 88,
@@ -60,10 +69,7 @@ const AsSenderItemList = props => {
           title={'Evaluation done'}
           type={2}
           onPress={() => {props.onSummary()}}
-        />
-        }
-       
-      </View>
+        /> */}
 
       <View
         style={{
@@ -206,7 +212,7 @@ const AsSenderItemList = props => {
         </View>
       </View>
     </View>
-    // </TouchableOpacity>
+     </TouchableOpacity>
   );
 };
 

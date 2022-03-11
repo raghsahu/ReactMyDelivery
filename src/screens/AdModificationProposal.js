@@ -551,7 +551,7 @@ function AdModificationProposal(props) {
             <Button
               style={[{width: 156}]}
               title={'Accept'}
-              onPress={() => {}}
+              onPress={() => {props.navigation.navigate('SummaryTransaction')}}
             />
           </View>
         </ScrollView>

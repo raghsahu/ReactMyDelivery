@@ -34,7 +34,7 @@ function MobileOtp(props) {
       />
        <BottomBackground></BottomBackground>
       <SafeAreaView
-      //style={styles.container}
+      //style={{justifyContent: 'center', alignSelf: 'center'}}
       >
         <ScrollView
           //style={styles.container}

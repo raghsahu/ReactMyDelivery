@@ -49,7 +49,11 @@ function MyAccount(props) {
     //You can add N number of Views here in if-else condition
     if (index === 1) {
       //Return the FirstScreen as a child to set in Parent View
-      return <Incomplete />;
+      return <Incomplete 
+         onModify={() => {
+                  props.navigation.navigate('AddProductCommision')
+                }}
+      />;
     } else if (index === 2) {
       //Return the SecondScreen as a child to set in Parent View
       return <Published />;
@@ -554,7 +558,8 @@ function MyAccount(props) {
                 style={[{width: 104}]}
                 title={'Yes'}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  deleteAccountModalVisibility();
+                   props.navigation.navigate('Login')
                 }}
               />
 
