@@ -42,6 +42,7 @@ export const IMAGES = {
   close: require('./images/close.png'),
   starCorner: require('./images/star_corner.png'),
   starFilled: require('./images/star_filled.png'),
+  starWater: require('./images/star_water.png'),
   share: require('./images/share.png'),
   time: require('./images/time.png'),
   department: require('./images/department.png'),

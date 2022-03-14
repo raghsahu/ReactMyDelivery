@@ -307,7 +307,7 @@ function EditAccount(props) {
 
           <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Save Changes'}
+            title={'SAVE CHANGES'}
             onPress={() => {
              // props.navigation.navigate('EmailOtp')
               }}

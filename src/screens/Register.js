@@ -27,9 +27,9 @@ import {
 
 import moment from 'moment'; // date format
 
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 //PACKAGES
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 
 const options = [
   {
@@ -72,7 +72,8 @@ function Register(props) {
   const [selectDate, setSelectDate] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
   let [selectedLanguage, setSelectedLanguage] = useState('en');
-  const { getTranslation, setI18nConfig, saveUserLanguage } = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage} =
+    useContext(LocalizationContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -101,42 +102,40 @@ function Register(props) {
   const onValueChange = item => {
     setSelectedLang(item);
     if (item == 'English') {
-      setSelectedLanguage('en')
-    }else if (item == 'French') {
-      setSelectedLanguage('fr')
+      setSelectedLanguage('en');
+    } else if (item == 'French') {
+      setSelectedLanguage('fr');
     }
     if (item == 'Spanish') {
-      setSelectedLanguage('sp')
+      setSelectedLanguage('sp');
     }
   };
 
-  
-    const onSelectLanguage = () => {
-        if (selectedLanguage) {
-            //setLoading(true)
-            setI18nConfig(selectedLanguage)
-            saveUserLanguage(selectedLanguage)
-            //AsyncStorage.setItem('is_first_time_install', 'true')
-           // setLoading(false)
+  const onSelectLanguage = () => {
+    if (selectedLanguage) {
+      //setLoading(true)
+      setI18nConfig(selectedLanguage);
+      saveUserLanguage(selectedLanguage);
+      //AsyncStorage.setItem('is_first_time_install', 'true')
+      // setLoading(false)
 
-            // props.navigation.dispatch(
-            //     CommonActions.reset({
-            //         index: 0,
-            //         routes: [
-            //             { name: 'Splash' }
-            //         ],
-            //     })
-            // );
-
-        }
-        else {
-            Alert.alert('', 'Please select a language', [{
-                text: getTranslation('ok'), onPress: () => {
-
-                }
-            }])
-        }
+      // props.navigation.dispatch(
+      //     CommonActions.reset({
+      //         index: 0,
+      //         routes: [
+      //             { name: 'Splash' }
+      //         ],
+      //     })
+      // );
+    } else {
+      Alert.alert('', 'Please select a language', [
+        {
+          text: getTranslation('ok'),
+          onPress: () => {},
+        },
+      ]);
     }
+  };
 
   const setCheck = checkStatus => {
     setSelection(checkStatus);
@@ -144,12 +143,14 @@ function Register(props) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
       <SafeAreaView style={styles.container}>
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-
           <ImageBackground
             source={IMAGES.signup_placeholder}
             style={{
@@ -187,7 +188,10 @@ function Register(props) {
           </ImageBackground>
 
           <Text
-            style={[styles.inputView, {marginTop: 20, marginBottom: 10, alignSelf: 'center'}]}
+            style={[
+              styles.inputView,
+              {marginTop: 20, marginBottom: 10, alignSelf: 'center'},
+            ]}
             size="24"
             weight="500"
             align="center"
@@ -229,7 +233,7 @@ function Register(props) {
             />
           </View>
 
-         <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
+          <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
             <Input
               style={[{marginTop: 18}]}
               placeholder={getTranslation('date_of_birth')}
@@ -238,7 +242,6 @@ function Register(props) {
               value={selectDate}
             />
           </TouchableOpacity>
-
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
@@ -249,14 +252,27 @@ function Register(props) {
             }}
           />
 
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('mobile_no')}
-            isLeft={IMAGES.phone}
-            onChangeText={text => {
-              //setName(text);
-            }}
-          />
+          <View 
+           style={[styles.inputView, styles.inputContainer, {flexDirection: 'row', flex: 1}]}
+          >
+            <Input
+              style={[{width: 100}]}
+              placeholder={'Country'}
+              //isLeft={IMAGES.phone}
+              onChangeText={text => {
+                //setName(text);
+              }}
+            />
+
+            <Input
+             style={[{flex: 1}]}
+              placeholder={getTranslation('mobile_no')}
+             // isLeft={IMAGES.phone}
+              onChangeText={text => {
+                //setName(text);
+              }}
+            />
+          </View>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
@@ -278,7 +294,7 @@ function Register(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('select_your_country')}
-           // isLeft={IMAGES.location}
+            // isLeft={IMAGES.location}
             onChangeText={text => {
               setName(text);
             }}
@@ -324,14 +340,15 @@ function Register(props) {
             onChecked={setCheck}
           />
           <Button
-            style={[styles.inputView, {marginTop: 30,}]}
+            style={[styles.inputView, {marginTop: 30}]}
             title={getTranslation('register')}
             onPress={() => {
-               onSelectLanguage()
-              props.navigation.navigate('EmailOtp')}}
+              onSelectLanguage();
+              props.navigation.navigate('EmailOtp');
+            }}
           />
 
-           <View
+          <View
             style={[
               styles.inputView,
               {
@@ -363,18 +380,10 @@ function Register(props) {
               {getTranslation('login')}
             </Text>
           </View>
-
-
         </ScrollView>
       </SafeAreaView>
 
-      {show && (
-        <DateTimePick
-          value={date}
-          mode={mode}
-          onChange={onChange}
-        />
-      )}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
 }

@@ -23,9 +23,10 @@ import {
   CustomRatingBar,
 } from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {Rating} from 'react-native-ratings';
 
 function RatingReview(props) {
-  const [defaultRating, setDefaultRating] = useState(2);
+  const [defaultRating, setDefaultRating] = useState(0);
   // To set the max number of Stars
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
@@ -61,11 +62,17 @@ function RatingReview(props) {
             {'Please rate the application'}
           </Text>
 
-          <CustomRatingBar
-            onSelect={onSelect}
-            defaultRatings={defaultRating}
-            maxRating={maxRating}
-          />
+            <Rating
+                  type="custom"
+                  tintColor={COLORS.white}
+                  ratingColor="#04D9C5"
+                  startingValue={0}
+                  ratingBackgroundColor="#DBDBDB"
+                  ratingCount={5}
+                  imageSize={45}
+                  // onFinishRating={this.ratingCompleted}
+                  style={{marginTop: 1,  paddingVertical: 1}}
+                />
 
           <TextInput
             style={[styles.inputView, styles.comment]}
@@ -93,11 +100,22 @@ function RatingReview(props) {
             {'Please rate Test'}
           </Text>
 
-          <CustomRatingBar
+              <Rating
+                  type="custom"
+                  tintColor={COLORS.white}
+                  ratingColor="#04D9C5"
+                  startingValue={0}
+                  ratingBackgroundColor="#DBDBDB"
+                  ratingCount={5}
+                  imageSize={45}
+                  // onFinishRating={this.ratingCompleted}
+                  style={{marginTop: 1,  paddingVertical: 1}}
+                />
+          {/* <CustomRatingBar
             onSelect={onSelect}
             defaultRatings={defaultRating}
             maxRating={maxRating}
-          />
+          /> */}
 
           <TextInput
             style={[styles.inputView, styles.comment]}

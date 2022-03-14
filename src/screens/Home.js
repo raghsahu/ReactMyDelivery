@@ -19,9 +19,11 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 //CONTEXT
-//import {APPContext} from '../context/APPProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function Home(props) {
+  const { getTranslation} = useContext(LocalizationContext);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
@@ -40,7 +42,7 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={'Hello, Omar Bentchikou'}
+          title={getTranslation('hello')+ ', Omar Bentchikou'}
           onNotification={() => {
             props.navigation.navigate('Notification')
           }}
@@ -56,7 +58,7 @@ function Home(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'Choose'}
+              {getTranslation('choose')}
             </Text>
 
             <View
@@ -89,7 +91,7 @@ function Home(props) {
                   weight="500"
                   align="center"
                   color={COLORS.white}>
-                  {'User'}
+                  {getTranslation('user')}
                 </Text>
               </View>
              </TouchableOpacity> 
@@ -115,7 +117,7 @@ function Home(props) {
                     weight="500"
                     align="center"
                     color={COLORS.white}>
-                    {'Delivery Man'}
+                    {getTranslation('delivery_man')}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -137,7 +139,7 @@ function Home(props) {
                   weight="500"
                   align="center"
                   color={COLORS.white}>
-                  {'Sender (a gift)'}
+                  {getTranslation('sender_a_gift')}
                 </Text>
               </View>
             </View>

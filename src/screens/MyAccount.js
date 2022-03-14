@@ -87,7 +87,7 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-            //onPress={() => setIndex1(1)}
+            onPress={() => setIndex1(1)}
           >
             <Text
               style={{}}
@@ -109,7 +109,7 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-            // onPress={() => setIndex1(2)}
+             onPress={() => setIndex1(2)}
           >
             <Text
               size="16"
@@ -130,7 +130,8 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-            onPress={() => setIndex1(3)}>
+            onPress={() => setIndex1(3)}
+           >
             <Text
               size="16"
               weight="500"
@@ -148,17 +149,21 @@ function MyAccount(props) {
     //You can add N number of Views here in if-else condition
     if (index1 === 1) {
       //Return the FirstScreen as a child to set in Parent View
-      return <AsSender />;
+      return null
+      //<AsSender />;
     } else if (index1 === 2) {
       //Return the SecondScreen as a child to set in Parent View
-      return <AsSender />;
+      return null
+      //<AsSender />;
     } else if (index1 === 3) {
       //Return the SecondScreen as a child to set in Parent View
         if (tabStatus === 'completed') {
           return (
             <AsSender
               onSummary={() => {
-                props.navigation.navigate('SummaryTransaction');
+                props.navigation.navigate('SummaryTransaction', {
+                  status: 'completed',
+                });
               }}
               onRating={() => {
                 props.navigation.navigate('RatingReview');
@@ -166,13 +171,14 @@ function MyAccount(props) {
             />
           );
         } else {
-          return (
-            <AsSender
-              onSummary={() => {
-                props.navigation.navigate('SummaryTransaction');
-              }}
-            />
-          );
+          return null
+          //(
+            // <AsSender
+            //   onSummary={() => {
+            //     props.navigation.navigate('SummaryTransaction');
+            //   }}
+            // />
+         // );
         }
       
     }

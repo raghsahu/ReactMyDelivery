@@ -35,12 +35,13 @@ import {TabBar} from './src/components';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {LocalizationProvider} from './src/context/LocalizationProvider';
+import {LocalizationProvider, LocalizationContext} from './src/context/LocalizationProvider';
 
 const {Navigator, Screen} = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const BottomBar = () => {
+    const { getTranslation} = useContext(LocalizationContext);
   return (
     <Tab.Navigator
       screenOptions={{

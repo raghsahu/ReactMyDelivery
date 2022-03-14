@@ -21,7 +21,11 @@ import {
   Header,
   BottomBackground,
   RadioButtons,
+  DateTimePick,
 } from '../components';
+import moment from 'moment'; // date format
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const options = [
   {
@@ -41,6 +45,17 @@ const options = [
 function AddProductCommision(props) {
   const [name, setName] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
+  const {getTranslation} = useContext(LocalizationContext);
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [selectDate, setSelectDate] = useState('');
+  const [selectDate1, setSelectDate1] = useState('');
+  const [secondDate, setSecondDate] = useState('false');
+  const [selectTime, setSelectTime] = useState('');
+  const [selectTime1, setSelectTime1] = useState('');
+  const [secondTime, setSecondTime] = useState('false');
+  const [dateSelected, setDateSelected] = useState(false);
 
   const onSelect = item => {
     if (selectedOption && selectedOption.key === item.key) {
@@ -50,15 +65,49 @@ function AddProductCommision(props) {
     }
   };
 
+  function showDatepicker(mode) {
+    showMode(mode);
+  }
+
+  const onChange = (event, selectedDate) => {
+    //console.log('time_select ' + selectedDate);
+    setShow(Platform.OS === 'ios');
+
+    if (dateSelected) {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
+
+      if (secondDate === 'true') {
+        setSelectDate1(moment(currentDate).format('DD-MM-YYYY'));
+      } else {
+        setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+      }
+    } else {
+      if (secondTime === 'true') {
+        setSelectTime1(moment(selectedDate).format('HH:MM'));
+      } else {
+        setSelectTime(moment(selectedDate).format('HH:MM'));
+      }
+    }
+  };
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
       <BottomBackground></BottomBackground>
       <SafeAreaView
       //style={styles.container}
       >
         <Header
-          title={'Describe Product(s) Commission'}
+          title={getTranslation('describe_product_commission')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -72,12 +121,12 @@ function AddProductCommision(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Commission for having'}
+            {getTranslation('commission_for_having')}
           </Text>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Global Commission'}
+            placeholder={getTranslation('global_commission')}
             onChangeText={text => {
               setName(text);
             }}
@@ -89,7 +138,7 @@ function AddProductCommision(props) {
             weight="400"
             align="left"
             color={COLORS.textColor}>
-            {'Deliveryman Commission'}
+            {getTranslation('deliveryman_commission')}
           </Text>
 
           <View
@@ -107,12 +156,12 @@ function AddProductCommision(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Place of delivery'}
+            {getTranslation('place_of_delivery')}
           </Text>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Place of delivery'}
+            placeholder={getTranslation('place_of_delivery')}
             onChangeText={text => {
               setName(text);
             }}
@@ -133,7 +182,7 @@ function AddProductCommision(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Gender who can see the ad'}
+            {getTranslation('gender_who_can_access')}
           </Text>
 
           <View style={[styles.inputView, {marginTop: 20}]}>
@@ -159,7 +208,7 @@ function AddProductCommision(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Ad acceptance limit'}
+            {getTranslation('ad_acceptance_limit')}
           </Text>
 
           <View
@@ -168,23 +217,40 @@ function AddProductCommision(props) {
               styles.inputContainer,
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
-            <Text
-              style={[ styles.day_hour]}
-              size="16"
-              weight="400"
-              align="center"
-              color={COLORS.textColor}>
-              {'Day'}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('date');
+                setSecondDate('false');
+                setDateSelected(true);
+              }}
+              style={styles.day_hour}>
+              <Text
+                // style={[ styles.day_hour]}
+                size="16"
+                weight="400"
+                align="center"
+                value={selectDate}
+                color={COLORS.textColor}>
+                {selectDate ? selectDate : getTranslation('day')}
+              </Text>
+            </TouchableOpacity>
 
-            <Text
-              style={[ styles.day_hour]}
-              size="16"
-              weight="400"
-              align="center"
-              color={COLORS.textColor}>
-              {'Hour'}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('time');
+                setSecondTime('false');
+                setDateSelected(false);
+              }}
+              style={styles.day_hour}>
+              <Text
+                //style={[styles.day_hour]}
+                size="16"
+                weight="400"
+                align="center"
+                color={COLORS.textColor}>
+                {selectTime ? selectTime : getTranslation('hour')}
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <Text
@@ -193,7 +259,7 @@ function AddProductCommision(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Limit Delivery'}
+            {getTranslation('limit_delivery')}
           </Text>
           <View
             style={[
@@ -201,38 +267,53 @@ function AddProductCommision(props) {
               //styles.inputContainer,
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
-            <Text
-              style={[ styles.day_hour]}
-              size="16"
-              weight="400"
-              align="center"
-              color={COLORS.textColor}>
-              {'Day'}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('date');
+                setSecondDate('true');
+                setDateSelected(true);
+              }}
+              style={styles.day_hour}>
+              <Text
+                //style={[ styles.day_hour]}
+                size="16"
+                weight="400"
+                align="center"
+                color={COLORS.textColor}>
+                {selectDate1 ? selectDate1 : getTranslation('day')}
+              </Text>
+            </TouchableOpacity>
 
-            <Text
-              style={[ styles.day_hour]}
-              size="16"
-              weight="400"
-              align="center"
-              color={COLORS.textColor}>
-              {'Hour'}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('time');
+                setSecondTime('true');
+                setDateSelected(false);
+              }}
+              style={styles.day_hour}>
+              <Text
+                // style={[styles.day_hour]}
+                size="16"
+                weight="400"
+                align="center"
+                color={COLORS.textColor}>
+                {selectTime1 ? selectTime1 : getTranslation('hour')}
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Continue'}
+            title={getTranslation('continue')}
             onPress={() => {
               props.navigation.navigate('AddProductSummary');
             }}
           />
 
-          <View
-           style={{marginBottom: 30}}
-          ></View>
+          <View style={{marginBottom: 30}}></View>
         </ScrollView>
       </SafeAreaView>
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
 }

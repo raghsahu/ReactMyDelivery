@@ -15,9 +15,12 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Text, Input, Header, BottomBackground} from '../components';
+//CONTEXT
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function AddProduct(props) {
   const [name, setName] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -27,7 +30,7 @@ function AddProduct(props) {
       // style={styles.container}
       >
         <Header
-          title={'Describe Product(s)      1/5'}
+          title={getTranslation('describe_products') +'      1/5'}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -41,12 +44,12 @@ function AddProduct(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Describe the product'}
+            {getTranslation('describe_the_product')}
           </Text>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Product Name'}
+            placeholder={getTranslation('product_name')}
             onChangeText={text => {
               setName(text);
             }}
@@ -92,14 +95,14 @@ function AddProduct(props) {
                 weight="400"
                 align="center"
                 color={COLORS.gray}>
-                {'Photo'}
+                {getTranslation('photo')}
               </Text>
             </View>
           </ImageBackground>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Web Link'}
+            placeholder={getTranslation('web_link')}
             onChangeText={text => {
               //setPassword(text);
             }}
@@ -107,7 +110,7 @@ function AddProduct(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Place to buy (optional)'}
+            placeholder={getTranslation('place_to_by')}
             onChangeText={text => {
               setName(text);
             }}
@@ -115,7 +118,7 @@ function AddProduct(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Price of product'}
+            placeholder={getTranslation('price_of_product')}
             onChangeText={text => {
               setName(text);
             }}
@@ -123,7 +126,7 @@ function AddProduct(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Quantity'}
+            placeholder={getTranslation('quantity')}
             onChangeText={text => {
               //setName(text);
             }}
@@ -131,7 +134,7 @@ function AddProduct(props) {
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Total Price'}
+            placeholder={getTranslation('total_price')}
             onChangeText={text => {
               setName(text);
             }}
@@ -140,7 +143,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             type={1}
             multiline={true}
-            placeholder={'Additional product information :'}
+            placeholder={getTranslation('additional_product_info')}
             onChangeText={text => {
               setName(text);
             }}
@@ -158,7 +161,7 @@ function AddProduct(props) {
             ]}>
             <Button
               style={[{width: 130}]}
-              title={'Add Product'}
+              title={getTranslation('add_product')}
               onPress={() => {
                 //props.navigation.navigate('EmailOtp');
               }}
@@ -166,7 +169,7 @@ function AddProduct(props) {
 
             <Button
               style={[{width: 130}]}
-              title={"That's All"}
+              title={getTranslation('thats_all')}
               onPress={() => {
                 props.navigation.navigate('AddProductCommision');
               }}

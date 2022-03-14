@@ -26,18 +26,56 @@ import {
   RadioButtons,
   CheckBox,
   ProductsItemList,
+  DateTimePick,
 } from '../components';
+import moment from 'moment'; // date format
 
 const {height, width} = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {Rating} from 'react-native-ratings';
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function SummaryTransaction(props) {
+  const {status} = props.route.params;
+  const {getTranslation} = useContext(LocalizationContext);
   const [name, setName] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
   const [enableTxnCodeBtn, setEnableTxnCodeBtn] = useState(false);
+   const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [selectDate, setSelectDate] = useState('');
+   const [selectTime, setSelectTime] = useState('');
+   const [dateSelected, setDateSelected] = useState(false);
+
+    function showDatepicker(mode) {
+    showMode(mode);
+  }
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+   const onChange = (event, selectedDate) => {
+   // console.log('time_select ' + selectedDate);
+    setShow(Platform.OS === 'ios');
+
+    if (dateSelected) {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
+        setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+      
+    } else {
+     
+        setSelectTime(moment(selectedDate).format('HH:MM'));
+      
+    }
+  };
+
 
   const TxnCodeModalVisibility = () => {
     setTxnCodeModalVisible(!isTxnCodeModalVisible);
@@ -60,7 +98,7 @@ function SummaryTransaction(props) {
 
       <SafeAreaView style={styles.container}>
         <Header
-          title={'Summary of the Transaction'}
+          title={getTranslation('summary_of_txn')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -69,131 +107,139 @@ function SummaryTransaction(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <Text
-            style={[styles.inputView, {marginTop: 20}]}
-            size="18"
-            weight="500"
-            align="left"
-            color={COLORS.textColor}>
-            {'Code Exchange'}
-          </Text>
-
-          <View
-            style={{
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 20,
-              width: '85%',
-              height: 80,
-              shadowColor: 'black',
-              shadowOpacity: 0.26,
-              shadowOffset: {width: 0, height: 2},
-              shadowRadius: 10,
-              elevation: 3,
-              borderRadius: 12,
-              backgroundColor: 'white',
-              flex: 1,
-            }}>
-            <Text
-              style={[
-                {
-                  width: 154,
-                  padding: 20,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#FEC107',
-                },
-              ]}
-              size="18"
-              weight="500"
-              align="center"
-              color={COLORS.black}>
-              {'BsVonq1bDv'}
-            </Text>
-          </View>
-
-          <Text
-            style={[styles.inputView, {marginTop: 20}]}
-            size="18"
-            weight="500"
-            align="left"
-            color={COLORS.textColor}>
-            {'Delivery man Details'}
-          </Text>
-
-          <View
-            style={{
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 20,
-              width: '85%',
-              height: 80,
-              shadowColor: 'black',
-              shadowOpacity: 0.26,
-              shadowOffset: {width: 0, height: 2},
-              shadowRadius: 10,
-              elevation: 3,
-              borderRadius: 12,
-              backgroundColor: 'white',
-              flex: 1,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                margin: 5,
-                backgroundColor: COLORS.white,
-              }}>
-              <Image
-                style={{
-                  width: 64,
-                  height: 64,
-                  margin: 5,
-                  borderRadius: 32,
-                  resizeMode: 'contain',
-                }}
-                source={IMAGES.circle_placeholder}
-              />
+          {status === 'completed' ? null : (
+            <View>
+              <Text
+                style={[styles.inputView, {marginTop: 20}]}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.textColor}>
+                {getTranslation('txn_code')}
+              </Text>
 
               <View
                 style={{
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  marginTop: 20,
+                  width: '85%',
+                  height: 80,
+                  shadowColor: 'black',
+                  shadowOpacity: 0.26,
+                  shadowOffset: {width: 0, height: 2},
+                  shadowRadius: 10,
+                  elevation: 3,
+                  borderRadius: 12,
+                  backgroundColor: 'white',
                   flex: 1,
-                  margin: 5,
                 }}>
-                <Text color={COLORS.black} size="16" weight="500">
-                  {'Souad Bentchikou'}
+                <Text
+                  style={[
+                    {
+                      width: 154,
+                      padding: 20,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#FEC107',
+                    },
+                  ]}
+                  size="18"
+                  weight="500"
+                  align="center"
+                  color={COLORS.black}>
+                  {'BsVonq1bDv'}
                 </Text>
+              </View>
 
-                <View style={{marginTop: 10, flexDirection: 'row'}}>
-                  <Text
-                    style={[{marginStart: 15}]}
-                    size="18"
-                    weight="500"
-                    align="left"
-                    color={COLORS.black}>
-                    {'0'}
-                  </Text>
-                  <Rating
-                    type="custom"
-                    ratingColor="#04D9C5"
-                    startingValue={1}
-                    ratingBackgroundColor="#04D9C5"
-                    ratingCount={1}
-                    imageSize={20}
-                    // onFinishRating={this.ratingCompleted}
-                    style={{marginTop: 1, marginStart: 15, paddingVertical: 1}}
+              <Text
+                style={[styles.inputView, {marginTop: 20}]}
+                size="18"
+                weight="500"
+                align="left"
+                color={COLORS.textColor}>
+                {'User Details'}
+              </Text>
+
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  marginTop: 20,
+                  width: '85%',
+                  height: 80,
+                  shadowColor: 'black',
+                  shadowOpacity: 0.26,
+                  shadowOffset: {width: 0, height: 2},
+                  shadowRadius: 10,
+                  elevation: 3,
+                  borderRadius: 12,
+                  backgroundColor: 'white',
+                  flex: 1,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    margin: 5,
+                    backgroundColor: COLORS.white,
+                  }}>
+                  <Image
+                    style={{
+                      width: 64,
+                      height: 64,
+                      margin: 5,
+                      borderRadius: 32,
+                      resizeMode: 'contain',
+                    }}
+                    source={IMAGES.circle_placeholder}
                   />
-                  <Text
-                    style={[{marginStart: 10, marginEnd: 15}]}
-                    size="18"
-                    weight="500"
-                    align="left"
-                    color={COLORS.black}>
-                    {'0 Ratings'}
-                  </Text>
+
+                  <View
+                    style={{
+                      flex: 1,
+                      margin: 5,
+                    }}>
+                    <Text color={COLORS.black} size="16" weight="500">
+                      {'Souad Bentchikou'}
+                    </Text>
+
+                    <View style={{marginTop: 10, flexDirection: 'row'}}>
+                      <Text
+                        style={[{marginStart: 15}]}
+                        size="18"
+                        weight="500"
+                        align="left"
+                        color={COLORS.black}>
+                        {'0'}
+                      </Text>
+                      <Rating
+                        type="custom"
+                        ratingColor="#04D9C5"
+                        startingValue={1}
+                        ratingBackgroundColor="#04D9C5"
+                        ratingCount={1}
+                        imageSize={20}
+                        // onFinishRating={this.ratingCompleted}
+                        style={{
+                          marginTop: 1,
+                          marginStart: 15,
+                          paddingVertical: 1,
+                        }}
+                      />
+                      <Text
+                        style={[{marginStart: 10, marginEnd: 15}]}
+                        size="18"
+                        weight="500"
+                        align="left"
+                        color={COLORS.black}>
+                        {'0 ' + getTranslation('ratings')}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
+          )}
 
           <Text
             style={[styles.inputView, {marginTop: 20}]}
@@ -201,7 +247,7 @@ function SummaryTransaction(props) {
             weight="500"
             align="left"
             color={COLORS.textColor}>
-            {'Product(s) Details'}
+            {getTranslation('products_details')}
           </Text>
 
           <FlatList
@@ -220,7 +266,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Global Commission :'}
+                {getTranslation('global_commission') + ' :'}
               </Text>
 
               <Text
@@ -240,7 +286,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman Commission:'}
+                {getTranslation('deliveryman_commission') + ' :'}
               </Text>
 
               <Text
@@ -259,7 +305,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by') + ' :'}
               </Text>
 
               <Text
@@ -269,7 +315,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'Both'}
+                {getTranslation('both')}
               </Text>
             </View>
 
@@ -279,7 +325,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -299,7 +345,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -319,7 +365,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place of Delivery :'}
+                {getTranslation('place_of_delivery') + ' :'}
               </Text>
 
               <Text
@@ -349,7 +395,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Details :'}
+                {getTranslation('delivery_details') + ' :'}
               </Text>
 
               <Text
@@ -369,7 +415,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman:'}
+                {getTranslation('delivery_man') + ':'}
               </Text>
 
               <Text
@@ -388,7 +434,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Date :'}
+                {getTranslation('delivery_date')}
               </Text>
 
               <Text
@@ -408,7 +454,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Time: '}
+                {getTranslation('delivery_time')}
               </Text>
 
               <Text
@@ -439,7 +485,7 @@ function SummaryTransaction(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Delivered on:'}
+              {getTranslation('delivered_on')}
             </Text>
 
             <Text
@@ -462,7 +508,7 @@ function SummaryTransaction(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Total to Pay :'}
+              {getTranslation('total_to_pay')}
             </Text>
 
             <Text
@@ -487,26 +533,26 @@ function SummaryTransaction(props) {
             }}
           /> */}
 
-          {/* <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Rating'}
-            // type={1}
-            onPress={() => {
-              
-            }}
-          /> */}
-
-          {/* //change hide & show button with conditions */}
-          <View
-            style={{
-              marginHorizontal: 15,
-              marginBottom: 15,
-              marginTop: 30,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // position: 'absolute',
-            }}>
-            {/* <Button
+          {status == 'completed' ? (
+            <Button
+              style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
+              title={'Rating'}
+              // type={1}
+              onPress={() => {
+                props.navigation.navigate('RatingReview');
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                marginHorizontal: 15,
+                marginBottom: 15,
+                marginTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              {/* <Button
                 style={[{width: 156}]}
                 title={'Complaint'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -516,39 +562,40 @@ function SummaryTransaction(props) {
                 }}
               /> */}
 
-            {!enableTxnCodeBtn ? (
+              {!enableTxnCodeBtn ? (
+                <Button
+                  style={[
+                    {width: 160, justifyContent: 'center', alignSelf: 'center'},
+                  ]}
+                  title={'Change Delivery \nDate'} //or Change Delivery Date (according to condition)
+                  onPress={() => {
+                    ChangeDateModalVisibility();
+                  }}
+                />
+              ) : null}
+
+              {enableTxnCodeBtn ? (
+                <Button
+                  style={[{width: 156}]}
+                  title={getTranslation('txn_code')} //or Change Delivery Date (according to condition)
+                  onPress={() => {
+                    TxnCodeModalVisibility();
+                  }}
+                />
+              ) : null}
+
               <Button
-                style={[
-                  {width: 160, justifyContent: 'center', alignSelf: 'center'},
-                ]}
-                title={'Change Delivery \nDate'} //or Change Delivery Date (according to condition)
+                style={[{width: 160}]}
+                title={getTranslation('chat')}
+                type={1}
                 onPress={() => {
-                  ChangeDateModalVisibility();
+                  props.navigation.navigate('SendSuggestion', {
+                    headerTitle: 'Souad Bentchikou',
+                  });
                 }}
               />
-            ) : null}
-
-            {enableTxnCodeBtn ? (
-              <Button
-                style={[{width: 156}]}
-                title={'Transaction Code'} //or Change Delivery Date (according to condition)
-                onPress={() => {
-                  TxnCodeModalVisibility();
-                }}
-              />
-            ) : null}
-
-            <Button
-              style={[{width: 160}]}
-              title={'Chat'}
-              type={1}
-              onPress={() => {
-                props.navigation.navigate('SendSuggestion', {
-                  headerTitle: 'Chat',
-                });
-              }}
-            />
-          </View>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
 
@@ -577,7 +624,7 @@ function SummaryTransaction(props) {
               weight="500"
               align="center"
               color={COLORS.black}>
-              {'Please confirm transaction'}
+              {getTranslation('pls_confirm_txn')}
             </Text>
 
             <OTPInputView
@@ -606,7 +653,7 @@ function SummaryTransaction(props) {
                   styles.inputView,
                   {width: 100, justifyContent: 'center'},
                 ]}
-                title={'Cancel'}
+                title={getTranslation('cancel')}
                 onPress={() => {
                   TxnCodeModalVisibility();
                 }}
@@ -614,7 +661,7 @@ function SummaryTransaction(props) {
 
               <Button
                 style={[{width: 100}]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   TxnCodeModalVisibility();
                   props.navigation.navigate('ExchangeSuccessSummary');
@@ -644,7 +691,7 @@ function SummaryTransaction(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'Change date and time'}
+              {getTranslation('change_date_time')}
             </Text>
 
             <Text
@@ -656,23 +703,35 @@ function SummaryTransaction(props) {
               {'Proposal changing \n delivery date and time'}
             </Text>
 
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('date'); 
+                setDateSelected(true);
+              }}
+              style={[styles.inputView, styles.inputContainer]}>
             <Input
-              style={[styles.inputView, styles.inputContainer]}
-              placeholder={'Day'}
+              //style={[styles.inputView, styles.inputContainer]}
+              placeholder={getTranslation('day')}
               isLeft={IMAGES.date}
-              onChangeText={text => {
-                // setPassword(text);
-              }}
+              editable= {false}
+              value={selectDate}
             />
+            </TouchableOpacity>
 
-            <Input
-              style={[styles.inputView, styles.inputContainer]}
-              placeholder={'Hour'}
-              isLeft={IMAGES.time}
-              onChangeText={text => {
-                // setPassword(text);
+           <TouchableOpacity
+              onPress={() => {
+                showDatepicker('time'); 
+                setDateSelected(false);
               }}
+              style={[styles.inputView, styles.inputContainer]}>
+            <Input
+            //  style={[styles.inputView, styles.inputContainer]}
+              placeholder={getTranslation('hour')}
+              isLeft={IMAGES.time}
+              editable= {false}
+              value={selectTime}
             />
+             </TouchableOpacity>
 
             <View
               style={{
@@ -687,7 +746,7 @@ function SummaryTransaction(props) {
                   styles.inputView,
                   {width: 100, justifyContent: 'center'},
                 ]}
-                title={'Cancel'}
+                title={getTranslation('cancel')}
                 onPress={() => {
                   ChangeDateModalVisibility();
                 }}
@@ -695,7 +754,7 @@ function SummaryTransaction(props) {
 
               <Button
                 style={[{width: 100}]}
-                title={'Propose'}
+                title={getTranslation('propose')}
                 onPress={() => {
                   ChangeDateModalVisibility();
                   props.navigation.navigate('ProposalChangedDate');
@@ -706,6 +765,8 @@ function SummaryTransaction(props) {
           </View>
         </View>
       </Modal>
+
+            {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
 }

@@ -36,7 +36,7 @@ function Incomplete(props) {
       <SafeAreaView style={styles.container}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={['', '', '', '', '']}
+          data={['',]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (

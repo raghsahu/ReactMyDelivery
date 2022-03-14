@@ -25,15 +25,26 @@ import {
   BottomBackground,
   RadioButtons,
   CheckBox,
+  DateTimePick,
 } from '../components';
 import {Rating} from 'react-native-ratings';
+import moment from 'moment'; // date format
 
 const {height, width} = Dimensions.get('screen');
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function AdSummaryDetails(props) {
+  const {getTranslation} = useContext(LocalizationContext);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [selectDate, setSelectDate] = useState('');
+  const [selectTime, setSelectTime] = useState('');
+  const [dateSelected, setDateSelected] = useState(false);
   const [reasonToChange, setReasonToChange] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -78,6 +89,28 @@ function AdSummaryDetails(props) {
 
   const setCheck = checkStatus => {
     setSelection(checkStatus);
+  };
+
+  function showDatepicker(mode) {
+    showMode(mode);
+  }
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const onChange = (event, selectedDate) => {
+    // console.log('time_select ' + selectedDate);
+    setShow(Platform.OS === 'ios');
+
+    if (dateSelected) {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
+      setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+    } else {
+      setSelectTime(moment(selectedDate).format('HH:MM'));
+    }
   };
 
   return (
@@ -475,7 +508,7 @@ function AdSummaryDetails(props) {
             <View>
               <CheckBox
                 isSelected={isSelected}
-                text={'Terms & Conditions'}
+                text={'Contract Terms'}
                 onChecked={setCheck}
               />
               <View
@@ -642,7 +675,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="center"
               color={COLORS.black}>
-              {'€ 2.00 + € 6.00 = € 8.00'}
+              {'€ 6.00 + € 2.00 = € 8.00'}
             </Text>
 
             <Text
@@ -663,22 +696,40 @@ function AdSummaryDetails(props) {
               {'Specifying the date \nexpected delivery'}
             </Text>
 
-            <Input
-              style={{marginHorizontal: 10, marginTop: 20}}
-              placeholder={'Day'}
-              isLeft={IMAGES.date}
-              onChangeText={text => {
-                setDay(text);
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('date');
+                setDateSelected(true);
               }}
-            />
-            <Input
-              style={{marginVertical: 10, marginHorizontal: 10}}
-              placeholder={'Hour'}
-              isLeft={IMAGES.time}
-              onChangeText={text => {
-                setHour(text);
+              style={{marginHorizontal: 10, marginTop: 20}}>
+              <Input
+                //style={{marginHorizontal: 10, marginTop: 20}}
+                placeholder={'Day'}
+                isLeft={IMAGES.date}
+                editable={false}
+                onChangeText={text => {
+                  setDay(text);
+                }}
+                value={selectDate}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker('time');
+                setDateSelected(false);
               }}
-            />
+              style={{marginVertical: 10, marginHorizontal: 10}}>
+              <Input
+                placeholder={'Hour'}
+                isLeft={IMAGES.time}
+                value={selectTime}
+                editable={false}
+                onChangeText={text => {
+                  setHour(text);
+                }}
+              />
+            </TouchableOpacity>
 
             <Button
               style={[
@@ -693,7 +744,9 @@ function AdSummaryDetails(props) {
               title={'Ok'}
               onPress={() => {
                 logoutModalVisibility();
-                props.navigation.navigate('SummaryTransaction');
+                props.navigation.navigate('SummaryTransaction', {
+                  status: '',
+                });
               }}
             />
           </View>
@@ -1159,6 +1212,7 @@ function AdSummaryDetails(props) {
           </View>
         </View>
       </Modal>
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
 }

@@ -25,6 +25,8 @@ import {
   RadioButtons,
   CheckBox,
 } from '../components';
+//CONTEXT
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -32,6 +34,7 @@ function AddProductSummary(props) {
   const [name, setName] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const { getTranslation} = useContext(LocalizationContext);
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -49,7 +52,7 @@ function AddProductSummary(props) {
        style={styles.container}
        >
         <Header
-          title={'Summary'}
+          title={getTranslation('summary')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -64,7 +67,7 @@ function AddProductSummary(props) {
             weight="500"
             align="center"
             color={COLORS.textColor}>
-            {'Summary'}
+            {getTranslation('summary')}
           </Text>
 
           <View
@@ -106,7 +109,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Web Link :'}
+                {getTranslation('web_link') +' :'}
               </Text>
 
               <Text
@@ -126,7 +129,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place to Buy :'}
+                {getTranslation('place_to_buy') }
               </Text>
 
               <Text
@@ -146,7 +149,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Price :'}
+                {getTranslation('price') +' :'}
               </Text>
 
               <Text
@@ -166,7 +169,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Additional Information:'}
+                {getTranslation('additional_info')}
               </Text>
 
               <Text
@@ -195,7 +198,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by')}
               </Text>
 
               <Text
@@ -205,7 +208,7 @@ function AddProductSummary(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'Both'}
+                {getTranslation('both')}
               </Text>
             </View>
 
@@ -215,7 +218,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -235,7 +238,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -255,7 +258,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {'Place of Delivery :'}
+                {getTranslation('place_of_delivery') +' :'}
               </Text>
 
               <Text
@@ -286,7 +289,7 @@ function AddProductSummary(props) {
               size="14"
               align="center"
               weight="500">
-              {'Total Price'}
+              {getTranslation('total_price')}
             </Text>
 
             <Text
@@ -295,7 +298,7 @@ function AddProductSummary(props) {
               size="14"
               align="center"
               weight="500">
-              {'Deliveryman \nCommission'}
+              {getTranslation('delivery_man_commission')}
             </Text>
 
             <Text
@@ -304,7 +307,7 @@ function AddProductSummary(props) {
               size="14"
               align="center"
               weight="500">
-              {'Fees'}
+              {getTranslation('fees')}
             </Text>
           </View>
 
@@ -395,7 +398,7 @@ function AddProductSummary(props) {
             size="16"
             weight="500"
             align={'right'}>
-            {'Info'}
+            {getTranslation('info')}
           </Text>
 
           <View
@@ -407,7 +410,7 @@ function AddProductSummary(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Total to Pay :'}
+              {getTranslation('total_to_pay')}
             </Text>
 
             <Text
@@ -423,13 +426,13 @@ function AddProductSummary(props) {
 
           <CheckBox
             isSelected={isSelected}
-            text={'Contract Terms'}
+            text={getTranslation('contract_terms')}
             onChecked={setCheck}
           />
 
           <Button
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Accept'}
+            title={getTranslation('accept')}
             onPress={() => {
               logoutModalVisibility();
             }}
@@ -460,7 +463,7 @@ function AddProductSummary(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'Payment'}
+              {getTranslation('payment')}
             </Text>
 
             <TouchableOpacity
@@ -490,7 +493,7 @@ function AddProductSummary(props) {
               weight="500"
               align="center"
               color={COLORS.darkGray}>
-              {'Total Payment'}
+              {getTranslation('total_payment')}
             </Text>
 
             <Text
@@ -508,7 +511,7 @@ function AddProductSummary(props) {
               weight="400"
               align="center"
               color={COLORS.darkGray}>
-              {'Redirecting to Payment...'}
+              {getTranslation('redirected_to_payment')}
             </Text>
 
             <View
@@ -524,7 +527,7 @@ function AddProductSummary(props) {
                   // styles.inputView,
                   {width: 200, justifyContent: 'center', alignSelf: 'center'},
                 ]}
-                title={'Ok'}
+                title={getTranslation('ok')}
                 onPress={() => {
                   logoutModalVisibility();
                   props.navigation.navigate('MyAccount');

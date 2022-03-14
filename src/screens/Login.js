@@ -75,6 +75,9 @@ function Login(props) {
             onChangeText={text => {
               setName(text);
             }}
+            isShow={() => {
+             
+            }}
           />
 
           <Input
