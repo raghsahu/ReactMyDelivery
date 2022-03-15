@@ -18,9 +18,12 @@ import {COLORS, IMAGES} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, AsSenderItemList} from '../components';
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function AsSender(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const {getTranslation} = useContext(LocalizationContext);
 
   // const deleteModalVisibility = () => {
   //   setDeleteModalVisible(!isDeleteModalVisible);
@@ -80,7 +83,7 @@ function AsSender(props) {
               weight="500"
               align="left"
               color={COLORS.black}>
-              {'Are you sure to delete this announcement'}
+              {getTranslation('are_you_sure_delete_announcement')}
             </Text>
 
             <View
@@ -100,7 +103,7 @@ function AsSender(props) {
                     justifyContent: 'center',
                   },
                 ]}
-                title={'Yes'}
+                title={getTranslation('yes')}
                 onPress={() => {
                   // props.navigation.navigate('Market')
                 }}
@@ -108,7 +111,7 @@ function AsSender(props) {
 
               <Button
                 style={[{width: 90, height: 41, justifyContent: 'center'}]}
-                title={'No'}
+                title={getTranslation('no')}
                 onPress={() => {
                   //deleteModalVisibility();
                 }}

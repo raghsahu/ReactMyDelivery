@@ -18,52 +18,7 @@ const PublishedItemList = props => {
       }}>
       <View
         style={{
-          flex: 1.0,
-          // justifyContent: 'space-between',
-          alignSelf: 'center',
-          justifyContent: 'center',
-          position: 'absolute',
-          right: 0,
-          marginTop: 5,
-        }}>
-        <Button
-          style={[
-            {
-              width: 88,
-              height: 29,
-              borderRadius: 0,
-              alignSelf: 'center',
-              justifyContent: 'center',
-              backgroundColor: COLORS.gray,
-            },
-          ]}
-          title={'Expired'}
-          type={2}
-          //onPress={() => {props.onModify()}}
-        />
-
-        <Button
-          style={[
-            {
-              width: 88,
-              height: 29,
-              marginTop: 5,
-              backgroundColor: COLORS.red,
-              borderRadius: 0,
-              alignSelf: 'center',
-              justifyContent: 'center',
-            },
-          ]}
-          title={'Delete'}
-          onPress={() => {
-            props.onDelete();
-          }}
-        />
-      </View>
-
-      <View
-        style={{
-         // flex: 1,
+          // flex: 1,
           flexDirection: 'row',
           marginTop: 20,
         }}>
@@ -112,6 +67,49 @@ const PublishedItemList = props => {
             </Text>
           </View>
         </View>
+      </View>
+
+      <View
+        style={{
+          // flex: 1.0,
+          position: 'absolute',
+          right: 0,
+          marginTop: 5,
+          marginRight: 0,
+        }}>
+        <Button
+          style={[
+            {
+              width: 88,
+              height: 29,
+              borderRadius: 0,
+              alignSelf: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.gray,
+            },
+          ]}
+          title={'Expired'}
+          type={2}
+          //onPress={() => {props.onModify()}}
+        />
+
+        <Button
+          style={[
+            {
+              width: 88,
+              height: 29,
+              marginTop: 5,
+              backgroundColor: COLORS.red,
+              borderRadius: 0,
+              alignSelf: 'center',
+              justifyContent: 'center',
+            },
+          ]}
+          title={'Delete'}
+          onPress={() => {
+            props.onDelete();
+          }}
+        />
       </View>
 
       <View

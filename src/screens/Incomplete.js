@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     left: '50%',
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
-    height: 140,
+    height: 120,
     width: width * 0.85,
     backgroundColor: '#fff',
     borderRadius: 7,

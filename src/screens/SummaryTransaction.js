@@ -44,14 +44,14 @@ function SummaryTransaction(props) {
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
   const [enableTxnCodeBtn, setEnableTxnCodeBtn] = useState(false);
-   const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
-   const [selectTime, setSelectTime] = useState('');
-   const [dateSelected, setDateSelected] = useState(false);
+  const [selectTime, setSelectTime] = useState('');
+  const [dateSelected, setDateSelected] = useState(false);
 
-    function showDatepicker(mode) {
+  function showDatepicker(mode) {
     showMode(mode);
   }
 
@@ -60,22 +60,18 @@ function SummaryTransaction(props) {
     setMode(currentMode);
   };
 
-   const onChange = (event, selectedDate) => {
-   // console.log('time_select ' + selectedDate);
+  const onChange = (event, selectedDate) => {
+    // console.log('time_select ' + selectedDate);
     setShow(Platform.OS === 'ios');
 
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
-        setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
-      
+      setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
     } else {
-     
-        setSelectTime(moment(selectedDate).format('HH:MM'));
-      
+      setSelectTime(moment(selectedDate).format('HH:MM'));
     }
   };
-
 
   const TxnCodeModalVisibility = () => {
     setTxnCodeModalVisible(!isTxnCodeModalVisible);
@@ -394,8 +390,8 @@ function SummaryTransaction(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('delivery_details') + ' :'}
+              <Text style={{}} color={COLORS.black} size="18" weight="600">
+                {getTranslation('delivery_details')}
               </Text>
 
               <Text
@@ -469,58 +465,62 @@ function SummaryTransaction(props) {
             </View>
           </View>
 
-          <View
-            style={{
-              backgroundColor: COLORS.gray,
-              height: 2,
-              marginTop: 10,
-            }}></View>
+          {status == 'completed' ? (
+            <View>
+              <View
+                style={{
+                  backgroundColor: COLORS.gray,
+                  height: 2,
+                  marginTop: 10,
+                }}></View>
 
-          <View
-            style={[
-              styles.inputView,
-              {
-                flexDirection: 'row',
-                marginTop: 10,
-              },
-            ]}>
-            <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {getTranslation('delivered_on')}
-            </Text>
+              <View
+                style={[
+                  styles.inputView,
+                  {
+                    flexDirection: 'row',
+                    marginTop: 10,
+                  },
+                ]}>
+                <Text style={{}} color={COLORS.black} size="16" weight="600">
+                  {getTranslation('delivered_on')}
+                </Text>
 
-            <Text
-              style={{
-                marginLeft: 10,
-              }}
-              color={COLORS.primaryColor}
-              size="16"
-              weight="500">
-              {'2020-04-02 12:05 by John Ben'}
-            </Text>
-          </View>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                  }}
+                  color={COLORS.primaryColor}
+                  size="16"
+                  weight="500">
+                  {'2020-04-02 12:05 by John Ben'}
+                </Text>
+              </View>
 
-          <View
-            style={[
-              styles.inputView,
-              {
-                flexDirection: 'row',
-                marginTop: 15,
-              },
-            ]}>
-            <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {getTranslation('total_to_pay')}
-            </Text>
+              <View
+                style={[
+                  styles.inputView,
+                  {
+                    flexDirection: 'row',
+                    marginTop: 15,
+                  },
+                ]}>
+                <Text style={{}} color={COLORS.black} size="16" weight="600">
+                  {getTranslation('total_to_pay')}
+                </Text>
 
-            <Text
-              style={{
-                marginLeft: 10,
-              }}
-              color={COLORS.darkGray}
-              size="16"
-              weight="500">
-              {'€600 + €32,4 + €8,1 = €638'}
-            </Text>
-          </View>
+                <Text
+                  style={{
+                    marginLeft: 10,
+                  }}
+                  color={COLORS.darkGray}
+                  size="16"
+                  weight="500">
+                  {'€600 + €32,4 + €8,1 = €638'}
+                </Text>
+              </View>
+            </View>
+          ) : null}
 
           {/* //hide & show button with conditions */}
 
@@ -567,7 +567,7 @@ function SummaryTransaction(props) {
                   style={[
                     {width: 160, justifyContent: 'center', alignSelf: 'center'},
                   ]}
-                  title={'Change Delivery \nDate'} //or Change Delivery Date (according to condition)
+                  title={'Change Delivery Date'} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     ChangeDateModalVisibility();
                   }}
@@ -705,33 +705,33 @@ function SummaryTransaction(props) {
 
             <TouchableOpacity
               onPress={() => {
-                showDatepicker('date'); 
+                showDatepicker('date');
                 setDateSelected(true);
               }}
               style={[styles.inputView, styles.inputContainer]}>
-            <Input
-              //style={[styles.inputView, styles.inputContainer]}
-              placeholder={getTranslation('day')}
-              isLeft={IMAGES.date}
-              editable= {false}
-              value={selectDate}
-            />
+              <Input
+                //style={[styles.inputView, styles.inputContainer]}
+                placeholder={getTranslation('day')}
+                isLeft={IMAGES.date}
+                editable={false}
+                value={selectDate}
+              />
             </TouchableOpacity>
 
-           <TouchableOpacity
+            <TouchableOpacity
               onPress={() => {
-                showDatepicker('time'); 
+                showDatepicker('time');
                 setDateSelected(false);
               }}
               style={[styles.inputView, styles.inputContainer]}>
-            <Input
-            //  style={[styles.inputView, styles.inputContainer]}
-              placeholder={getTranslation('hour')}
-              isLeft={IMAGES.time}
-              editable= {false}
-              value={selectTime}
-            />
-             </TouchableOpacity>
+              <Input
+                //  style={[styles.inputView, styles.inputContainer]}
+                placeholder={getTranslation('hour')}
+                isLeft={IMAGES.time}
+                editable={false}
+                value={selectTime}
+              />
+            </TouchableOpacity>
 
             <View
               style={{
@@ -766,7 +766,7 @@ function SummaryTransaction(props) {
         </View>
       </Modal>
 
-            {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
 }

@@ -19,7 +19,9 @@ import { LocalizationContext } from '../context/LocalizationProvider';
 function ResetPassword(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-   const { getTranslation} = useContext(LocalizationContext);
+  const { getTranslation} = useContext(LocalizationContext);
+  const [pwSecureText, setPwSecureText] = useState(true);
+  const [pwSecureText1, setPwSecureText1] = useState(true);
 
   return (
     <View style={styles.container}>
@@ -60,26 +62,26 @@ function ResetPassword(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('password')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               // setPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText(!pwSecureText)
             }}
           />
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('confirm_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText1}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               // setPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText1(!pwSecureText1)
             }}
           />
 

@@ -17,24 +17,20 @@ import {Button, Header, Text, Input} from '../components';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
 //PACKAGES
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
+
 
 function Splash(props) {
   const {getUserLanguage, setI18nConfig, getTranslation} =
     useContext(LocalizationContext);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     moveToNext();
-  //   }, 2000);
-  //   return () => {};
-  // }, []);
-
-  useEffect(async () => {
-    getUserLanguage(res => {
-      setI18nConfig(res);
-       moveToNext();
-    });
+  useEffect(() => {
+    (async () => {
+      getUserLanguage(res => {
+        setI18nConfig(res);
+        moveToNext();
+      });
+    })();
   }, []);
 
   const moveToNext = () => {
@@ -42,23 +38,20 @@ function Splash(props) {
     //     if (result) {
     //         let obj = JSON.parse(result)
     //         setLoggedInUser(obj)
-            // setTimeout(() => {
-            //     navigate({ props, name: 'HomeScreen', index: 0, navType: 'reset' });
-            // }, 3000);
+    // setTimeout(() => {
+    //     navigate({ props, name: 'HomeScreen', index: 0, navType: 'reset' });
+    // }, 3000);
 
     //     } else {
-            setTimeout(() => {
-                  props.navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'Login' }
-                    ],
-                })
-            );
-            }, 3000);
-  
-  
+    setTimeout(() => {
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
+    }, 3000);
+
     // }
     // })
   };
@@ -88,7 +81,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
- 
 });
 
 export default Splash;

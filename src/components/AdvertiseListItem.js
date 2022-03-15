@@ -1,20 +1,34 @@
-import React, { useContext } from 'react';
-import { View, Dimensions, Image, TouchableOpacity } from 'react-native';
-const { height, width } = Dimensions.get('screen');
+import React, {useContext} from 'react';
+import {View, Dimensions, Image, TouchableOpacity} from 'react-native';
+const {height, width} = Dimensions.get('screen');
 //ASSETS
-import { COLORS, IMAGES } from '../assets';
+import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
-import { Text, Button } from '../components';
-import { Rating } from 'react-native-ratings';
+import {Text, Button} from '../components';
+import {Rating} from 'react-native-ratings';
 const AsSenderItemList = props => {
   //const item = props.item;
 
   return (
     <TouchableOpacity
-      style={[props.mainViewStyle, {
-        backgroundColor: COLORS.white,
-      }]}
-      onPress={() => { props.onSummary() }}>
+      style={[
+        props.mainViewStyle,
+        {
+          backgroundColor: COLORS.white,
+        },
+      ]}
+      onPress={() => {
+        props.onSummary();
+      }}>
+      <Text
+        // style={{marginBottom:10}}
+        color={COLORS.textColor2}
+        size="8"
+        weight="bold"
+        align={'right'}>
+        {'Publication Date : 2022-01-13'}
+      </Text>
+
       <View>
         <View
           style={{
@@ -25,12 +39,9 @@ const AsSenderItemList = props => {
             position: 'absolute',
             right: 0,
             marginTop: 5,
-            flexDirection: 'row'
+            flexDirection: 'row',
           }}>
-
-          <View
-            style={{
-            }}>
+          <View style={{}}>
             <Text style={{}} color={COLORS.textColor2} size="8" weight="800">
               {'Applicant Rate:'}
             </Text>
@@ -41,19 +52,20 @@ const AsSenderItemList = props => {
           <View
             style={{
               marginStart: 5,
-              alignSelf: 'center'
+              alignSelf: 'center',
             }}>
             <Rating
-              type='custom'
-              ratingColor='#04D9C5'
+              //isDisabled= {true}
+              type="custom"
+              ratingColor="#04D9C5"
               startingValue={4}
-              ratingBackgroundColor='#c8c7c8'
+              ratingBackgroundColor="#c8c7c8"
               ratingCount={5}
               imageSize={13}
+              isDisabled={false}
               // onFinishRating={this.ratingCompleted}
-              style={{ paddingVertical: 1 }}
+              style={{paddingVertical: 1}}
             />
-
           </View>
         </View>
 
@@ -177,7 +189,7 @@ const AsSenderItemList = props => {
             style={{
               flexDirection: 'row',
               marginLeft: 5,
-              alignItems: 'center'
+              alignItems: 'center',
             }}>
             <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
               {'Price:'}
@@ -205,7 +217,8 @@ const AsSenderItemList = props => {
 
             <Text
               style={{
-                marginLeft: 10, alignSelf: 'center'
+                marginLeft: 10,
+                alignSelf: 'center',
               }}
               color={COLORS.primaryColor}
               size="16"
@@ -216,9 +229,11 @@ const AsSenderItemList = props => {
         </View>
       </View>
 
-      <View style={{
-                backgroundColor: COLORS.gray, height: 1,
-              }}></View> 
+      <View
+        style={{
+          backgroundColor: COLORS.gray,
+          height: 1,
+        }}></View>
     </TouchableOpacity>
   );
 };

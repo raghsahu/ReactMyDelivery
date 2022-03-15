@@ -21,6 +21,7 @@ import {Button, Header, Text, Input, BottomBackground} from '../components';
 function Login(props) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [pwSecureText, setPwSecureText] = useState(true);
 
   const {getTranslation} = useContext(LocalizationContext);
 
@@ -83,13 +84,13 @@ function Login(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('enter_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               // setPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText(!pwSecureText)
             }}
           />
 

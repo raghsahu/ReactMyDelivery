@@ -72,6 +72,8 @@ function Register(props) {
   const [selectDate, setSelectDate] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
   let [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [pwSecureText, setPwSecureText] = useState(true);
+  const [pwSecureText1, setPwSecureText1] = useState(true);
   const {getTranslation, setI18nConfig, saveUserLanguage} =
     useContext(LocalizationContext);
 
@@ -252,22 +254,25 @@ function Register(props) {
             }}
           />
 
-          <View 
-           style={[styles.inputView, styles.inputContainer, {flexDirection: 'row', flex: 1}]}
-          >
+          <View
+            style={[
+              styles.inputView,
+              styles.inputContainer,
+              {flexDirection: 'row', flex: 1},
+            ]}>
             <Input
               style={[{width: 100}]}
               placeholder={'Country'}
-              //isLeft={IMAGES.phone}
+              editable={false}
               onChangeText={text => {
                 //setName(text);
               }}
             />
 
             <Input
-             style={[{flex: 1}]}
+              style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-             // isLeft={IMAGES.phone}
+              // isLeft={IMAGES.phone}
               onChangeText={text => {
                 //setName(text);
               }}
@@ -311,26 +316,26 @@ function Register(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('password')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               //setPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText(!pwSecureText)
             }}
           />
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('confirm_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText1}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               //setPassword(text);
             }}
             isShow={() => {
-              //
+              setPwSecureText1(!pwSecureText1)
             }}
           />
 

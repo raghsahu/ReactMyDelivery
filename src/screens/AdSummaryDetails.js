@@ -119,7 +119,7 @@ function AdSummaryDetails(props) {
 
       <SafeAreaView style={styles.container}>
         <Header
-          title={'Product(s) Details Of Ad'}
+          title={getTranslation('product_details_of_ad')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -187,7 +187,7 @@ function AdSummaryDetails(props) {
             weight="500"
             align="left"
             color={COLORS.textColor}>
-            {'Product(s) Details'}
+            {getTranslation('products_details')}
           </Text>
 
           <Image
@@ -222,7 +222,7 @@ function AdSummaryDetails(props) {
                 onPress={() => {
                   photosModalVisibleModalVisibility();
                 }}>
-                {'change photo'}
+                {getTranslation('change_photo')}
               </Text>
             )}
 
@@ -237,7 +237,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Web Link :'}
+                  {getTranslation('web_link') +' :'}
                 </Text>
 
                 <Text
@@ -259,7 +259,7 @@ function AdSummaryDetails(props) {
                   onPress={() => {
                     webLinkModalVisibleModalVisibility();
                   }}>
-                  {'change'}
+                  {getTranslation('change')}
                 </Text>
               )}
             </View>
@@ -270,7 +270,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place to Buy :'}
+                {getTranslation('place_to_buy')}
               </Text>
 
               <Text
@@ -295,7 +295,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Price :'}
+                  {getTranslation('price' + ' :')}
                 </Text>
 
                 <Text
@@ -317,7 +317,7 @@ function AdSummaryDetails(props) {
                   onPress={() => {
                     changePriceQuantityModalVisibleModalVisibility();
                   }}>
-                  {'change'}
+                  {getTranslation('change')}
                 </Text>
               )}
             </View>
@@ -328,7 +328,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Additional Information:'}
+                {getTranslation('additional_info')}
               </Text>
 
               <Text
@@ -363,7 +363,7 @@ function AdSummaryDetails(props) {
                 onPress={() => {
                   commissionModalVisibleModalVisibility();
                 }}>
-                {'change'}
+                {getTranslation('change')}
               </Text>
             )}
             <View
@@ -372,7 +372,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Global Commission :'}
+                {getTranslation('global_commission') +' :'}
               </Text>
 
               <Text
@@ -392,7 +392,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman Commission:'}
+                {getTranslation('deliveryman_commission')}
               </Text>
 
               <Text
@@ -411,7 +411,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by')}
               </Text>
 
               <Text
@@ -431,7 +431,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -451,7 +451,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -475,7 +475,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Place of Delivery :'}
+                  {getTranslation('place_of_delivery') +' :'}
                 </Text>
 
                 <Text
@@ -498,7 +498,7 @@ function AdSummaryDetails(props) {
                   onPress={() => {
                     placeOfDeliveryModalVisibleModalVisibility();
                   }}>
-                  {'change'}
+                  {getTranslation('change')}
                 </Text>
               )}
             </View>
@@ -508,7 +508,7 @@ function AdSummaryDetails(props) {
             <View>
               <CheckBox
                 isSelected={isSelected}
-                text={'Contract Terms'}
+                text={getTranslation('contract_terms')}
                 onChecked={setCheck}
               />
               <View
@@ -523,7 +523,7 @@ function AdSummaryDetails(props) {
                 <Button
                   type={1}
                   style={[{width: 156}]}
-                  title={'To Propose'}
+                  title={getTranslation('to_propose')}
                   onPress={() => {
                     proposalToModificationOfAd();
                   }}
@@ -531,7 +531,7 @@ function AdSummaryDetails(props) {
 
                 <Button
                   style={[{width: 156}]}
-                  title={'Accept'}
+                  title={getTranslation('accept')}
                   onPress={() => {
                     logoutModalVisibility();
                   }}
@@ -547,36 +547,13 @@ function AdSummaryDetails(props) {
                   height: 2,
                   marginTop: 10,
                 }}></View>
-              <TextInput
-                placeholderTextColor={COLORS.placeHolderTextColor}
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={props.secureTextEntry && !open}
-                multiline
-                numberOfLines={6}
-                textAlign="left"
-                value={reasonToChange}
-                style={[
-                  styles.inputView,
-                  styles.inputContainer,
-                  {
-                    flex: 1,
-                    fontFamily: 'Poppins-Regular',
-                    fontWeight: '400',
-                    fontSize: 16,
-                    color: COLORS.black,
-                    paddingVertical: 1,
-                    paddingHorizontal: 20,
-                    borderRadius: 24,
-                    backgroundColor: '#F0F0F0',
-                    marginBottom: 20,
-                  },
-                ]}
-                placeholder={'Why this change...'}
-                onChangeText={text => {
-                  setReasonToChange(text);
-                }}
-              />
+
+        <TextInput
+            style={[styles.inputView, styles.comment]}
+            placeholder={getTranslation('why_this_change')}
+            multiline={true}
+            //value={''}
+          />
 
               <View
                 style={{
@@ -597,7 +574,7 @@ function AdSummaryDetails(props) {
                       width: 156,
                     },
                   ]}
-                  title={'To Cancel'} //or Change Delivery Date (according to condition)
+                  title={getTranslation('to_cancel')} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     proposalToModificationOfAd();
                   }}
@@ -605,7 +582,7 @@ function AdSummaryDetails(props) {
 
                 <Button
                   style={[{width: 156}]}
-                  title={'To Propose'}
+                  title={getTranslation('to_propose')}
                   onPress={() => {
                     props.navigation.navigate('AdModificationProposal');
                   }}
@@ -636,7 +613,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="left"
               color={COLORS.white}>
-              {'Accepted'}
+              {getTranslation('accepted')}
             </Text>
 
             <TouchableOpacity
@@ -666,7 +643,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="center"
               color={COLORS.black}>
-              {'Payment de guarantee deposit'}
+              {getTranslation('payment_guarantee_deposit')}
             </Text>
 
             <Text
@@ -799,11 +776,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[
-                  {
-                    borderColor: COLORS.primaryColor,
-                    borderWidth: 1.2,
-                    width: 146,
-                  },
+                  styles.modalCancelButton
                 ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -814,7 +787,7 @@ function AdSummaryDetails(props) {
               />
 
               <Button
-                style={[{width: 146}]}
+                style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
@@ -871,11 +844,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[
-                  {
-                    borderColor: COLORS.primaryColor,
-                    borderWidth: 1.2,
-                    width: 146,
-                  },
+                  styles.modalCancelButton
                 ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -886,7 +855,7 @@ function AdSummaryDetails(props) {
               />
 
               <Button
-                style={[{width: 146}]}
+                style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
                   webLinkModalVisibleModalVisibility();
@@ -961,11 +930,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[
-                  {
-                    borderColor: COLORS.primaryColor,
-                    borderWidth: 1.2,
-                    width: 146,
-                  },
+                  styles.modalCancelButton
                 ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -975,7 +940,9 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                style={[{width: 146}]}
+                 style={[
+                  styles.modalConfirmButton
+                ]}
                 title={'Confirm'}
                 onPress={() => {
                   photosModalVisibleModalVisibility();
@@ -1024,6 +991,7 @@ function AdSummaryDetails(props) {
                     style={{marginTop: 7, marginHorizontal: 10}}
                     placeholder={''}
                     isLeft={IMAGES.percentage}
+                    value={'6.00'}
                     onChangeText={text => {
                       // setDay(text);
                     }}
@@ -1070,7 +1038,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="center"
                 color={COLORS.primaryColor}>
-                {''}
+                {'€ 6.00'}
               </Text>
             </View>
             <View
@@ -1086,11 +1054,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[
-                  {
-                    borderColor: COLORS.primaryColor,
-                    borderWidth: 1.2,
-                    width: 146,
-                  },
+                  styles.modalCancelButton
                 ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -1100,7 +1064,7 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                style={[{width: 146}]}
+                style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
                   changePriceQuantityModalVisibleModalVisibility();
@@ -1137,10 +1101,10 @@ function AdSummaryDetails(props) {
               </Text>
               <View>
                 <Text
-                  style={{marginTop: 20, marginLeft: 20}}
+                  style={{marginTop: 20, }}
                   size="14"
                   weight="500"
-                  align="left"
+                  align="center"
                   color={COLORS.black}>
                   {'Enter Global Commission in €'}
                 </Text>
@@ -1161,19 +1125,19 @@ function AdSummaryDetails(props) {
                 }}>
                 <Text
                   style={{alignSelf: 'center'}}
-                  size="14"
+                  size="18"
                   weight="500"
                   align="left"
                   color={COLORS.black}>
-                  {'Your commission'}
+                  {'Your commission:'}
                 </Text>
                 <Text
-                  style={{marginHorizontal: 15, paddingHorizontal: 10}}
-                  size="14"
+                  style={{ paddingHorizontal: 10}}
+                  size="18"
                   weight="500"
                   align="center"
                   color={COLORS.primaryColor}>
-                  {'€ 50'}
+                  {'€ 0.50'}
                 </Text>
               </View>
             </View>
@@ -1190,11 +1154,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[
-                  {
-                    borderColor: COLORS.primaryColor,
-                    borderWidth: 1.2,
-                    width: 146,
-                  },
+                  styles.modalCancelButton
                 ]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
@@ -1202,7 +1162,7 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                style={[{width: 146}]}
+                style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
                   commissionModalVisibleModalVisibility();
@@ -1283,7 +1243,24 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 10,
     backgroundColor: COLORS.primaryColor,
+  }, 
+  comment: {
+    textAlignVertical: 'top',
+    paddingHorizontal: 10,
+    marginTop: 20,
+    height: 120,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 24,
+    fontSize: 16
   },
+  modalCancelButton:{
+    borderColor: COLORS.primaryColor,
+    borderWidth: 1.2,
+    width: 132,
+  },
+  modalConfirmButton:{
+    width: 132,
+  }
 });
 
 export default AdSummaryDetails;

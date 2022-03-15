@@ -63,7 +63,7 @@ const Input = (props) => {
         {props.isShow && (
           <TouchableOpacity
             style={{justifyContent: 'center', alignSelf: 'center'}}
-            onPress={props.onRight}>
+            onPress={props.isShow}>
             <Image
               source={IMAGES.eye}
               tintColor={COLORS.black}

@@ -411,8 +411,7 @@ function MyAccount(props) {
                   style={[
                     styles.buttonStyle,
                     {
-                      backgroundColor:
-                        index === 1 ? COLORS.primaryColor : COLORS.white,
+                      backgroundColor: index === 1 ? COLORS.primaryColor : COLORS.white,
                       borderRadius: 20,
                     },
                   ]}

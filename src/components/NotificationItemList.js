@@ -19,7 +19,8 @@ const NotificationItemList = props => {
     <View
       style={{
         flexDirection: 'row',
-        margin: 5,
+        marginTop: 10,
+        marginHorizontal: 10,
         backgroundColor: COLORS.white,
         borderRadius: 8,
       }}>

@@ -8,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
+  TextInput,
 } from 'react-native';
 
 //ASSETS
@@ -139,7 +140,7 @@ function AddProduct(props) {
               setName(text);
             }}
           />
-          <Input
+          {/* <Input
             style={[styles.inputView, styles.inputContainer]}
             type={1}
             multiline={true}
@@ -147,6 +148,12 @@ function AddProduct(props) {
             onChangeText={text => {
               setName(text);
             }}
+          /> */}
+          <TextInput
+            style={[styles.inputView, styles.comment]}
+            placeholder={getTranslation('additional_product_info')}
+            multiline={true}
+            //value={''}
           />
 
           <View
@@ -194,6 +201,20 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 16,
+  },
+  comment: {
+    textAlignVertical: 'top',
+    paddingHorizontal: 10,
+    marginTop: 20,
+    height: 120,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 24,
+   // borderColor: COLORS.gray,
+    //borderWidth: 1,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '400',
+    fontSize: 16,
+    color: COLORS.black,
   },
 });
 

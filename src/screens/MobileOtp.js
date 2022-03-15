@@ -94,11 +94,11 @@ function MobileOtp(props) {
 
           <Text
             style={[styles.inputContainer, styles.inputView]}
-            size="14"
-            weight="600"
+            size="16"
+            weight="500"
             align="right"
-            color={COLORS.textColor}>
-            {getTranslation('resend') +' (180 s)'}
+            color={COLORS.primaryColor}>
+            {getTranslation('resend') +' OTP (180 s)'}
           </Text>
 
           <Button

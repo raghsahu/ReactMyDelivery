@@ -224,15 +224,16 @@ function AddProductCommision(props) {
                 setDateSelected(true);
               }}
               style={styles.day_hour}>
-              <Text
-                // style={[ styles.day_hour]}
-                size="16"
-                weight="400"
-                align="center"
-                value={selectDate}
-                color={COLORS.textColor}>
-                {selectDate ? selectDate : getTranslation('day')}
-              </Text>
+              <Input
+                //style={[{alignSelf: 'center'}]}
+                editable={false}
+                textAlign={'center'}
+                placeholder={getTranslation('day')}
+                value={selectDate ? selectDate : ''}
+                onChangeText={text => {
+                  //setName(text);
+                }}
+              />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -242,14 +243,16 @@ function AddProductCommision(props) {
                 setDateSelected(false);
               }}
               style={styles.day_hour}>
-              <Text
-                //style={[styles.day_hour]}
-                size="16"
-                weight="400"
-                align="center"
-                color={COLORS.textColor}>
-                {selectTime ? selectTime : getTranslation('hour')}
-              </Text>
+              <Input
+                //style={[{alignSelf: 'center'}]}
+                editable={false}
+                textAlign={'center'}
+                placeholder={getTranslation('hour')}
+                value={selectTime ? selectTime : ''}
+                onChangeText={text => {
+                  //setName(text);
+                }}
+              />
             </TouchableOpacity>
           </View>
 
@@ -274,14 +277,16 @@ function AddProductCommision(props) {
                 setDateSelected(true);
               }}
               style={styles.day_hour}>
-              <Text
-                //style={[ styles.day_hour]}
-                size="16"
-                weight="400"
-                align="center"
-                color={COLORS.textColor}>
-                {selectDate1 ? selectDate1 : getTranslation('day')}
-              </Text>
+              <Input
+                //style={[{alignSelf: 'center'}]}
+                editable={false}
+                textAlign={'center'}
+                placeholder={getTranslation('day')}
+                value={selectDate1 ? selectDate1 : ''}
+                onChangeText={text => {
+                  //setName(text);
+                }}
+              />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -291,14 +296,16 @@ function AddProductCommision(props) {
                 setDateSelected(false);
               }}
               style={styles.day_hour}>
-              <Text
-                // style={[styles.day_hour]}
-                size="16"
-                weight="400"
-                align="center"
-                color={COLORS.textColor}>
-                {selectTime1 ? selectTime1 : getTranslation('hour')}
-              </Text>
+              <Input
+                //style={[{alignSelf: 'center'}]}
+                editable={false}
+                textAlign={'center'}
+                placeholder={getTranslation('hour')}
+                value={selectTime1 ? selectTime1 : ''}
+                onChangeText={text => {
+                  //setName(text);
+                }}
+              />
             </TouchableOpacity>
           </View>
 
@@ -333,7 +340,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     backgroundColor: COLORS.lightGray,
-    padding: 10,
+    //padding: 10,
     width: 120,
     borderRadius: 20,
   },

@@ -55,6 +55,15 @@ const BottomBar = () => {
 };
 
 const App = () => {
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    LogBox.ignoreLogs([
+      "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+    ]);
+
+  }, [])
+
   return (
     <LocalizationProvider>
       <NavigationContainer>

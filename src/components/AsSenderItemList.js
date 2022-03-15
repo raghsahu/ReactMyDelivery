@@ -92,7 +92,7 @@ const AsSenderItemList = props => {
             margin: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="18" weight="500">
-            {'Test3'}
+            {'souris'}
           </Text>
 
           <View
@@ -187,7 +187,7 @@ const AsSenderItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'$10'}
+            {'€6.00'}
           </Text>
         </View>
 
@@ -207,7 +207,7 @@ const AsSenderItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'$10'}
+            {'€6.00'}
           </Text>
         </View>
       </View>

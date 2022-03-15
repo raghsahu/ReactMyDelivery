@@ -27,6 +27,8 @@ import {
   CheckBox,
 } from '../components';
 import {Rating} from 'react-native-ratings';
+//CONTEXT
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -35,6 +37,7 @@ function AdModificationProposal(props) {
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
   const [reasonToChange, setReasonToChange] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -42,7 +45,7 @@ function AdModificationProposal(props) {
 
       <SafeAreaView style={styles.container}>
         <Header
-          title={'Proposal: Modification of Ad'}
+          title={getTranslation('proposal_modification_ad')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -56,7 +59,7 @@ function AdModificationProposal(props) {
             weight="600"
             align="left"
             color={COLORS.primaryColor}>
-            {'Your announcement'}
+            {getTranslation('your_announcement')}
           </Text>
 
           <Text
@@ -97,7 +100,7 @@ function AdModificationProposal(props) {
               weight="500"
               align="left"
               color={COLORS.textColor5}>
-              {'Photo changed'}
+              {getTranslation('photo_changed')}
             </Text>
 
             <View
@@ -111,7 +114,7 @@ function AdModificationProposal(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Web Link :'}
+                  {getTranslation('web_link') +' :'}
                 </Text>
 
                 <Text
@@ -131,7 +134,7 @@ function AdModificationProposal(props) {
                 size="16"
                 weight="500"
                 onPress={() => {}}>
-                {'Changed'}
+                {getTranslation('changed')}
               </Text>
             </View>
 
@@ -141,7 +144,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place to Buy :'}
+                {getTranslation('place_to_buy')}
               </Text>
 
               <Text
@@ -166,7 +169,7 @@ function AdModificationProposal(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Price :'}
+                  {getTranslation('price') + ' :'}
                 </Text>
 
                 <Text
@@ -186,7 +189,7 @@ function AdModificationProposal(props) {
                 size="16"
                 weight="500"
                 onPress={() => {}}>
-                {'Changed'}
+                {getTranslation('changed')}
               </Text>
             </View>
 
@@ -196,7 +199,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Additional Information:'}
+                {getTranslation('additional_info')}
               </Text>
 
               <Text
@@ -228,7 +231,7 @@ function AdModificationProposal(props) {
               size="16"
               weight="500"
               onPress={() => {}}>
-              {'Changed'}
+              {getTranslation('changed')}
             </Text>
 
             <View
@@ -237,7 +240,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Global Commission :'}
+                {getTranslation('global_commission') +' :'}
               </Text>
 
               <Text
@@ -257,7 +260,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman Commission:'}
+                {getTranslation('deliveryman_commission') + ' :'}
               </Text>
 
               <Text
@@ -276,7 +279,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by')}
               </Text>
 
               <Text
@@ -296,7 +299,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -316,7 +319,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -340,7 +343,7 @@ function AdModificationProposal(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {'Place of Delivery :'}
+                  {getTranslation('place_of_delivery') +' :'}
                 </Text>
 
                 <Text
@@ -361,7 +364,7 @@ function AdModificationProposal(props) {
                 size="16"
                 weight="500"
                 onPress={() => {}}>
-                {'Changed'}
+                {getTranslation('changed')}
               </Text>
             </View>
           </View>
@@ -380,7 +383,7 @@ function AdModificationProposal(props) {
               marginHorizontal: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Global Commission :'}
+              {getTranslation('global_commission') + ' :'}
             </Text>
 
             <Text
@@ -401,7 +404,7 @@ function AdModificationProposal(props) {
               marginHorizontal: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Deliveryman Commission:'}
+              { getTranslation('deliveryman_commission') +' :'}
             </Text>
 
             <Text
@@ -416,34 +419,10 @@ function AdModificationProposal(props) {
           </View>
 
           <TextInput
-            placeholderTextColor={COLORS.placeHolderTextColor}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={props.secureTextEntry && !open}
-            multiline
-            numberOfLines={6}
-            textAlign="left"
-            value={reasonToChange}
-            style={[
-              styles.inputView,
-              styles.inputContainer,
-              {
-                flex: 1,
-                fontFamily: 'Poppins-Regular',
-                fontWeight: '400',
-                fontSize: 16,
-                color: COLORS.black,
-                paddingVertical: 1,
-                paddingHorizontal: 20,
-                borderRadius: 24,
-                backgroundColor: '#F0F0F0',
-                marginBottom: 20,
-              },
-            ]}
-            placeholder={'Why this change...'}
-            onChangeText={text => {
-              setReasonToChange(text);
-            }}
+            style={[styles.inputView, styles.comment]}
+            placeholder={getTranslation('why_this_change')}
+            multiline={true}
+            //value={''}
           />
 
           <Text
@@ -452,7 +431,7 @@ function AdModificationProposal(props) {
             weight="500"
             align="left"
             color={COLORS.textColor}>
-            {'Delivery Details'}
+            {getTranslation('delivery_details')}
           </Text>
 
           <View
@@ -462,7 +441,7 @@ function AdModificationProposal(props) {
               marginHorizontal: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Delivery Date : '}
+              {getTranslation('delivery_date')}
             </Text>
 
             <Text
@@ -484,7 +463,7 @@ function AdModificationProposal(props) {
               marginBottom: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Delivery Time : '}
+              {getTranslation('delivery_time')}
             </Text>
 
             <Text
@@ -511,7 +490,7 @@ function AdModificationProposal(props) {
               marginTop: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="22" weight="600">
-              {'Difference to Pay :'}
+              {getTranslation('difference_to_pay')}
             </Text>
 
             <Text
@@ -544,14 +523,17 @@ function AdModificationProposal(props) {
                   width: 156,
                 },
               ]}
-              title={'Refuse'}
+              title={getTranslation('refuse')}
               onPress={() => {}}
             />
 
             <Button
               style={[{width: 156}]}
-              title={'Accept'}
-              onPress={() => {props.navigation.navigate('SummaryTransaction')}}
+              title={getTranslation('accept')}
+              onPress={() => {props.navigation.navigate('SummaryTransaction', {
+                status: '',
+              })
+              }}
             />
           </View>
         </ScrollView>
@@ -594,6 +576,15 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 10,
     backgroundColor: '#C4C2C3',
+  },
+  comment: {
+    textAlignVertical: 'top',
+    paddingHorizontal: 10,
+    marginTop: 20,
+    height: 120,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 24,
+    fontSize: 16,
   },
 });
 

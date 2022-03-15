@@ -15,12 +15,15 @@ import {COLORS, IMAGES} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Text, Input, Header, BottomBackground} from '../components';
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function DescribePlaceOfDelivery(props) {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [department, setDepartment] = useState('');
+  const {getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -31,7 +34,7 @@ function DescribePlaceOfDelivery(props) {
       // style={styles.container}
       >
         <Header
-          title={'Describe Place'}
+          title={getTranslation('describe_place')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -46,7 +49,7 @@ function DescribePlaceOfDelivery(props) {
             weight="500"
             align="center"
             color={COLORS.titleColor}>
-            {'Describe the place of delivery'}
+            {getTranslation('describe_place_delivery')}
           </Text>
           <Text
             style={[styles.inputView, {marginTop: 22,marginBottom:30, alignSelf: 'flex-start'}]}
@@ -54,12 +57,12 @@ function DescribePlaceOfDelivery(props) {
             weight="500"
             align="center"
             color={COLORS.primaryColor}>
-            {'Where are you going'}
+            {getTranslation('where_you_going')}
           </Text>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Address'}
+            placeholder={getTranslation('address')}
             isLeft={IMAGES.home}
             onChangeText={text => {
               setAddress(text);
@@ -67,7 +70,7 @@ function DescribePlaceOfDelivery(props) {
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'City'}
+            placeholder={getTranslation('city')}
             isLeft={IMAGES.location}
             onChangeText={text => {
               setCity(text);
@@ -75,7 +78,7 @@ function DescribePlaceOfDelivery(props) {
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Country'}
+            placeholder={getTranslation('country')}
             isLeft={IMAGES.location}
             onChangeText={text => {
               setCountry(text);
@@ -83,7 +86,7 @@ function DescribePlaceOfDelivery(props) {
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
-            placeholder={'Department'}
+            placeholder={getTranslation('department')}
             isLeft={IMAGES.department}
             onChangeText={text => {
               setDepartment(text);
@@ -92,7 +95,7 @@ function DescribePlaceOfDelivery(props) {
 
           <Button
             style={[styles.inputView, { marginTop: 40, marginBottom:80 }]}
-            title={'Show List'}
+            title={getTranslation('show_list')}
             onPress={() => {
               props.navigation.navigate('RequestsListForPlaces')
             }}
