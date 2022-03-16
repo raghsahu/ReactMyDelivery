@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -28,7 +28,7 @@ import {
 } from '../components';
 import {Rating} from 'react-native-ratings';
 //CONTEXT
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const {height, width} = Dimensions.get('screen');
 
@@ -37,7 +37,7 @@ function AdModificationProposal(props) {
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
   const [reasonToChange, setReasonToChange] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -85,36 +85,47 @@ function AdModificationProposal(props) {
           />
 
           <View style={[styles.inputView, {marginTop: 20}]}>
-            <Text
-              // style={[styles.inputView]}
-              size="20"
-              weight="500"
-              align="left"
-              color={COLORS.textColor}>
-              {'souris'}
-            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <Text
+                // style={{flex: 1}}
+                size="20"
+                weight="500"
+                align="left"
+                color={COLORS.textColor}>
+                {'souris'}
+              </Text>
 
-            <Text
-              style={[styles.rightButtons, {position: 'absolute'}]}
-              size="16"
-              weight="500"
-              align="left"
-              color={COLORS.textColor5}>
-              {getTranslation('photo_changed')}
-            </Text>
+              <Text
+                style={[styles.rightButtons, {width: 150}]}
+                size="16"
+                weight="500"
+                align="center"
+                color={COLORS.textColor5}>
+                {getTranslation('photo_changed')}
+              </Text>
+            </View>
 
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 5,
+                flex: 1,
                 justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10
               }}>
-              <View
+            
+            <View
                 style={{
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('web_link') +' :'}
+                  {getTranslation('web_link') + ' :'}
                 </Text>
 
                 <Text
@@ -129,11 +140,11 @@ function AdModificationProposal(props) {
               </View>
 
               <Text
-                style={styles.rightButtons}
-                color={COLORS.textColor5}
+                style={[styles.rightButtons, {width: 97}]}
                 size="16"
                 weight="500"
-                onPress={() => {}}>
+                align="center"
+                color={COLORS.textColor5}>
                 {getTranslation('changed')}
               </Text>
             </View>
@@ -183,14 +194,14 @@ function AdModificationProposal(props) {
                 </Text>
               </View>
 
-              <Text
+              {/* <Text
                 style={[styles.rightButtons]}
                 color={COLORS.textColor5}
                 size="16"
                 weight="500"
                 onPress={() => {}}>
                 {getTranslation('changed')}
-              </Text>
+              </Text> */}
             </View>
 
             <View
@@ -225,7 +236,7 @@ function AdModificationProposal(props) {
             <Text
               style={[
                 styles.rightButtons,
-                {position: 'absolute', marginTop: 10, paddingVertical: 10},
+                {position: 'absolute',  alignSelf: 'flex-end'},
               ]}
               color={COLORS.textColor5}
               size="16"
@@ -240,7 +251,7 @@ function AdModificationProposal(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('global_commission') +' :'}
+                {getTranslation('global_commission') + ' :'}
               </Text>
 
               <Text
@@ -343,7 +354,7 @@ function AdModificationProposal(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('place_of_delivery') +' :'}
+                  {getTranslation('place_of_delivery') + ' :'}
                 </Text>
 
                 <Text
@@ -358,14 +369,14 @@ function AdModificationProposal(props) {
                 </Text>
               </View>
 
-              <Text
+              {/* <Text
                 style={[styles.rightButtons, {marginRight: 0}]}
                 color={COLORS.textColor5}
                 size="16"
                 weight="500"
                 onPress={() => {}}>
                 {getTranslation('changed')}
-              </Text>
+              </Text> */}
             </View>
           </View>
 
@@ -404,7 +415,7 @@ function AdModificationProposal(props) {
               marginHorizontal: 20,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              { getTranslation('deliveryman_commission') +' :'}
+              {getTranslation('deliveryman_commission') + ' :'}
             </Text>
 
             <Text
@@ -530,9 +541,10 @@ function AdModificationProposal(props) {
             <Button
               style={[{width: 156}]}
               title={getTranslation('accept')}
-              onPress={() => {props.navigation.navigate('SummaryTransaction', {
-                status: '',
-              })
+              onPress={() => {
+                props.navigation.navigate('SummaryTransaction', {
+                  status: '',
+                });
               }}
             />
           </View>
@@ -548,7 +560,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 20,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,
@@ -570,12 +582,13 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   rightButtons: {
-    // position: 'absolute',
-    alignSelf: 'flex-end',
-    borderRadius: 30,
-    paddingVertical: 2,
+    height: 38,
+    borderRadius: 19,
+    paddingVertical: 7,
     paddingHorizontal: 10,
     backgroundColor: '#C4C2C3',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   comment: {
     textAlignVertical: 'top',

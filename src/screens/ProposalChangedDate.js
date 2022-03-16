@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Text, Input, Header, BottomBackground} from '../components';
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

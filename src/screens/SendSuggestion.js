@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';

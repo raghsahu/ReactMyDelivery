@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -295,7 +295,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('price' + ' :')}
+                  {getTranslation('price') + ' :'}
                 </Text>
 
                 <Text
@@ -522,7 +522,7 @@ function AdSummaryDetails(props) {
                 }}>
                 <Button
                   type={1}
-                  style={[{width: 156}]}
+                  style={[{width: 156, backgroundColor: COLORS.homeBg}]}
                   title={getTranslation('to_propose')}
                   onPress={() => {
                     proposalToModificationOfAd();
@@ -651,8 +651,8 @@ function AdSummaryDetails(props) {
               size="18"
               weight="500"
               align="center"
-              color={COLORS.black}>
-              {'€ 6.00 + € 2.00 = € 8.00'}
+              color={COLORS.primaryColor}>
+              {'€ 3.00'}
             </Text>
 
             <Text
@@ -661,7 +661,7 @@ function AdSummaryDetails(props) {
               weight="400"
               align="center"
               color={COLORS.black}>
-              {'Sum blocked until the \nexchange delivery'}
+              {'Sum blocked until the end \nof the transaction'}
             </Text>
 
             <Text
@@ -670,7 +670,7 @@ function AdSummaryDetails(props) {
               weight="400"
               align="center"
               color={COLORS.black}>
-              {'Specifying the date \nexpected delivery'}
+              {'Expected delivery'}
             </Text>
 
             <TouchableOpacity
@@ -714,7 +714,7 @@ function AdSummaryDetails(props) {
                 {
                   width: 200,
                   marginTop: 10,
-                  marginBottom: 10,
+                  marginBottom: 20,
                   alignSelf: 'center',
                 },
               ]}
@@ -1212,10 +1212,10 @@ function AdSummaryDetails(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1.0,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.homeBg,
   },
   inputView: {
-    marginHorizontal: 20,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

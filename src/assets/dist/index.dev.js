@@ -1,4 +1,10 @@
-export const IMAGES = {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DIMENSION = exports.COLORS = exports.IMAGES = void 0;
+var IMAGES = {
   BACK: require('./images/cross.png'),
   StarCorner: require('./images/star_corner.png'),
   StarFilled: require('./images/star_filled.png'),
@@ -50,10 +56,10 @@ export const IMAGES = {
   weblink: require('./images/weblink.png'),
   photos: require('./images/photos.png'),
   percentage: require('./images/percentage.png'),
-  quantity: require('./images/quantity.png'),
+  quantity: require('./images/quantity.png')
 };
-
-export const COLORS = {
+exports.IMAGES = IMAGES;
+var COLORS = {
   gray: 'rgba(191,191,191,1)',
   black: 'rgba(0,0,0,1)',
   white: 'rgba(255,255,255,1)',
@@ -73,9 +79,10 @@ export const COLORS = {
   homeBg: '#E5E5E5',
   red: '#FF0000',
   borderColor: '#AAAAAA',
-  borderColor2: '#363636',
+  borderColor2: '#363636'
 };
-
-export const DIMENSION = {
-  marginHorizontal: 20,
+exports.COLORS = COLORS;
+var DIMENSION = {
+  marginHorizontal: 20
 };
+exports.DIMENSION = DIMENSION;

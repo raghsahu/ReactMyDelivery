@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, PublishedItemList} from '../components';
@@ -70,7 +70,7 @@ function Published(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: DIMENSION.marginHorizontal,
                 marginTop: 20,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -102,10 +102,10 @@ function Published(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1.0,
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: '#FAFAFA',
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

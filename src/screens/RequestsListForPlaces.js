@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, {useEffect, useContext, useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,20 +8,19 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
-  FlatList
+  FlatList,
 } from 'react-native';
 
-
 //ASSETS
-import { COLORS, IMAGES } from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import { Button, Text, Input, Header, AdvertiseListItem } from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {Button, Text, Input, Header, AdvertiseListItem} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function RequestsListForPlaces(props) {
   const [name, setName] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -37,24 +36,31 @@ function RequestsListForPlaces(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-
-          <View style={{ flex: 1, paddingVertical: 10, justifyContent: 'space-between', marginTop: 12, flexDirection: 'row' }}>
+          <View
+            style={{
+              flex: 1,
+              paddingVertical: 10,
+              justifyContent: 'space-between',
+              marginTop: 12,
+              flexDirection: 'row',
+            }}>
             <Text
-              style={[styles.inputView, { alignSelf: 'center' }]}
+              style={[styles.inputView, {alignSelf: 'center'}]}
               size="20"
               weight="500"
               align="center"
               color={COLORS.textColor2}>
               {getTranslation('filter_by')}
             </Text>
-            <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
+            <TouchableOpacity style={[styles.inputView, {alignSelf: 'center'}]}>
               <ImageBackground
-               source={IMAGES.rectangle_gray_border} resizeMode="cover" >
+                source={IMAGES.rectangle_gray_border}
+                resizeMode="cover">
                 <Image
                   style={{
                     width: 30,
                     height: 30,
-                   // borderRadius: 35,
+                    // borderRadius: 35,
                     margin: 5,
                   }}
                   source={IMAGES.filterby}
@@ -63,11 +69,20 @@ function RequestsListForPlaces(props) {
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.inputView, { marginTop: 22, flex: 1, marginBottom: 30, }]}>
-            <View style={{ justifyContent: 'space-evenly', flex: 1, flexDirection: 'row' }}>
-              <TouchableOpacity style={{ borderRadius: 30, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+          <View
+            style={[
+              styles.inputView,
+              {marginTop: 10, flex: 1, marginBottom: 30},
+            ]}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flex: 1,
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -75,10 +90,9 @@ function RequestsListForPlaces(props) {
                   {'Publication Date'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{ borderRadius: 30, marginStart: 10, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -86,10 +100,9 @@ function RequestsListForPlaces(props) {
                   {'Duration of Ad'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{ borderRadius: 30, marginStart: 10, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -98,11 +111,16 @@ function RequestsListForPlaces(props) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ justifyContent: 'space-evenly', flex: 1, flexDirection: 'row', marginTop: 12 }}>
-              <TouchableOpacity
-                style={{ justifyContent: 'center', borderRadius: 30, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flex: 1,
+                flexDirection: 'row',
+                marginTop: 5,
+              }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -110,10 +128,9 @@ function RequestsListForPlaces(props) {
                   {'Price'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{ justifyContent: 'center', borderRadius: 30, marginStart: 10, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -121,10 +138,9 @@ function RequestsListForPlaces(props) {
                   {'Limit Delivery Date'}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{ justifyContent: 'center', borderRadius: 30, marginStart: 10, width: '33%', borderWidth: 1, borderColor: COLORS.borderColor, paddingVertical: 5, paddingHorizontal: 12 }}>
+              <TouchableOpacity style={[styles.filter_item]}>
                 <Text
-                  style={{ textAlignVertical: "center" }}
+                  style={{textAlignVertical: 'center'}}
                   size="10"
                   weight="500"
                   align="center"
@@ -135,20 +151,27 @@ function RequestsListForPlaces(props) {
             </View>
           </View>
 
-          <View style={{ height: 5, backgroundColor: "#414141" }}></View>
+          <View style={{height: 5, backgroundColor: '#414141'}}></View>
 
-          <View style={{ flex: 1, paddingVertical: 10, justifyContent: 'space-between', marginTop: 12, flexDirection: 'row' }}>
+          <View
+            style={{
+              flex: 1,
+              paddingVertical: 10,
+              justifyContent: 'space-between',
+              marginTop: 12,
+              flexDirection: 'row',
+            }}>
             <Text
-              style={[styles.inputView, { alignSelf: 'center' }]}
+              style={[styles.inputView, {alignSelf: 'center'}]}
               size="18"
               weight="500"
               align="center"
               color={COLORS.textColor2}>
               {'Advertise List'}
             </Text>
-            <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
+            <TouchableOpacity style={[styles.inputView, {alignSelf: 'center'}]}>
               <Text
-                style={[{ alignSelf: 'center' }]}
+                style={[{alignSelf: 'center'}]}
                 size="18"
                 weight="500"
                 align="center"
@@ -159,23 +182,21 @@ function RequestsListForPlaces(props) {
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={['', '']}
+            data={['']}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
+            renderItem={({item, index}) => {
               return (
                 <AdvertiseListItem
-                  mainViewStyle={[styles.inputView, { marginBottom: 20 }]}
+                  mainViewStyle={[styles.inputView, {marginBottom: 20}]}
                   onSummary={() => {
                     // navigation.navigate('SummaryTransaction')
-                    props.navigation.navigate('AdSummaryDetails')
-                        // props.onSummary()
+                    props.navigation.navigate('AdSummaryDetails');
+                    // props.onSummary()
                   }}
-
                 />
               );
-                      }}
+            }}
           />
-
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -188,10 +209,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,
+  },
+  filter_item: {
+    flex: 1,
+    height: 30,
+    width: '33%',
+    borderRadius: 15,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: COLORS.borderColor,
+    paddingHorizontal: 5,
+    justifyContent: 'center', 
   },
 });
 

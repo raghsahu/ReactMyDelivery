@@ -146,7 +146,7 @@ const AsSenderItemList = props => {
             marginLeft: 5,
             marginTop: 5,
           }}>
-          <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+          <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('acceptance_limit')}
           </Text>
 
@@ -167,7 +167,7 @@ const AsSenderItemList = props => {
             marginLeft: 5,
             marginTop: 10,
           }}>
-          <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+          <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('delivery_limit')}
           </Text>
 
@@ -185,9 +185,9 @@ const AsSenderItemList = props => {
         <View
           style={{
             flexDirection: 'row',
-            marginTop: 10,
+            marginTop: 5,
             marginBottom: 5,
-            justifyContent: 'space-between',
+            //justifyContent: 'space-between',
           }}>
           <View
             style={{
@@ -195,7 +195,7 @@ const AsSenderItemList = props => {
               marginLeft: 5,
               alignItems: 'center',
             }}>
-            <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+            <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
               {getTranslation('price') +' :'}
             </Text>
 
@@ -213,9 +213,9 @@ const AsSenderItemList = props => {
           <View
             style={{
               flexDirection: 'row',
-              marginLeft: 5,
+              marginLeft: 25,
             }}>
-            <Text style={{}} color={COLORS.black} size="16" weight="600">
+            <Text style={{}} color={COLORS.black} size="16" weight="500">
               {getTranslation('delivery_man_commission') +' :'}
             </Text>
 
@@ -233,11 +233,11 @@ const AsSenderItemList = props => {
         </View>
       </View>
 
-      <View
+      {/* <View
         style={{
           backgroundColor: COLORS.gray,
           height: 1,
-        }}></View>
+        }}></View> */}
     </TouchableOpacity>
   );
 };

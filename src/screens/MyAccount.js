@@ -15,7 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 import LinearGradient from 'react-native-linear-gradient';
 //COMMON COMPONENT
@@ -231,7 +231,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'Omar Bentchikou'}
+              {'Omar Bentchikou                 Diomdi'}
             </Text>
 
             <Text
@@ -273,6 +273,7 @@ function MyAccount(props) {
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
+                    marginLeft: 24,
                     alignSelf: 'center',
                     justifyContent: 'center',
                   }}>
@@ -295,7 +296,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     backgroundColor: COLORS.gray,
-                    //width: 110,
+                   // width: 180,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -303,7 +304,7 @@ function MyAccount(props) {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{marginLeft: 15, marginRight: 15}}
+                    style={{marginLeft: 15, marginRight: 15, paddingLeft: 10, paddingRight: 10}}
                     size="16"
                     weight="500"
                     align="center"
@@ -316,13 +317,14 @@ function MyAccount(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: 10,
                 marginTop: 5,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
               <TouchableOpacity
+              style={{flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Suggestion',
@@ -333,7 +335,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     backgroundColor: '#792392',
-                    width: 160,
+                   // width: 160,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -353,6 +355,7 @@ function MyAccount(props) {
               </TouchableOpacity>
 
               <TouchableOpacity
+              style={{flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Complaint',
@@ -363,7 +366,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     //backgroundColor: COLORS.gray,
-                    width: 160,
+                    //width: 160,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -635,7 +638,7 @@ const styles = StyleSheet.create({
     //backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 20,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   item: {
     backgroundColor: COLORS.white,

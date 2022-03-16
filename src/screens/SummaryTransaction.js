@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -642,7 +642,7 @@ function SummaryTransaction(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: DIMENSION.marginHorizontal,
                 marginTop: 30,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -735,7 +735,7 @@ function SummaryTransaction(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: DIMENSION.marginHorizontal,
                 marginTop: 30,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -777,7 +777,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

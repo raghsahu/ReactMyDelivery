@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
@@ -39,7 +39,7 @@ function ResetPassword(props) {
           // style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
-            style={{marginHorizontal: 10, marginTop: 73}}
+            style={{marginHorizontal: 10, marginTop: 33}}
             size="24"
             weight="400"
             align="center"
@@ -51,7 +51,7 @@ function ResetPassword(props) {
           <Image
             source={IMAGES.reset_pw_icon}
             style={{
-              height: 347,
+              height: 300,
               width: '100%',
               marginTop: 20,
               alignSelf: 'center',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -151,7 +151,7 @@ function AddProductCommision(props) {
             ]}></View>
 
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[styles.inputView, {marginTop: 10, alignSelf: 'center'}]}
             size="18"
             weight="500"
             align="center"
@@ -177,7 +177,7 @@ function AddProductCommision(props) {
             ]}></View>
 
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[styles.inputView, {marginTop: 15, alignSelf: 'center'}]}
             size="18"
             weight="500"
             align="center"
@@ -203,7 +203,7 @@ function AddProductCommision(props) {
             ]}></View>
 
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[styles.inputView, {marginTop: 10, alignSelf: 'center'}]}
             size="18"
             weight="500"
             align="center"
@@ -214,8 +214,8 @@ function AddProductCommision(props) {
           <View
             style={[
               styles.inputView,
-              styles.inputContainer,
-              {flexDirection: 'row', justifyContent: 'space-between'},
+             
+              {flexDirection: 'row', justifyContent: 'space-between', marginTop: 10},
             ]}>
             <TouchableOpacity
               onPress={() => {
@@ -331,13 +331,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,
   },
   day_hour: {
-    marginTop: 20,
+    marginTop: 10,
     alignSelf: 'center',
     backgroundColor: COLORS.lightGray,
     //padding: 10,

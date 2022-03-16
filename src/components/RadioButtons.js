@@ -1,23 +1,21 @@
-import React, { Component } from 'react';
-import {  View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {Component} from 'react';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 //COMMON COMPONENT
 import {Text} from '../components';
 //ASSETS
-import {
-  COLORS,
-} from '../assets';
+import {COLORS} from '../assets';
 
-export default function RadioButtons({ options, selectedOption, onSelect }) {
+export default function RadioButtons({options, selectedOption, onSelect, style}) {
   return (
-    <View style={{
-                flexDirection: 'row',
-               
-              }}>
-      {options.map((item) => {
+    <View
+      style={{
+        flexDirection: 'row', alignItems: 'center', 
+      }}>
+      {options.map(item => {
         return (
-          <View key={item.key} style={[styles.buttonContainer]}>
+          <View key={item.key} style={[style,  styles.buttonContainer, ]}>
             <TouchableOpacity
-              style={[styles.circle, {marginLeft:10}]}
+              style={[styles.circle, {marginLeft: 10}]}
               onPress={() => {
                 onSelect(item);
               }}>
@@ -25,15 +23,15 @@ export default function RadioButtons({ options, selectedOption, onSelect }) {
                 <View style={styles.checkedCircle} />
               )}
             </TouchableOpacity>
-                <Text
-                weight="500"
-                size="16"
-                color={COLORS.black}
-                style={{
-                marginLeft:5,
-                
-              }}>{item.text}
-              </Text>
+            <Text
+              weight="500"
+              size="16"
+              color={COLORS.black}
+              style={{
+                marginLeft: 10,
+              }}>
+              {item.text}
+            </Text>
           </View>
         );
       })}

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -120,7 +120,7 @@ function ExchangeSuccessSummary(props) {
 
           <Button
             style={{
-              marginHorizontal: 20,
+              marginHorizontal: DIMENSION.marginHorizontal,
               marginBottom: 20,
               marginTop: 20,
               justifyContent: 'center',
@@ -414,7 +414,7 @@ function ExchangeSuccessSummary(props) {
 
           <View
             style={{
-              marginHorizontal: 20,
+              marginHorizontal: DIMENSION.marginHorizontal,
               marginBottom: 20,
               marginTop: 30,
               justifyContent: 'center',
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

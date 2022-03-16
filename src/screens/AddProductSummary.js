@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -108,7 +108,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {getTranslation('web_link') +' :'}
               </Text>
 
@@ -148,7 +148,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {getTranslation('price') +' :'}
               </Text>
 
@@ -168,7 +168,7 @@ function AddProductSummary(props) {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{}} color={COLORS.black} size="16" weight="500">
                 {getTranslation('additional_info')}
               </Text>
 
@@ -205,7 +205,7 @@ function AddProductSummary(props) {
                 style={{
                   marginLeft: 10,
                 }}
-                color={COLORS.Darkgray}
+                color={COLORS.textColor4}
                 size="16"
                 weight="500">
                 {getTranslation('both')}
@@ -225,7 +225,7 @@ function AddProductSummary(props) {
                 style={{
                   marginLeft: 10,
                 }}
-                color={COLORS.darkGray}
+                color={COLORS.textColor4}
                 size="16"
                 weight="500">
                 {'2022-01-15 12:00'}
@@ -245,7 +245,7 @@ function AddProductSummary(props) {
                 style={{
                   marginLeft: 10,
                 }}
-                color={COLORS.darkGray}
+                color={COLORS.textColor4}
                 size="16"
                 weight="500">
                 {'2022-01-22    12:00'}
@@ -266,7 +266,7 @@ function AddProductSummary(props) {
                   marginLeft: 10,
                   width: 200,
                 }}
-                color={COLORS.darkGray}
+                color={COLORS.textColor4}
                 size="16"
                 weight="500">
                 {'Constantine Constantine Algerie'}
@@ -285,7 +285,7 @@ function AddProductSummary(props) {
             ]}>
             <Text
               style={{justifyContent: 'center', alignSelf: 'center'}}
-              color={COLORS.darkGray}
+              color={COLORS.textColor4}
               size="14"
               align="center"
               weight="500">
@@ -294,7 +294,7 @@ function AddProductSummary(props) {
 
             <Text
               style={{justifyContent: 'center', alignSelf: 'center'}}
-              color={COLORS.darkGray}
+              color={COLORS.textColor4}
               size="14"
               align="center"
               weight="500">
@@ -303,7 +303,7 @@ function AddProductSummary(props) {
 
             <Text
               style={{justifyContent: 'center', alignSelf: 'center'}}
-              color={COLORS.darkGray}
+              color={COLORS.textColor4}
               size="14"
               align="center"
               weight="500">
@@ -417,7 +417,7 @@ function AddProductSummary(props) {
               style={{
                 marginLeft: 10,
               }}
-              color={COLORS.darkGray}
+              color={COLORS.black}
               size="16"
               weight="500">
               {'€ 4.00'}
@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

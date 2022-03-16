@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 //COMMON COMPONENT
@@ -45,14 +45,14 @@ function EmailOtp(props) {
             style={{
               height: 274,
               width: 274,
-              margin: 60,
+              marginTop: 40,
               alignSelf: 'center',
               justifyContent: 'center',
             }}
           />
 
           <Input
-            style={[styles.inputView, styles.inputContainer]}
+            style={[styles.inputView, styles.inputContainer,{marginTop: 30}]}
             //placeholder={'omarbentchikou@hotmail.com'}
             editable={false}
             value={'omarbentchikou@hotmail.com'}
@@ -143,13 +143,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,
   },
   otpView: {
-    marginHorizontal: 20,
+    marginHorizontal: DIMENSION.marginHorizontal,
     alignSelf: 'center',
   },
     underlineStyleBase: {

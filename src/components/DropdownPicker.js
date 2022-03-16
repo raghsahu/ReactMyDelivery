@@ -3,7 +3,7 @@ import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 //COMMON COMPONENT
 import {Text} from '../components';
 //ASSETS
-import {COLORS} from '../assets';
+import {COLORS, DIMENSION} from '../assets';
 import {Picker} from '@react-native-picker/picker'; //for dropdown
 
 export default function DropdownPicker(props) {
@@ -51,7 +51,7 @@ export default function DropdownPicker(props) {
         //itemStyle={{color: COLORS.black, backgroundColor: COLORS.black}}
         style={{
           color: COLORS.black,
-          width: 300,
+          width: 250,
          // placeholderTextColor: COLORS.gray,
         }}
         ref={pickerRef}
@@ -75,7 +75,7 @@ export default function DropdownPicker(props) {
 
 const styles = StyleSheet.create({
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     height: 48,

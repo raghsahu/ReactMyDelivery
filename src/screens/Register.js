@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -36,6 +36,17 @@ const options = [
     key: 'Man',
     text: 'Man',
   },
+  // {
+  //   key: 'Women',
+  //   text: 'Women',
+  // },
+];
+
+const optionsWomen = [
+  // {
+  //   key: 'Man',
+  //   text: 'Man',
+  // },
   {
     key: 'Women',
     text: 'Women',
@@ -227,11 +238,33 @@ function Register(props) {
             }}
           />
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
+          <View
+            style={[
+              styles.inputView,
+              {
+                marginTop: 20,
+                backgroundColor: COLORS.white,
+                padding: 10,
+                elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.5,
+                shadowRadius: 2,
+                flexDirection: 'row',
+                // justifyContent: 'space-between',
+              },
+            ]}>
             <RadioButtons
               selectedOption={selectedOption}
               onSelect={onSelect}
               options={options}
+            />
+
+            <RadioButtons
+              style={[{marginLeft: 70}]}
+              selectedOption={selectedOption}
+              onSelect={onSelect}
+              options={optionsWomen}
             />
           </View>
 
@@ -258,12 +291,13 @@ function Register(props) {
             style={[
               styles.inputView,
               styles.inputContainer,
-              {flexDirection: 'row', flex: 1},
+              {flexDirection: 'row', flex: 1, backgroundColor: COLORS.lightGray, borderRadius: 24,},
             ]}>
             <Input
               style={[{width: 100}]}
               placeholder={'Country'}
               editable={false}
+              textAlign={'center'}
               onChangeText={text => {
                 //setName(text);
               }}
@@ -272,7 +306,7 @@ function Register(props) {
             <Input
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-              // isLeft={IMAGES.phone}
+              textAlign={'center'}
               onChangeText={text => {
                 //setName(text);
               }}
@@ -299,7 +333,7 @@ function Register(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('select_your_country')}
-            // isLeft={IMAGES.location}
+            textAlign={'center'}
             onChangeText={text => {
               setName(text);
             }}
@@ -322,7 +356,7 @@ function Register(props) {
               //setPassword(text);
             }}
             isShow={() => {
-              setPwSecureText(!pwSecureText)
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -335,7 +369,7 @@ function Register(props) {
               //setPassword(text);
             }}
             isShow={() => {
-              setPwSecureText1(!pwSecureText1)
+              setPwSecureText1(!pwSecureText1);
             }}
           />
 
@@ -399,7 +433,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

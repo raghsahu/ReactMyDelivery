@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, IncompleteItemList} from '../components';
@@ -72,7 +72,7 @@ function Incomplete(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: DIMENSION.marginHorizontal,
                 marginTop: 20,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,

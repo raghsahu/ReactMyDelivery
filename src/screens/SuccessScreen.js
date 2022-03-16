@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import {COLORS, IMAGES, DIMENSION} from '../assets';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 //COMMON COMPONENT
@@ -78,13 +78,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputView: {
-    marginHorizontal: 30,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   inputContainer: {
     marginTop: 16,
   },
   otpView: {
-    marginHorizontal: 20,
+    marginHorizontal: DIMENSION.marginHorizontal,
     alignSelf: 'center',
   },
   underlineStyleBase: {

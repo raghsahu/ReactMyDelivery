@@ -12,198 +12,210 @@ const PublishedItemList = props => {
   //const item = props.item;
 
   return (
-    <View
-      style={{
-        padding: 5,
-        margin: 5,
-        backgroundColor: COLORS.white,
-      }}>
+    <View style={{}}>
       <View
         style={{
-          // flex: 1,
-          flexDirection: 'row',
-          marginTop: 20,
+          padding: 5,
+          // marginTop: 4,
+          marginLeft: 5,
+          marginRight: 5,
+          // backgroundColor: '',
         }}>
-        <Image
-          style={{
-            width: 70,
-            height: 70,
-            borderRadius: 35,
-            margin: 5,
-          }}
-          source={IMAGES.circle_placeholder}
-        />
-
         <View
           style={{
-            padding: 5,
-            marginTop: 10,
+            // flex: 1,
+            flexDirection: 'row',
+            marginTop: 20,
           }}>
-          <Text style={{}} color={COLORS.black} size="18" weight="500">
-            {'Test3'}
-          </Text>
+          <Image
+            style={{
+              width: 70,
+              height: 70,
+              borderRadius: 35,
+              margin: 5,
+            }}
+            source={IMAGES.circle_placeholder}
+          />
 
           <View
             style={{
-              flexDirection: 'row',
-              marginTop: 5,
+              padding: 5,
+              marginTop: 10,
             }}>
-            <Image
-              tintColor={COLORS.primaryColor}
+            <Text
+              style={{marginBottom: 5}}
+              color={COLORS.textColor2}
+              size="18"
+              weight="500">
+              {'Test3'}
+            </Text>
+
+            <View
               style={{
-                width: 20,
-                height: 20,
-                //borderRadius: 35,
-              }}
-              source={IMAGES.location}
-            />
+                flexDirection: 'row',
+                marginTop: 5,
+              }}>
+              <Image
+                tintColor={COLORS.primaryColor}
+                style={{
+                  width: 20,
+                  height: 20,
+                  //borderRadius: 35,
+                }}
+                source={IMAGES.location}
+              />
+
+              <Text
+                style={{
+                  marginLeft: 5,
+                }}
+                color={COLORS.primaryColor}
+                size="16"
+                weight="500">
+                {'Constantine Constantine,\n Algerie '}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View
+          style={{
+            // flex: 1.0,
+            position: 'absolute',
+            right: 0,
+            marginTop: 5,
+            marginRight: 0,
+          }}>
+          <Button
+            style={[
+              {
+                width: 93,
+                height: 29,
+                borderRadius: 0,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#C2C2C2',
+              },
+            ]}
+            title={getTranslation('expired')}
+            type={2}
+            //onPress={() => {props.onModify()}}
+          />
+
+          <Button
+            style={[
+              {
+                width: 93,
+                height: 29,
+                marginTop: 5,
+                backgroundColor: COLORS.red,
+                borderRadius: 0,
+                alignSelf: 'center',
+                justifyContent: 'center',
+              },
+            ]}
+            title={getTranslation('delete')}
+            onPress={() => {
+              props.onDelete();
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 5,
+          }}>
+          <Text style={{}} color={COLORS.black} size="16" weight="600">
+            {getTranslation('acceptance_limit')}
+          </Text>
+
+          <Text
+            style={{
+              marginLeft: 10,
+            }}
+            color={COLORS.textColor4}
+            size="16"
+            weight="500">
+            {'2021-11-07 14:42'}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 5,
+            marginTop: 5,
+          }}>
+          <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+            {getTranslation('delivery_limit')}
+          </Text>
+
+          <Text
+            style={{
+              marginLeft: 10,
+            }}
+            color={COLORS.textColor4}
+            size="16"
+            weight="500">
+            {'2021-11-07 14:42'}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 5,
+            marginBottom: 10,
+            justifyContent: 'space-between',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginLeft: 5,
+            }}>
+            <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+              {getTranslation('price') + ' :'}
+            </Text>
 
             <Text
               style={{
-                marginLeft: 5,
+                marginLeft: 10,
               }}
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'Constantine Constantine, Algerie '}
+              {'€10'}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginLeft: 5,
+            }}>
+            <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
+              {getTranslation('deliveryman_commission') + ' :'}
+            </Text>
+
+            <Text
+              style={{
+                marginLeft: 10,
+              }}
+              color={COLORS.primaryColor}
+              size="16"
+              weight="500">
+              {'€10'}
             </Text>
           </View>
         </View>
       </View>
-
       <View
         style={{
-          // flex: 1.0,
-          position: 'absolute',
-          right: 0,
-          marginTop: 5,
-          marginRight: 0,
-        }}>
-        <Button
-          style={[
-            {
-              width: 88,
-              height: 29,
-              borderRadius: 0,
-              alignSelf: 'center',
-              justifyContent: 'center',
-              backgroundColor: COLORS.gray,
-            },
-          ]}
-          title={getTranslation('expired')}
-          type={2}
-          //onPress={() => {props.onModify()}}
-        />
-
-        <Button
-          style={[
-            {
-              width: 88,
-              height: 29,
-              marginTop: 5,
-              backgroundColor: COLORS.red,
-              borderRadius: 0,
-              alignSelf: 'center',
-              justifyContent: 'center',
-            },
-          ]}
-          title={getTranslation('delete')}
-          onPress={() => {
-            props.onDelete();
-          }}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          marginLeft: 5,
-        }}>
-        <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {getTranslation('acceptance_limit')}
-        </Text>
-
-        <Text
-          style={{
-            marginLeft: 10,
-          }}
-          color={COLORS.darkGray}
-          size="16"
-          weight="500">
-          {'2021-11-07 14:42'}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          marginLeft: 5,
-          marginTop: 5,
-        }}>
-        <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {getTranslation('delivery_limit')}
-        </Text>
-
-        <Text
-          style={{
-            marginLeft: 10,
-          }}
-          color={COLORS.darkGray}
-          size="16"
-          weight="500">
-          {'2021-11-07 14:42'}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 5,
-          marginBottom: 5,
-          justifyContent: 'space-between',
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginLeft: 5,
-          }}>
-          <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {getTranslation('price') +' :'}
-          </Text>
-
-          <Text
-            style={{
-              marginLeft: 10,
-            }}
-            color={COLORS.primaryColor}
-            size="16"
-            weight="500">
-            {'€10'}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            marginLeft: 5,
-          }}>
-          <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {getTranslation('deliveryman_commission') +' :'}
-          </Text>
-
-          <Text
-            style={{
-              marginLeft: 10,
-            }}
-            color={COLORS.primaryColor}
-            size="16"
-            weight="500">
-            {'€10'}
-          </Text>
-        </View>
-      </View>
+          height: 4,
+          backgroundColor: '#D5D5D5',
+        }}></View>
     </View>
-    // </TouchableOpacity>
   );
 };
 
