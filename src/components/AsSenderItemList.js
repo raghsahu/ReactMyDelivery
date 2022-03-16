@@ -5,9 +5,12 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+//CONTEXT
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 const AsSenderItemList = props => {
   //const item = props.item;
+  const { getTranslation} = useContext(LocalizationContext);
 
   return (
      <TouchableOpacity
@@ -44,7 +47,7 @@ const AsSenderItemList = props => {
               //backgroundColor: COLORS.primaryColor,
             },
           ]}
-          title={'Rating'}
+          title={getTranslation('rating')}
           //type={1}
           onPress={() => {props.onRating()}}
         />
@@ -129,7 +132,7 @@ const AsSenderItemList = props => {
           marginLeft: 5,
         }}>
         <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {'Acceptance Limit:'}
+          {getTranslation('acceptance_limit')}
         </Text>
 
         <Text
@@ -150,7 +153,7 @@ const AsSenderItemList = props => {
           marginTop: 5,
         }}>
         <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {'Delivery Limit:'}
+          {getTranslation('delivery_limit')}
         </Text>
 
         <Text
@@ -177,7 +180,7 @@ const AsSenderItemList = props => {
             marginLeft: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Price:'}
+            {getTranslation('price') + ' :'}
           </Text>
 
           <Text
@@ -197,7 +200,7 @@ const AsSenderItemList = props => {
             marginLeft: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Deliveryman Commission:'}
+            {getTranslation('deliveryman_commission') +' :'}
           </Text>
 
           <Text

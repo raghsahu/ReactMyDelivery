@@ -79,7 +79,7 @@
     "ad_seen_by": "Ad Seen By : ",
     "acceptance_limit": "Acceptance Limit :",
     "delivery_limit": "Delivery Limit :",
-    "delivery_man_commission": "Deliveryman Commission",
+    "delivery_man_commission": "Deliveryman \nCommission",
     "fees": "Fees",
     "total_to_pay": "Total to Pay :",
     "contract_terms": "Contract Terms",
@@ -154,7 +154,29 @@
     "select_country": "Select Country",
     "old_pw": "Old Password",
     "enter_new_pw": "Enter New Password",
-    "save_changes": "SAVE CHANGES"
+    "save_changes": "SAVE CHANGES",
+    "notifications": "Notifications",
+    "logout": "Logout",
+    "delete_account": "Delete Account",
+    "suggestion": "Suggestion",
+    "complaint": "Complaint",
+    "announcement": "Announcements:",
+    "incomplete": "INCOMPLETE",
+    "published": "PUBLISHED",
+    "inProgress": "INPROGRESS",
+    "completed": "COMPLETED",
+    "are_you_delete_account": "Are you sure you want to delete your account",
+    "verification_code": "Verification Code",
+    "are_you_logout": "Are you sure you want to logout your account",
+    "as_user": "AS USER",
+    "as_delivery_man": "AS DELIVERY MAN",
+    "as_sender": "AS SENDER",
+    "application_rate": "Applicant Rate:",
+    "rating": "Rating",
+    "modify": "Modify",
+    "delete": "Delete",
+    "expired": "Expired"
+
 
    
 

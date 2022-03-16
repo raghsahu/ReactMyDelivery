@@ -298,7 +298,7 @@ function AddProductSummary(props) {
               size="14"
               align="center"
               weight="500">
-              {getTranslation('delivery_man_commission')}
+              {getTranslation('deliveryman_commission')}
             </Text>
 
             <Text

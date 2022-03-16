@@ -6,7 +6,11 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
 import {Rating} from 'react-native-ratings';
+//CONTEXT
+import { LocalizationContext } from '../context/LocalizationProvider';
+
 const AsSenderItemList = props => {
+  const { getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
@@ -26,7 +30,7 @@ const AsSenderItemList = props => {
         size="8"
         weight="bold"
         align={'right'}>
-        {'Publication Date : 2022-01-13'}
+        {getTranslation('publication_date') +' : 2022-01-13'}
       </Text>
 
       <View>
@@ -43,10 +47,10 @@ const AsSenderItemList = props => {
           }}>
           <View style={{}}>
             <Text style={{}} color={COLORS.textColor2} size="8" weight="800">
-              {'Applicant Rate:'}
+              {getTranslation('application_rate')}
             </Text>
             <Text style={{}} color={COLORS.textColor} size="8" weight="400">
-              {'Number of Evaluation : 31'}
+              {getTranslation('number_evaluation') +' 31'}
             </Text>
           </View>
           <View
@@ -143,7 +147,7 @@ const AsSenderItemList = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
-            {'Acceptance Limit:'}
+            {getTranslation('acceptance_limit')}
           </Text>
 
           <Text
@@ -164,7 +168,7 @@ const AsSenderItemList = props => {
             marginTop: 10,
           }}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
-            {'Delivery Limit:'}
+            {getTranslation('delivery_limit')}
           </Text>
 
           <Text
@@ -192,7 +196,7 @@ const AsSenderItemList = props => {
               alignItems: 'center',
             }}>
             <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
-              {'Price:'}
+              {getTranslation('price') +' :'}
             </Text>
 
             <Text
@@ -212,7 +216,7 @@ const AsSenderItemList = props => {
               marginLeft: 5,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Deliveryman\nCommission:'}
+              {getTranslation('delivery_man_commission') +' :'}
             </Text>
 
             <Text

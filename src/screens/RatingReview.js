@@ -24,11 +24,13 @@ import {
 } from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {Rating} from 'react-native-ratings';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function RatingReview(props) {
   const [defaultRating, setDefaultRating] = useState(0);
   // To set the max number of Stars
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+  const { getTranslation} = useContext(LocalizationContext);
 
   const onSelect = item => {
     setDefaultRating(item);
@@ -45,7 +47,7 @@ function RatingReview(props) {
       style={styles.container}
       >
         <Header
-          title={'Review & Rating'}
+          title={getTranslation('review_rating')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -59,7 +61,7 @@ function RatingReview(props) {
             weight="500"
             align="center"
             color={COLORS.black}>
-            {'Please rate the application'}
+            {getTranslation('pls_rate_application')}
           </Text>
 
             <Rating
@@ -76,7 +78,7 @@ function RatingReview(props) {
 
           <TextInput
             style={[styles.inputView, styles.comment]}
-            placeholder={'Leave a comment...'}
+            placeholder={getTranslation('leave_comment')}
             multiline={true}
             //value={''}
           />
@@ -119,7 +121,7 @@ function RatingReview(props) {
 
           <TextInput
             style={[styles.inputView, styles.comment]}
-            placeholder={'Leave a comment...'}
+            placeholder={getTranslation('leave_comment')}
             multiline={true}
             //value={''}
           />
@@ -140,7 +142,7 @@ function RatingReview(props) {
               weight="500"
               align="left"
               color={COLORS.black}>
-              {'Share Now :'}
+              {getTranslation('share_now')}
             </Text>
 
             <View
@@ -164,7 +166,7 @@ function RatingReview(props) {
 
           <Button
             style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}
-            title={'Submit'}
+            title={getTranslation('submit')}
             onPress={() => {
               // props.navigation.navigate('SuccessScreen');
             }}

@@ -11,16 +11,19 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const ProductsItemList = props => {
+  const {getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
- 
     <View
-      style={{
-        //margin: 5,
-      }}>
+      style={
+        {
+          //margin: 5,
+        }
+      }>
       <Image
         style={{
           width: 300,
@@ -49,7 +52,7 @@ const ProductsItemList = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Web Link :'}
+            {getTranslation('web_link') + ' :'}
           </Text>
 
           <Text
@@ -69,7 +72,7 @@ const ProductsItemList = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Place to Buy :'}
+            {getTranslation('place_to_buy')}
           </Text>
 
           <Text
@@ -109,7 +112,7 @@ const ProductsItemList = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Additional Information:'}
+            {getTranslation('additional_info')}
           </Text>
 
           <Text
@@ -125,14 +128,12 @@ const ProductsItemList = props => {
       </View>
 
       <View
-            style={{
-              backgroundColor: COLORS.gray,
-              height: 2,
-              marginTop: 10,
-            }}></View>
-
+        style={{
+          backgroundColor: COLORS.gray,
+          height: 2,
+          marginTop: 10,
+        }}></View>
     </View>
-
   );
 };
 

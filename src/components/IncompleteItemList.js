@@ -5,8 +5,10 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 const IncompleteItemList = props => {
+  const { getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
@@ -48,7 +50,7 @@ const IncompleteItemList = props => {
         </Text>
 
         <Text color={COLORS.black} size="14" weight="500">
-          {'Web Link :ghu.com'}
+          {getTranslation('web_link') +' :ghu.com'}
         </Text>
         <Text color={COLORS.black} size="14" weight="500">
           {'Price :'}
@@ -73,7 +75,7 @@ const IncompleteItemList = props => {
                 justifyContent: 'center',
               },
             ]}
-            title={'Modify'}
+            title={getTranslation('modify')}
             onPress={() => {
               props.onModify();
             }}
@@ -90,7 +92,7 @@ const IncompleteItemList = props => {
                 justifyContent: 'center',
               },
             ]}
-            title={'Delete'}
+            title={getTranslation('delete')}
             onPress={() => {
               props.onDelete();
             }}

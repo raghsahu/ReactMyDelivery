@@ -5,8 +5,10 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const PublishedItemList = props => {
+  const {getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
@@ -88,7 +90,7 @@ const PublishedItemList = props => {
               backgroundColor: COLORS.gray,
             },
           ]}
-          title={'Expired'}
+          title={getTranslation('expired')}
           type={2}
           //onPress={() => {props.onModify()}}
         />
@@ -105,7 +107,7 @@ const PublishedItemList = props => {
               justifyContent: 'center',
             },
           ]}
-          title={'Delete'}
+          title={getTranslation('delete')}
           onPress={() => {
             props.onDelete();
           }}
@@ -118,7 +120,7 @@ const PublishedItemList = props => {
           marginLeft: 5,
         }}>
         <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {'Acceptance Limit:'}
+          {getTranslation('acceptance_limit')}
         </Text>
 
         <Text
@@ -139,7 +141,7 @@ const PublishedItemList = props => {
           marginTop: 5,
         }}>
         <Text style={{}} color={COLORS.black} size="16" weight="600">
-          {'Delivery Limit:'}
+          {getTranslation('delivery_limit')}
         </Text>
 
         <Text
@@ -166,7 +168,7 @@ const PublishedItemList = props => {
             marginLeft: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Price:'}
+            {getTranslation('price') +' :'}
           </Text>
 
           <Text
@@ -176,7 +178,7 @@ const PublishedItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'$10'}
+            {'€10'}
           </Text>
         </View>
 
@@ -186,7 +188,7 @@ const PublishedItemList = props => {
             marginLeft: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Deliveryman Commission:'}
+            {getTranslation('deliveryman_commission') +' :'}
           </Text>
 
           <Text
@@ -196,7 +198,7 @@ const PublishedItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'$10'}
+            {'€10'}
           </Text>
         </View>
       </View>

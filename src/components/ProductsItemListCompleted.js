@@ -11,8 +11,10 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const ProductsItemListCompleted = props => {
+const {getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
@@ -29,7 +31,7 @@ const ProductsItemListCompleted = props => {
             marginBottom: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Web Link :'}
+            {getTranslation('web_link') +' :'}
           </Text>
 
           <Text
@@ -49,7 +51,7 @@ const ProductsItemListCompleted = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Place to Buy :'}
+            {getTranslation('place_to_buy')}
           </Text>
 
           <Text
@@ -69,7 +71,7 @@ const ProductsItemListCompleted = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Price :'}
+            {getTranslation('price') +':'}
           </Text>
 
           <Text
@@ -89,7 +91,7 @@ const ProductsItemListCompleted = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Additional Information:'}
+            {getTranslation('additional_info')}
           </Text>
 
           <Text

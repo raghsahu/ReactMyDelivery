@@ -17,9 +17,11 @@ import { COLORS, IMAGES } from '../assets';
 
 //COMMON COMPONENT
 import { Button, Text, Input, Header, AdvertiseListItem } from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function RequestsListForPlaces(props) {
   const [name, setName] = useState('');
+  const { getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>
@@ -27,7 +29,7 @@ function RequestsListForPlaces(props) {
 
       <SafeAreaView style={styles.container}>
         <Header
-          title={'Requests List'}
+          title={getTranslation('request_list')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -43,7 +45,7 @@ function RequestsListForPlaces(props) {
               weight="500"
               align="center"
               color={COLORS.textColor2}>
-              {'Filter By'}
+              {getTranslation('filter_by')}
             </Text>
             <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
               <ImageBackground

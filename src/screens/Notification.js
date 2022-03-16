@@ -18,9 +18,10 @@ import {COLORS, IMAGES} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, NotificationItemList, BottomBackground} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 function Notification(props) {
- 
+  const { getTranslation} = useContext(LocalizationContext);
 
 
   return (
@@ -34,7 +35,7 @@ function Notification(props) {
 
       <SafeAreaView style={styles.container}>
        <Header
-          title={'Notifications'}
+          title={getTranslation('notifications')}
           onBack={() => {
             props.navigation.goBack();
           }}

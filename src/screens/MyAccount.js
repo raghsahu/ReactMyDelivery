@@ -27,10 +27,11 @@ import Published from './Published';
 import AsSender from './AsSender';
 
 //CONTEXT
-//import {APPContext} from '../context/APPProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
 const {height, width} = Dimensions.get('screen');
 
 function MyAccount(props) {
+  const { getTranslation} = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(1);
@@ -95,7 +96,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={index1 === 1 ? COLORS.primaryColor : COLORS.black}>
-              {'AS USER'}
+              {getTranslation('as_user')}
             </Text>
           </TouchableOpacity>
           {/*To set the SecondScreen*/}
@@ -116,7 +117,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={index1 === 2 ? COLORS.primaryColor : COLORS.black}>
-              {'AS DELIVERY MAN'}
+              {getTranslation('as_delivery_man')}
             </Text>
           </TouchableOpacity>
           {/*To set the ThirdScreen*/}
@@ -137,7 +138,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={index1 === 3 ? COLORS.primaryColor : COLORS.black}>
-              {'AS SENDER'}
+              {getTranslation('as_sender')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -200,7 +201,7 @@ function MyAccount(props) {
           }}></View>
 
         <Header
-          title={'My Account'}
+          title={getTranslation('my_account')}
           onEdit={() => {
             props.navigation.navigate('EditAccount');
           }}
@@ -280,7 +281,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={COLORS.white}>
-                    {'Logout'}
+                    {getTranslation('logout')}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -307,7 +308,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={COLORS.red}>
-                    {'Delete Account'}
+                    {getTranslation('delete_account')}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -346,7 +347,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={COLORS.white}>
-                    {'Suggestion'}
+                    {getTranslation('suggestion')}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -376,7 +377,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={COLORS.white}>
-                    {'Complaint'}
+                    {getTranslation('complaint')}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -397,7 +398,7 @@ function MyAccount(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Announcements:'}
+                {getTranslation('announcement')}
               </Text>
             </View>
 
@@ -421,7 +422,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={index === 1 ? COLORS.white : COLORS.black}>
-                    {'INCOMPLETE'}
+                    {getTranslation('incomplete')}
                   </Text>
                 </TouchableOpacity>
                 {/*To set the SecondScreen*/}
@@ -440,7 +441,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={index === 2 ? COLORS.white : COLORS.black}>
-                    {'PUBLISHED'}
+                    {getTranslation('published')}
                   </Text>
                 </TouchableOpacity>
                 {/*To set the ThirdScreen*/}
@@ -459,7 +460,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={index === 3 ? COLORS.white : COLORS.black}>
-                    {'INPROGRESS'}
+                    {getTranslation('inProgress')}
                   </Text>
                 </TouchableOpacity>
 
@@ -478,7 +479,7 @@ function MyAccount(props) {
                     weight="500"
                     align="center"
                     color={index === 4 ? COLORS.white : COLORS.black}>
-                    {'COMPLETED'}
+                    {getTranslation('completed')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -505,7 +506,7 @@ function MyAccount(props) {
               weight="500"
               align="left"
               color={COLORS.black}>
-              {'Are you sure you want to delete your account'}
+              {getTranslation('are_you_delete_account')}
             </Text>
 
             <View
@@ -540,7 +541,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.black}>
-              {'Verification Code'}
+              {getTranslation('verification_code')}
             </Text>
 
             <Input
@@ -561,7 +562,7 @@ function MyAccount(props) {
               }}>
               <Button
                 style={[{width: 104}]}
-                title={'Yes'}
+                title={getTranslation('yes')}
                 onPress={() => {
                   deleteAccountModalVisibility();
                    props.navigation.navigate('Login')
@@ -570,7 +571,7 @@ function MyAccount(props) {
 
               <Button
                 style={[{width: 104}]}
-                title={'No'}
+                title={getTranslation('no')}
                 onPress={() => {
                   deleteAccountModalVisibility();
                 }}
@@ -594,7 +595,7 @@ function MyAccount(props) {
               weight="500"
               align="left"
               color={COLORS.black}>
-              {'Are you sure you want to logout your account'}
+              {getTranslation('are_you_logout')}
             </Text>
 
             <View
@@ -607,7 +608,7 @@ function MyAccount(props) {
               }}>
               <Button
                 style={[{width: 104}]}
-                title={'Yes'}
+                title={getTranslation('yes')}
                 onPress={() => {
                   // props.navigation.navigate('Market')
                 }}
@@ -615,7 +616,7 @@ function MyAccount(props) {
 
               <Button
                 style={[{width: 104}]}
-                title={'No'}
+                title={getTranslation('no')}
                 onPress={() => {
                   logoutModalVisibility();
                 }}
