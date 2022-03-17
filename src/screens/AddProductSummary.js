@@ -530,7 +530,9 @@ function AddProductSummary(props) {
                 title={getTranslation('ok')}
                 onPress={() => {
                   logoutModalVisibility();
-                  props.navigation.navigate('MyAccount');
+                  props.navigation.navigate('MyAccount', {
+                    tabIndex: 2
+                  });
                 }}
               />
             </View>

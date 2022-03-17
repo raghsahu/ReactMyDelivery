@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {View, Platform, LogBox} from 'react-native';
+import {View, Platform, LogBox, Image} from 'react-native';
 
 //SCREENS
 import {
@@ -35,34 +35,91 @@ import {TabBar} from './src/components';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {LocalizationProvider, LocalizationContext} from './src/context/LocalizationProvider';
+import {
+  LocalizationProvider,
+  LocalizationContext,
+} from './src/context/LocalizationProvider';
+
+import {COLORS, IMAGES, DIMENSION} from './src/assets';
 
 const {Navigator, Screen} = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+function HomeStackScreen() {
+  return (
+    <Navigator
+     screenOptions={{
+            headerShown: false,
+          }}>
+      <Screen name="Home" component={Home} />
+      <Screen name="DescribePlaceOfDelivery" component={DescribePlaceOfDelivery} />
+      <Screen name="RequestsListForPlaces" component={RequestsListForPlaces} />
+    </Navigator>
+  );
+}
+
 const BottomBar = () => {
-    const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: COLORS.primaryColor,
+          borderTopRightRadius: 20, //add border top right radius
+          borderTopLeftRadius: 20, //add border top left radius
+          height: 54,
+        },
+        tabBarLabelStyle: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: COLORS.white,
+        },
       }}
-      tabBar={props => <TabBar {...props} />}>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="MyAccount" component={MyAccount} />
+      // tabBar={props => <TabBar {...props} />}
+    >
+      <Tab.Screen
+        name="HomeStackScreen"
+        component={HomeStackScreen}
+        options={{
+           title: 'Home',
+          tabBarIcon: ({size, focused, color}) => {
+            return (
+              <Image
+                style={{width: 20, height: 20, tintColor: '#ffffff'}}
+                source={IMAGES.home}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="MyAccount"
+        component={MyAccount}
+        options={{
+          title: 'My Account',
+          tabBarStyle: {display: 'none'},
+          tabBarIcon: ({size, focused, color}) => {
+            return (
+              <Image
+                style={{width: 20, height: 20, tintColor: '#ffffff'}}
+                source={IMAGES.name}
+              />
+            );
+          },
+        }}
+      />
     </Tab.Navigator>
   );
 };
 
 const App = () => {
-
   useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     LogBox.ignoreLogs([
-      "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+      "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
     ]);
-
-  }, [])
+  }, []);
 
   return (
     <LocalizationProvider>
@@ -96,14 +153,14 @@ const App = () => {
             component={ExchangeSuccessSummary}
           />
           <Screen name="ProposalChangedDate" component={ProposalChangedDate} />
-          <Screen
+          {/* <Screen
             name="DescribePlaceOfDelivery"
             component={DescribePlaceOfDelivery}
-          />
-          <Screen
+          /> */}
+          {/* <Screen
             name="RequestsListForPlaces"
             component={RequestsListForPlaces}
-          />
+          /> */}
           <Screen name="AdSummaryDetails" component={AdSummaryDetails} />
           <Screen
             name="AdModificationProposal"

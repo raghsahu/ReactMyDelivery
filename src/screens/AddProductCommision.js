@@ -118,7 +118,7 @@ function AddProductCommision(props) {
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
-            weight="500"
+            weight="700"
             align="center"
             color={COLORS.textColor}>
             {getTranslation('commission_for_having')}
@@ -153,7 +153,7 @@ function AddProductCommision(props) {
           <Text
             style={[styles.inputView, {marginTop: 10, alignSelf: 'center'}]}
             size="18"
-            weight="500"
+            weight="700"
             align="center"
             color={COLORS.textColor}>
             {getTranslation('place_of_delivery')}
@@ -179,7 +179,7 @@ function AddProductCommision(props) {
           <Text
             style={[styles.inputView, {marginTop: 15, alignSelf: 'center'}]}
             size="18"
-            weight="500"
+            weight="700"
             align="center"
             color={COLORS.textColor}>
             {getTranslation('gender_who_can_access')}
@@ -205,7 +205,7 @@ function AddProductCommision(props) {
           <Text
             style={[styles.inputView, {marginTop: 10, alignSelf: 'center'}]}
             size="18"
-            weight="500"
+            weight="700"
             align="center"
             color={COLORS.textColor}>
             {getTranslation('ad_acceptance_limit')}
@@ -259,7 +259,7 @@ function AddProductCommision(props) {
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
-            weight="500"
+            weight="700"
             align="center"
             color={COLORS.textColor}>
             {getTranslation('limit_delivery')}

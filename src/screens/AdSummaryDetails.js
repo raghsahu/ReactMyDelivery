@@ -572,6 +572,7 @@ function AdSummaryDetails(props) {
                       borderColor: COLORS.primaryColor,
                       borderWidth: 1.2,
                       width: 156,
+                      backgroundColor: COLORS.homeBg,
                     },
                   ]}
                   title={getTranslation('to_cancel')} //or Change Delivery Date (according to condition)
@@ -613,7 +614,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="left"
               color={COLORS.white}>
-              {getTranslation('accepted')}
+              {getTranslation('payment')}
             </Text>
 
             <TouchableOpacity

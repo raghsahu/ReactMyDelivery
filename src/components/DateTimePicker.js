@@ -15,7 +15,7 @@ export default function DateTimePick(props) {
           testID="dateTimePicker"
           value={props.value}
           mode={props.mode}
-          is24Hour={true}
+          is24Hour={false}
           display="default"
           onChange={props.onChange}
         />

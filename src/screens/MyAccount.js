@@ -13,6 +13,7 @@ import {
   ImageBackground,
   Modal,
   Dimensions,
+  TextInput,
 } from 'react-native';
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
@@ -27,16 +28,21 @@ import Published from './Published';
 import AsSender from './AsSender';
 
 //CONTEXT
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 const {height, width} = Dimensions.get('screen');
 
 function MyAccount(props) {
-  const { getTranslation} = useContext(LocalizationContext);
+  const {tabIndex} = props.route.params ? props.route.params : 1;
+  const {getTranslation} = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [index1, setIndex1] = useState(3);
   const [tabStatus, setTabStatus] = useState();
+
+  useEffect(() => {
+   tabIndex ? setIndex(tabIndex) : setIndex(1)
+  }, []);
 
   const deleteAccountModalVisibility = () => {
     setModalVisible(!isModalVisible);
@@ -50,19 +56,21 @@ function MyAccount(props) {
     //You can add N number of Views here in if-else condition
     if (index === 1) {
       //Return the FirstScreen as a child to set in Parent View
-      return <Incomplete 
-         onModify={() => {
-                  props.navigation.navigate('AddProductCommision')
-                }}
-      />;
+      return (
+        <Incomplete
+          onModify={() => {
+            props.navigation.navigate('AddProductCommision');
+          }}
+        />
+      );
     } else if (index === 2) {
       //Return the SecondScreen as a child to set in Parent View
       return <Published />;
     } else if (index === 3) {
-      setTabStatus('inProgress')
-      return <CompletedElement/>;
+      setTabStatus('inProgress');
+      return <CompletedElement />;
     } else {
-       setTabStatus('completed')
+      setTabStatus('completed');
       return <CompletedElement />;
     }
   };
@@ -88,8 +96,7 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-            onPress={() => setIndex1(1)}
-          >
+            onPress={() => setIndex1(1)}>
             <Text
               style={{}}
               size="16"
@@ -110,8 +117,7 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-             onPress={() => setIndex1(2)}
-          >
+            onPress={() => setIndex1(2)}>
             <Text
               size="16"
               weight="500"
@@ -131,8 +137,7 @@ function MyAccount(props) {
                   }
                 : null,
             ]}
-            onPress={() => setIndex1(3)}
-           >
+            onPress={() => setIndex1(3)}>
             <Text
               size="16"
               weight="500"
@@ -150,44 +155,46 @@ function MyAccount(props) {
     //You can add N number of Views here in if-else condition
     if (index1 === 1) {
       //Return the FirstScreen as a child to set in Parent View
-      return null
+      return null;
       //<AsSender />;
     } else if (index1 === 2) {
       //Return the SecondScreen as a child to set in Parent View
-      return null
+      return null;
       //<AsSender />;
     } else if (index1 === 3) {
       //Return the SecondScreen as a child to set in Parent View
-        if (tabStatus === 'completed') {
-          return (
-            <AsSender
-              onSummary={() => {
-                props.navigation.navigate('SummaryTransaction', {
-                  status: 'completed',
-                });
-              }}
-              onRating={() => {
-                props.navigation.navigate('RatingReview');
-              }}
-            />
-          );
-        } else {
-          return null
-          //(
-            // <AsSender
-            //   onSummary={() => {
-            //     props.navigation.navigate('SummaryTransaction');
-            //   }}
-            // />
-         // );
-        }
-      
+      if (tabStatus === 'completed') {
+        return (
+          <AsSender
+            onSummary={() => {
+              props.navigation.navigate('SummaryTransaction', {
+                status: 'completed',
+              });
+            }}
+            onRating={() => {
+              props.navigation.navigate('RatingReview');
+            }}
+          />
+        );
+      } else {
+        return null;
+        //(
+        // <AsSender
+        //   onSummary={() => {
+        //     props.navigation.navigate('SummaryTransaction');
+        //   }}
+        // />
+        // );
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
       {/* <BottomBackground></BottomBackground> */}
       <SafeAreaView style={styles.container}>
         <View
@@ -296,7 +303,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     backgroundColor: COLORS.gray,
-                   // width: 180,
+                    // width: 180,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -304,7 +311,12 @@ function MyAccount(props) {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{marginLeft: 15, marginRight: 15, paddingLeft: 10, paddingRight: 10}}
+                    style={{
+                      marginLeft: 15,
+                      marginRight: 15,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    }}
                     size="16"
                     weight="500"
                     align="center"
@@ -324,7 +336,7 @@ function MyAccount(props) {
                 // position: 'absolute',
               }}>
               <TouchableOpacity
-              style={{flex: 1 }}
+                style={{flex: 1}}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Suggestion',
@@ -335,7 +347,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     backgroundColor: '#792392',
-                   // width: 160,
+                    // width: 160,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -355,7 +367,7 @@ function MyAccount(props) {
               </TouchableOpacity>
 
               <TouchableOpacity
-              style={{flex: 1 }}
+                style={{flex: 1}}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Complaint',
@@ -415,7 +427,8 @@ function MyAccount(props) {
                   style={[
                     styles.buttonStyle,
                     {
-                      backgroundColor: index === 1 ? COLORS.primaryColor : COLORS.white,
+                      backgroundColor:
+                        index === 1 ? COLORS.primaryColor : COLORS.white,
                       borderRadius: 20,
                     },
                   ]}
@@ -518,12 +531,12 @@ function MyAccount(props) {
                   justifyContent: 'center',
                   alignSelf: 'center',
                   marginTop: 20,
-                  borderColor: COLORS.gray,
+                  borderColor: '#A9A9A9',
                   borderRadius: 2,
                   borderWidth: 1,
                   width: 200,
                   height: 70,
-                  backgroundColor: COLORS.lightGray,
+                  backgroundColor: '#F7F7FF',
                 },
               ]}>
               <Text
@@ -536,24 +549,52 @@ function MyAccount(props) {
               </Text>
             </View>
 
-            <Text
+            <View
               style={[
-                {alignSelf: 'center', justifyContent: 'center', marginTop: 5},
-              ]}
-              size="16"
-              weight="500"
-              align="center"
-              color={COLORS.black}>
-              {getTranslation('verification_code')}
-            </Text>
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 10,
+                  marginHorizontal: 10,
+                },
+              ]}>
+              <Text
+                style={[
+                  {
+                    flex: 1,
+                    marginRight: 5,
+                    height: 40,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: COLORS.gray,
+                    padding: 5,
+                  },
+                ]}
+                size="16"
+                weight="500"
+                align="center"
+                color={COLORS.black}>
+                {getTranslation('verification_code')}
+              </Text>
 
-            <Input
-              style={[styles.inputView, {marginTop: 5}]}
-              placeholder={'Enter Code'}
-              onChangeText={text => {
-                //setName(text);
-              }}
-            />
+              <TextInput
+                style={[
+                  {
+                    flex: 1,
+                    marginLeft: 5,
+                    height: 40,
+                    backgroundColor: COLORS.gray,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    padding: 5,
+                  },
+                ]}
+                placeholder={''}
+                onChangeText={text => {
+                  //setName(text);
+                }}
+              />
+            </View>
 
             <View
               style={{
@@ -568,7 +609,7 @@ function MyAccount(props) {
                 title={getTranslation('yes')}
                 onPress={() => {
                   deleteAccountModalVisibility();
-                   props.navigation.navigate('Login')
+                  props.navigation.navigate('Login');
                 }}
               />
 
@@ -669,11 +710,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     position: 'absolute',
-    top: '50%',
+    top: '40%',
     left: '50%',
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
-    height: 325,
+    height: 300,
     width: width * 0.85,
     backgroundColor: '#fff',
     borderRadius: 7,

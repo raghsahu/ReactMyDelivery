@@ -206,7 +206,7 @@ function EditAccount(props) {
             />
           </TouchableOpacity>
 
-
+{/* 
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('email_id')}
@@ -214,7 +214,7 @@ function EditAccount(props) {
             onChangeText={text => {
               setName(text);
             }}
-          />
+          /> */}
 
         <View
             style={[
