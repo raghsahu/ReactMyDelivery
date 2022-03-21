@@ -13,6 +13,9 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
+import ActionSheet from 'react-native-actions-sheet';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {PermissionsAndroid} from 'react-native';
 
 //COMMON COMPONENT
 import {
@@ -87,6 +90,8 @@ function Register(props) {
   const [pwSecureText1, setPwSecureText1] = useState(true);
   const {getTranslation, setI18nConfig, saveUserLanguage} =
     useContext(LocalizationContext);
+  const actionSheetRef = useRef();
+  const [images, setImages] = useState('');
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -154,6 +159,47 @@ function Register(props) {
     setSelection(checkStatus);
   };
 
+  const onPressUpload = () => {
+    actionSheetRef.current?.setModalVisible(true);
+  };
+
+  const onPressLibrary = async type => {
+    var result = null;
+    // if (requestExternalStoreageRead()) {
+    if (type == 1) {
+      result = await launchCamera();
+      actionSheetRef.current?.setModalVisible(false);
+    } else {
+      result = await launchImageLibrary();
+      actionSheetRef.current?.setModalVisible(false);
+    }
+    console.log(result);
+    if (result && result.assets.length > 0) {
+      let uri = result.assets[0].uri;
+      let items = [...images];
+      items.push(uri);
+      setImages(uri);
+    }
+    // }
+  };
+
+  const requestExternalStoreageRead = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'My Delivery ...',
+          message: 'App needs access to external storage',
+        },
+      );
+
+      return granted == PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      //Handle this error
+      return false;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -164,28 +210,40 @@ function Register(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <ImageBackground
-            source={IMAGES.signup_placeholder}
+          <TouchableOpacity
             style={{
-              height: 160,
-              width: 160,
-              marginTop: 32,
+              height: 180,
+              width: 180,
               alignSelf: 'center',
-              justifyContent: 'center',
-              resizeMode: 'contain',
-              alignItems: 'center',
-            }}>
+            }}
+            onPress={onPressUpload}>
+            <ImageBackground
+              source={images ? {uri: images} : IMAGES.signup_placeholder}
+              style={{
+                height: 160,
+                width: 160,
+                borderRadius: 160 / 2,
+                marginTop: 32,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                resizeMode: 'contain',
+                overflow: 'hidden',
+                borderWidth: 0.1,
+                alignItems: 'center',
+              }}></ImageBackground>
             <View
               style={{
                 backgroundColor: COLORS.primaryColor,
                 height: 60,
                 width: 60,
                 borderRadius: 30,
-                alignItems: 'center',
+                // alignItems: 'center',
                 justifyContent: 'center',
                 position: 'absolute', //Here is the trick
                 bottom: 0,
-                alignSelf: 'flex-end',
+                right: 0,
+                // marginLeft: 50,
+                //alignSelf: 'center',
               }}>
               <Image
                 source={IMAGES.camera}
@@ -198,7 +256,7 @@ function Register(props) {
                 }}
               />
             </View>
-          </ImageBackground>
+          </TouchableOpacity>
 
           <Text
             style={[
@@ -291,7 +349,12 @@ function Register(props) {
             style={[
               styles.inputView,
               styles.inputContainer,
-              {flexDirection: 'row', flex: 1, backgroundColor: COLORS.lightGray, borderRadius: 24,},
+              {
+                flexDirection: 'row',
+                flex: 1,
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 24,
+              },
             ]}>
             <Input
               style={[{width: 100}]}
@@ -422,6 +485,84 @@ function Register(props) {
         </ScrollView>
       </SafeAreaView>
 
+      <ActionSheet ref={actionSheetRef}>
+        <View style={[styles.bottomView, {}]}>
+          <View style={[styles.bottomViewItem, {}]}>
+            <TouchableOpacity onPress={() => onPressLibrary(1)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.camera}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Camera'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                borderColor: COLORS.primaryColor,
+                borderWidth: 1,
+              }}></View>
+            <TouchableOpacity onPress={() => onPressLibrary(2)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.photos}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Photo library'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ActionSheet>
       {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
     </View>
   );
@@ -437,6 +578,30 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 16,
+  },
+  bottomView: {
+    height: 150,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: '#ffffff',
+  },
+  bottomViewItem: {
+    margin: 25,
+    borderColor: COLORS.primaryColor,
+    borderWidth: 2,
+    borderRadius: 8,
+  },
+  bottomViewIcon: {
+    flexDirection: 'row',
+    height: 50,
+    marginStart: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginStart: 20,
   },
 });
 

@@ -39,6 +39,7 @@ import {
   LocalizationProvider,
   LocalizationContext,
 } from './src/context/LocalizationProvider';
+import {APPContext, AppProvider} from './src/context/AppProvider';
 
 import {COLORS, IMAGES, DIMENSION} from './src/assets';
 
@@ -123,6 +124,7 @@ const App = () => {
 
   return (
     <LocalizationProvider>
+      <AppProvider>
       <NavigationContainer>
         <Navigator
           screenOptions={{
@@ -168,6 +170,7 @@ const App = () => {
           />
         </Navigator>
       </NavigationContainer>
+      </AppProvider>
     </LocalizationProvider>
   );
 };

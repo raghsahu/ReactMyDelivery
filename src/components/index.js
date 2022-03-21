@@ -16,6 +16,7 @@ import CustomRatingBar from "./CustomRatingBar";
 import ProductsItemList from "./ProductsItemList";
 import ProductsItemListCompleted from "./ProductsItemListCompleted";
 import AdvertiseListItem from "./AdvertiseListItem";
+import ProgressView from "./ProgressView";
 
 export {
    Text,
@@ -36,4 +37,5 @@ export {
    ProductsItemList,
    ProductsItemListCompleted,
    AdvertiseListItem,
+   ProgressView,
 }

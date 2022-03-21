@@ -14,16 +14,44 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
 
 function Login(props) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('rrr@gmail.com');
+  const [password, setPassword] = useState('123456');
   const [pwSecureText, setPwSecureText] = useState(true);
-
+  const [isLoading, setLoading] = useState(false);
   const {getTranslation} = useContext(LocalizationContext);
+  const { getLogin } = useContext(APPContext);
+
+  
+  const onNext = async () => {
+    setLoading(true)
+   
+    const result = await getLogin(email, password)
+    setLoading(false)
+     console.log("LoginResult", result);
+    if (result.status == true) {
+        setTimeout(() => {
+            props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        { name: 'BottomBar', params: { isFromLogin: true } }
+                    ],
+                })
+            );
+        }, 500);
+    }
+    else {
+        Toast.show(result.error)
+    }
+}
+
 
   return (
     <View style={styles.container}>
@@ -74,7 +102,7 @@ function Login(props) {
             placeholder={getTranslation('enter_email_mobile')}
             isLeft={IMAGES.message_icon}
             onChangeText={text => {
-              setName(text);
+              setEmail(text);
             }}
             isShow={() => {
              
@@ -87,7 +115,7 @@ function Login(props) {
             secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              // setPassword(text);
+               setPassword(text);
             }}
             isShow={() => {
               setPwSecureText(!pwSecureText)
@@ -98,7 +126,8 @@ function Login(props) {
             style={[styles.inputView, {marginTop: 40}]}
             title={getTranslation('login')}
             onPress={() => {
-              props.navigation.navigate('BottomBar');
+                onNext()  
+              //props.navigation.navigate('BottomBar');
             }}
           />
 
@@ -149,6 +178,10 @@ function Login(props) {
 
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? 
+      <ProgressView></ProgressView>
+      : null
+      }
     </View>
   );
 }
