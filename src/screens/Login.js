@@ -9,16 +9,24 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
-import { APPContext } from '../context/AppProvider';
+import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
 
 function Login(props) {
   const [email, setEmail] = useState('rrr@gmail.com');
@@ -26,32 +34,35 @@ function Login(props) {
   const [pwSecureText, setPwSecureText] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const {getTranslation} = useContext(LocalizationContext);
-  const { getLogin } = useContext(APPContext);
+  const {getLogin} = useContext(APPContext);
 
-  
   const onNext = async () => {
-    setLoading(true)
-   
-    const result = await getLogin(email, password)
-    setLoading(false)
-     console.log("LoginResult", result);
-    if (result.status == true) {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (!email) {
+      Toast.show('Please enter email');
+    } else if (reg.test(email) === false) {
+      Toast.show('Please enter valid email');
+    } else if (!password) {
+      Toast.show('Please enter password');
+    } else {
+      setLoading(true);
+      const result = await getLogin(email, password);
+      setLoading(false);
+      console.log('LoginResult', result);
+      if (result.status == true) {
         setTimeout(() => {
-            props.navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'BottomBar', params: { isFromLogin: true } }
-                    ],
-                })
-            );
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'BottomBar', params: {isFromLogin: true}}],
+            }),
+          );
         }, 500);
+      } else {
+        Toast.show(result.error);
+      }
     }
-    else {
-        Toast.show(result.error)
-    }
-}
-
+  };
 
   return (
     <View style={styles.container}>
@@ -104,9 +115,7 @@ function Login(props) {
             onChangeText={text => {
               setEmail(text);
             }}
-            isShow={() => {
-             
-            }}
+            isShow={() => {}}
           />
 
           <Input
@@ -115,10 +124,10 @@ function Login(props) {
             secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-               setPassword(text);
+              setPassword(text);
             }}
             isShow={() => {
-              setPwSecureText(!pwSecureText)
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -126,7 +135,7 @@ function Login(props) {
             style={[styles.inputView, {marginTop: 40}]}
             title={getTranslation('login')}
             onPress={() => {
-                onNext()  
+              onNext();
               //props.navigation.navigate('BottomBar');
             }}
           />
@@ -175,13 +184,9 @@ function Login(props) {
               {getTranslation('sign_up')}
             </Text>
           </View>
-
         </ScrollView>
       </SafeAreaView>
-      {isLoading ? 
-      <ProgressView></ProgressView>
-      : null
-      }
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

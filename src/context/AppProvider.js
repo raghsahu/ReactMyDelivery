@@ -8,28 +8,12 @@ import {CommonActions} from '@react-navigation/native';
 export const APPContext = createContext();
 
 export const AppProvider = props => {
-  const baseURL = 'http://mydelivery.sairoses.com/backend/API/';
+  // mydelivery.sairoses.com
+  const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
 
   const webServices = {
     login: baseURL + 'mLogin',
-  };
-
-  const getProducts = async (sort, order, page, perPage) => {
-    let url =
-      baseURL +
-      '&' +
-      'sort=' +
-      sort +
-      '&' +
-      'order=' +
-      order +
-      '&' +
-      'page=' +
-      page +
-      '&' +
-      'per_page=' +
-      perPage;
-    return await request(url, 'get', {});
+    register: baseURL + 'madd/register',
   };
 
   const getLogin = async (email, pw) => {
@@ -39,6 +23,66 @@ export const AppProvider = props => {
     };
 
     return await request(webServices.login, 'post', params);
+  };
+
+  const getRegister = async (user_f_name, user_l_name, user_name, user_gender, user_dob, user_email, user_mb_no,user_addr,
+    user_city, user_country,user_language,user_password, user_lat, user_lon,user_img, user_fcm_key ) => {
+    let params = {
+      user_f_name: user_f_name,
+      user_m_name: user_l_name,
+      user_l_name: user_l_name,
+      user_name: user_name,
+      user_gender: user_gender,
+      user_dob: user_dob,
+      user_email: user_email,
+      user_mb_no: user_mb_no,
+      user_addr: user_addr,
+      user_city: user_city,
+      user_country: user_country,
+      user_language: user_language,
+      user_password: user_password,
+      user_lat: user_lat,
+      user_lon: user_lon,
+      user_img: user_img,
+       // user_img ? {
+      //   uri: user_img,
+      //   name:'userProfile.jpg',
+      //   type:'image/jpg'
+      // } : '',
+      user_fcm_key: user_fcm_key,
+    };
+    // const formData = new FormData();
+    // formData.append('user_f_name', user_f_name);
+    // formData.append('user_m_name', user_l_name);
+    // formData.append('user_l_name', user_l_name);
+    // formData.append('user_name', user_name);
+    // formData.append('user_gender', user_gender);
+    // formData.append('user_dob', user_dob);
+    // formData.append('user_email', user_email);
+    // formData.append('user_mb_no', user_mb_no);
+    // formData.append('user_addr', user_addr);
+    // formData.append('user_city', user_city);
+    // formData.append('user_country', user_country);
+    // formData.append('user_language', user_language);
+    // formData.append('user_password', user_password);
+    // formData.append('user_lat', user_lat);
+    // formData.append('user_lon', user_lon);
+    // formData.append(
+    //   'user_img',
+    //   user_img
+    //     ? {
+    //         uri:
+    //           Platform.OS === 'android'
+    //             ? user_img.uri
+    //             : user_img.uri.replace('file://', ''),
+    //         name: 'userProfile.jpg',
+    //         type: 'image/jpg',
+    //       }
+    //     : '',
+    // );
+    // formData.append('user_fcm_key', user_fcm_key);
+
+    return await request(webServices.register, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -93,44 +137,36 @@ export const AppProvider = props => {
   const getResponse = response => {
     console.log(JSON.stringify(response.data));
 
-    if (response.data && response.data.success == false) {
+    if (response.data && response.data.status == 0) {
       let result = {
         status: false,
-        data: response.data.message,
-        error: response.data.message,
+        data: response.data.result,
+        error: response.data.msg,
       };
       return result;
     } else {
       let data = response.data;
-      if (data && data.status == '200') {
+      if (data && data.status == 1) {
         let result = {
           status: true,
-          data: data.data,
-          subscription: data && data.subscription ? data.subscription : null,
-          error: data.message,
+          data: data.result,
+          //subscription: data && data.subscription ? data.subscription : null,
+          error: data.msg,
         };
         return result;
-      } else if (data && data.status == 'OK') {
-        let result = {
-          status: true,
-          data: data.data,
-          subscription: data && data.subscription ? data.subscription : null,
-          error: data.message,
-        };
-        return result;
-      } else if (data && (data.status == '401' || data.status == '400')) {
-        clearDatabase();
+      }else if (data && (data.status == '401' || data.status == '400')) {
+        // clearDatabase();
         let result = {
           status: false,
           data: data,
-          error: data.message,
+          error: data.msg,
         };
         return result;
       } else {
         let result = {
           status: false,
           data: '',
-          error: data.message,
+          error: data.msg,
         };
         return result;
       }
@@ -138,17 +174,7 @@ export const AppProvider = props => {
   };
 
   async function clearDatabase() {
-    const email = await AsyncStorage.getItem('apple_email_first_time');
-    const givenName = await AsyncStorage.getItem('apple_givenName_first_time');
-    const familyName = await AsyncStorage.getItem(
-      'apple_familyName_first_time',
-    );
-
     AsyncStorage.clear();
-
-    AsyncStorage.setItem('apple_email_first_time', email);
-    AsyncStorage.setItem('apple_givenName_first_time', givenName);
-    AsyncStorage.setItem('apple_familyName_first_time', familyName);
   }
 
   const getError = error => {
@@ -188,6 +214,7 @@ export const AppProvider = props => {
       value={{
         baseURL,
         getLogin,
+        getRegister,
       }}>
       {props.children}
     </APPContext.Provider>

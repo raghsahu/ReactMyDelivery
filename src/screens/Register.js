@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
+  Platform,
 } from 'react-native';
 
 //ASSETS
@@ -16,6 +17,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import ActionSheet from 'react-native-actions-sheet';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {PermissionsAndroid} from 'react-native';
+import {Picker} from '@react-native-picker/picker'; //for dropdown
 
 //COMMON COMPONENT
 import {
@@ -26,13 +28,18 @@ import {
   CheckBox,
   DropdownPicker,
   DateTimePick,
+  ProgressView,
 } from '../components';
 
 import moment from 'moment'; // date format
 
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
 //PACKAGES
 import {CommonActions} from '@react-navigation/native';
+import Toast from 'react-native-simple-toast';
+import CountryPicker from 'rn-country-picker';
+import RNCountry from 'react-native-countries';
 
 const options = [
   {
@@ -75,8 +82,15 @@ const optionsLanguage = [
 ];
 
 function Register(props) {
-  const [name, setName] = useState('');
+  const [firstName, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [isSelected, setSelection] = useState(false);
   const [isCalendarVisible, setCalendarVisibility] = useState(false);
@@ -92,12 +106,34 @@ function Register(props) {
     useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [mCountryCode, setCountryCode] = useState('91');
+  const [mCountryName, setCountryName] = useState();
+  const [mSelectedCountryName, setSelectedCountryName] = useState('India');
+
+  const [currentLongitude, setCurrentLongitude] = useState('');
+  const [currentLatitude, setCurrentLatitude] = useState('');
+  const [locationStatus, setLocationStatus] = useState('');
+
+  const {getRegister} = useContext(APPContext);
+
+  useEffect(() => {
+    let countryNames = RNCountry.getCountryNamesWithCodes;
+    countryNames.sort((a, b) => a.name.localeCompare(b.name));
+    setCountryName(countryNames);
+    console.log('country_names ' + mSelectedCountryName);
+  }, []);
+
+  const _selectedValue = index => {
+    setCountryCode(index);
+    console.log('country_code ' + index);
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+    setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
   };
 
   const showMode = currentMode => {
@@ -131,28 +167,17 @@ function Register(props) {
 
   const onSelectLanguage = () => {
     if (selectedLanguage) {
-      //setLoading(true)
       setI18nConfig(selectedLanguage);
       saveUserLanguage(selectedLanguage);
-      //AsyncStorage.setItem('is_first_time_install', 'true')
-      // setLoading(false)
-
-      // props.navigation.dispatch(
-      //     CommonActions.reset({
-      //         index: 0,
-      //         routes: [
-      //             { name: 'Splash' }
-      //         ],
-      //     })
-      // );
-    } else {
-      Alert.alert('', 'Please select a language', [
-        {
-          text: getTranslation('ok'),
-          onPress: () => {},
-        },
-      ]);
     }
+    // else {
+    //   Alert.alert('', 'Please select a language', [
+    //     {
+    //       text: getTranslation('ok'),
+    //       onPress: () => {},
+    //     },
+    //   ]);
+    // }
   };
 
   const setCheck = checkStatus => {
@@ -197,6 +222,76 @@ function Register(props) {
     } catch (err) {
       //Handle this error
       return false;
+    }
+  };
+
+  const onNext = async () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (!firstName) {
+      Toast.show('Please enter first name');
+    } else if (!lastName) {
+      Toast.show('Please enter last name');
+    } else if (!userName) {
+      Toast.show('Please enter user name');
+    } else if (!selectedOption) {
+      Toast.show('Please select gender');
+    } else if (!selectDate) {
+      Toast.show('Please enter date of birth');
+    } else if (!email) {
+      Toast.show('Please enter email');
+    } else if (reg.test(email) === false) {
+      Toast.show('Please enter valid email');
+    } else if (!mobile) {
+      Toast.show('Please enter mobile number');
+    } else if (!address) {
+      Toast.show('Please enter address');
+    } else if (!city) {
+      Toast.show('Please enter city');
+    } else if (!selectedLanguage) {
+      Toast.show('Please select language');
+    } else if (!password) {
+      Toast.show('Please enter password');
+    } else if (!confirmPassword) {
+      Toast.show('Please enter confirm password');
+    } else if (!isSelected) {
+      Toast.show('Please select terms & conditions');
+    } else {
+      setLoading(true);
+      const result = await getRegister(
+        firstName,
+        lastName,
+        userName,
+        selectedOption.key,
+        selectDate,
+        email,
+        mCountryCode + mobile,
+        address,
+        city,
+        mSelectedCountryName,
+        selectedLanguage,
+        password,
+        '10.0000',
+        '32.11',
+        images,
+        ' ',
+      );
+      setLoading(false);
+      console.log('RegisterResult', result);
+      if (result.status == true) {
+        Toast.show(result.error);
+        onSelectLanguage();
+        // props.navigation.navigate('EmailOtp');
+        setTimeout(() => {
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'EmailOtp', params: {isFromLogin: false}}],
+            }),
+          );
+        }, 500);
+      } else {
+        Toast.show(result.error);
+      }
     }
   };
 
@@ -283,7 +378,7 @@ function Register(props) {
             placeholder={getTranslation('last_name')}
             isLeft={IMAGES.name}
             onChangeText={text => {
-              //setPassword(text);
+              setLastName(text);
             }}
           />
 
@@ -292,7 +387,7 @@ function Register(props) {
             placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
             onChangeText={text => {
-              setName(text);
+              setUserName(text);
             }}
           />
 
@@ -340,8 +435,9 @@ function Register(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('email_id')}
             isLeft={IMAGES.message_icon}
+            //returnKeyType = "next"
             onChangeText={text => {
-              setName(text);
+              setEmail(text);
             }}
           />
 
@@ -356,7 +452,7 @@ function Register(props) {
                 borderRadius: 24,
               },
             ]}>
-            <Input
+            {/* <Input
               style={[{width: 100}]}
               placeholder={'Country'}
               editable={false}
@@ -364,14 +460,34 @@ function Register(props) {
               onChangeText={text => {
                 //setName(text);
               }}
+            /> */}
+            <CountryPicker
+              //style={[{width: 100}]}
+              disable={false}
+              animationType={'slide'}
+              containerStyle={styles.pickerStyle}
+              pickerTitleStyle={styles.pickerTitleStyle}
+              // dropDownImage={require('./res/ic_drop_down.png')}
+              selectedCountryTextStyle={styles.selectedCountryTextStyle}
+              countryNameTextStyle={styles.countryNameTextStyle}
+              pickerTitle={'Country Code'}
+              searchBarPlaceHolder={'Search...'}
+              hideCountryFlag={false}
+              hideCountryCode={false}
+              searchBarStyle={styles.searchBarStyle}
+              // backButtonImage={require('./res/ic_back_black.png')}
+              //searchButtonImage={require('./res/ic_search.png')}
+              countryCode={mCountryCode}
+              selectedValue={_selectedValue}
             />
 
             <Input
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-              textAlign={'center'}
+              //textAlign={'center'}
+              keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
               onChangeText={text => {
-                //setName(text);
+                setMobile(text);
               }}
             />
           </View>
@@ -381,7 +497,7 @@ function Register(props) {
             placeholder={getTranslation('address')}
             isLeft={IMAGES.home}
             onChangeText={text => {
-              setName(text);
+              setAddress(text);
             }}
           />
           <Input
@@ -389,18 +505,47 @@ function Register(props) {
             placeholder={getTranslation('city')}
             isLeft={IMAGES.location}
             onChangeText={text => {
-              setName(text);
+              setCity(text);
             }}
           />
 
-          <Input
+          {/* <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('select_your_country')}
             textAlign={'center'}
-            onChangeText={text => {
-              setName(text);
-            }}
-          />
+            editable={false}
+            // onChangeText={text => {
+            //   setCountry(text);
+            // }}
+          /> */}
+          <View
+            style={[
+              styles.inputView,
+              styles.inputContainer,
+              {
+                backgroundColor: COLORS.lightGray,
+                height: 48,
+                borderRadius: 24,
+              },
+            ]}>
+            {mCountryName ? (
+              <Picker
+                selectedValue={mSelectedCountryName}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedCountryName(itemValue)
+                }>
+                {mCountryName.map(val => {
+                  return (
+                    <Picker.Item
+                      key={'country-item-' + val.code}
+                      label={val.name}
+                      value={val.name}
+                    />
+                  );
+                })}
+              </Picker>
+            ) : null}
+          </View>
 
           <DropdownPicker
             //placeholder={'English'}
@@ -416,7 +561,7 @@ function Register(props) {
             secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              //setPassword(text);
+              setPassword(text);
             }}
             isShow={() => {
               setPwSecureText(!pwSecureText);
@@ -429,7 +574,7 @@ function Register(props) {
             secureTextEntry={pwSecureText1}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              //setPassword(text);
+              setConfirmPassword(text);
             }}
             isShow={() => {
               setPwSecureText1(!pwSecureText1);
@@ -445,8 +590,9 @@ function Register(props) {
             style={[styles.inputView, {marginTop: 30}]}
             title={getTranslation('register')}
             onPress={() => {
-              onSelectLanguage();
-              props.navigation.navigate('EmailOtp');
+              // onSelectLanguage();
+              // props.navigation.navigate('EmailOtp');
+              onNext();
             }}
           />
 
@@ -484,6 +630,8 @@ function Register(props) {
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      {isLoading ? <ProgressView></ProgressView> : null}
 
       <ActionSheet ref={actionSheetRef}>
         <View style={[styles.bottomView, {}]}>
@@ -602,6 +750,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginStart: 20,
+  },
+  pickerTitleStyle: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#000',
+  },
+  pickerStyle: {
+    height: 48,
+    width: 100,
+    marginLeft: 10,
+    justifyContent: 'center',
+    //padding: 10,
+    //borderWidth: 2,
+    //borderColor: '#303030',
+    //backgroundColor: 'white',
+  },
+  selectedCountryTextStyle: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    color: '#000',
+    textAlign: 'right',
+  },
+
+  countryNameTextStyle: {
+    paddingLeft: 10,
+    color: '#000',
+    textAlign: 'right',
+  },
+
+  searchBarStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginLeft: 8,
+    marginRight: 10,
   },
 });
 
