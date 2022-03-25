@@ -22,7 +22,16 @@ import {Button, Header, Text, Input, BottomBackground} from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 function Home(props) {
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation, getUserLoginData} = useContext(LocalizationContext);
+  const [userDetails, setUserDetails] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      getUserLoginData(res => {
+        setUserDetails(res)
+      });
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -42,7 +51,7 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={getTranslation('hello')+ ', Omar Bentchikou'}
+          title={getTranslation('hello')+ ', '+ userDetails.user_f_name + ' '+ userDetails.user_l_name}
           onNotification={() => {
             props.navigation.navigate('Notification')
           }}

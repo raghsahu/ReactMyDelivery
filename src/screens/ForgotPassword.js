@@ -11,15 +11,49 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
-
+import {APPContext} from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 function ForgotPassword(props) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const [email_mobile, setEmailMobile] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
+  const [isLoading, setLoading] = useState(false);
+  const {mForgot} = useContext(APPContext);
+
+  const onNext = () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (!email_mobile) {
+      Toast.show('Please enter email or mobile');
+    }else if(isNaN(email_mobile)){
+        //if input is not a number then here
+        if (reg.test(email_mobile) === false) {
+          Toast.show('Please enter valid email');
+        }else{
+          getOtp(false);
+        }
+    }else{
+      getOtp(true);
+    }
+
+  };
+
+  const getOtp = async (isMobile) => {
+    setLoading(true);
+    const result = await mForgot(email_mobile, isMobile);
+    setLoading(false);
+    console.log('EmailMobileOtpResult', result);
+    if (result.status == true) {
+     // Toast.show(result.error);
+     props.navigation.navigate('ResetPassword', {
+       otpResponse: result.data
+     });
+    } else {
+      Toast.show(result.error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -27,9 +61,7 @@ function ForgotPassword(props) {
         barStyle={'dark-content'}
         backgroundColor={COLORS.primaryColor}
       />
-
       <BottomBackground></BottomBackground>
-
       <View
        style={{flex: 1, justifyContent: 'center', }}
       >
@@ -71,7 +103,7 @@ function ForgotPassword(props) {
           placeholder={getTranslation('enter_email_mobile')}
           isLeft={IMAGES.message_icon}
           onChangeText={text => {
-            setName(text);
+            setEmailMobile(text);
           }}
         />
 
@@ -79,10 +111,12 @@ function ForgotPassword(props) {
           style={[styles.inputView, {marginTop: 40}]}
           title={getTranslation('send')}
           onPress={() => {
-            props.navigation.navigate('ResetPassword');
+            //props.navigation.navigate('ResetPassword');
+            onNext();
           }}
         />
       </View>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

@@ -14,6 +14,7 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
+import {Session} from '../context';
 import ActionSheet from 'react-native-actions-sheet';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {PermissionsAndroid} from 'react-native';
@@ -40,10 +41,11 @@ import {CommonActions} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import CountryPicker from 'rn-country-picker';
 import RNCountry from 'react-native-countries';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const options = [
   {
-    key: 'Man',
+    key: '1',
     text: 'Man',
   },
   // {
@@ -58,7 +60,7 @@ const optionsWomen = [
   //   text: 'Man',
   // },
   {
-    key: 'Women',
+    key: '2',
     text: 'Women',
   },
 ];
@@ -99,11 +101,11 @@ function Register(props) {
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
-  let [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage} =
-    useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData} = useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -163,6 +165,7 @@ function Register(props) {
     if (item == 'Spanish') {
       setSelectedLanguage('sp');
     }
+    setSelectedLanguageKey(item.key);
   };
 
   const onSelectLanguage = () => {
@@ -253,6 +256,8 @@ function Register(props) {
       Toast.show('Please enter password');
     } else if (!confirmPassword) {
       Toast.show('Please enter confirm password');
+    }else if(password != confirmPassword){
+      Toast.show('password & confirm password not match');
     } else if (!isSelected) {
       Toast.show('Please select terms & conditions');
     } else {
@@ -268,7 +273,7 @@ function Register(props) {
         address,
         city,
         mSelectedCountryName,
-        selectedLanguage,
+        selectedLanguageKey,
         password,
         '10.0000',
         '32.11',
@@ -280,12 +285,12 @@ function Register(props) {
       if (result.status == true) {
         Toast.show(result.error);
         onSelectLanguage();
-        // props.navigation.navigate('EmailOtp');
+        saveUserLoginData(result.data[0])
         setTimeout(() => {
           props.navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'EmailOtp', params: {isFromLogin: false}}],
+              routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: email, Mobile: mCountryCode + mobile}}],
             }),
           );
         }, 500);
@@ -590,9 +595,15 @@ function Register(props) {
             style={[styles.inputView, {marginTop: 30}]}
             title={getTranslation('register')}
             onPress={() => {
-              // onSelectLanguage();
-              // props.navigation.navigate('EmailOtp');
               onNext();
+        //       setTimeout(() => {
+        //     props.navigation.dispatch(
+        //     CommonActions.reset({
+        //       index: 0,
+        //       routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: 'rrr@mailinator.com'}}],
+        //     }),
+        //   );
+        // }, 500);
             }}
           />
 

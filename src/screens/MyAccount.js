@@ -8,7 +8,6 @@ import {
   StatusBar,
   FlatList,
   ActivityIndicator,
-  Toast,
   TouchableOpacity,
   ImageBackground,
   Modal,
@@ -19,8 +18,9 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 import LinearGradient from 'react-native-linear-gradient';
+import { CommonActions } from '@react-navigation/native';
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
 
 import EditAccount from './EditAccount';
 import Incomplete from './Incomplete';
@@ -29,19 +29,35 @@ import AsSender from './AsSender';
 
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
+
 const {height, width} = Dimensions.get('screen');
 
 function MyAccount(props) {
   const {tabIndex} = props.route.params ? props.route.params : 1;
-  const {getTranslation} = useContext(LocalizationContext);
+  const {getTranslation, clearAllData, getUserLoginData} = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(0);
   const [index1, setIndex1] = useState(3);
   const [tabStatus, setTabStatus] = useState();
+  const [inputCaptcha, setInputCaptcha] = useState('');
+  const [captcha, setCaptcha] = useState('');
+  const [userDetails, setUserDetails] = useState({});
+  const [isLoading, setLoading] = useState(false);
+  const {delUser} = useContext(APPContext);
 
   useEffect(() => {
    tabIndex ? setIndex(tabIndex) : setIndex(1)
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      getUserLoginData(res => {
+        setUserDetails(res)
+      });
+    })();
   }, []);
 
   const deleteAccountModalVisibility = () => {
@@ -189,6 +205,48 @@ function MyAccount(props) {
     }
   };
 
+  function makeCaptcha() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 6; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+      setCaptcha(text)
+    return text;
+  }
+
+  const onDeleteAccount = async () => {
+    if (!inputCaptcha) {
+      Toast.show('Please enter verification code');
+     }
+    else if(captcha != inputCaptcha){
+      Toast.show('verification code did not match');
+    }
+    else{
+      setLoading(true);
+      const result = await delUser(userDetails.user_id);
+      setLoading(false);
+      console.log('DeleteUser', result);
+      if (result.status == true) {
+        Toast.show(result.error);
+        deleteAccountModalVisibility();
+        setCaptcha('')
+        setInputCaptcha('')
+        clearAllData();
+        setTimeout(() => {
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Splash', params: {isFromLogin: true}}],
+            }),
+          );
+        }, 500);
+      } else {
+        Toast.show(result.error);
+      }
+    }
+
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -238,7 +296,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'Omar Bentchikou                 Diomdi'}
+              {userDetails.user_f_name + ' '+ userDetails.user_l_name +'               '+ userDetails.user_name}
             </Text>
 
             <Text
@@ -247,7 +305,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'+213-77967736'}
+              { '+'+ userDetails.user_mb_no}
             </Text>
 
             <Text
@@ -256,7 +314,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'diomdi3@gmail.com'}
+              {userDetails.user_email}
             </Text>
 
             <View
@@ -296,6 +354,7 @@ function MyAccount(props) {
 
               <TouchableOpacity
                 onPress={() => {
+                  makeCaptcha();
                   deleteAccountModalVisibility();
                 }}>
                 <LinearGradient
@@ -545,7 +604,7 @@ function MyAccount(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'L0OwsY'}
+                {captcha}
               </Text>
             </View>
 
@@ -555,6 +614,8 @@ function MyAccount(props) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   marginTop: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   marginHorizontal: 10,
                 },
               ]}>
@@ -589,9 +650,9 @@ function MyAccount(props) {
                     padding: 5,
                   },
                 ]}
-                placeholder={''}
+               // placeholder={''}
                 onChangeText={text => {
-                  //setName(text);
+                  setInputCaptcha(text);
                 }}
               />
             </View>
@@ -608,8 +669,7 @@ function MyAccount(props) {
                 style={[{width: 104}]}
                 title={getTranslation('yes')}
                 onPress={() => {
-                  deleteAccountModalVisibility();
-                  props.navigation.navigate('Login');
+                  onDeleteAccount();
                 }}
               />
 
@@ -654,7 +714,14 @@ function MyAccount(props) {
                 style={[{width: 104}]}
                 title={getTranslation('yes')}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  clearAllData();
+                  logoutModalVisibility();
+                  props.navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{name: 'Login', params: {isFromLogin: false}}],
+                  }),
+                );
                 }}
               />
 
@@ -669,6 +736,9 @@ function MyAccount(props) {
           </View>
         </View>
       </Modal>
+
+      {isLoading ? <ProgressView></ProgressView> : null}
+
     </View>
   );
 }

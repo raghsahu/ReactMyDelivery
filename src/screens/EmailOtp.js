@@ -12,19 +12,62 @@ import {
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 import { LocalizationContext } from '../context/LocalizationProvider';
+import Toast from 'react-native-simple-toast';
+import {APPContext} from '../context/AppProvider';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView,} from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function EmailOtp(props) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const {Email, Mobile} = props.route.params;
   const [otp, setOtp] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
+  const {verification_update, verification} = useContext(APPContext);
+  const [isLoading, setLoading] = useState(false);
+  const [serverOtp, setServerOtp] = useState('');
 
-  const onOTP = () => {
-   // props.navigation.navigate('CreateNewPassword');
+  useEffect(() => {
+    getEmailOtp();
+  }, []);
+
+  const getEmailOtp = async () => {
+    setLoading(true);
+    const result = await verification(Email, '');
+    setLoading(false);
+    console.log('EmailServerOtp ', result);
+    if (result.status == true) {
+      Toast.show(result.error);
+      setServerOtp(result.data.otp)
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+
+  const onNext = async () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (!otp) {
+      Toast.show('Please enter otp');
+     }
+    else if(otp != serverOtp){
+      Toast.show('Otp did not match');
+    }
+    else{
+      setLoading(true);
+      const result = await verification_update(Email, otp, '' );
+      setLoading(false);
+      console.log('EmailOtpResult', result);
+      if (result.status == true) {
+       // Toast.show(result.error);
+        props.navigation.navigate('EmailSuccess', {
+          Mobile: Mobile,
+        })
+      } else {
+        Toast.show(result.error);
+      }
+    }
+
   };
 
   return (
@@ -55,7 +98,7 @@ function EmailOtp(props) {
             style={[styles.inputView, styles.inputContainer,{marginTop: 30}]}
             //placeholder={'omarbentchikou@hotmail.com'}
             editable={false}
-            value={'omarbentchikou@hotmail.com'}
+            value={Email}
           />
 
           <Text
@@ -87,7 +130,7 @@ function EmailOtp(props) {
             align="left"
             color={COLORS.textColor}
             >
-            { getTranslation('pls_enter_otp_sent_to') + ' omarbentchikou@hotmail.com'}
+            { getTranslation('pls_enter_otp_sent_to') + ' ' + Email}
           </Text>
 
          <OTPInputView
@@ -100,6 +143,7 @@ function EmailOtp(props) {
            // placeholderTextColor={'rgba(64,86,124,1)'}
             onCodeFilled={code => {
               //console.log(`Code is ${code}, you are good to go!`);
+              setOtp(code)
             }}
           />
 
@@ -127,12 +171,13 @@ function EmailOtp(props) {
             style={[styles.inputView, {marginTop: 40, marginBottom: 20}]}
             title={getTranslation('confirm')}
             onPress={() => {
-              props.navigation.navigate('EmailSuccess')
+             onNext();
             }}
           />
 
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

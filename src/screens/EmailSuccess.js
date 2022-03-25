@@ -17,6 +17,7 @@ import {Button, Header, Text, Input, BottomBackground} from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 function EmailSuccess(props) {
+  const {Mobile} = props.route.params;
   const { getTranslation} = useContext(LocalizationContext);
 
   return (
@@ -62,7 +63,9 @@ function EmailSuccess(props) {
           style={[{marginTop: 50}]}
           title={getTranslation('confirm_your_number')}
           onPress={() => {
-            props.navigation.navigate('MobileOtp');
+            props.navigation.navigate('MobileOtp', {
+              Mobile: Mobile,
+            });
           }}
         />
       </View>

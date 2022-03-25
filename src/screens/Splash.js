@@ -16,13 +16,15 @@ import {COLORS, IMAGES} from '../assets';
 import {Button, Header, Text, Input} from '../components';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
+import { APPContext } from "../context/AppProvider";
 //PACKAGES
 import {CommonActions} from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Splash(props) {
-  const {getUserLanguage, setI18nConfig, getTranslation} =
+  const {getUserLanguage, setI18nConfig, getTranslation, getUserLoginData} =
     useContext(LocalizationContext);
+    const { setUser } = useContext(APPContext);
 
   useEffect(() => {
     (async () => {
@@ -34,26 +36,27 @@ function Splash(props) {
   }, []);
 
   const moveToNext = () => {
-    // AsyncStorage.getItem('login_user_details', (err, result) => {
-    //     if (result) {
-    //         let obj = JSON.parse(result)
-    //         setLoggedInUser(obj)
-    // setTimeout(() => {
-    //     navigate({ props, name: 'HomeScreen', index: 0, navType: 'reset' });
-    // }, 3000);
-
-    //     } else {
-    setTimeout(() => {
-      props.navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'Login'}],
-        }),
-      );
-    }, 3000);
-
-    // }
-    // })
+    AsyncStorage.getItem('user_login_data', (error, result) => {
+      setTimeout(() => {
+        if (result !== null) {
+          let data = JSON.parse(result)
+          setUser(data)
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'BottomBar'}],
+            }),
+          );
+        } else {
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Login'}],
+            }),
+          );
+        }
+      }, 3000);
+    });
   };
 
   return (

@@ -12,13 +12,50 @@ import {
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 import { LocalizationContext } from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
 import { CommonActions } from '@react-navigation/native';
 
 function SuccessScreen(props) {
-  const { getTranslation} = useContext(LocalizationContext);
+  const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const { getTranslation, saveUserLoginData, getUserLoginData} = useContext(LocalizationContext);
+  const {check_user, setUser} = useContext(APPContext);
+
+  useEffect(() => {
+    (async () => {
+      getUserLoginData(res => {
+        setMobile(res.user_mb_no)
+        setEmail(res.user_email)
+        //console.log('local_data '+ res)
+      });
+    })();
+  }, []);
+
+  const onNext = async () => {
+      setLoading(true);
+      const result = await check_user(email , mobile);
+      setLoading(false);
+      if (result.status == true) {
+        saveUserLoginData(result.data[0])
+        setUser(result.data[0])
+        props.navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [
+                  { name: 'BottomBar' }
+              ],
+          })
+      );
+
+      } else {
+        Toast.show(result.error);
+      }
+    };
 
   return (
     <View style={styles.container}>
@@ -54,18 +91,11 @@ function SuccessScreen(props) {
           style={[styles.inputView, {marginTop: 50, width: 270}]}
           title={getTranslation('done')}
           onPress={() => {
-          // props.navigation.navigate('Home');
-                props.navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'BottomBar' }
-                    ],
-                })
-            );
+            onNext();
           }}
         />
       </View>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

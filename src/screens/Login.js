@@ -17,6 +17,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //COMMON COMPONENT
 import {
@@ -29,38 +30,49 @@ import {
 } from '../components';
 
 function Login(props) {
-  const [email, setEmail] = useState('rrr@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [isLoading, setLoading] = useState(false);
-  const {getTranslation} = useContext(LocalizationContext);
-  const {getLogin} = useContext(APPContext);
+  const {getTranslation, saveUserLoginData} = useContext(LocalizationContext);
+  const {getLogin, setUser} = useContext(APPContext);
 
-  const onNext = async () => {
+  const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!email) {
-      Toast.show('Please enter email');
-    } else if (reg.test(email) === false) {
-      Toast.show('Please enter valid email');
+      Toast.show('Please enter email or mobile');
     } else if (!password) {
       Toast.show('Please enter password');
-    } else {
-      setLoading(true);
-      const result = await getLogin(email, password);
-      setLoading(false);
-      console.log('LoginResult', result);
-      if (result.status == true) {
-        setTimeout(() => {
-          props.navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'BottomBar', params: {isFromLogin: true}}],
-            }),
-          );
-        }, 500);
-      } else {
-        Toast.show(result.error);
+    } else if(isNaN(email)){
+       //if input is not a number then here
+       if (reg.test(email) === false) {
+        Toast.show('Please enter valid email');
+      }else{
+        LoginApi();
       }
+    }else {
+      LoginApi();
+    }
+  };
+
+  const LoginApi = async (isMobile) => {
+    setLoading(true);
+    const result = await getLogin(email, password);
+    setLoading(false);
+    console.log('LoginResult', result);
+    if (result.status == true) {
+      saveUserLoginData(result.data[0])
+      setUser(result.data[0])
+      setTimeout(() => {
+        props.navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomBar', params: {isFromLogin: true}}],
+          }),
+        );
+      }, 500);
+    } else {
+      Toast.show(result.error);
     }
   };
 

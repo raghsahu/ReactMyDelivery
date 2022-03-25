@@ -13,17 +13,65 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { LocalizationContext } from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 
 function MobileOtp(props) {
-  const [password, setPassword] = useState('');
+  const {Mobile} = props.route.params;
   const [otp, setOtp] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const [mobile, setMobile] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [serverOtp, setServerOtp] = useState('');
+  const { getTranslation, getUserLoginData} = useContext(LocalizationContext);
+  const {verification_update, verification} = useContext(APPContext);
 
-  const onOTP = () => {
-    // props.navigation.navigate('CreateNewPassword');
+  useEffect(() => {
+    (async () => {
+      getUserLoginData(res => {
+        setMobile(res.user_mb_no)
+        console.log('local_data '+ res)
+        getMobileOtp();
+      });
+    })();
+  }, []);
+
+  const getMobileOtp = async () => {
+    setLoading(true);
+    const result = await verification('', mobile ? mobile : Mobile);
+    setLoading(false);
+    console.log('MobileServerOtp ', result);
+    if (result.status == true) {
+      Toast.show(result.error);
+      setServerOtp(result.data.otp)
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+
+  const onNext = async () => {
+    if (!otp) {
+      Toast.show('Please enter otp');
+     }
+    else if(otp != serverOtp){
+      Toast.show('Otp did not match');
+    }
+    else{
+      setLoading(true);
+      const result = await verification_update('', otp , mobile);
+      setLoading(false);
+      console.log('EmailOtpResult', result);
+      if (result.status == true) {
+       // Toast.show(result.error);
+       props.navigation.navigate('SuccessScreen');
+      } else {
+        Toast.show(result.error);
+      }
+    }
+
   };
 
   return (
@@ -66,7 +114,7 @@ function MobileOtp(props) {
             align="center"
             color={COLORS.textColor}>
             {
-              getTranslation('pls_verify_mobile_to_continue') + ' * +91 - 0123456789'
+              getTranslation('pls_verify_mobile_to_continue') + ' * ' + mobile
             }
           </Text>
 
@@ -79,6 +127,7 @@ function MobileOtp(props) {
             // placeholderCharacter=''
             // placeholderTextColor={'rgba(64,86,124,1)'}
             onCodeFilled={code => {
+              setOtp(code)
               //console.log(`Code is ${code}, you are good to go!`);
             }}
           />
@@ -105,7 +154,8 @@ function MobileOtp(props) {
             style={[styles.inputView, {marginTop: 40}]}
             title={getTranslation('verify')}
             onPress={() => {
-              props.navigation.navigate('SuccessScreen');
+              onNext();
+            
             }}
           />
           <View
@@ -113,6 +163,7 @@ function MobileOtp(props) {
           ></View>
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }
