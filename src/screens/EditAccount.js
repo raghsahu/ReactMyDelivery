@@ -27,14 +27,33 @@ import {
 } from '../components';
 
 import moment from 'moment'; // date format
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {PermissionsAndroid} from 'react-native';
+import {Picker} from '@react-native-picker/picker'; //for dropdown
+import RNCountry from 'react-native-countries';
+import CountryPicker from 'rn-country-picker';
+import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ActionSheet from 'react-native-actions-sheet';
 
 const options = [
   {
-    key: 'Man',
+    key: '1',
     text: 'Man',
   },
+  // {
+  //   key: 'Women',
+  //   text: 'Women',
+  // },
+];
+
+const optionsWomen = [
+  // {
+  //   key: 'Man',
+  //   text: 'Man',
+  // },
   {
-    key: 'Women',
+    key: '2',
     text: 'Women',
   },
 ];
@@ -58,8 +77,16 @@ const optionsLanguage = [
 ];
 
 function EditAccount(props) {
-  const [name, setName] = useState('');
+  const [firstName, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [isSelected, setSelection] = useState(false);
   const [isCalendarVisible, setCalendarVisibility] = useState(false);
@@ -68,13 +95,44 @@ function EditAccount(props) {
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
-  const {getTranslation} =  useContext(LocalizationContext);
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
+  const [pwSecureText, setPwSecureText] = useState(true);
+  const [pwSecureText1, setPwSecureText1] = useState(true);
+  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData, getUserLoginData} = useContext(LocalizationContext);
+  const actionSheetRef = useRef();
+  const [images, setImages] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [mCountryCode, setCountryCode] = useState('91');
+  const [mCountryName, setCountryName] = useState();
+  const [mSelectedCountryName, setSelectedCountryName] = useState('India');
+  const [userDetails, setUserDetails] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      getUserLoginData(res => {
+        setUserDetails(res)
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
+    let countryNames = RNCountry.getCountryNamesWithCodes;
+    countryNames.sort((a, b) => a.name.localeCompare(b.name));
+    setCountryName(countryNames);
+    console.log('country_names ' + mSelectedCountryName);
+  }, []);
+
+  const _selectedValue = index => {
+    setCountryCode(index);
+    console.log('country_code ' + index);
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+    setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
   };
 
   const showMode = currentMode => {
@@ -96,10 +154,147 @@ function EditAccount(props) {
 
   const onValueChange = item => {
     setSelectedLang(item);
+    if (item == 'English') {
+      setSelectedLanguage('en');
+    } else if (item == 'French') {
+      setSelectedLanguage('fr');
+    }
+    if (item == 'Spanish') {
+      setSelectedLanguage('sp');
+    }
+    setSelectedLanguageKey(item.key);
+  };
+
+  const onSelectLanguage = () => {
+    if (selectedLanguage) {
+      setI18nConfig(selectedLanguage);
+      saveUserLanguage(selectedLanguage);
+    }
+    // else {
+    //   Alert.alert('', 'Please select a language', [
+    //     {
+    //       text: getTranslation('ok'),
+    //       onPress: () => {},
+    //     },
+    //   ]);
+    // }
   };
 
   const setCheck = checkStatus => {
     setSelection(checkStatus);
+  };
+
+  const onPressUpload = () => {
+    actionSheetRef.current?.setModalVisible(true);
+  };
+
+  const onPressLibrary = async type => {
+    var result = null;
+    // if (requestExternalStoreageRead()) {
+    if (type == 1) {
+      result = await launchCamera();
+      actionSheetRef.current?.setModalVisible(false);
+    } else {
+      result = await launchImageLibrary();
+      actionSheetRef.current?.setModalVisible(false);
+    }
+    console.log(result);
+    if (result && result.assets.length > 0) {
+      let uri = result.assets[0].uri;
+      let items = [...images];
+      items.push(uri);
+      setImages(uri);
+    }
+    // }
+  };
+
+  const requestExternalStoreageRead = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'My Delivery ...',
+          message: 'App needs access to external storage',
+        },
+      );
+
+      return granted == PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      //Handle this error
+      return false;
+    }
+  };
+
+  const onNext = async () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (!firstName) {
+      Toast.show('Please enter first name');
+    } else if (!lastName) {
+      Toast.show('Please enter last name');
+    } else if (!userName) {
+      Toast.show('Please enter user name');
+    } else if (!selectedOption) {
+      Toast.show('Please select gender');
+    } else if (!selectDate) {
+      Toast.show('Please enter date of birth');
+    } else if (!email) {
+      Toast.show('Please enter email');
+    } else if (reg.test(email) === false) {
+      Toast.show('Please enter valid email');
+    } else if (!mobile) {
+      Toast.show('Please enter mobile number');
+    } else if (!address) {
+      Toast.show('Please enter address');
+    } else if (!city) {
+      Toast.show('Please enter city');
+    } else if (!selectedLanguage) {
+      Toast.show('Please select language');
+    } else if (!password) {
+      Toast.show('Please enter password');
+    } else if (!confirmPassword) {
+      Toast.show('Please enter confirm password');
+    }else if(password != confirmPassword){
+      Toast.show('password & confirm password not match');
+    } else if (!isSelected) {
+      Toast.show('Please select terms & conditions');
+    } else {
+      setLoading(true);
+      const result = await getRegister(
+        firstName,
+        lastName,
+        userName,
+        selectedOption.key,
+        selectDate,
+        email,
+        mCountryCode + mobile,
+        address,
+        city,
+        mSelectedCountryName,
+        selectedLanguageKey,
+        password,
+        '10.0000',
+        '32.11',
+        images,
+        ' ',
+      );
+      setLoading(false);
+      console.log('RegisterResult', result);
+      if (result.status == true) {
+        Toast.show(result.error);
+        onSelectLanguage();
+        saveUserLoginData(result.data[0])
+        setTimeout(() => {
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: email, Mobile: mCountryCode + mobile}}],
+            }),
+          );
+        }, 500);
+      } else {
+        Toast.show(result.error);
+      }
+    }
   };
 
   return (
@@ -117,28 +312,40 @@ function EditAccount(props) {
           style={styles.container}
           showsVerticalScrollIndicator={false}>
 
-          <ImageBackground
-            source={IMAGES.circle_placeholder}
+          <TouchableOpacity
             style={{
-              height: 100,
-              width: 100,
-              marginTop: 20,
+              height: 180,
+              width: 180,
               alignSelf: 'center',
-              justifyContent: 'center',
-              resizeMode: 'contain',
-              alignItems: 'center',
-            }}>
+            }}
+            onPress={onPressUpload}>
+            <ImageBackground
+              source={images ? {uri: images} : IMAGES.signup_placeholder}
+              style={{
+                height: 160,
+                width: 160,
+                borderRadius: 160 / 2,
+                marginTop: 32,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                resizeMode: 'contain',
+                overflow: 'hidden',
+                borderWidth: 0.1,
+                alignItems: 'center',
+              }}></ImageBackground>
             <View
               style={{
                 backgroundColor: COLORS.primaryColor,
-                height: 40,
-                width: 40,
-                borderRadius: 20,
-                alignItems: 'center',
+                height: 60,
+                width: 60,
+                borderRadius: 30,
+                // alignItems: 'center',
                 justifyContent: 'center',
                 position: 'absolute', //Here is the trick
                 bottom: 0,
-                alignSelf: 'flex-end',
+                right: 0,
+                // marginLeft: 50,
+                //alignSelf: 'center',
               }}>
               <Image
                 source={IMAGES.camera}
@@ -151,7 +358,7 @@ function EditAccount(props) {
                 }}
               />
             </View>
-          </ImageBackground>
+          </TouchableOpacity>
 
           <Text
             style={[styles.inputView, {marginTop: 20,}]}
@@ -166,6 +373,7 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('first_name')}
             isLeft={IMAGES.name}
+            value={userDetails.user_f_name}
             onChangeText={text => {
               setName(text);
             }}
@@ -174,8 +382,9 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('last_name')}
             isLeft={IMAGES.name}
+            value={userDetails.user_l_name}
             onChangeText={text => {
-              //setPassword(text);
+              setLastName(text);
             }}
           />
 
@@ -183,16 +392,39 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
+            value={userDetails.user_name}
             onChangeText={text => {
-              setName(text);
+              setUserName(text);
             }}
           />
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
+      <View
+            style={[
+              styles.inputView,
+              {
+                marginTop: 20,
+                backgroundColor: COLORS.white,
+                padding: 10,
+                elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.5,
+                shadowRadius: 2,
+                flexDirection: 'row',
+                // justifyContent: 'space-between',
+              },
+            ]}>
             <RadioButtons
               selectedOption={selectedOption}
               onSelect={onSelect}
               options={options}
+            />
+
+            <RadioButtons
+              style={[{marginLeft: 70}]}
+              selectedOption={selectedOption}
+              onSelect={onSelect}
+              options={optionsWomen}
             />
           </View>
 
@@ -201,6 +433,7 @@ function EditAccount(props) {
               style={[{marginTop: 18}]}
               placeholder={getTranslation('date_of_birth')}
               editable={false}
+              value={userDetails.user_dob}
               isLeft={IMAGES.date}
               value={selectDate}
             />
@@ -218,30 +451,42 @@ function EditAccount(props) {
 
         <View
             style={[
-              styles.inputView,
+             // styles.inputView,
               styles.inputContainer,
               {flexDirection: 'row', flex: 1},
             ]}>
-            {/* <Input
-              style={[{width: 100}]}
-              placeholder={'Country'}
-              //isLeft={IMAGES.phone}
-              onChangeText={text => {
-                //setName(text);
-              }}
-            /> */}
+        
+        <CountryPicker
+              //style={[{width: 100}]}
+              disable={false}
+              animationType={'slide'}
+              containerStyle={styles.pickerStyle}
+              pickerTitleStyle={styles.pickerTitleStyle}
+              // dropDownImage={require('./res/ic_drop_down.png')}
+              selectedCountryTextStyle={styles.selectedCountryTextStyle}
+              countryNameTextStyle={styles.countryNameTextStyle}
+              pickerTitle={'Country Code'}
+              searchBarPlaceHolder={'Search...'}
+              hideCountryFlag={false}
+              hideCountryCode={false}
+              searchBarStyle={styles.searchBarStyle}
+              // backButtonImage={require('./res/ic_back_black.png')}
+              //searchButtonImage={require('./res/ic_search.png')}
+              countryCode={mCountryCode}
+              selectedValue={_selectedValue}
+            />
 
             <Input
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-              // isLeft={IMAGES.phone}
+              value={userDetails.user_mb_no}
               onChangeText={text => {
-                //setName(text);
+                setMobile(text);
               }}
             />
 
           <Button
-            style={[{width: 80, height: 40, alignSelf: 'center', justifyContent: 'center'}]}
+            style={[{width: 60, height: 40, alignSelf: 'center', justifyContent: 'center', marginRight: 5}]}
             title={getTranslation('update')}
             onPress={() => {
              // props.navigation.navigate('EmailOtp')
@@ -252,28 +497,50 @@ function EditAccount(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('address')}
+            value={userDetails.user_addr}
             isLeft={IMAGES.home}
             onChangeText={text => {
-              setName(text);
+              setAddress(text);
             }}
           />
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('city')}
+            value={userDetails.user_city}
             isLeft={IMAGES.location}
             onChangeText={text => {
-              setName(text);
+              setCity(text);
             }}
           />
 
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('select_country')}
-            isLeft={IMAGES.location}
-            onChangeText={text => {
-              setName(text);
-            }}
-          />
+<View
+            style={[
+              styles.inputView,
+              styles.inputContainer,
+              {
+                backgroundColor: COLORS.lightGray,
+                height: 48,
+                borderRadius: 24,
+              },
+            ]}>
+            {mCountryName ? (
+              <Picker
+                selectedValue={mSelectedCountryName}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedCountryName(itemValue)
+                }>
+                {mCountryName.map(val => {
+                  return (
+                    <Picker.Item
+                      key={'country-item-' + val.code}
+                      label={val.name}
+                      value={val.name}
+                    />
+                  );
+                })}
+              </Picker>
+            ) : null}
+          </View>
 
           <DropdownPicker
             //placeholder={'English'}
@@ -298,10 +565,10 @@ function EditAccount(props) {
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              //setPassword(text);
+              setOldPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -311,10 +578,10 @@ function EditAccount(props) {
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              //setPassword(text);
+              setPassword(text);
             }}
             isShow={() => {
-              //props.navigation.navigate('Login')
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -324,10 +591,10 @@ function EditAccount(props) {
             secureTextEntry={true}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-              //setPassword(text);
+              setConfirmPassword(text);
             }}
             isShow={() => {
-              //
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -335,11 +602,90 @@ function EditAccount(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('save_changes')}
             onPress={() => {
-             // props.navigation.navigate('EmailOtp')
+              onNext();
               }}
           />
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
+      <ActionSheet ref={actionSheetRef}>
+        <View style={[styles.bottomView, {}]}>
+          <View style={[styles.bottomViewItem, {}]}>
+            <TouchableOpacity onPress={() => onPressLibrary(1)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.camera}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Camera'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                borderColor: COLORS.primaryColor,
+                borderWidth: 1,
+              }}></View>
+            <TouchableOpacity onPress={() => onPressLibrary(2)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.photos}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Photo library'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ActionSheet>
 
       {show && (
         <DateTimePick
@@ -362,6 +708,59 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 16,
+  },
+  pickerStyle: {
+    height: 48,
+    width: 100,
+    marginLeft: 10,
+    justifyContent: 'center',
+    //padding: 10,
+    //borderWidth: 2,
+    //borderColor: '#303030',
+    //backgroundColor: 'white',
+  },
+  selectedCountryTextStyle: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    color: '#000',
+    textAlign: 'right',
+  },
+
+  countryNameTextStyle: {
+    paddingLeft: 10,
+    color: '#000',
+    textAlign: 'right',
+  },
+  searchBarStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginLeft: 8,
+    marginRight: 10,
+  },
+  bottomView: {
+    height: 150,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: '#ffffff',
+  },
+  bottomViewItem: {
+    margin: 25,
+    borderColor: COLORS.primaryColor,
+    borderWidth: 2,
+    borderRadius: 8,
+  },
+  bottomViewIcon: {
+    flexDirection: 'row',
+    height: 50,
+    marginStart: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginStart: 20,
   },
 });
 
