@@ -20,7 +20,7 @@ import {Button, Header, Text, Input, BottomBackground, ProgressView,} from '../c
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function EmailOtp(props) {
-  const {Email, Mobile} = props.route.params;
+  const {Email, Mobile, CountryCode} = props.route.params;
   const [otp, setOtp] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
   const {verification_update, verification} = useContext(APPContext);
@@ -39,6 +39,7 @@ function EmailOtp(props) {
     if (result.status == true) {
       Toast.show(result.error);
       setServerOtp(result.data.otp)
+      setOtp(result.data.otp)
     } else {
       Toast.show(result.error);
     }
@@ -62,6 +63,7 @@ function EmailOtp(props) {
        // Toast.show(result.error);
         props.navigation.navigate('EmailSuccess', {
           Mobile: Mobile,
+          Email: Email,
         })
       } else {
         Toast.show(result.error);
@@ -141,6 +143,7 @@ function EmailOtp(props) {
             codeInputHighlightStyle={styles.underlineStyleHighLighted}
            // placeholderCharacter=''
            // placeholderTextColor={'rgba(64,86,124,1)'}
+            code={""+otp}
             onCodeFilled={code => {
               //console.log(`Code is ${code}, you are good to go!`);
               setOtp(code)

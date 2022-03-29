@@ -20,17 +20,14 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
 
 function Home(props) {
-  const {getTranslation, getUserLoginData} = useContext(LocalizationContext);
-  const [userDetails, setUserDetails] = useState({});
+  const {getTranslation} = useContext(LocalizationContext);
+  const {user} = useContext(APPContext);
 
   useEffect(() => {
-    (async () => {
-      getUserLoginData(res => {
-        setUserDetails(res)
-      });
-    })();
+  
   }, []);
 
   return (
@@ -51,7 +48,7 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={getTranslation('hello')+ ', '+ userDetails.user_f_name + ' '+ userDetails.user_l_name}
+          title={getTranslation('hello')+ ', '+ user.user_f_name + ' '+ user.user_l_name}
           onNotification={() => {
             props.navigation.navigate('Notification')
           }}

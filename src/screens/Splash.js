@@ -22,7 +22,7 @@ import {CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Splash(props) {
-  const {getUserLanguage, setI18nConfig, getTranslation, getUserLoginData} =
+  const {getUserLanguage, setI18nConfig, getTranslation} =
     useContext(LocalizationContext);
     const { setUser } = useContext(APPContext);
 

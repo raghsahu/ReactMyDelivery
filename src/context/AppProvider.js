@@ -4,12 +4,17 @@ import React, {createContext, useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
+import moment from 'moment'; // date format
 
 export const APPContext = createContext();
 
 export const AppProvider = props => {
 
   const [user, setUser] = useState(null);
+
+  const changeDateFormat = (date, format) => {
+    return moment(date).format(format);
+  };
 
   // mydelivery.sairoses.com
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
@@ -23,6 +28,8 @@ export const AppProvider = props => {
     mForgot: baseURL + 'mForgot',
     reset_password: baseURL + 'reset_password',
     delUser: baseURL + 'deluser',
+    userUpdate: baseURL + 'madd/user',
+    notifications: baseURL + 'fields/notifications',
   };
 
   const getLogin = async (email, pw) => {
@@ -107,7 +114,86 @@ export const AppProvider = props => {
     // );
     // formData.append('user_fcm_key', user_fcm_key);
 
-    return await request(webServices.register, 'post', params);
+    return await requestMultipart(webServices.register, 'post', params);
+  };
+
+  const userUpdate = async (
+    user_id,
+    user_f_name,
+    user_l_name,
+    user_name,
+    user_gender,
+    user_dob,
+    user_email,
+    user_mb_no,
+    user_addr,
+    user_city,
+    user_country,
+    user_language,
+    user_password,
+    user_lat,
+    user_lon,
+    user_img,
+    user_fcm_key,
+  ) => {
+    // let params = {
+    //   user_id: user_id,
+    //   user_f_name: user_f_name,
+    //   user_m_name: '',
+    //   user_l_name: user_l_name,
+    //   user_name: user_name,
+    //   user_gender: user_gender,
+    //   user_dob: user_dob,
+    //   user_email: user_email,
+    //   user_mb_no: user_mb_no,
+    //   user_addr: user_addr,
+    //   user_city: user_city,
+    //   user_country: user_country,
+    //   user_language: user_language,
+    //   user_password: user_password,
+    //   user_lat: user_lat,
+    //   user_lon: user_lon,
+    //   user_img: user_img,
+    //   user_fcm_key: user_fcm_key,
+    //   // user_img: user_img ? {
+    //   //   uri: user_img,
+    //   //   name:'userProfile.jpg',
+    //   //   type:'image/jpg'
+    //   // } : '',
+    // };
+    const formData = new FormData();
+    formData.append('user_id', user_id);
+    formData.append('user_f_name', user_f_name);
+    formData.append('user_m_name', user_l_name);
+    formData.append('user_l_name', user_l_name);
+    formData.append('user_name', user_name);
+    formData.append('user_gender', user_gender);
+    formData.append('user_dob', user_dob);
+    formData.append('user_email', user_email);
+    formData.append('user_mb_no', user_mb_no);
+    formData.append('user_addr', user_addr);
+    formData.append('user_city', user_city);
+    formData.append('user_country', user_country);
+    formData.append('user_language', user_language);
+    formData.append('user_password', user_password);
+    formData.append('user_lat', user_lat);
+    formData.append('user_lon', user_lon);
+    formData.append(
+      'user_img',
+      user_img
+        ? {
+            uri:
+              Platform.OS === 'android'
+                ? user_img
+                : user_img.replace('file://', ''),
+            name: 'userProfile.jpg',
+            type: 'image/jpg',
+          }
+        : '',
+    );
+    formData.append('user_fcm_key', user_fcm_key);
+
+    return await requestMultipart(webServices.userUpdate, 'post', formData);
   };
 
   const verification_update = async (email, otp, mobile) => {
@@ -169,13 +255,21 @@ export const AppProvider = props => {
     return await request(webServices.delUser, 'post', params);
   };
 
+  
+  const getNotifications = async (user_id) => {
+    let params = {
+      user_id: user_id,
+    };
+    return await request(webServices.notifications, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
       console.log('URL: ', url);
       console.log('METHOD: ', method);
       console.log('PARAMS: ', params);
-      console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
+      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
 
       if (method == 'get') {
@@ -199,14 +293,86 @@ export const AppProvider = props => {
         );
 
         return getResponse(response);
+      } else if (method == 'post') {
+        var response = await axios.post({
+          method: method,
+          url: url,
+          data: params,
+          // headers: {
+          //     'Authorization': user ? `Bearer ${user.user_session}` : ''
+          // },
+        });
+
+        return getResponse(response);
       } else {
         var response = await axios({
           method: method,
           url: url,
           data: params,
+          // headers: {
+          //     'Authorization': user ? `Bearer ${user.user_session}` : ''
+          // },
+        });
+
+        return getResponse(response);
+      }
+    } catch (e) {
+      console.log(e);
+      return getError(e);
+      //return 'Something went wrong'
+    }
+  };
+
+  const requestMultipart = async (url, method, params) => {
+    try {
+      console.log('===================');
+      console.log('URL: ', url);
+      console.log('METHOD: ', method);
+      console.log('PARAMS: ', params);
+      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
+      console.log('===================');
+
+      if (method == 'get') {
+        const response = await axios.get(url, {
+          params: params,
           headers: {
               'Authorization': user ? `Bearer ${user.user_session}` : ''
           },
+        });
+
+        return getResponse(response);
+      } else if (method == 'put') {
+        const response = await axios.put(
+          url,
+          params,
+          {
+          headers: {
+              'Authorization': user ? `Bearer ${user.user_session}` : ''
+          },
+          }
+        );
+
+        return getResponse(response);
+      }else if (method == 'post') {
+        var response = await axios.post({
+          method: method,
+          url: url,
+          data: params,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+             // 'Authorization': user ? `Bearer ${user.user_session}` : ''
+          },
+        });
+
+        return getResponse(response);
+      } else {
+        var response = await axios({
+          method: method,
+          url: url,
+          data: params,
+          // headers: {
+          //    // 'Authorization': user ? `Bearer ${user.user_session}` : ''
+          // },
         });
 
         return getResponse(response);
@@ -296,6 +462,7 @@ export const AppProvider = props => {
   return (
     <APPContext.Provider
       value={{
+        changeDateFormat,
         setUser,
         user,
         baseURL,
@@ -307,6 +474,8 @@ export const AppProvider = props => {
         mForgot,
         reset_password,
         delUser,
+        userUpdate,
+        getNotifications,
       }}>
       {props.children}
     </APPContext.Provider>

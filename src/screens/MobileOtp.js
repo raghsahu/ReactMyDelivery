@@ -20,22 +20,18 @@ import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
 function MobileOtp(props) {
-  const {Mobile} = props.route.params;
+  const {Mobile, Email} = props.route.params;
   const [otp, setOtp] = useState('');
   const [mobile, setMobile] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [serverOtp, setServerOtp] = useState('');
-  const { getTranslation, getUserLoginData} = useContext(LocalizationContext);
-  const {verification_update, verification} = useContext(APPContext);
+  const { getTranslation} = useContext(LocalizationContext);
+  const {verification_update, verification, user} = useContext(APPContext);
 
   useEffect(() => {
-    (async () => {
-      getUserLoginData(res => {
-        setMobile(res.user_mb_no)
-        console.log('local_data '+ res)
-        getMobileOtp();
-      });
-    })();
+    setMobile(user.user_mb_no)
+    getMobileOtp();
+    
   }, []);
 
   const getMobileOtp = async () => {
@@ -46,6 +42,7 @@ function MobileOtp(props) {
     if (result.status == true) {
       Toast.show(result.error);
       setServerOtp(result.data.otp)
+      setOtp(result.data.otp)
     } else {
       Toast.show(result.error);
     }
@@ -66,7 +63,10 @@ function MobileOtp(props) {
       console.log('EmailOtpResult', result);
       if (result.status == true) {
        // Toast.show(result.error);
-       props.navigation.navigate('SuccessScreen');
+       props.navigation.navigate('SuccessScreen', {
+         Mobile :  mobile ? mobile : Mobile,
+         Email: Email,
+       });
       } else {
         Toast.show(result.error);
       }
@@ -114,7 +114,7 @@ function MobileOtp(props) {
             align="center"
             color={COLORS.textColor}>
             {
-              getTranslation('pls_verify_mobile_to_continue') + ' * ' + mobile
+              getTranslation('pls_verify_mobile_to_continue') + ' * ' + Mobile
             }
           </Text>
 
@@ -126,6 +126,7 @@ function MobileOtp(props) {
             codeInputHighlightStyle={styles.underlineStyleHighLighted}
             // placeholderCharacter=''
             // placeholderTextColor={'rgba(64,86,124,1)'}
+            code={""+otp}
             onCodeFilled={code => {
               setOtp(code)
               //console.log(`Code is ${code}, you are good to go!`);

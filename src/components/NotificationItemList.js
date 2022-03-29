@@ -5,9 +5,11 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import {APPContext} from '../context/AppProvider';
 
 const NotificationItemList = props => {
-  //const item = props.item;
+  const item = props.item;
+  const {changeDateFormat} = useContext(APPContext);
 
   return (
     // <TouchableOpacity
@@ -54,14 +56,14 @@ const NotificationItemList = props => {
           color={COLORS.primaryColor}
           size="16"
           weight="500">
-          {'Test'}
+          {item.user_f_name + ' '+ item.user_l_name}
         </Text>
 
         <Text color={COLORS.black} size="16" weight="500">
-          {'Lorem Impsum Lorem Impsum Lorem Impsum Lorem '}
+          {item.prod_name}
         </Text>
         <Text color={COLORS.darkGray} size="14" weight="500">
-          {'2022-01-13  20:08'}
+          {changeDateFormat(item.notn_create_date, 'yyyy-MM-DD hh:mm a')}
         </Text>
 
       </View>

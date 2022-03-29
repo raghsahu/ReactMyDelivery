@@ -20,28 +20,24 @@ import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../co
 import { CommonActions } from '@react-navigation/native';
 
 function SuccessScreen(props) {
+  const {Mobile, Email} = props.route.params;
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const { getTranslation, saveUserLoginData, getUserLoginData} = useContext(LocalizationContext);
-  const {check_user, setUser} = useContext(APPContext);
+  const { getTranslation} = useContext(LocalizationContext);
+  const {check_user, setUser, user} = useContext(APPContext);
 
   useEffect(() => {
-    (async () => {
-      getUserLoginData(res => {
-        setMobile(res.user_mb_no)
-        setEmail(res.user_email)
-        //console.log('local_data '+ res)
-      });
-    })();
+    setMobile(user.user_mb_no)
+    setEmail(user.user_email)
   }, []);
 
   const onNext = async () => {
+    console.log('email ' + Email)
       setLoading(true);
-      const result = await check_user(email , mobile);
+      const result = await check_user('' ,  mobile ? mobile : Mobile);
       setLoading(false);
       if (result.status == true) {
-        saveUserLoginData(result.data[0])
         setUser(result.data[0])
         props.navigation.dispatch(
           CommonActions.reset({
@@ -91,7 +87,15 @@ function SuccessScreen(props) {
           style={[styles.inputView, {marginTop: 50, width: 270}]}
           title={getTranslation('done')}
           onPress={() => {
-            onNext();
+           // onNext();
+            props.navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [
+                  { name: 'Login' }
+              ],
+          })
+      );
           }}
         />
       </View>

@@ -105,7 +105,7 @@ function Register(props) {
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData} = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage} = useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -269,7 +269,7 @@ function Register(props) {
         selectedOption.key,
         selectDate,
         email,
-        mCountryCode + mobile,
+        mobile,
         address,
         city,
         mSelectedCountryName,
@@ -281,16 +281,19 @@ function Register(props) {
         ' ',
       );
       setLoading(false);
-      console.log('RegisterResult', result);
+      //console.log('RegisterResult', result);
       if (result.status == true) {
         Toast.show(result.error);
         onSelectLanguage();
-        saveUserLoginData(result.data[0])
         setTimeout(() => {
           props.navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: email, Mobile: mCountryCode + mobile}}],
+              routes: [{name: 'EmailOtp', params: {isFromLogin: false,
+                 Email: email, 
+                 Mobile: mobile,
+                 CountryCode: mCountryCode,
+                 }}],
             }),
           );
         }, 500);

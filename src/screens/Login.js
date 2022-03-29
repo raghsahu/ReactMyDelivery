@@ -61,8 +61,8 @@ function Login(props) {
     setLoading(false);
     console.log('LoginResult', result);
     if (result.status == true) {
-      saveUserLoginData(result.data[0])
       setUser(result.data[0])
+      saveUserLoginData(result.data[0])
       setTimeout(() => {
         props.navigation.dispatch(
           CommonActions.reset({

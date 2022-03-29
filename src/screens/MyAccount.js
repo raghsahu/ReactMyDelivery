@@ -36,7 +36,7 @@ const {height, width} = Dimensions.get('screen');
 
 function MyAccount(props) {
   const {tabIndex} = props.route.params ? props.route.params : 1;
-  const {getTranslation, clearAllData, getUserLoginData} = useContext(LocalizationContext);
+  const {getTranslation, clearAllData} = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(0);
@@ -44,21 +44,13 @@ function MyAccount(props) {
   const [tabStatus, setTabStatus] = useState();
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
-  const [userDetails, setUserDetails] = useState({});
   const [isLoading, setLoading] = useState(false);
-  const {delUser} = useContext(APPContext);
+  const {delUser, user} = useContext(APPContext);
 
   useEffect(() => {
    tabIndex ? setIndex(tabIndex) : setIndex(1)
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      getUserLoginData(res => {
-        setUserDetails(res)
-      });
-    })();
-  }, []);
 
   const deleteAccountModalVisibility = () => {
     setModalVisible(!isModalVisible);
@@ -223,7 +215,7 @@ function MyAccount(props) {
     }
     else{
       setLoading(true);
-      const result = await delUser(userDetails.user_id);
+      const result = await delUser(user.user_id);
       setLoading(false);
       console.log('DeleteUser', result);
       if (result.status == true) {
@@ -296,7 +288,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {userDetails.user_f_name + ' '+ userDetails.user_l_name +'               '+ userDetails.user_name}
+              {user.user_f_name + ' '+ user.user_l_name +'               '+ user.user_name}
             </Text>
 
             <Text
@@ -305,7 +297,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              { '+'+ userDetails.user_mb_no}
+              { '+'+ user.user_mb_no}
             </Text>
 
             <Text
@@ -314,7 +306,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {userDetails.user_email}
+              {user.user_email}
             </Text>
 
             <View

@@ -24,6 +24,7 @@ import {
   DropdownPicker,
   DateTimePick,
   Header,
+  ProgressView,
 } from '../components';
 
 import moment from 'moment'; // date format
@@ -35,6 +36,7 @@ import CountryPicker from 'rn-country-picker';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionSheet from 'react-native-actions-sheet';
+import {APPContext} from '../context/AppProvider';
 
 const options = [
   {
@@ -97,9 +99,10 @@ function EditAccount(props) {
   const [selectedLang, setSelectedLang] = useState('English');
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
+  const [pwSecureTextOld, setPwSecureTextOld] = useState(true);
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData, getUserLoginData} = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage,} = useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -107,20 +110,26 @@ function EditAccount(props) {
   const [mCountryName, setCountryName] = useState();
   const [mSelectedCountryName, setSelectedCountryName] = useState('India');
   const [userDetails, setUserDetails] = useState({});
+  const {user, userUpdate, setUser} = useContext(APPContext);
 
   useEffect(() => {
-    (async () => {
-      getUserLoginData(res => {
-        setUserDetails(res)
-      });
-    })();
+    setName(user.user_f_name)
+    setLastName(user.user_l_name)
+    setUserName(user.user_name)
+    setSelectDate(user.user_dob)
+    setAddress(user.user_addr)
+    setCity(user.user_city)
+    setMobile(user.user_mb_no)
+    //setSelectedOption(user.gender == '1' ? options : optionsWomen)
   }, []);
 
   useEffect(() => {
+   // console.log('user_datttt ' + user.user_f_name);
+
     let countryNames = RNCountry.getCountryNamesWithCodes;
     countryNames.sort((a, b) => a.name.localeCompare(b.name));
     setCountryName(countryNames);
-    console.log('country_names ' + mSelectedCountryName);
+    //console.log('country_names ' + mSelectedCountryName);
   }, []);
 
   const _selectedValue = index => {
@@ -201,8 +210,8 @@ function EditAccount(props) {
     console.log(result);
     if (result && result.assets.length > 0) {
       let uri = result.assets[0].uri;
-      let items = [...images];
-      items.push(uri);
+     // let items = [...images];
+      //items.push(uri);
       setImages(uri);
     }
     // }
@@ -225,7 +234,7 @@ function EditAccount(props) {
     }
   };
 
-  const onNext = async () => {
+  const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!firstName) {
       Toast.show('Please enter first name');
@@ -237,11 +246,13 @@ function EditAccount(props) {
       Toast.show('Please select gender');
     } else if (!selectDate) {
       Toast.show('Please enter date of birth');
-    } else if (!email) {
-      Toast.show('Please enter email');
-    } else if (reg.test(email) === false) {
-      Toast.show('Please enter valid email');
-    } else if (!mobile) {
+    } 
+    // else if (!email) {
+    //   Toast.show('Please enter email');
+    // } else if (reg.test(email) === false) {
+    //   Toast.show('Please enter valid email');
+    // } 
+    else if (!mobile) {
       Toast.show('Please enter mobile number');
     } else if (!address) {
       Toast.show('Please enter address');
@@ -249,51 +260,55 @@ function EditAccount(props) {
       Toast.show('Please enter city');
     } else if (!selectedLanguage) {
       Toast.show('Please select language');
-    } else if (!password) {
-      Toast.show('Please enter password');
-    } else if (!confirmPassword) {
-      Toast.show('Please enter confirm password');
-    }else if(password != confirmPassword){
-      Toast.show('password & confirm password not match');
-    } else if (!isSelected) {
-      Toast.show('Please select terms & conditions');
-    } else {
-      setLoading(true);
-      const result = await getRegister(
-        firstName,
-        lastName,
-        userName,
-        selectedOption.key,
-        selectDate,
-        email,
-        mCountryCode + mobile,
-        address,
-        city,
-        mSelectedCountryName,
-        selectedLanguageKey,
-        password,
-        '10.0000',
-        '32.11',
-        images,
-        ' ',
-      );
-      setLoading(false);
-      console.log('RegisterResult', result);
-      if (result.status == true) {
-        Toast.show(result.error);
-        onSelectLanguage();
-        saveUserLoginData(result.data[0])
-        setTimeout(() => {
-          props.navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: email, Mobile: mCountryCode + mobile}}],
-            }),
-          );
-        }, 500);
-      } else {
-        Toast.show(result.error);
+    } else if (oldPassword) {
+     // Toast.show('Please select terms & conditions');
+     if (oldPassword != user.user_password) {
+      Toast.show('Old password not match');
+     }else if (!password) {
+        Toast.show('Please enter password');
+      } else if (!confirmPassword) {
+        Toast.show('Please enter confirm password');
+      }else if(password != confirmPassword){
+        Toast.show('password & confirm password not match');
+      }else{
+        UpdateUser();
       }
+    }
+    else {
+      UpdateUser();
+    }
+  };
+
+  const UpdateUser = async () => {
+    setLoading(true);
+    const result = await userUpdate(
+      user.user_id,
+      firstName,
+      lastName,
+      userName,
+      selectedOption.key,
+      selectDate,
+      user.user_email,
+      mobile,
+      address,
+      city,
+      mSelectedCountryName,
+      selectedLanguageKey,
+      password,
+      '10.0000',
+      '32.11',
+      images,
+      ' ',
+    );
+    setLoading(false);
+   // console.log('UpdateResult', result);
+    if (result.status == true) {
+      Toast.show(result.error);
+      onSelectLanguage();
+      setUser(result.data[0])
+     props.navigation.goBack();
+    } else {
+      Toast.show(result.error);
     }
   };
 
@@ -373,7 +388,7 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('first_name')}
             isLeft={IMAGES.name}
-            value={userDetails.user_f_name}
+            value={firstName}
             onChangeText={text => {
               setName(text);
             }}
@@ -382,7 +397,7 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('last_name')}
             isLeft={IMAGES.name}
-            value={userDetails.user_l_name}
+            value={lastName}
             onChangeText={text => {
               setLastName(text);
             }}
@@ -392,7 +407,7 @@ function EditAccount(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
-            value={userDetails.user_name}
+            value={userName}
             onChangeText={text => {
               setUserName(text);
             }}
@@ -433,7 +448,6 @@ function EditAccount(props) {
               style={[{marginTop: 18}]}
               placeholder={getTranslation('date_of_birth')}
               editable={false}
-              value={userDetails.user_dob}
               isLeft={IMAGES.date}
               value={selectDate}
             />
@@ -479,7 +493,7 @@ function EditAccount(props) {
             <Input
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-              value={userDetails.user_mb_no}
+              value={mobile}
               onChangeText={text => {
                 setMobile(text);
               }}
@@ -497,7 +511,7 @@ function EditAccount(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('address')}
-            value={userDetails.user_addr}
+            value={address}
             isLeft={IMAGES.home}
             onChangeText={text => {
               setAddress(text);
@@ -506,14 +520,14 @@ function EditAccount(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('city')}
-            value={userDetails.user_city}
+            value={city}
             isLeft={IMAGES.location}
             onChangeText={text => {
               setCity(text);
             }}
           />
 
-<View
+        <View
             style={[
               styles.inputView,
               styles.inputContainer,
@@ -562,20 +576,20 @@ function EditAccount(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('old_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureTextOld}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               setOldPassword(text);
             }}
             isShow={() => {
-              setPwSecureText(!pwSecureText);
+              setPwSecureTextOld(!pwSecureTextOld);
             }}
           />
 
            <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('enter_new_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               setPassword(text);
@@ -588,13 +602,13 @@ function EditAccount(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('confirm_pw')}
-            secureTextEntry={true}
+            secureTextEntry={pwSecureText1}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
               setConfirmPassword(text);
             }}
             isShow={() => {
-              setPwSecureText(!pwSecureText);
+              setPwSecureText1(!pwSecureText1);
             }}
           />
 

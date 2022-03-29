@@ -29,6 +29,10 @@ function ResetPassword(props) {
   const [isLoading, setLoading] = useState(false);
   const {reset_password} = useContext(APPContext);
 
+  useEffect(() => {
+    setOtp(otpResponse.otp)
+   // console.log(' otppp '+ otp)
+  }, []);
   const onNext = () => {
    // console.log('user_id '+ otpResponse.user_id)
     if (!otp) {
@@ -104,6 +108,7 @@ function ResetPassword(props) {
             placeholder={'OTP'}
             //secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
+            value={""+otpResponse.otp}
             onChangeText={text => {
                setOtp(text);
             }}
