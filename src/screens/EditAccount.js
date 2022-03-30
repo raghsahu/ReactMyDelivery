@@ -60,24 +60,6 @@ const optionsWomen = [
   },
 ];
 
-const optionsLanguage = [
-  {
-    key: '1',
-    label: 'English',
-    value: 'English',
-  },
-  {
-    key: '2',
-    label: 'French',
-    value: 'French',
-  },
-  {
-    key: '3',
-    label: 'Spanish',
-    value: 'Spanish',
-  },
-];
-
 function EditAccount(props) {
   const [firstName, setName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -89,28 +71,29 @@ function EditAccount(props) {
   const [oldPassword, setOldPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [gender, setGender] = useState(null);
   const [isSelected, setSelection] = useState(false);
   const [isCalendarVisible, setCalendarVisibility] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
-  const [selectedLang, setSelectedLang] = useState('English');
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureTextOld, setPwSecureTextOld] = useState(true);
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage,} = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData, optionsLanguage} = useContext(LocalizationContext);
   const actionSheetRef = useRef();
-  const [images, setImages] = useState('');
+  const [images, setImages] = useState(null);
+  const [serverImage, setServerImage] = useState('');
+  const [captureImage, setCaptureImages] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [mCountryCode, setCountryCode] = useState('91');
   const [mCountryName, setCountryName] = useState();
   const [mSelectedCountryName, setSelectedCountryName] = useState('India');
   const [userDetails, setUserDetails] = useState({});
-  const {user, userUpdate, setUser} = useContext(APPContext);
+  const {user, setUser, checkSpecialChar, imageBaseUrl, webServices} = useContext(APPContext);
 
   useEffect(() => {
     setName(user.user_f_name)
@@ -120,7 +103,19 @@ function EditAccount(props) {
     setAddress(user.user_addr)
     setCity(user.user_city)
     setMobile(user.user_mb_no)
-    //setSelectedOption(user.gender == '1' ? options : optionsWomen)
+    setEmail(user.user_email)
+    setServerImage(user.user_img)
+    setGender(user.user_gender == '1' ? options[0] : optionsWomen[0] )
+    setSelectedCountryName(user.user_country)
+    setSelectedLanguageKey(user.user_language)
+    if (user.user_language == '1') {
+      setSelectedLanguage('en');
+    } else if (user.user_language == '2') {
+      setSelectedLanguage('fr');
+    }else if (user.user_language == '3') {
+      setSelectedLanguage('sp');
+    }
+
   }, []);
 
   useEffect(() => {
@@ -154,24 +149,22 @@ function EditAccount(props) {
   };
 
   const onSelect = item => {
-    if (selectedOption && selectedOption.key === item.key) {
-      setSelectedOption(null);
+    if (gender && gender.key === item.key) {
+      setGender(null);
     } else {
-      setSelectedOption(item);
+      setGender(item);
     }
   };
 
   const onValueChange = item => {
-    setSelectedLang(item);
-    if (item == 'English') {
-      setSelectedLanguage('en');
-    } else if (item == 'French') {
-      setSelectedLanguage('fr');
+    setSelectedLanguage(item);
+    if (item == 'en') {
+      setSelectedLanguageKey('1');
+    } else if (item == 'fr') {
+      setSelectedLanguageKey('2');
+    }else if (item == 'sp') {
+      setSelectedLanguageKey('3');
     }
-    if (item == 'Spanish') {
-      setSelectedLanguage('sp');
-    }
-    setSelectedLanguageKey(item.key);
   };
 
   const onSelectLanguage = () => {
@@ -213,6 +206,7 @@ function EditAccount(props) {
      // let items = [...images];
       //items.push(uri);
       setImages(uri);
+      setCaptureImages(true)
     }
     // }
   };
@@ -242,7 +236,11 @@ function EditAccount(props) {
       Toast.show('Please enter last name');
     } else if (!userName) {
       Toast.show('Please enter user name');
-    } else if (!selectedOption) {
+    }else if (userName.trim().length < 3) {
+      Toast.show('User name must be minimum 3 character');
+    } else if (checkSpecialChar(userName)) {
+      Toast.show('Special character & number not allowed in username');
+    } else if (!gender) {
       Toast.show('Please select gender');
     } else if (!selectDate) {
       Toast.show('Please enter date of birth');
@@ -254,7 +252,9 @@ function EditAccount(props) {
     // } 
     else if (!mobile) {
       Toast.show('Please enter mobile number');
-    } else if (!address) {
+    } else if (mobile.trim().length != 10) {
+      Toast.show('Please enter 10 digit mobile number');
+    }else if (!address) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
@@ -279,14 +279,14 @@ function EditAccount(props) {
     }
   };
 
-  const UpdateUser = async () => {
+  const UpdateUser = () => {
     setLoading(true);
-    const result = await userUpdate(
+    userUpdate(
       user.user_id,
       firstName,
       lastName,
       userName,
-      selectedOption.key,
+      gender.key,
       selectDate,
       user.user_email,
       mobile,
@@ -300,15 +300,103 @@ function EditAccount(props) {
       images,
       ' ',
     );
-    setLoading(false);
-   // console.log('UpdateResult', result);
-    if (result.status == true) {
-      Toast.show(result.error);
-      onSelectLanguage();
-      setUser(result.data[0])
-     props.navigation.goBack();
-    } else {
-      Toast.show(result.error);
+  };
+
+  const userUpdate = (
+    user_id,
+    user_f_name,
+    user_l_name,
+    user_name,
+    user_gender,
+    user_dob,
+    user_email,
+    user_mb_no,
+    user_addr,
+    user_city,
+    user_country,
+    user_language,
+    user_password,
+    user_lat,
+    user_lon,
+    user_img,
+    user_fcm_key,
+  ) => {
+    const formData = new FormData();
+    formData.append('user_id', user_id);
+    formData.append('user_f_name', user_f_name);
+    formData.append('user_m_name', user_l_name);
+    formData.append('user_l_name', user_l_name);
+    formData.append('user_name', user_name);
+    formData.append('user_gender', user_gender);
+    formData.append('user_dob', user_dob);
+    formData.append('user_email', user_email);
+    formData.append('user_mb_no', user_mb_no);
+    formData.append('user_addr', user_addr);
+    formData.append('user_city', user_city);
+    formData.append('user_country', user_country);
+    formData.append('user_language', user_language);
+    formData.append('user_password', user_password);
+    formData.append('user_lat', user_lat);
+    formData.append('user_lon', user_lon);
+    if (user_img) {
+      formData.append(
+        'user_img',
+        user_img
+          ? {
+              uri:
+                Platform.OS === 'android'
+                  ? user_img
+                  : user_img.replace('file://', ''),
+              name: 'userProfile.jpg',
+              type: 'image/jpg',
+            }
+          : '',
+      );
+    }
+ 
+    formData.append('user_fcm_key', user_fcm_key);
+
+    return requestMultipart(webServices.userUpdate, 'post', formData);
+  };
+
+  const requestMultipart = (url, method, params) => {
+    try {
+      console.log('===================');
+      console.log('URL: ', url);
+      console.log('METHOD: ', method);
+      console.log('PARAMS: ', params);
+      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
+      console.log('===================');
+      
+      const options = {
+        method: 'POST',
+        body: params,
+        // If you add this, upload won't work
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        // }
+      };
+      var response = fetch(url, options)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log('aaaaa '+ JSON.stringify(data));
+        setLoading(false);
+        if (data && data.status == 1) {
+          Toast.show(data.msg);
+          onSelectLanguage();
+          setUser(data.result[0])
+          saveUserLoginData(data.result[0])
+          props.navigation.goBack();
+        }else {
+          Toast.show(data.msg);
+          }
+      });
+    } catch (e) {
+      console.log(e);
+      return getError(e);
+      //return 'Something went wrong'
     }
   };
 
@@ -335,7 +423,8 @@ function EditAccount(props) {
             }}
             onPress={onPressUpload}>
             <ImageBackground
-              source={images ? {uri: images} : IMAGES.signup_placeholder}
+              source={captureImage == true ? {uri:images} : serverImage ? {uri: imageBaseUrl + serverImage} : IMAGES.signup_placeholder}
+          
               style={{
                 height: 160,
                 width: 160,
@@ -430,14 +519,14 @@ function EditAccount(props) {
               },
             ]}>
             <RadioButtons
-              selectedOption={selectedOption}
+              selectedOption={gender}
               onSelect={onSelect}
               options={options}
             />
 
             <RadioButtons
               style={[{marginLeft: 70}]}
-              selectedOption={selectedOption}
+              selectedOption={gender}
               onSelect={onSelect}
               options={optionsWomen}
             />
@@ -559,7 +648,7 @@ function EditAccount(props) {
           <DropdownPicker
             //placeholder={'English'}
             isLeft={IMAGES.language}
-            selectedValue={selectedLang}
+            selectedValue={selectedLanguage}
             onChange={onValueChange}
             options={optionsLanguage}
           />
@@ -706,6 +795,7 @@ function EditAccount(props) {
           value={date}
           mode={mode}
           onChange={onChange}
+          maximumDate={new Date(Date.now() - 86400000)}
         />
       )}
     </View>

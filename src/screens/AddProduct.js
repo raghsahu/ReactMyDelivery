@@ -13,6 +13,9 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {PermissionsAndroid} from 'react-native';
+import ActionSheet from 'react-native-actions-sheet';
 
 //COMMON COMPONENT
 import {Button, Text, Input, Header, BottomBackground} from '../components';
@@ -20,8 +23,58 @@ import {Button, Text, Input, Header, BottomBackground} from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 
 function AddProduct(props) {
-  const [name, setName] = useState('');
+  const actionSheetRef = useRef();
+  const [productName, setProductName] = useState('');
+  const [webLink, setWebLinkName] = useState('');
+  const [placeToBuy, setPlaceToBuy] = useState('');
+  const [priceOfProduct, setPriceOfProduct] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [totalPrice, setTotalPrice] = useState('');
+  const [additionalInfo, setAdditionalInfo] = useState('');
+  const [prodImg, setProdImg] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
+
+  const onPressUpload = () => {
+    actionSheetRef.current?.setModalVisible(true);
+  };
+
+  const onPressLibrary = async type => {
+    var result = null;
+    // if (requestExternalStoreageRead()) {
+    if (type == 1) {
+      result = await launchCamera();
+      actionSheetRef.current?.setModalVisible(false);
+    } else {
+      result = await launchImageLibrary();
+      actionSheetRef.current?.setModalVisible(false);
+    }
+    console.log(result);
+    if (result && result.assets.length > 0) {
+      let uri = result.assets[0].uri;
+     // let items = [...images];
+      //items.push(uri);
+      setProdImg(uri);
+    }
+    // }
+  };
+
+  const requestExternalStoreageRead = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'My Delivery ...',
+          message: 'App needs access to external storage',
+        },
+      );
+
+      return granted == PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      //Handle this error
+      return false;
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -52,60 +105,68 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('product_name')}
             onChangeText={text => {
-              setName(text);
+              setProductName(text);
             }}
           />
 
-          <ImageBackground
-            source={IMAGES.rectangle_gray_border}
+          <TouchableOpacity
             style={{
               height: 100,
               width: 100,
               marginTop: 20,
               alignSelf: 'center',
-              justifyContent: 'center',
-              resizeMode: 'contain',
-              alignItems: 'center',
-            }}>
-            <View
+            }}
+            onPress={onPressUpload}>
+            <ImageBackground
+              source={prodImg ? {uri: prodImg} : IMAGES.rectangle_gray_border}
               style={{
-                // backgroundColor: COLORS.primaryColor,
-                // height: 40,
-                // width: 40,
-                // borderRadius: 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'absolute', //Here is the trick
-                // bottom: 0,
+                height: 100,
+                width: 100,
                 alignSelf: 'center',
+                justifyContent: 'center',
+                resizeMode: 'contain',
+                alignItems: 'center',
               }}>
-              <Image
-                source={IMAGES.plus}
-                //tintColor={COLORS.white}
+              <View
                 style={{
-                  height: 24,
-                  width: 24,
-                  alignSelf: 'center',
+                  // backgroundColor: COLORS.primaryColor,
+                  // height: 40,
+                  // width: 40,
+                  // borderRadius: 20,
+                  alignItems: 'center',
                   justifyContent: 'center',
-                }}
-              />
+                  position: 'absolute', //Here is the trick
+                  // bottom: 0,
+                  alignSelf: 'center',
+                }}>
+                <Image
+                  source={IMAGES.plus}
+                  //tintColor={COLORS.white}
+                  style={{
+                    height: 24,
+                    width: 24,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  }}
+                />
 
-              <Text
-                style={[{marginTop: 10, alignSelf: 'center'}]}
-                size="12"
-                weight="400"
-                align="center"
-                color={COLORS.gray}>
-                {getTranslation('photo')}
-              </Text>
-            </View>
-          </ImageBackground>
+                <Text
+                  style={[{marginTop: 10, alignSelf: 'center'}]}
+                  size="12"
+                  weight="400"
+                  align="center"
+                  color={COLORS.gray}>
+                  {getTranslation('photo')}
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('web_link')}
             onChangeText={text => {
-              //setPassword(text);
+              setWebLinkName(text);
             }}
           />
 
@@ -113,7 +174,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('place_to_by')}
             onChangeText={text => {
-              setName(text);
+              setPlaceToBuy(text);
             }}
           />
 
@@ -121,7 +182,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('price_of_product')}
             onChangeText={text => {
-              setName(text);
+              setPriceOfProduct(text);
             }}
           />
 
@@ -129,7 +190,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('quantity')}
             onChangeText={text => {
-              //setName(text);
+              setQuantity(text);
             }}
           />
 
@@ -137,7 +198,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('total_price')}
             onChangeText={text => {
-              setName(text);
+              setTotalPrice(text);
             }}
           />
           {/* <Input
@@ -153,7 +214,9 @@ function AddProduct(props) {
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('additional_product_info')}
             multiline={true}
-            //value={''}
+            onChangeText={text => {
+              setAdditionalInfo(text);
+            }}
           />
 
           <View
@@ -170,7 +233,7 @@ function AddProduct(props) {
               style={[{width: 130}]}
               title={getTranslation('add_product')}
               onPress={() => {
-                //props.navigation.navigate('EmailOtp');
+                onNext();
               }}
             />
 
@@ -187,6 +250,84 @@ function AddProduct(props) {
           ></View>
         </ScrollView>
       </SafeAreaView>
+      <ActionSheet ref={actionSheetRef}>
+        <View style={[styles.bottomView, {}]}>
+          <View style={[styles.bottomViewItem, {}]}>
+            <TouchableOpacity onPress={() => onPressLibrary(1)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.camera}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Camera'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                borderColor: COLORS.primaryColor,
+                borderWidth: 1,
+              }}></View>
+            <TouchableOpacity onPress={() => onPressLibrary(2)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.photos}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  //align="center"
+                  color={COLORS.textColor}>
+                  {'Photo library'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ActionSheet>
     </View>
   );
 }
@@ -215,6 +356,30 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 16,
     color: COLORS.black,
+  },
+  bottomView: {
+    height: 150,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: '#ffffff',
+  },
+  bottomViewItem: {
+    margin: 25,
+    borderColor: COLORS.primaryColor,
+    borderWidth: 2,
+    borderRadius: 8,
+  },
+  bottomViewIcon: {
+    flexDirection: 'row',
+    height: 50,
+    marginStart: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginStart: 20,
   },
 });
 

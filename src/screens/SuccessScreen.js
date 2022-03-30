@@ -21,21 +21,19 @@ import { CommonActions } from '@react-navigation/native';
 
 function SuccessScreen(props) {
   const {Mobile, Email} = props.route.params;
-  const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
   const { getTranslation} = useContext(LocalizationContext);
   const {check_user, setUser, user} = useContext(APPContext);
 
   useEffect(() => {
-    setMobile(user.user_mb_no)
-    setEmail(user.user_email)
+    
   }, []);
 
   const onNext = async () => {
-    console.log('email ' + Email)
+   // console.log('email ' + Email)
       setLoading(true);
-      const result = await check_user('' ,  mobile ? mobile : Mobile);
+      const result = await check_user('' , Mobile);
       setLoading(false);
       if (result.status == true) {
         setUser(result.data[0])

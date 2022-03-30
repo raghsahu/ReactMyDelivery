@@ -45,7 +45,7 @@ function MyAccount(props) {
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const {delUser, user} = useContext(APPContext);
+  const {delUser, user, imageBaseUrl} = useContext(APPContext);
 
   useEffect(() => {
    tabIndex ? setIndex(tabIndex) : setIndex(1)
@@ -272,10 +272,11 @@ function MyAccount(props) {
           showsVerticalScrollIndicator={false}>
           <View style={{flex: 1}}>
             <Image
-              source={IMAGES.circle_placeholder}
+              source={user.user_img ? {uri: imageBaseUrl + user.user_img} : IMAGES.circle_placeholder}
               style={{
                 height: 114,
                 width: 114,
+                borderRadius: 114 / 2,
                 marginTop: 5,
                 alignSelf: 'center',
                 justifyContent: 'center',

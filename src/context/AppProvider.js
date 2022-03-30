@@ -16,8 +16,19 @@ export const AppProvider = props => {
     return moment(date).format(format);
   };
 
+  const checkSpecialChar = (string) => {
+    var format = /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi;
+    if(format.test(string)){
+      return true;
+    } else{
+      return false;
+    }
+   
+  }
+
   // mydelivery.sairoses.com
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
+  const imageBaseUrl = 'http://mydelivery.prometteur.in/backend/application/webroot/';
 
   const webServices = {
     login: baseURL + 'mLogin',
@@ -114,7 +125,7 @@ export const AppProvider = props => {
     // );
     // formData.append('user_fcm_key', user_fcm_key);
 
-    return await requestMultipart(webServices.register, 'post', params);
+    return await request(webServices.register, 'post', params);
   };
 
   const userUpdate = async (
@@ -294,14 +305,13 @@ export const AppProvider = props => {
 
         return getResponse(response);
       } else if (method == 'post') {
-        var response = await axios.post({
-          method: method,
-          url: url,
-          data: params,
+        var response = await axios.post(
+           url,
+           params,
           // headers: {
           //     'Authorization': user ? `Bearer ${user.user_session}` : ''
           // },
-        });
+        );
 
         return getResponse(response);
       } else {
@@ -331,52 +341,30 @@ export const AppProvider = props => {
       console.log('PARAMS: ', params);
       //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
-
-      if (method == 'get') {
-        const response = await axios.get(url, {
-          params: params,
-          headers: {
-              'Authorization': user ? `Bearer ${user.user_session}` : ''
-          },
-        });
-
-        return getResponse(response);
-      } else if (method == 'put') {
-        const response = await axios.put(
-          url,
-          params,
-          {
-          headers: {
-              'Authorization': user ? `Bearer ${user.user_session}` : ''
-          },
-          }
-        );
-
-        return getResponse(response);
-      }else if (method == 'post') {
-        var response = await axios.post({
-          method: method,
-          url: url,
-          data: params,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-             // 'Authorization': user ? `Bearer ${user.user_session}` : ''
-          },
-        });
-
-        return getResponse(response);
-      } else {
-        var response = await axios({
-          method: method,
-          url: url,
-          data: params,
-          // headers: {
-          //    // 'Authorization': user ? `Bearer ${user.user_session}` : ''
-          // },
-        });
-
-        return getResponse(response);
-      }
+      
+      const options = {
+        method: 'POST',
+        body: params,
+        // If you add this, upload won't work
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        // }
+      };
+      var response = fetch(url, options)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log('aaaaa '+ JSON.stringify(data));
+        //if (data && data.status == 1) {
+          let result = {
+            status: true,
+            data: data.result,
+            error: data.msg,
+          };
+          return result;
+        //}
+      });
     } catch (e) {
       console.log(e);
       return getError(e);
@@ -463,6 +451,9 @@ export const AppProvider = props => {
     <APPContext.Provider
       value={{
         changeDateFormat,
+        checkSpecialChar,
+        imageBaseUrl,
+        webServices,
         setUser,
         user,
         baseURL,

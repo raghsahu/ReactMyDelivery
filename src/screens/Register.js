@@ -65,24 +65,6 @@ const optionsWomen = [
   },
 ];
 
-const optionsLanguage = [
-  {
-    key: '1',
-    label: 'English',
-    value: 'English',
-  },
-  {
-    key: '2',
-    label: 'French',
-    value: 'French',
-  },
-  {
-    key: '3',
-    label: 'Spanish',
-    value: 'Spanish',
-  },
-];
-
 function Register(props) {
   const [firstName, setName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -100,12 +82,11 @@ function Register(props) {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
-  const [selectedLang, setSelectedLang] = useState('English');
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage} = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage, optionsLanguage} = useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -117,7 +98,7 @@ function Register(props) {
   const [currentLatitude, setCurrentLatitude] = useState('');
   const [locationStatus, setLocationStatus] = useState('');
 
-  const {getRegister} = useContext(APPContext);
+  const {webServices, checkSpecialChar} = useContext(APPContext);
 
   useEffect(() => {
     let countryNames = RNCountry.getCountryNamesWithCodes;
@@ -156,16 +137,14 @@ function Register(props) {
   };
 
   const onValueChange = item => {
-    setSelectedLang(item);
-    if (item == 'English') {
-      setSelectedLanguage('en');
-    } else if (item == 'French') {
-      setSelectedLanguage('fr');
+    setSelectedLanguage(item);
+    if (item == 'en') {
+      setSelectedLanguageKey('1');
+    } else if (item == 'fr') {
+      setSelectedLanguageKey('2');
+    }else if (item == 'sp') {
+      setSelectedLanguageKey('3');
     }
-    if (item == 'Spanish') {
-      setSelectedLanguage('sp');
-    }
-    setSelectedLanguageKey(item.key);
   };
 
   const onSelectLanguage = () => {
@@ -236,6 +215,10 @@ function Register(props) {
       Toast.show('Please enter last name');
     } else if (!userName) {
       Toast.show('Please enter user name');
+    } else if (userName.trim().length < 3) {
+      Toast.show('User name must be minimum 3 character');
+    } else if (checkSpecialChar(userName)) {
+      Toast.show('Special character & number not allowed in username');
     } else if (!selectedOption) {
       Toast.show('Please select gender');
     } else if (!selectDate) {
@@ -246,7 +229,9 @@ function Register(props) {
       Toast.show('Please enter valid email');
     } else if (!mobile) {
       Toast.show('Please enter mobile number');
-    } else if (!address) {
+    } else if (mobile.trim().length != 10) {
+      Toast.show('Please enter 10 digit mobile number');
+    }else if (!address) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
@@ -262,7 +247,7 @@ function Register(props) {
       Toast.show('Please select terms & conditions');
     } else {
       setLoading(true);
-      const result = await getRegister(
+      getRegister(
         firstName,
         lastName,
         userName,
@@ -280,11 +265,111 @@ function Register(props) {
         images,
         ' ',
       );
-      setLoading(false);
-      //console.log('RegisterResult', result);
-      if (result.status == true) {
-        Toast.show(result.error);
-        onSelectLanguage();
+      // setLoading(false);
+      // //console.log('RegisterResult', result);
+      // if (result.status == true) {
+      //   Toast.show(result.error);
+      //   onSelectLanguage();
+      //   setTimeout(() => {
+      //     props.navigation.dispatch(
+      //       CommonActions.reset({
+      //         index: 0,
+      //         routes: [{name: 'EmailOtp', params: {isFromLogin: false,
+      //            Email: email, 
+      //            Mobile: mobile,
+      //            CountryCode: mCountryCode,
+      //            }}],
+      //       }),
+      //     );
+      //   }, 500);
+      // } else {
+      //   Toast.show(result.error);
+      // }
+    }
+  };
+
+  const getRegister = (
+    user_f_name,
+    user_l_name,
+    user_name,
+    user_gender,
+    user_dob,
+    user_email,
+    user_mb_no,
+    user_addr,
+    user_city,
+    user_country,
+    user_language,
+    user_password,
+    user_lat,
+    user_lon,
+    user_img,
+    user_fcm_key,
+  ) => {
+    const formData = new FormData();
+    formData.append('user_f_name', user_f_name);
+    formData.append('user_m_name', user_l_name);
+    formData.append('user_l_name', user_l_name);
+    formData.append('user_name', user_name);
+    formData.append('user_gender', user_gender);
+    formData.append('user_dob', user_dob);
+    formData.append('user_email', user_email);
+    formData.append('user_mb_no', user_mb_no);
+    formData.append('user_addr', user_addr);
+    formData.append('user_city', user_city);
+    formData.append('user_country', user_country);
+    formData.append('user_language', user_language);
+    formData.append('user_password', user_password);
+    formData.append('user_lat', user_lat);
+    formData.append('user_lon', user_lon);
+    if (user_img) {
+      formData.append(
+        'user_img',
+        user_img
+          ? {
+              uri:
+                Platform.OS === 'android'
+                  ? user_img
+                  : user_img.replace('file://', ''),
+              name: 'userProfile.jpg',
+              type: 'image/jpg',
+            }
+          : '',
+      );
+    }
+ 
+    formData.append('user_fcm_key', user_fcm_key);
+
+    return requestMultipart(webServices.register, 'post', formData);
+  };
+
+  const requestMultipart = (url, method, params) => {
+    try {
+      console.log('===================');
+      console.log('URL: ', url);
+      console.log('METHOD: ', method);
+      console.log('PARAMS: ', params);
+      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
+      console.log('===================');
+      
+      const options = {
+        method: 'POST',
+        body: params,
+        // If you add this, upload won't work
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        // }
+      };
+      var response = fetch(url, options)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log('aaaaa '+ JSON.stringify(data));
+        setLoading(false);
+        if (data && data.status == 1) {
+          Toast.show(data.msg);
+       
         setTimeout(() => {
           props.navigation.dispatch(
             CommonActions.reset({
@@ -297,9 +382,15 @@ function Register(props) {
             }),
           );
         }, 500);
-      } else {
-        Toast.show(result.error);
-      }
+        onSelectLanguage();
+        }else {
+          Toast.show(data.msg);
+          }
+      });
+    } catch (e) {
+      console.log(e);
+      return getError(e);
+      //return 'Something went wrong'
     }
   };
 
@@ -558,7 +649,7 @@ function Register(props) {
           <DropdownPicker
             //placeholder={'English'}
             isLeft={IMAGES.language}
-            selectedValue={selectedLang}
+            selectedValue={selectedLanguage}
             onChange={onValueChange}
             options={optionsLanguage}
           />
@@ -725,7 +816,7 @@ function Register(props) {
           </View>
         </View>
       </ActionSheet>
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} maximumDate={new Date(Date.now() - 86400000)}/>}
     </View>
   );
 }

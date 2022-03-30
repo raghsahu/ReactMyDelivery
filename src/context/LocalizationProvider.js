@@ -39,6 +39,24 @@ export const LocalizationProvider = props => {
     }
   };
 
+  const optionsLanguage = [
+    {
+      key: '1',
+      label: 'English',
+      value: 'en',
+    },
+    {
+      key: '2',
+      label: 'French',
+      value: 'fr',
+    },
+    {
+      key: '3',
+      label: 'Spanish',
+      value: 'sp',
+    },
+  ];
+
   const getUserLanguage = callback => {
     AsyncStorage.getItem('user_current_selected_language', (error, result) => {
       let lan = result ? result : 'en';
@@ -84,7 +102,8 @@ export const LocalizationProvider = props => {
         saveUserLanguage,
         saveUserLoginData,
         getUserLoginData,
-        clearAllData
+        clearAllData,
+        optionsLanguage
       }}>
       {props.children}
     </LocalizationContext.Provider>

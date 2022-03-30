@@ -22,21 +22,19 @@ import Toast from 'react-native-simple-toast';
 function MobileOtp(props) {
   const {Mobile, Email} = props.route.params;
   const [otp, setOtp] = useState('');
-  const [mobile, setMobile] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [serverOtp, setServerOtp] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
-  const {verification_update, verification, user} = useContext(APPContext);
+  const {verification_update, verification} = useContext(APPContext);
 
   useEffect(() => {
-    setMobile(user.user_mb_no)
     getMobileOtp();
     
   }, []);
 
   const getMobileOtp = async () => {
     setLoading(true);
-    const result = await verification('', mobile ? mobile : Mobile);
+    const result = await verification('', Mobile);
     setLoading(false);
     console.log('MobileServerOtp ', result);
     if (result.status == true) {
@@ -58,13 +56,13 @@ function MobileOtp(props) {
     }
     else{
       setLoading(true);
-      const result = await verification_update('', otp , mobile);
+      const result = await verification_update('', otp , Mobile);
       setLoading(false);
-      console.log('EmailOtpResult', result);
+      console.log('MobileOtpResult', result);
       if (result.status == true) {
        // Toast.show(result.error);
        props.navigation.navigate('SuccessScreen', {
-         Mobile :  mobile ? mobile : Mobile,
+         Mobile : Mobile,
          Email: Email,
        });
       } else {
