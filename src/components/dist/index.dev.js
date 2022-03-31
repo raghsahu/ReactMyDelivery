@@ -117,6 +117,12 @@ Object.defineProperty(exports, "ProgressView", {
     return _ProgressView["default"];
   }
 });
+Object.defineProperty(exports, "AddProductsItemList", {
+  enumerable: true,
+  get: function get() {
+    return _AddProductItemSummary["default"];
+  }
+});
 
 var _Text = _interopRequireDefault(require("./Text"));
 
@@ -155,5 +161,7 @@ var _ProductsItemListCompleted = _interopRequireDefault(require("./ProductsItemL
 var _AdvertiseListItem = _interopRequireDefault(require("./AdvertiseListItem"));
 
 var _ProgressView = _interopRequireDefault(require("./ProgressView"));
+
+var _AddProductItemSummary = _interopRequireDefault(require("./AddProductItemSummary"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }

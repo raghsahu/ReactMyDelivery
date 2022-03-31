@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
+  Alert,
+  BackHandler, 
 } from 'react-native';
 
 //ASSETS
@@ -20,7 +22,10 @@ import ActionSheet from 'react-native-actions-sheet';
 //COMMON COMPONENT
 import {Button, Text, Input, Header, BottomBackground} from '../components';
 //CONTEXT
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
+import Toast from 'react-native-simple-toast';
+import {openDatabase} from 'react-native-sqlite-storage';
+var db = openDatabase({name: 'DescribeProduct.db'});
 
 function AddProduct(props) {
   const actionSheetRef = useRef();
@@ -32,7 +37,68 @@ function AddProduct(props) {
   const [totalPrice, setTotalPrice] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [prodImg, setProdImg] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const [prodCount, setProdCount] = useState(0);
+  const {getTranslation} = useContext(LocalizationContext);
+
+  useEffect(() => {
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='table_product'",
+        [],
+        function (tx, res) {
+          console.log('item:', res.rows.length);
+          if (res.rows.length == 0) {
+            txn.executeSql('DROP TABLE IF EXISTS table_product', []);
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS table_product( product_id INTEGER PRIMARY KEY AUTOINCREMENT, product_name VARCHAR(100),  web_link VARCHAR(255),  place_to_buy VARCHAR(255), price_of_product VARCHAR(255), quantity VARCHAR(255), total_price VARCHAR(255), additional_info VARCHAR(255), prod_img VARCHAR(255))',
+              [],
+            );
+          }
+        },
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    getSavedProductCount()
+  }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    };
+  }, []);
+
+  function handleBackButtonClick() {
+    Alert.alert(
+      'Success',
+      'Are you sure want to discard all products',
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            onDiscard();
+            props.navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+    return true;
+  }
+
+
+  const getSavedProductCount = () =>{
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        if (results.rows.length > 0) {
+         setProdCount(results.rows.length)
+        } 
+       // console.log('ResultsLength', results.rows.length);
+      });
+    });
+  }
 
   const onPressUpload = () => {
     actionSheetRef.current?.setModalVisible(true);
@@ -51,7 +117,7 @@ function AddProduct(props) {
     console.log(result);
     if (result && result.assets.length > 0) {
       let uri = result.assets[0].uri;
-     // let items = [...images];
+      // let items = [...images];
       //items.push(uri);
       setProdImg(uri);
     }
@@ -75,18 +141,121 @@ function AddProduct(props) {
     }
   };
 
+  const onNext = () => {
+    if(prodCount < 5){
+    if (!productName) {
+      Toast.show('Please enter product name');
+    } else if (!webLink) {
+      Toast.show('Please enter web link');
+    } else if (!priceOfProduct) {
+      Toast.show('Please enter price of product');
+    } else if (!quantity) {
+      Toast.show('Please enter quantity');
+    } else if (!totalPrice) {
+      Toast.show('Please enter total price');
+    } else if (!prodImg) {
+      Toast.show('Please capture product image');
+    } else {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            'INSERT INTO table_product (product_name, web_link, place_to_buy, price_of_product, quantity, total_price, additional_info, prod_img) VALUES (?,?,?,?,?,?,?,?)',
+            [
+              productName,
+              webLink,
+              placeToBuy,
+              priceOfProduct,
+              quantity,
+              totalPrice,
+              additionalInfo,
+              prodImg,
+            ],
+            (tx, results) => {
+              console.log('Results', results.rowsAffected);
+              if (results.rowsAffected > 0) {
+                Toast.show('Product added');
+                setProductName('');
+                setWebLinkName('');
+                setPlaceToBuy('');
+                setPriceOfProduct('');
+                setQuantity('');
+                setTotalPrice('');
+                setAdditionalInfo('');
+                setProdImg('');
+  
+                //get all saved product count
+                getSavedProductCount()
+  
+                //*** */
+              }
+            },
+          );
+        });
+      }
+    }else{
+      Toast.show('You can add max 5 products')
+    }
+  };
+
+  const onNextAddCommission = () => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        if (results.rows.length > 0) {
+          props.navigation.navigate('AddProductCommision');
+        } else {
+          Toast.show('Please add product');
+        }
+       // console.log('ResultsLength', results.rows.length);
+      });
+    });
+  };
+
+  const onDiscard = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM table_product',
+        (tx, results) => {
+          try{
+            console.log('ResultsDelete', results.rowsAffected);
+           
+            if (results.rowsAffected == 0) {
+             
+            }
+          }catch(ex){
+             console.log(ex)
+          }
+        
+        },
+      );
+    });
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
       <BottomBackground></BottomBackground>
       <SafeAreaView
       // style={styles.container}
       >
         <Header
-          title={getTranslation('describe_products') +'      1/5'}
+          title={getTranslation('describe_products') + '      '+ (prodCount) +'/5'}
           onBack={() => {
-            props.navigation.goBack();
+            Alert.alert(
+              'Success',
+              'Are you sure want to discard all products',
+              [
+                {
+                  text: 'Yes',
+                  onPress: () => {
+                    onDiscard();
+                    props.navigation.goBack();
+                  },
+                },
+              ],
+              {cancelable: true},
+            );
           }}
         />
         <ScrollView
@@ -104,6 +273,7 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('product_name')}
+            value={productName}
             onChangeText={text => {
               setProductName(text);
             }}
@@ -165,6 +335,7 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('web_link')}
+            value={webLink}
             onChangeText={text => {
               setWebLinkName(text);
             }}
@@ -173,6 +344,7 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('place_to_by')}
+            value={placeToBuy}
             onChangeText={text => {
               setPlaceToBuy(text);
             }}
@@ -181,6 +353,7 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('price_of_product')}
+            value={priceOfProduct}
             onChangeText={text => {
               setPriceOfProduct(text);
             }}
@@ -189,6 +362,8 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('quantity')}
+            value={quantity}
+            keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
               setQuantity(text);
             }}
@@ -197,6 +372,8 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('total_price')}
+            value={totalPrice}
+            keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
               setTotalPrice(text);
             }}
@@ -214,6 +391,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('additional_product_info')}
             multiline={true}
+            value={additionalInfo}
             onChangeText={text => {
               setAdditionalInfo(text);
             }}
@@ -241,13 +419,11 @@ function AddProduct(props) {
               style={[{width: 130}]}
               title={getTranslation('thats_all')}
               onPress={() => {
-                props.navigation.navigate('AddProductCommision');
+                onNextAddCommission();
               }}
             />
           </View>
-          <View
-           style={{marginBottom: 30}}
-          ></View>
+          <View style={{marginBottom: 30}}></View>
         </ScrollView>
       </SafeAreaView>
       <ActionSheet ref={actionSheetRef}>
@@ -350,7 +526,7 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 24,
-   // borderColor: COLORS.gray,
+    // borderColor: COLORS.gray,
     //borderWidth: 1,
     fontFamily: 'Poppins-Regular',
     fontWeight: '400',

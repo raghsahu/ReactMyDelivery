@@ -10,6 +10,7 @@ import {
   ImageBackground,
   Modal,
   Dimensions,
+  FlatList,
 } from 'react-native';
 
 //ASSETS
@@ -24,17 +25,42 @@ import {
   BottomBackground,
   RadioButtons,
   CheckBox,
+  AddProductsItemList
 } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-
+import Toast from 'react-native-simple-toast';
 const {height, width} = Dimensions.get('screen');
+import { openDatabase } from 'react-native-sqlite-storage';
+var db = openDatabase({ name: 'DescribeProduct.db' });
 
 function AddProductSummary(props) {
-  const [name, setName] = useState('');
+  const {CommissionData} = props.route.params;
+  const [productListItems, setProductListItems] = useState([]);
+  const [prodTotalPrice, setTotalPrice] = useState(0);
+  
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const { getTranslation} = useContext(LocalizationContext);
+
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM table_product',
+        [],
+        (tx, results) => {
+          var temp = [];
+          var totalPrice = 0;
+          for (let i = 0; i < results.rows.length; ++i){
+            temp.push(results.rows.item(i));
+            totalPrice = totalPrice + (results.rows.item(i).total_price * results.rows.item(i).quantity)
+          }
+            setProductListItems(temp);
+            setTotalPrice(totalPrice)
+        }
+      );
+    });
+  }, []);
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -43,6 +69,10 @@ function AddProductSummary(props) {
   const setCheck = checkStatus => {
     setSelection(checkStatus);
   };
+
+  const onNext = () => {
+    
+  }
 
   return (
     <View style={styles.container}>
@@ -80,116 +110,23 @@ function AddProductSummary(props) {
               },
             ]}></View>
 
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 5,
+        <FlatList
+            showsVerticalScrollIndicator={false}
+            data={productListItems}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return <AddProductsItemList
+                item={item}
+               />;
             }}
-            source={IMAGES.product_placeholder}
           />
-
-          <View style={[styles.inputView, {marginTop: 20}]}>
-            <Text
-              // style={[styles.inputView]}
-              size="20"
-              weight="500"
-              align="left"
-              color={COLORS.textColor}>
-              {'Stylo'}
-            </Text>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {getTranslation('web_link') +' :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={'#35CCC1'}
-                size="16"
-                weight="500">
-                {'www.com'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('place_to_buy') }
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {getTranslation('price') +' :'}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.primaryColor}
-                size="16"
-                weight="500">
-                {'€ 2.00 x 1 = € 2.00'}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {getTranslation('additional_info')}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-          </View>
-
+{/* 
           <View
             style={{
               backgroundColor: COLORS.gray,
               height: 2,
               marginTop: 20,
-            }}></View>
+            }}></View> */}
 
           <View style={[styles.inputView, {marginTop: 20}]}>
             <View
@@ -208,7 +145,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {getTranslation('both')}
+                {CommissionData.gender == '1' ? 'Man' : CommissionData.gender == '2' ? 'Women' : 'Both'}
               </Text>
             </View>
 
@@ -228,7 +165,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                {CommissionData.acceptanceDay +' '+ CommissionData.acceptanceTime}
               </Text>
             </View>
 
@@ -248,7 +185,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                {CommissionData.limitDay +' '+ CommissionData.deliveryTime}
               </Text>
             </View>
 
@@ -269,7 +206,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'Constantine Constantine Algerie'}
+                {CommissionData.placeOfDelivery}
               </Text>
             </View>
           </View>
@@ -323,7 +260,7 @@ function AddProductSummary(props) {
             <Text
               style={{
                 backgroundColor: COLORS.lightGray,
-                width: 70,
+                width: 80,
                 padding: 8,
                 marginTop: 10,
                 borderRadius: 24,
@@ -334,7 +271,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {'2.00'}
+              {prodTotalPrice}
             </Text>
 
             <Image
@@ -351,7 +288,7 @@ function AddProductSummary(props) {
             <Text
               style={{
                 backgroundColor: COLORS.lightGray,
-                width: 70,
+                width: 80,
                 padding: 8,
                 marginTop: 10,
                 borderRadius: 24,
@@ -361,7 +298,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {'2.00'}
+              {CommissionData.globalCommission}
             </Text>
 
             <Image
@@ -378,7 +315,7 @@ function AddProductSummary(props) {
             <Text
               style={{
                 backgroundColor: COLORS.lightGray,
-                width: 70,
+                width: 80,
                 padding: 8,
                 marginTop: 10,
                 borderRadius: 24,
@@ -388,7 +325,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {'2.00'}
+              {'0.00'}
             </Text>
           </View>
 
@@ -420,7 +357,7 @@ function AddProductSummary(props) {
               color={COLORS.black}
               size="16"
               weight="500">
-              {'€ 4.00'}
+              {'€ '+  prodTotalPrice + CommissionData.globalCommission}
             </Text>
           </View>
 
@@ -434,7 +371,12 @@ function AddProductSummary(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('accept')}
             onPress={() => {
-              logoutModalVisibility();
+              if(isSelected){
+                logoutModalVisibility();
+              }else{
+                Toast.show('Please select Contact Terms')
+              }
+              
             }}
           />
 
@@ -502,7 +444,7 @@ function AddProductSummary(props) {
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {'€ 4.00'}
+              {'€ '+  prodTotalPrice + CommissionData.globalCommission}
             </Text>
 
             <Text
@@ -530,9 +472,10 @@ function AddProductSummary(props) {
                 title={getTranslation('ok')}
                 onPress={() => {
                   logoutModalVisibility();
-                  props.navigation.navigate('MyAccount', {
-                    tabIndex: 2
-                  });
+                  onNext();
+                  // props.navigation.navigate('MyAccount', {
+                  //   tabIndex: 2
+                  // });
                 }}
               />
             </View>

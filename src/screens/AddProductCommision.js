@@ -26,42 +26,45 @@ import {
 import moment from 'moment'; // date format
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import Toast from 'react-native-simple-toast';
 
 const options = [
   {
-    key: 'Man',
+    key: '1',
     text: 'Man',
   },
   {
-    key: 'Women',
+    key: '2',
     text: 'Women',
   },
   {
-    key: 'Both',
+    key: '3',
     text: 'Both',
   },
 ];
 
 function AddProductCommision(props) {
-  const [name, setName] = useState('');
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [globalCommission, setGlobalCommission] = useState('');
+  const [placeOfDelivery, setPlaceOfDelivery] = useState('');
+  const [gender, setSelectedGender] = useState(null);
+  const [selectDate, setSelectDate] = useState('');
+  const [selectDate1, setSelectDate1] = useState('');
+  const [selectTime, setSelectTime] = useState('');
+  const [selectTime1, setSelectTime1] = useState('');
+
   const {getTranslation} = useContext(LocalizationContext);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  const [selectDate, setSelectDate] = useState('');
-  const [selectDate1, setSelectDate1] = useState('');
   const [secondDate, setSecondDate] = useState('false');
-  const [selectTime, setSelectTime] = useState('');
-  const [selectTime1, setSelectTime1] = useState('');
   const [secondTime, setSecondTime] = useState('false');
   const [dateSelected, setDateSelected] = useState(false);
 
   const onSelect = item => {
-    if (selectedOption && selectedOption.key === item.key) {
-      setSelectedOption(null);
+    if (gender && gender.key === item.key) {
+      setSelectedGender(null);
     } else {
-      setSelectedOption(item);
+      setSelectedGender(item);
     }
   };
 
@@ -96,6 +99,39 @@ function AddProductCommision(props) {
     setMode(currentMode);
   };
 
+  const onNext = () => {
+    if (!globalCommission) {
+      Toast.show('Please enter global commission');
+    } else if (!placeOfDelivery) {
+      Toast.show('Please enter place of delivery');
+    } else if (!gender) {
+      Toast.show('Please select gender');
+    } else if (!selectDate) {
+      Toast.show('Please enter ad acceptance limit day');
+    } else if (!selectDate1) {
+      Toast.show('Please enter limit delivery day');
+    } else if (!selectTime) {
+      Toast.show('Please enter ad acceptance limit time');
+    } else if (!selectTime1) {
+      Toast.show('Please enter limit delivery time');
+    } else {
+      const CommissionData = {
+        globalCommission: globalCommission,
+        placeOfDelivery: placeOfDelivery,
+        gender: gender.key,
+        acceptanceDay: selectDate,
+        limitDay: selectDate1,
+        acceptanceTime: selectTime,
+        deliveryTime: selectTime1,
+      }
+
+      props.navigation.navigate('AddProductSummary', {
+        CommissionData: CommissionData,
+      });
+      console.log('summary_gender '+ CommissionData.gender)
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -127,8 +163,9 @@ function AddProductCommision(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('global_commission')}
+            keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
-              setName(text);
+              setGlobalCommission(text);
             }}
           />
 
@@ -163,7 +200,7 @@ function AddProductCommision(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('place_of_delivery')}
             onChangeText={text => {
-              setName(text);
+              setPlaceOfDelivery(text);
             }}
           />
 
@@ -187,7 +224,7 @@ function AddProductCommision(props) {
 
           <View style={[styles.inputView, {marginTop: 20}]}>
             <RadioButtons
-              selectedOption={selectedOption}
+              selectedOption={gender}
               onSelect={onSelect}
               options={options}
             />
@@ -214,8 +251,12 @@ function AddProductCommision(props) {
           <View
             style={[
               styles.inputView,
-             
-              {flexDirection: 'row', justifyContent: 'space-between', marginTop: 10},
+
+              {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 10,
+              },
             ]}>
             <TouchableOpacity
               onPress={() => {
@@ -231,7 +272,7 @@ function AddProductCommision(props) {
                 placeholder={getTranslation('day')}
                 value={selectDate ? selectDate : ''}
                 onChangeText={text => {
-                  //setName(text);
+                  setSelectDate(text)
                 }}
               />
             </TouchableOpacity>
@@ -250,7 +291,7 @@ function AddProductCommision(props) {
                 placeholder={getTranslation('hour')}
                 value={selectTime ? selectTime : ''}
                 onChangeText={text => {
-                  //setName(text);
+                  setSelectTime(text)
                 }}
               />
             </TouchableOpacity>
@@ -284,7 +325,7 @@ function AddProductCommision(props) {
                 placeholder={getTranslation('day')}
                 value={selectDate1 ? selectDate1 : ''}
                 onChangeText={text => {
-                  //setName(text);
+                  setSelectTime(text);
                 }}
               />
             </TouchableOpacity>
@@ -303,7 +344,7 @@ function AddProductCommision(props) {
                 placeholder={getTranslation('hour')}
                 value={selectTime1 ? selectTime1 : ''}
                 onChangeText={text => {
-                  //setName(text);
+                  setSelectTime1(text);
                 }}
               />
             </TouchableOpacity>
@@ -313,7 +354,8 @@ function AddProductCommision(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('continue')}
             onPress={() => {
-              props.navigation.navigate('AddProductSummary');
+              // props.navigation.navigate('AddProductSummary');
+              onNext();
             }}
           />
 
