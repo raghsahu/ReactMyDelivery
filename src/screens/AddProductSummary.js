@@ -25,40 +25,45 @@ import {
   BottomBackground,
   RadioButtons,
   CheckBox,
-  AddProductsItemList
+  AddProductsItemList,
+  ProgressView,
 } from '../components';
 //CONTEXT
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import Toast from 'react-native-simple-toast';
+import {APPContext} from '../context/AppProvider';
 const {height, width} = Dimensions.get('screen');
-import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'DescribeProduct.db' });
+import {openDatabase} from 'react-native-sqlite-storage';
+var db = openDatabase({name: 'DescribeProduct.db'});
 
 function AddProductSummary(props) {
   const {CommissionData} = props.route.params;
   const [productListItems, setProductListItems] = useState([]);
   const [prodTotalPrice, setTotalPrice] = useState(0);
-  
+  const [totalToPayPrice, setTotalToPay] = useState(0);
+
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
+  const {user, webServices, getError, add_Product} = useContext(APPContext);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT * FROM table_product',
-        [],
-        (tx, results) => {
-          var temp = [];
-          var totalPrice = 0;
-          for (let i = 0; i < results.rows.length; ++i){
-            temp.push(results.rows.item(i));
-            totalPrice = totalPrice + (results.rows.item(i).total_price * results.rows.item(i).quantity)
-          }
-            setProductListItems(temp);
-            setTotalPrice(totalPrice)
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        var temp = [];
+        var totalPrice = 0;
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+          totalPrice =
+            totalPrice +
+            results.rows.item(i).price_of_product * results.rows.item(i).quantity
         }
-      );
+        setProductListItems(temp);
+        setTotalPrice(totalPrice);
+        const totalToPay = (totalPrice + parseInt(CommissionData.globalCommission))
+        setTotalToPay(totalToPay)
+      });
     });
   }, []);
 
@@ -70,17 +75,139 @@ function AddProductSummary(props) {
     setSelection(checkStatus);
   };
 
+  var tempImages = [];
   const onNext = () => {
-    
+    setLoading(true);
+    for (let i = 0; i < productListItems.length; i++) {
+      const formData = new FormData();
+      formData.append('prod_img[]', {
+        uri:
+          Platform.OS === 'android'
+            ? productListItems[i].prod_img
+            : productListItems[i].prod_img.replace('file://', ''),
+        name: 'userProfile.jpg',
+        type: 'image/jpg',
+      });
+      requestMultipart(webServices.upload_imgs, 'post', formData);
+    }
+  };
+
+  const requestMultipart = (url, method, params) => {
+    try {
+      console.log('===================');
+      console.log('URL: ', url);
+      console.log('METHOD: ', method);
+      console.log('PARAMS: ', params);
+      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
+      console.log('===================');
+
+      const options = {
+        method: 'POST',
+        body: params,
+        headers: {
+          //'Content-Type': 'multipart/form-data',
+          user_session: user ? user.user_session : '',
+          user_id: user ? user.user_id : '',
+        },
+      };
+      var response = fetch(url, options)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          console.log('uploadImage ' + JSON.stringify(data));
+          if (data && data.status == 1) {
+            tempImages.push(data);
+            if (tempImages.length == productListItems.length) {
+              uploadProductAllData();
+            }
+          } else {
+            Toast.show(data.msg);
+          }
+        });
+    } catch (e) {
+      console.log(e);
+      setLoading(false)
+      Toast.show('Something went wrong')
+    }
+  };
+
+  const uploadProductAllData = async () => {
+    try {
+    var temp = [];
+  //  console.log('image_path '+ tempImages[0].result.images);
+    for (let i = 0; i < productListItems.length; i++) {
+      const ProductData = {
+        prod_user_id: user.user_id,
+        prod_ad_id: '0',
+        prod_name: productListItems[i].product_name,
+        prod_web_link: productListItems[i].web_link,
+        prod_place_purchase: productListItems[i].place_to_buy,
+        prod_place_delivery: CommissionData.placeOfDelivery,
+        prod_price: productListItems[i].price_of_product,
+        prod_qnty: productListItems[i].quantity,
+        prod_price_total: productListItems[i].total_price,
+        prod_info: productListItems[i].additional_info,
+        prod_img: tempImages[i].result.images,
+      };
+      temp.push(ProductData);
+    }
+
+    const result = await add_Product(
+      JSON.stringify(temp),
+      user.user_id,
+      CommissionData.globalCommission,
+      CommissionData.placeOfDelivery,
+      CommissionData.gender,
+      CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
+      CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
+      '0',
+      '0',
+      prodTotalPrice + CommissionData.globalCommission,
+      'offline payment',
+    );
+    setLoading(false);
+    console.log('AddProductResult', result);
+    if (result.status == true) {
+      Toast.show(result.error);
+      onDiscard();
+      props.navigation.navigate('MyAccount', {
+        tabIndex: 2,
+      });
+    } else {
+      Toast.show(result.error);
+    }
+
+  } catch (e) {
+    console.log(e);
+    setLoading(false)
+    Toast.show('Something went wrong')
   }
+  };
+
+  const onDiscard = () => {
+    db.transaction(tx => {
+      tx.executeSql('DELETE FROM table_product', (tx, results) => {
+        try {
+          console.log('ResultsDelete', results.rowsAffected);
+
+          if (results.rowsAffected > 0) {
+          }
+        } catch (ex) {
+          console.log(ex);
+        }
+      });
+    });
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
-         <BottomBackground></BottomBackground>
-      <SafeAreaView
-       style={styles.container}
-       >
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
+      <BottomBackground></BottomBackground>
+      <SafeAreaView style={styles.container}>
         <Header
           title={getTranslation('summary')}
           onBack={() => {
@@ -110,17 +237,15 @@ function AddProductSummary(props) {
               },
             ]}></View>
 
-        <FlatList
+          <FlatList
             showsVerticalScrollIndicator={false}
             data={productListItems}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
-              return <AddProductsItemList
-                item={item}
-               />;
+              return <AddProductsItemList item={item} />;
             }}
           />
-{/* 
+          {/* 
           <View
             style={{
               backgroundColor: COLORS.gray,
@@ -145,7 +270,11 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.gender == '1' ? 'Man' : CommissionData.gender == '2' ? 'Women' : 'Both'}
+                {CommissionData.gender == '1'
+                  ? 'Man'
+                  : CommissionData.gender == '2'
+                  ? 'Women'
+                  : 'Both'}
               </Text>
             </View>
 
@@ -165,7 +294,9 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.acceptanceDay +' '+ CommissionData.acceptanceTime}
+                {CommissionData.acceptanceDay +
+                  ' ' +
+                  CommissionData.acceptanceTime}
               </Text>
             </View>
 
@@ -185,7 +316,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.limitDay +' '+ CommissionData.deliveryTime}
+                {CommissionData.limitDay + ' ' + CommissionData.deliveryTime}
               </Text>
             </View>
 
@@ -195,7 +326,7 @@ function AddProductSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="500">
-                {getTranslation('place_of_delivery') +' :'}
+                {getTranslation('place_of_delivery') + ' :'}
               </Text>
 
               <Text
@@ -357,7 +488,7 @@ function AddProductSummary(props) {
               color={COLORS.black}
               size="16"
               weight="500">
-              {'€ '+  prodTotalPrice + CommissionData.globalCommission}
+              {'€ ' + totalToPayPrice}
             </Text>
           </View>
 
@@ -371,19 +502,17 @@ function AddProductSummary(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('accept')}
             onPress={() => {
-              if(isSelected){
+              if (isSelected) {
                 logoutModalVisibility();
-              }else{
-                Toast.show('Please select Contact Terms')
+               // console.log('dateee '+ CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,)
+              } else {
+                Toast.show('Please select Contact Terms');
               }
-              
             }}
           />
-
         </ScrollView>
-   
       </SafeAreaView>
-
+      {isLoading ? <ProgressView></ProgressView> : null}
       <Modal
         animationType="slide"
         transparent
@@ -444,7 +573,7 @@ function AddProductSummary(props) {
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {'€ '+  prodTotalPrice + CommissionData.globalCommission}
+              {'€ ' + (prodTotalPrice + CommissionData.globalCommission)}
             </Text>
 
             <Text
@@ -473,9 +602,6 @@ function AddProductSummary(props) {
                 onPress={() => {
                   logoutModalVisibility();
                   onNext();
-                  // props.navigation.navigate('MyAccount', {
-                  //   tabIndex: 2
-                  // });
                 }}
               />
             </View>

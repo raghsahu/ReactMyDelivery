@@ -6,10 +6,12 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
 
 const PublishedItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
-  //const item = props.item;
+  const {imageBaseUrl} = useContext(APPContext);
+  const item = props.item;
 
   return (
     <View style={{}}>
@@ -34,7 +36,7 @@ const PublishedItemList = props => {
               borderRadius: 35,
               margin: 5,
             }}
-            source={IMAGES.circle_placeholder}
+            source={item.products[0].prod_img ? {uri: imageBaseUrl + item.products[0].prod_img} : IMAGES.circle_placeholder}
           />
 
           <View
@@ -47,7 +49,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor2}
               size="18"
               weight="500">
-              {'Test3'}
+              {item.products[0].prod_name}
             </Text>
 
             <View
@@ -72,7 +74,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'Constantine Constantine,\n Algerie '}
+                {item.products[0].prod_place_delivery}
               </Text>
             </View>
           </View>
@@ -137,7 +139,7 @@ const PublishedItemList = props => {
             color={COLORS.textColor4}
             size="16"
             weight="500">
-            {'2021-11-07 14:42'}
+            {item.ad_accept_limit}
           </Text>
         </View>
 
@@ -158,7 +160,7 @@ const PublishedItemList = props => {
             color={COLORS.textColor4}
             size="16"
             weight="500">
-            {'2021-11-07 14:42'}
+            {item.ad_delivery_limit}
           </Text>
         </View>
 
@@ -185,7 +187,7 @@ const PublishedItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€10'}
+              {item.products[0].prod_price}
             </Text>
           </View>
 
@@ -205,7 +207,7 @@ const PublishedItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€10'}
+              {item.ad_cmsn_price}
             </Text>
           </View>
         </View>

@@ -98,7 +98,7 @@ function Register(props) {
   const [currentLatitude, setCurrentLatitude] = useState('');
   const [locationStatus, setLocationStatus] = useState('');
 
-  const {webServices, checkSpecialChar} = useContext(APPContext);
+  const {webServices, checkSpecialChar, getError} = useContext(APPContext);
 
   useEffect(() => {
     let countryNames = RNCountry.getCountryNamesWithCodes;

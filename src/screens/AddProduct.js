@@ -63,12 +63,12 @@ function AddProduct(props) {
     getSavedProductCount()
   }, []);
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
-    };
-  }, []);
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+  //   return () => {
+  //     BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+  //   };
+  // }, []);
 
   function handleBackButtonClick() {
     Alert.alert(
@@ -141,6 +141,15 @@ function AddProduct(props) {
     }
   };
 
+  const getTotalPrice = () => {
+    if (priceOfProduct && quantity) {
+      var totalPriceForProduct = priceOfProduct * quantity
+      return ''+ totalPriceForProduct;
+      setTotalPrice(totalPriceForProduct)
+    }
+    return ''
+  }
+
   const onNext = () => {
     if(prodCount < 5){
     if (!productName) {
@@ -151,8 +160,6 @@ function AddProduct(props) {
       Toast.show('Please enter price of product');
     } else if (!quantity) {
       Toast.show('Please enter quantity');
-    } else if (!totalPrice) {
-      Toast.show('Please enter total price');
     } else if (!prodImg) {
       Toast.show('Please capture product image');
     } else {
@@ -165,7 +172,7 @@ function AddProduct(props) {
               placeToBuy,
               priceOfProduct,
               quantity,
-              totalPrice,
+              ''+totalPrice,
               additionalInfo,
               prodImg,
             ],
@@ -354,6 +361,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('price_of_product')}
             value={priceOfProduct}
+            keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
               setPriceOfProduct(text);
             }}
@@ -372,21 +380,12 @@ function AddProduct(props) {
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('total_price')}
-            value={totalPrice}
-            keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
-            onChangeText={text => {
-              setTotalPrice(text);
-            }}
+            value={getTotalPrice()}
+            editable={false}
+            //keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+           
           />
-          {/* <Input
-            style={[styles.inputView, styles.inputContainer]}
-            type={1}
-            multiline={true}
-            placeholder={getTranslation('additional_product_info')}
-            onChangeText={text => {
-              setName(text);
-            }}
-          /> */}
+
           <TextInput
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('additional_product_info')}

@@ -93,7 +93,7 @@ function EditAccount(props) {
   const [mCountryName, setCountryName] = useState();
   const [mSelectedCountryName, setSelectedCountryName] = useState('India');
   const [userDetails, setUserDetails] = useState({});
-  const {user, setUser, checkSpecialChar, imageBaseUrl, webServices} = useContext(APPContext);
+  const {user, setUser, checkSpecialChar, imageBaseUrl, webServices, getError} = useContext(APPContext);
 
   useEffect(() => {
     setName(user.user_f_name)
@@ -279,9 +279,9 @@ function EditAccount(props) {
     }
   };
 
-  const UpdateUser = () => {
+  const UpdateUser = async () => {
     setLoading(true);
-    userUpdate(
+     await userUpdate(
       user.user_id,
       firstName,
       lastName,
@@ -300,9 +300,11 @@ function EditAccount(props) {
       images,
       ' ',
     );
+    console.log('AAa123 '+ result);
+    setLoading(false);
   };
 
-  const userUpdate = (
+  const userUpdate = async (
     user_id,
     user_f_name,
     user_l_name,
@@ -356,7 +358,7 @@ function EditAccount(props) {
  
     formData.append('user_fcm_key', user_fcm_key);
 
-    return requestMultipart(webServices.userUpdate, 'post', formData);
+    return await requestMultipart(webServices.userUpdate, 'post', formData);
   };
 
   const requestMultipart = (url, method, params) => {
@@ -372,9 +374,11 @@ function EditAccount(props) {
         method: 'POST',
         body: params,
         // If you add this, upload won't work
-        // headers: {
-        //   'Content-Type': 'multipart/form-data',
-        // }
+        headers: {
+          //'Content-Type': 'multipart/form-data',
+          user_session: user ? user.user_session : '',
+          user_id: user ? user.user_id : '',
+        }
       };
       var response = fetch(url, options)
       .then((response) => {

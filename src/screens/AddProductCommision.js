@@ -44,7 +44,7 @@ const options = [
 ];
 
 function AddProductCommision(props) {
-  const [globalCommission, setGlobalCommission] = useState('');
+  const [globalCommission, setGlobalCommission] = useState(null);
   const [placeOfDelivery, setPlaceOfDelivery] = useState('');
   const [gender, setSelectedGender] = useState(null);
   const [selectDate, setSelectDate] = useState('');
@@ -81,15 +81,15 @@ function AddProductCommision(props) {
       setDate(currentDate);
 
       if (secondDate === 'true') {
-        setSelectDate1(moment(currentDate).format('DD-MM-YYYY'));
+        setSelectDate1(moment(currentDate).format('YYYY-MM-DD'));
       } else {
-        setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+        setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
       }
     } else {
       if (secondTime === 'true') {
-        setSelectTime1(moment(selectedDate).format('HH:MM'));
+        setSelectTime1(moment(selectedDate).format('HH:MM:SS'));
       } else {
-        setSelectTime(moment(selectedDate).format('HH:MM'));
+        setSelectTime(moment(selectedDate).format('HH:MM:SS'));
       }
     }
   };

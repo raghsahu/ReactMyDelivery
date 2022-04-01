@@ -17,10 +17,35 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
-import {Button, Header, Text, Input, PublishedItemList} from '../components';
+import {Button, Header, Text, Input, PublishedItemList, ProgressView} from '../components';
+//CONTEXT
+import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 
 function Published(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const {user, imageBaseUrl, publishedProduct} = useContext(APPContext);
+  const {getTranslation} = useContext(LocalizationContext);
+  const [publishedItem, setPublishedItem] = useState([]);
+
+  useEffect(() => {
+    getPublishedProduct();
+  }, []);
+
+  const getPublishedProduct = async () => {
+    setLoading(true);
+    const result = await publishedProduct(user.user_id, '0');
+    setLoading(false);
+    //console.log('EmailServerOtp ', result);
+    if (result.status == true) {
+      setPublishedItem(result.data)
+
+    } else {
+      Toast.show(result.error);
+    }
+  };
 
   const deleteModalVisibility = () => {
     setDeleteModalVisible(!isDeleteModalVisible);
@@ -36,11 +61,12 @@ function Published(props) {
       <SafeAreaView style={styles.container}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={['', '', '', '', '']}
+          data={publishedItem}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
               <PublishedItemList
+                item={item}
                 onDelete={() => {
                   deleteModalVisibility();
                 }}
@@ -50,7 +76,7 @@ function Published(props) {
           }}
         />
       </SafeAreaView>
-
+      {isLoading ? <ProgressView></ProgressView> : null}
       <Modal
         animationType="slide"
         transparent

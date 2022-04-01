@@ -105,7 +105,7 @@ const AddProductsItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'€ '+ item.total_price  +' * '+  item.quantity + ' = € ' + item.total_price * item.quantity }
+            {'€ '+ item.price_of_product  +' * '+  item.quantity + ' = € ' + item.price_of_product * item.quantity }
           </Text>
         </View>
 
