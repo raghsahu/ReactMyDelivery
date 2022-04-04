@@ -33,6 +33,8 @@ import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
 const {height, width} = Dimensions.get('screen');
+import {openDatabase} from 'react-native-sqlite-storage';
+var db = openDatabase({name: 'DescribeProduct.db'});
 
 function MyAccount(props) {
   const {tabIndex} = props.route.params ? props.route.params : 1;
@@ -46,6 +48,21 @@ function MyAccount(props) {
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
   const {delUser, user, imageBaseUrl} = useContext(APPContext);
+  const [productListItems, setProductListItems] = useState([]);
+
+  useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        var temp = [];
+     
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        setProductListItems(temp);
+
+      });
+    });
+  }, []);
 
   useEffect(() => {
    tabIndex ? setIndex(tabIndex) : setIndex(1)
@@ -66,6 +83,7 @@ function MyAccount(props) {
       //Return the FirstScreen as a child to set in Parent View
       return (
         <Incomplete
+          data={productListItems}
           onModify={() => {
             props.navigation.navigate('AddProductCommision');
           }}

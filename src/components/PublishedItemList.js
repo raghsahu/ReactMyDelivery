@@ -39,7 +39,7 @@ const PublishedItemList = props => {
             source={item.products[0].prod_img ? {uri: imageBaseUrl + item.products[0].prod_img} : IMAGES.circle_placeholder}
           />
 
-          <View
+          <View 
             style={{
               padding: 5,
               marginTop: 10,

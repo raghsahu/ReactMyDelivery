@@ -9,7 +9,7 @@ import { LocalizationContext } from '../context/LocalizationProvider';
 
 const IncompleteItemList = props => {
   const { getTranslation} = useContext(LocalizationContext);
-  //const item = props.item;
+  const item = props.item;
 
   return (
     // <TouchableOpacity
@@ -31,7 +31,7 @@ const IncompleteItemList = props => {
           margin: 5,
           // borderRadius: 12,
         }}
-        source={IMAGES.rectangle_gray_border}
+        source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
       />
 
       <View
@@ -46,14 +46,14 @@ const IncompleteItemList = props => {
           color={COLORS.primaryColor}
           size="18"
           weight="500">
-          {'Test'}
+          {item.product_name}
         </Text>
 
         <Text color={COLORS.black} size="14" weight="500">
-          {getTranslation('web_link') +' :ghu.com'}
+          {getTranslation('web_link') +' : '+ item.web_link}
         </Text>
         <Text color={COLORS.black} size="14" weight="500">
-          {'Price :'}
+          {'Price : '+ '€ '+ item.price_of_product  +' * '+  item.quantity + ' = € ' + item.price_of_product * item.quantity}
         </Text>
 
         <View

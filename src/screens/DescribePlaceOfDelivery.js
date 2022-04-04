@@ -19,11 +19,30 @@ import {Button, Text, Input, Header, BottomBackground} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 
 function DescribePlaceOfDelivery(props) {
-  const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const [department, setDepartment] = useState('');
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
   const {getTranslation} = useContext(LocalizationContext);
+
+  useEffect(() => {
+    props.navigation.addListener('focus', () => {
+     // console.log(props.route.params)
+    })
+  }, []) 
+
+  const onGooglePlace = () =>{
+    props.navigation.navigate('GooglePlacesInput', {onReturn: (item) => {
+      console.log('log_item '+ JSON.stringify(item))
+        setAddress(item.address)
+        setCity(item.city)
+        setCountry(item.country);
+        setLat(item.lat);
+        setLng(item.lng);
+    }})
+  }
 
   return (
     <View style={styles.container}>
@@ -42,7 +61,6 @@ function DescribePlaceOfDelivery(props) {
         <ScrollView
           //style={styles.container}
           showsVerticalScrollIndicator={false}>
-          
           <Text
             style={[styles.inputView, {marginTop: 22, alignSelf: 'flex-start'}]}
             size="20"
@@ -52,7 +70,10 @@ function DescribePlaceOfDelivery(props) {
             {getTranslation('describe_place_delivery')}
           </Text>
           <Text
-            style={[styles.inputView, {marginTop: 22,marginBottom:30, alignSelf: 'flex-start'}]}
+            style={[
+              styles.inputView,
+              {marginTop: 22, marginBottom: 30, alignSelf: 'flex-start'},
+            ]}
             size="20"
             weight="500"
             align="center"
@@ -60,30 +81,55 @@ function DescribePlaceOfDelivery(props) {
             {getTranslation('where_you_going')}
           </Text>
 
+          <TouchableOpacity
+            onPress={() => {
+             onGooglePlace();            
+            }}  
+            style={[styles.inputView, styles.inputContainer]}>
+            <Input
+              value={address}
+              placeholder={getTranslation('address')}
+              editable={false}
+              isLeft={IMAGES.home}
+              // onChangeText={text => {
+              //   setAddress(text);
+              // }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              onGooglePlace();
+            }}  
+            style={[styles.inputView, styles.inputContainer]}>      
           <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('address')}
-            isLeft={IMAGES.home}
-            onChangeText={text => {
-              setAddress(text);
-            }}
-          />
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
+            //style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('city')}
+            editable={false}
+            value={city}
             isLeft={IMAGES.location}
-            onChangeText={text => {
-              setCity(text);
-            }}
+            // onChangeText={text => {
+            //   setCity(text);
+            // }}
           />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+            onPress={() => {
+              onGooglePlace();
+            }}  
+            style={[styles.inputView, styles.inputContainer]}>
           <Input
-            style={[styles.inputView, styles.inputContainer]}
+            //style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('country')}
+            editable={false}
+            value={country}
             isLeft={IMAGES.location}
-            onChangeText={text => {
-              setCountry(text);
-            }}
+            // onChangeText={text => {
+            //   setCountry(text);
+            // }}
           />
+          </TouchableOpacity>
           <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('department')}
@@ -94,15 +140,16 @@ function DescribePlaceOfDelivery(props) {
           />
 
           <Button
-            style={[styles.inputView, { marginTop: 40, marginBottom:80 }]}
+            style={[styles.inputView, {marginTop: 40, marginBottom: 80}]}
             title={getTranslation('show_list')}
             onPress={() => {
-              props.navigation.navigate('RequestsListForPlaces')
+              props.navigation.navigate('RequestsListForPlaces', {
+                lat: lat,
+                lng: lng,
+              });
             }}
           />
-        
         </ScrollView>
-       
       </SafeAreaView>
     </View>
   );

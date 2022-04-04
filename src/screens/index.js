@@ -23,6 +23,7 @@ import DescribePlaceOfDelivery from './DescribePlaceOfDelivery';
 import RequestsListForPlaces from './RequestsListForPlaces';
 import AdSummaryDetails from './AdSummaryDetails';
 import AdModificationProposal from './AdModificationProposal';
+import GooglePlacesInput from './GooglePlacesInput';
 
 
 export {
@@ -51,4 +52,5 @@ export {
   RequestsListForPlaces,
   AdSummaryDetails,
   AdModificationProposal,
+  GooglePlacesInput,
 };

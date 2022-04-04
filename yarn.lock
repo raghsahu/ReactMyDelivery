@@ -5813,6 +5813,11 @@
   "resolved" "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
   "version" "2.1.1"
 
+"qs@~6.9.1":
+  "integrity" "sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw=="
+  "resolved" "https://registry.npmjs.org/qs/-/qs-6.9.7.tgz"
+  "version" "6.9.7"
+
 "query-string@^7.0.0":
   "integrity" "sha512-MplouLRDHBZSG9z7fpuAAcI7aAYjDLhtsiVZsevsfaHWDS2IDdORKbSd1kWUA+V4zyva/HZoSfpwnYMMQDhb0w=="
   "resolved" "https://registry.npmjs.org/query-string/-/query-string-7.1.1.tgz"
@@ -5917,6 +5922,15 @@
     "invariant" "^2.2.4"
     "lodash" "^4.17.21"
     "prop-types" "^15.7.2"
+
+"react-native-google-places-autocomplete@^2.4.1":
+  "integrity" "sha512-NJrzZ5zsguhTqe0C5tIW9PfxOn2wkWDiGYIBFksHzFOIIURxFPUlO0cJmfOjs5CBIDtMampgNXBdgADExBen5w=="
+  "resolved" "https://registry.npmjs.org/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-2.4.1.tgz"
+  "version" "2.4.1"
+  dependencies:
+    "lodash.debounce" "^4.0.8"
+    "prop-types" "^15.7.2"
+    "qs" "~6.9.1"
 
 "react-native-gradle-plugin@^0.0.3":
   "integrity" "sha512-mvkntuCKpKL26XV54XVBGt2hJWGh6IJc5rjOEXQ/9jd9FNhsbRnqdOjI8XMy1gLvK2X8xwbbpEym+QKunV658g=="

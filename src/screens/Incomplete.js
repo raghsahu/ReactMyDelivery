@@ -18,12 +18,57 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, IncompleteItemList} from '../components';
+import {openDatabase} from 'react-native-sqlite-storage';
+var db = openDatabase({name: 'DescribeProduct.db'});
 
 function Incomplete(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [productListItems, setProductListItems] = useState([]);
+  const [deleteProductId, setDeleteProductId] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
-  const deleteModalVisibility = () => {
+  useEffect(() => {
+    if (props.data) {
+      setProductListItems(props.data);
+    }else{
+      db.transaction(tx => {
+        tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+          var temp = [];
+       
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setProductListItems(temp);
+  
+        });
+      });
+    }
+  
+  }, []);
+
+  const onDeleteProduct = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM table_product where product_id=?', [deleteProductId],
+        (tx, results) => {
+          try{
+           // console.log('ResultsDelete', results.rowsAffected);
+            setProductListItems(productListItems.filter(item => item.id === deleteProductId))
+            if (results.rowsAffected == 0) {
+            
+            }
+          }catch(ex){
+             console.log(ex)
+          }
+        
+        },
+      );
+    });
+  };
+
+  const deleteModalVisibility = (id) => {
     setDeleteModalVisible(!isDeleteModalVisible);
+    setDeleteProductId(id)
   };
 
   return (
@@ -36,13 +81,14 @@ function Incomplete(props) {
       <SafeAreaView style={styles.container}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={['',]}
+          data={productListItems}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
               <IncompleteItemList
+                item={item}
                 onDelete={() => {
-                  deleteModalVisibility();
+                  deleteModalVisibility(item.product_id);
                 }}
                 onModify={() => {
                   props.onModify();
@@ -82,7 +128,8 @@ function Incomplete(props) {
                 style={[{width: 90,  height: 41, alignSelf: 'center', justifyContent: 'center'}]}
                 title={'Yes'}
                 onPress={() => {
-                  deleteModalVisibility();
+                  setDeleteModalVisible(!isDeleteModalVisible);
+                  onDeleteProduct();
                 }}
               />
 
@@ -90,7 +137,7 @@ function Incomplete(props) {
                 style={[{width: 90, height: 41, justifyContent: 'center'}]}
                 title={'No'}
                 onPress={() => {
-                  deleteModalVisibility();
+                  setDeleteModalVisible(!isDeleteModalVisible);
                 }}
               />
             </View>

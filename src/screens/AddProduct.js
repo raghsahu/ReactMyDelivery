@@ -249,20 +249,21 @@ function AddProduct(props) {
         <Header
           title={getTranslation('describe_products') + '      '+ (prodCount) +'/5'}
           onBack={() => {
-            Alert.alert(
-              'Success',
-              'Are you sure want to discard all products',
-              [
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    onDiscard();
-                    props.navigation.goBack();
-                  },
-                },
-              ],
-              {cancelable: true},
-            );
+            props.navigation.goBack();
+            // Alert.alert(
+            //   'Success',
+            //   'Are you sure want to discard all products',
+            //   [
+            //     {
+            //       text: 'Yes',
+            //       onPress: () => {
+            //         onDiscard();
+            //         props.navigation.goBack();
+            //       },
+            //     },
+            //   ],
+            //   {cancelable: true},
+            // );
           }}
         />
         <ScrollView
