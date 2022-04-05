@@ -41,6 +41,7 @@ import {
   LocalizationContext,
 } from './src/context/LocalizationProvider';
 import {APPContext, AppProvider} from './src/context/AppProvider';
+import {CommonUtilsContext, CommonUtils} from './src/context/CommonUtils';
 
 import {COLORS, IMAGES, DIMENSION} from './src/assets';
 
@@ -124,6 +125,7 @@ const App = () => {
   }, []);
 
   return (
+    <CommonUtils>
     <LocalizationProvider>
       <AppProvider>
       <NavigationContainer>
@@ -174,6 +176,7 @@ const App = () => {
       </NavigationContainer>
       </AppProvider>
     </LocalizationProvider>
+    </CommonUtils>
   );
 };
 

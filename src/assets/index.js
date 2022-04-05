@@ -51,6 +51,7 @@ export const IMAGES = {
   photos: require('./images/photos.png'),
   percentage: require('./images/percentage.png'),
   quantity: require('./images/quantity.png'),
+  filterItem: require('./images/filter_item.png'),
 };
 
 export const COLORS = {

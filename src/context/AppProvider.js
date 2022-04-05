@@ -25,6 +25,7 @@ export const AppProvider = props => {
   };
 
   // mydelivery.sairoses.com
+  const googleApiKey = 'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI';
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
   const imageBaseUrl =
     'http://mydelivery.prometteur.in/backend/application/webroot/';
@@ -43,6 +44,7 @@ export const AppProvider = props => {
     addProduct: baseURL + 'madd/product',
     upload_imgs: baseURL + 'upload_imgs',
     ads_by_status: baseURL + 'fields/ads_by_status',
+    getProductFilter: baseURL + 'fields/product',
   };
 
   const getLogin = async (email, pw) => {
@@ -147,13 +149,33 @@ export const AppProvider = props => {
     return await request(webServices.ads_by_status, 'post', params);
   };
 
+  const getFilterProduct = async (publication_date, advertiser_rating, duration_ad, max_price,min_price,max_cmsn,min_cmsn,
+    last_delv_date,ad_type,user_lat, user_lon ) => {
+    let params = {
+      publication_date: publication_date,
+      advertiser_rating: advertiser_rating,
+      duration_ad: duration_ad,
+      max_price: max_price,
+      min_price: min_price,
+      max_cmsn: max_cmsn,
+      min_cmsn: min_cmsn,
+      last_delv_date: last_delv_date,
+      ad_type: ad_type,
+      user_lat: user_lat,
+      user_lon: user_lon,
+ 
+    };
+    return await request(webServices.getProductFilter, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
       console.log('URL: ', url);
       console.log('METHOD: ', method);
+      console.log('headers: user_session: ', user ? user.user_session : '');
+      console.log('headers: user_id: ', user ? user.user_id : '');
       console.log('PARAMS: ', params);
-      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
 
       if (method == 'get') {
@@ -164,6 +186,7 @@ export const AppProvider = props => {
             user_session: user ? user.user_session : '',
             user_id: user ? user.user_id : '',
           },
+          
         });
 
         return getResponse(response);
@@ -293,6 +316,7 @@ export const AppProvider = props => {
         getError,
         setUser,
         user,
+        googleApiKey,
         baseURL,
         getLogin,
         verification_update,
@@ -303,7 +327,8 @@ export const AppProvider = props => {
         delUser,
         getNotifications,
         add_Product,
-        publishedProduct
+        publishedProduct,
+        getFilterProduct,
       }}>
       {props.children}
     </APPContext.Provider>

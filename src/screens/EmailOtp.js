@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 
 //ASSETS
@@ -26,6 +27,26 @@ function EmailOtp(props) {
   const {verification_update, verification} = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [serverOtp, setServerOtp] = useState('');
+  const [seconds, setSeconds ] =  useState(0);
+
+  useEffect(()=>{
+    let myInterval = setInterval(() => {
+            if (seconds > 0) {
+                setSeconds(seconds - 1);
+            }
+            if (seconds === 0) {
+                // if (minutes === 0) {
+                    clearInterval(myInterval)
+                // } else {
+                    //setMinutes(minutes - 1);
+                   // setSeconds(180);
+                //}
+            } 
+        }, 1000)
+        return ()=> {
+            clearInterval(myInterval);
+          };
+    });
 
   useEffect(() => {
     getEmailOtp();
@@ -40,6 +61,7 @@ function EmailOtp(props) {
       Toast.show(result.error);
       setServerOtp(result.data.otp)
       setOtp(result.data.otp)
+      setSeconds(180)
     } else {
       Toast.show(result.error);
     }
@@ -160,15 +182,20 @@ function EmailOtp(props) {
             {getTranslation('or')}
           </Text>
 
+          <TouchableOpacity
+          onPress={seconds === 0 ? getEmailOtp : null} 
+           style={[styles.inputContainer, styles.inputView,]}
+           >
           <Text
-            style={[styles.inputContainer, styles.inputView,]}
+           // style={[styles.inputContainer, styles.inputView,]}
             size="14"
             weight="600"
             align="right"
-            color={COLORS.textColor}
+            color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}
             >
-            {getTranslation('resend') +' (180 s)'}
+            {getTranslation('resend') +' ('+ seconds + 's)'}
           </Text>
+          </TouchableOpacity>
 
           <Button
             style={[styles.inputView, {marginTop: 40, marginBottom: 20}]}

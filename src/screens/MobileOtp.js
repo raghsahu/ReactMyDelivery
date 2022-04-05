@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 
 //ASSETS
@@ -26,6 +27,26 @@ function MobileOtp(props) {
   const [serverOtp, setServerOtp] = useState('');
   const { getTranslation} = useContext(LocalizationContext);
   const {verification_update, verification} = useContext(APPContext);
+  const [seconds, setSeconds ] =  useState(0);
+
+  useEffect(()=>{
+    let myInterval = setInterval(() => {
+            if (seconds > 0) {
+                setSeconds(seconds - 1);
+            }
+            if (seconds === 0) {
+                // if (minutes === 0) {
+                    clearInterval(myInterval)
+                // } else {
+                    //setMinutes(minutes - 1);
+                   // setSeconds(180);
+                //}
+            } 
+        }, 1000)
+        return ()=> {
+            clearInterval(myInterval);
+          };
+    });
 
   useEffect(() => {
     getMobileOtp();
@@ -41,6 +62,7 @@ function MobileOtp(props) {
       Toast.show(result.error);
       setServerOtp(result.data.otp)
       setOtp(result.data.otp)
+      setSeconds(10)
     } else {
       Toast.show(result.error);
     }
@@ -140,14 +162,19 @@ function MobileOtp(props) {
             {getTranslation('or')}
           </Text>
 
+          <TouchableOpacity
+          onPress={seconds === 0 ? getMobileOtp : null} 
+           style={[styles.inputContainer, styles.inputView,]}
+           >
           <Text
             style={[styles.inputContainer, styles.inputView]}
             size="16"
             weight="500"
             align="right"
-            color={COLORS.primaryColor}>
-            {getTranslation('resend') +' OTP (180 s)'}
+            color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}>
+             {getTranslation('resend') +' ('+ seconds + 's)'}
           </Text>
+          </TouchableOpacity>
 
           <Button
             style={[styles.inputView, {marginTop: 40}]}

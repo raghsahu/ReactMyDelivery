@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {APPContext} from '../context/AppProvider';
 
 const GooglePlacesInput = (props) => {
+  const {googleApiKey} = useContext(APPContext);
   
     useEffect(() => {
         props.navigation.addListener('focus', () => {
@@ -26,7 +28,7 @@ const GooglePlacesInput = (props) => {
             ',' +
             details?.geometry?.location.lng +
             '&key=' +
-            'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI',
+            googleApiKey,
         )
           .then(response => response.json())
           .then(responseJson => {
@@ -52,7 +54,7 @@ const GooglePlacesInput = (props) => {
           });
       }}
       query={{
-        key: 'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI',
+        key: googleApiKey,
         language: 'en',
       }}
       onFail={error => console.error(error)}

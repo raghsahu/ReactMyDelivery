@@ -17,6 +17,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {Button, Text, Input, Header, BottomBackground} from '../components';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import Toast from 'react-native-simple-toast';
 
 function DescribePlaceOfDelivery(props) {
   const [address, setAddress] = useState('');
@@ -143,10 +144,14 @@ function DescribePlaceOfDelivery(props) {
             style={[styles.inputView, {marginTop: 40, marginBottom: 80}]}
             title={getTranslation('show_list')}
             onPress={() => {
-              props.navigation.navigate('RequestsListForPlaces', {
+              if(!address){
+                Toast.show('Please select address')
+              }else{
+                props.navigation.navigate('RequestsListForPlaces', {
                 lat: lat,
                 lng: lng,
               });
+              }
             }}
           />
         </ScrollView>

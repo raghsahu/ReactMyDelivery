@@ -18,6 +18,7 @@ import ProductsItemListCompleted from "./ProductsItemListCompleted";
 import AdvertiseListItem from "./AdvertiseListItem";
 import ProgressView from "./ProgressView";
 import AddProductsItemList from "./AddProductItemSummary";
+import FilterItem from "./FilterItem";
 
 export {
    Text,
@@ -40,4 +41,5 @@ export {
    AdvertiseListItem,
    ProgressView,
    AddProductsItemList,
+   FilterItem,
 }
