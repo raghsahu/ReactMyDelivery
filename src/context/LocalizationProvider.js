@@ -87,10 +87,9 @@ export const LocalizationProvider = props => {
   };
 
   const clearAllData = () => {
-    AsyncStorage.getAllKeys()
-        .then(keys => AsyncStorage.multiRemove(keys));
-        //.then(() => );
-  }
+    AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys));
+    //.then(() => );
+  };
 
   return (
     <LocalizationContext.Provider
@@ -103,7 +102,7 @@ export const LocalizationProvider = props => {
         saveUserLoginData,
         getUserLoginData,
         clearAllData,
-        optionsLanguage
+        optionsLanguage,
       }}>
       {props.children}
     </LocalizationContext.Provider>

@@ -57,12 +57,14 @@ function AddProductSummary(props) {
           temp.push(results.rows.item(i));
           totalPrice =
             totalPrice +
-            results.rows.item(i).price_of_product * results.rows.item(i).quantity
+            results.rows.item(i).price_of_product *
+              results.rows.item(i).quantity;
         }
         setProductListItems(temp);
         setTotalPrice(totalPrice);
-        const totalToPay = (totalPrice + parseInt(CommissionData.globalCommission))
-        setTotalToPay(totalToPay)
+        const totalToPay =
+          totalPrice + parseInt(CommissionData.globalCommission);
+        setTotalToPay(totalToPay);
       });
     });
   }, []);
@@ -98,14 +100,12 @@ function AddProductSummary(props) {
       console.log('URL: ', url);
       console.log('METHOD: ', method);
       console.log('PARAMS: ', params);
-      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
 
       const options = {
         method: 'POST',
         body: params,
         headers: {
-          //'Content-Type': 'multipart/form-data',
           user_session: user ? user.user_session : '',
           user_id: user ? user.user_id : '',
         },
@@ -115,7 +115,6 @@ function AddProductSummary(props) {
           return response.json();
         })
         .then(data => {
-          console.log('uploadImage ' + JSON.stringify(data));
           if (data && data.status == 1) {
             tempImages.push(data);
             if (tempImages.length == productListItems.length) {
@@ -127,62 +126,59 @@ function AddProductSummary(props) {
         });
     } catch (e) {
       console.log(e);
-      setLoading(false)
-      Toast.show('Something went wrong')
+      setLoading(false);
+      Toast.show('Something went wrong');
     }
   };
 
   const uploadProductAllData = async () => {
     try {
-    var temp = [];
-  //  console.log('image_path '+ tempImages[0].result.images);
-    for (let i = 0; i < productListItems.length; i++) {
-      const ProductData = {
-        prod_user_id: user.user_id,
-        prod_ad_id: '0',
-        prod_name: productListItems[i].product_name,
-        prod_web_link: productListItems[i].web_link,
-        prod_place_purchase: productListItems[i].place_to_buy,
-        prod_place_delivery: CommissionData.placeOfDelivery,
-        prod_price: productListItems[i].price_of_product,
-        prod_qnty: productListItems[i].quantity,
-        prod_price_total: productListItems[i].total_price,
-        prod_info: productListItems[i].additional_info,
-        prod_img: tempImages[i].result.images,
-      };
-      temp.push(ProductData);
-    }
+      var temp = [];
+      for (let i = 0; i < productListItems.length; i++) {
+        const ProductData = {
+          prod_user_id: user.user_id,
+          prod_ad_id: '0',
+          prod_name: productListItems[i].product_name,
+          prod_web_link: productListItems[i].web_link,
+          prod_place_purchase: productListItems[i].place_to_buy,
+          prod_place_delivery: CommissionData.placeOfDelivery,
+          prod_price: productListItems[i].price_of_product,
+          prod_qnty: productListItems[i].quantity,
+          prod_price_total: productListItems[i].total_price,
+          prod_info: productListItems[i].additional_info,
+          prod_img: tempImages[i].result.images,
+        };
+        temp.push(ProductData);
+      }
 
-    const result = await add_Product(
-      JSON.stringify(temp),
-      user.user_id,
-      CommissionData.globalCommission,
-      CommissionData.placeOfDelivery,
-      CommissionData.gender,
-      CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
-      CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
-      '0',
-      '0',
-      prodTotalPrice + CommissionData.globalCommission,
-      'offline payment',
-    );
-    setLoading(false);
-    console.log('AddProductResult', result);
-    if (result.status == true) {
-      Toast.show(result.error);
-      onDiscard();
-      props.navigation.navigate('MyAccount', {
-        tabIndex: 2,
-      });
-    } else {
-      Toast.show(result.error);
+      const result = await add_Product(
+        JSON.stringify(temp),
+        user.user_id,
+        CommissionData.globalCommission,
+        CommissionData.placeOfDelivery,
+        CommissionData.gender,
+        CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
+        CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
+        '0',
+        '0',
+        prodTotalPrice + CommissionData.globalCommission,
+        'offline payment',
+      );
+      setLoading(false);
+      if (result.status == true) {
+        Toast.show(result.error);
+        onDiscard();
+        props.navigation.navigate('MyAccount', {
+          tabIndex: 2,
+        });
+      } else {
+        Toast.show(result.error);
+      }
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+      Toast.show('Something went wrong');
     }
-
-  } catch (e) {
-    console.log(e);
-    setLoading(false)
-    Toast.show('Something went wrong')
-  }
   };
 
   const onDiscard = () => {
@@ -230,9 +226,7 @@ function AddProductSummary(props) {
           <View
             style={[
               {
-                // marginTop: 20,
                 backgroundColor: COLORS.lightGray,
-                // borderWidth: 0.4,
                 height: 10,
               },
             ]}></View>
@@ -245,13 +239,6 @@ function AddProductSummary(props) {
               return <AddProductsItemList item={item} />;
             }}
           />
-          {/* 
-          <View
-            style={{
-              backgroundColor: COLORS.gray,
-              height: 2,
-              marginTop: 20,
-            }}></View> */}
 
           <View style={[styles.inputView, {marginTop: 20}]}>
             <View
@@ -504,7 +491,6 @@ function AddProductSummary(props) {
             onPress={() => {
               if (isSelected) {
                 logoutModalVisibility();
-               // console.log('dateee '+ CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,)
               } else {
                 Toast.show('Please select Contact Terms');
               }
@@ -591,11 +577,9 @@ function AddProductSummary(props) {
                 marginTop: 20,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                // position: 'absolute',
               }}>
               <Button
                 style={[
-                  // styles.inputView,
                   {width: 200, justifyContent: 'center', alignSelf: 'center'},
                 ]}
                 title={getTranslation('ok')}

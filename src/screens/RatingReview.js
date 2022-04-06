@@ -24,13 +24,13 @@ import {
 } from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {Rating} from 'react-native-ratings';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function RatingReview(props) {
   const [defaultRating, setDefaultRating] = useState(0);
   // To set the max number of Stars
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
 
   const onSelect = item => {
     setDefaultRating(item);
@@ -43,18 +43,14 @@ function RatingReview(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      style={styles.container}
-      >
+      <SafeAreaView style={styles.container}>
         <Header
           title={getTranslation('review_rating')}
           onBack={() => {
             props.navigation.goBack();
           }}
         />
-        <ScrollView
-          //style={styles.container}
-          showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             style={[{marginTop: 20, marginBottom: 20}]}
             size="18"
@@ -64,17 +60,17 @@ function RatingReview(props) {
             {getTranslation('pls_rate_application')}
           </Text>
 
-            <Rating
-                  type="custom"
-                  tintColor={COLORS.white}
-                  ratingColor="#04D9C5"
-                  startingValue={0}
-                  ratingBackgroundColor="#DBDBDB"
-                  ratingCount={5}
-                  imageSize={45}
-                  // onFinishRating={this.ratingCompleted}
-                  style={{marginTop: 1,  paddingVertical: 1}}
-                />
+          <Rating
+            type="custom"
+            tintColor={COLORS.white}
+            ratingColor="#04D9C5"
+            startingValue={0}
+            ratingBackgroundColor="#DBDBDB"
+            ratingCount={5}
+            imageSize={45}
+            // onFinishRating={this.ratingCompleted}
+            style={{marginTop: 1, paddingVertical: 1}}
+          />
 
           <TextInput
             style={[styles.inputView, styles.comment]}
@@ -102,22 +98,17 @@ function RatingReview(props) {
             {'Please rate Test'}
           </Text>
 
-              <Rating
-                  type="custom"
-                  tintColor={COLORS.white}
-                  ratingColor="#04D9C5"
-                  startingValue={0}
-                  ratingBackgroundColor="#DBDBDB"
-                  ratingCount={5}
-                  imageSize={45}
-                  // onFinishRating={this.ratingCompleted}
-                  style={{marginTop: 1,  paddingVertical: 1}}
-                />
-          {/* <CustomRatingBar
-            onSelect={onSelect}
-            defaultRatings={defaultRating}
-            maxRating={maxRating}
-          /> */}
+          <Rating
+            type="custom"
+            tintColor={COLORS.white}
+            ratingColor="#04D9C5"
+            startingValue={0}
+            ratingBackgroundColor="#DBDBDB"
+            ratingCount={5}
+            imageSize={45}
+            // onFinishRating={this.ratingCompleted}
+            style={{marginTop: 1, paddingVertical: 1}}
+          />
 
           <TextInput
             style={[styles.inputView, styles.comment]}
@@ -183,7 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   inputView: {
-    marginHorizontal:DIMENSION.marginHorizontal,
+    marginHorizontal: DIMENSION.marginHorizontal,
   },
   shareImg: {
     height: 26,
@@ -196,7 +187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 20,
     height: 120,
-   // backgroundColor: COLORS.lightGray,
+    // backgroundColor: COLORS.lightGray,
     borderRadius: 24,
     borderColor: COLORS.gray,
     borderWidth: 1,

@@ -21,36 +21,35 @@ import {Text} from '../components';
  * @property {string} label - input title header text
  */
 
-const Input = (props) => {
+const Input = props => {
   const [open, setOpen] = useState(false);
 
   return (
     <View style={props.style}>
-      {/* {props.label && <Label title={props.label} />} */}
       <View style={[styles.inputContainer, props.border]}>
-       {props.isLeft && (
-        <View
-          style={{
-            backgroundColor: COLORS.primaryColor,
-            height: 40,
-            width: 40,
-            borderRadius: 20,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            marginRight: 5,
-          }}>
-          <Image
-            source={props.isLeft}
-            tintColor={COLORS.white}
+        {props.isLeft && (
+          <View
             style={{
-              height: 24,
-              width: 24,
+              backgroundColor: COLORS.primaryColor,
+              height: 40,
+              width: 40,
+              borderRadius: 20,
               alignSelf: 'center',
               justifyContent: 'center',
-              resizeMode: 'contain',
-            }}
-          />
-        </View>
+              marginRight: 5,
+            }}>
+            <Image
+              source={props.isLeft}
+              tintColor={COLORS.white}
+              style={{
+                height: 24,
+                width: 24,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
         )}
         <TextInput
           {...props}
@@ -68,14 +67,14 @@ const Input = (props) => {
               source={IMAGES.eye}
               tintColor={COLORS.black}
               style={{
-              height: 24,
-              width: 24,
-              alignSelf: 'center',
-              justifyContent: 'center',
-              marginRight: 5,
-              resizeMode: 'contain'
-            }}
-          />
+                height: 24,
+                width: 24,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                marginRight: 5,
+                resizeMode: 'contain',
+              }}
+            />
           </TouchableOpacity>
         )}
       </View>

@@ -29,9 +29,7 @@ function SendSuggestion(props) {
         backgroundColor={COLORS.primaryColor}
       />
 
-      <SafeAreaView
-      //style={styles.container}
-      >
+      <SafeAreaView>
         <Header
           title={headerTitle}
           onBack={() => {
@@ -91,7 +89,6 @@ const styles = StyleSheet.create({
   inputView: {
     position: 'absolute',
     bottom: 0,
-    //marginHorizontal: 20,
     marginBottom: 20,
     width: width,
     flexDirection: 'row',
@@ -99,7 +96,6 @@ const styles = StyleSheet.create({
   },
   input: {
     width: width - 80,
-    // height: 48,
     marginRight: 10,
   },
   back: {

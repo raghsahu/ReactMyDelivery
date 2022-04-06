@@ -6,18 +6,20 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
 import {APPContext} from '../context/AppProvider';
+import {CommonUtilsContext} from '../context/CommonUtils';
 
 const NotificationItemList = props => {
   const item = props.item;
-  const {changeDateFormat, imageBaseUrl} = useContext(APPContext);
+  const {imageBaseUrl} = useContext(APPContext);
+  const {changeDateFormat} = useContext(CommonUtilsContext);
 
-  const setImages = (prodImg) => {
-    var imageJSONString = JSON.parse(prodImg); 
-    var imageUrl = imageJSONString.result.images; 
+  const setImages = prodImg => {
+    var imageJSONString = JSON.parse(prodImg);
+    var imageUrl = imageJSONString.result.images;
     var imageArray = imageUrl.split(',');
     //console.log('image '+ imageArray)
-    return imageArray ? imageArray[0] : ''
-  }
+    return imageArray ? imageArray[0] : '';
+  };
 
   return (
     // <TouchableOpacity
@@ -34,14 +36,13 @@ const NotificationItemList = props => {
         backgroundColor: COLORS.white,
         borderRadius: 8,
       }}>
-
       <View
-      style={{
-        backgroundColor: COLORS.primaryColor,
-        borderBottomLeftRadius: 8,
-        borderTopLeftRadius: 8,
-        width:5 ,
-      }}></View>
+        style={{
+          backgroundColor: COLORS.primaryColor,
+          borderBottomLeftRadius: 8,
+          borderTopLeftRadius: 8,
+          width: 5,
+        }}></View>
       <Image
         style={{
           width: 57,
@@ -50,7 +51,11 @@ const NotificationItemList = props => {
           //resizeMode: 'contain'
         }}
         //source={IMAGES.product_placeholder}
-        source= {setImages(item.prod_img) ? {uri: imageBaseUrl + setImages(item.prod_img)} : IMAGES.product_placeholder}
+        source={
+          setImages(item.prod_img)
+            ? {uri: imageBaseUrl + setImages(item.prod_img)}
+            : IMAGES.product_placeholder
+        }
       />
 
       <View
@@ -58,14 +63,8 @@ const NotificationItemList = props => {
           flex: 1,
           margin: 5,
         }}>
-        <Text
-          style={{
-            
-          }}
-          color={COLORS.primaryColor}
-          size="16"
-          weight="500">
-          {item.user_f_name + ' '+ item.user_l_name}
+        <Text style={{}} color={COLORS.primaryColor} size="16" weight="500">
+          {item.user_f_name + ' ' + item.user_l_name}
         </Text>
 
         <Text color={COLORS.black} size="16" weight="500">
@@ -74,7 +73,6 @@ const NotificationItemList = props => {
         <Text color={COLORS.darkGray} size="14" weight="500">
           {changeDateFormat(item.notn_create_date, 'yyyy-MM-DD hh:mm a')}
         </Text>
-
       </View>
     </View>
     // </TouchableOpacity>

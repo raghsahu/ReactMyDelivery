@@ -15,40 +15,44 @@ import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 import {CommonActions} from '@react-navigation/native';
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function ResetPassword(props) {
   const {otpResponse} = props.route.params;
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const {reset_password} = useContext(APPContext);
 
   useEffect(() => {
-    setOtp(otpResponse.otp)
-   // console.log(' otppp '+ otp)
+    setOtp(otpResponse.otp);
   }, []);
   const onNext = () => {
-   // console.log('user_id '+ otpResponse.user_id)
     if (!otp) {
       Toast.show('Please enter Otp');
-    }else if(!password){
+    } else if (!password) {
       Toast.show('Please enter password');
-    }else if(!password){
+    } else if (!password) {
       Toast.show('Please enter confirm password');
-    }else if(password != confirmPassword){
+    } else if (password != confirmPassword) {
       Toast.show('password & confirm password not match');
-    }else if(otp != otpResponse.otp){
+    } else if (otp != otpResponse.otp) {
       Toast.show('Otp did not match');
-    }else{
+    } else {
       resetPassword();
     }
-
   };
 
   const resetPassword = async () => {
@@ -76,12 +80,8 @@ function ResetPassword(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      //style={styles.container}
-      >
-        <ScrollView
-          // style={styles.container}
-          showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             style={{marginHorizontal: 10, marginTop: 33}}
             size="24"
@@ -103,18 +103,15 @@ function ResetPassword(props) {
             }}
           />
 
-        <Input
+          <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={'OTP'}
             //secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
-            value={""+otpResponse.otp}
+            value={'' + otpResponse.otp}
             onChangeText={text => {
-               setOtp(text);
+              setOtp(text);
             }}
-            // isShow={() => {
-            //   setPwSecureText(!pwSecureText)
-            // }}
           />
 
           <Input
@@ -123,10 +120,10 @@ function ResetPassword(props) {
             secureTextEntry={pwSecureText}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-               setPassword(text);
+              setPassword(text);
             }}
             isShow={() => {
-              setPwSecureText(!pwSecureText)
+              setPwSecureText(!pwSecureText);
             }}
           />
 
@@ -136,10 +133,10 @@ function ResetPassword(props) {
             secureTextEntry={pwSecureText1}
             isLeft={IMAGES.keys_icon}
             onChangeText={text => {
-               setConfirmPassword(text);
+              setConfirmPassword(text);
             }}
             isShow={() => {
-              setPwSecureText1(!pwSecureText1)
+              setPwSecureText1(!pwSecureText1);
             }}
           />
 
@@ -150,9 +147,7 @@ function ResetPassword(props) {
               onNext();
             }}
           />
-          <View
-           style={{marginBottom: 30}}
-          ></View>
+          <View style={{marginBottom: 30}}></View>
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}

@@ -34,15 +34,12 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 function ExchangeSuccessSummary(props) {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
 
       <SafeAreaView style={styles.container}>
-        {/* <Header
-          title={'Summary of the Transaction'}
-          onBack={() => {
-            props.navigation.goBack();
-          }}
-        /> */}
         <BottomBackground></BottomBackground>
         <ScrollView
           style={styles.container}

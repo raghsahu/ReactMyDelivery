@@ -101,7 +101,6 @@ function AdSummaryDetails(props) {
   };
 
   const onChange = (event, selectedDate) => {
-    // console.log('time_select ' + selectedDate);
     setShow(Platform.OS === 'ios');
 
     if (dateSelected) {
@@ -237,7 +236,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('web_link') +' :'}
+                  {getTranslation('web_link') + ' :'}
                 </Text>
 
                 <Text
@@ -372,7 +371,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('global_commission') +' :'}
+                {getTranslation('global_commission') + ' :'}
               </Text>
 
               <Text
@@ -475,7 +474,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('place_of_delivery') +' :'}
+                  {getTranslation('place_of_delivery') + ' :'}
                 </Text>
 
                 <Text
@@ -548,12 +547,12 @@ function AdSummaryDetails(props) {
                   marginTop: 10,
                 }}></View>
 
-        <TextInput
-            style={[styles.inputView, styles.comment]}
-            placeholder={getTranslation('why_this_change')}
-            multiline={true}
-            //value={''}
-          />
+              <TextInput
+                style={[styles.inputView, styles.comment]}
+                placeholder={getTranslation('why_this_change')}
+                multiline={true}
+                //value={''}
+              />
 
               <View
                 style={{
@@ -776,9 +775,7 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[
-                  styles.modalCancelButton
-                ]}
+                style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -844,9 +841,7 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[
-                  styles.modalCancelButton
-                ]}
+                style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -930,9 +925,7 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[
-                  styles.modalCancelButton
-                ]}
+                style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -941,9 +934,7 @@ function AdSummaryDetails(props) {
                 }}
               />
               <Button
-                 style={[
-                  styles.modalConfirmButton
-                ]}
+                style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
                   photosModalVisibleModalVisibility();
@@ -1054,9 +1045,7 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[
-                  styles.modalCancelButton
-                ]}
+                style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   // props.navigation.navigate('SendSuggestion', {
@@ -1102,7 +1091,7 @@ function AdSummaryDetails(props) {
               </Text>
               <View>
                 <Text
-                  style={{marginTop: 20, }}
+                  style={{marginTop: 20}}
                   size="14"
                   weight="500"
                   align="center"
@@ -1133,7 +1122,7 @@ function AdSummaryDetails(props) {
                   {'Your commission:'}
                 </Text>
                 <Text
-                  style={{ paddingHorizontal: 10}}
+                  style={{paddingHorizontal: 10}}
                   size="18"
                   weight="500"
                   align="center"
@@ -1154,9 +1143,7 @@ function AdSummaryDetails(props) {
               <Button
                 type={1}
                 titleColor={COLORS.primaryColor}
-                style={[
-                  styles.modalCancelButton
-                ]}
+                style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   commissionModalVisibleModalVisibility();
@@ -1177,38 +1164,6 @@ function AdSummaryDetails(props) {
     </View>
   );
 }
-
-//   <View
-//       style={{
-//         margin: 10,
-//         backgroundColor: COLORS.white,
-//         elevation: 5,
-//         borderRadius: 20,
-//       }}>
-//       <Text
-//         style={{marginLeft: 20, marginTop: 40, marginBottom: 40}}
-//         color={COLORS.black}
-//         size="18"
-//         weight="500">
-//         {'Expected Delivery'}
-//       </Text>
-//       <Input
-//         style={{marginHorizontal: 10}}
-//         placeholder={'Day'}
-//         isLeft={IMAGES.date}
-//         onChangeText={text => {
-//           setDay(text);
-//         }}
-//       />
-//       <Input
-//         style={{marginVertical: 20, marginHorizontal: 10}}
-//         placeholder={'Hour'}
-//         isLeft={IMAGES.time}
-//         onChangeText={text => {
-//           setHour(text);
-//         }}
-//       />
-// </View>
 
 const styles = StyleSheet.create({
   container: {
@@ -1244,7 +1199,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 10,
     backgroundColor: COLORS.primaryColor,
-  }, 
+  },
   comment: {
     textAlignVertical: 'top',
     paddingHorizontal: 10,
@@ -1252,16 +1207,16 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 24,
-    fontSize: 16
+    fontSize: 16,
   },
-  modalCancelButton:{
+  modalCancelButton: {
     borderColor: COLORS.primaryColor,
     borderWidth: 1.2,
     width: 132,
   },
-  modalConfirmButton:{
+  modalConfirmButton: {
     width: 132,
-  }
+  },
 });
 
 export default AdSummaryDetails;

@@ -17,16 +17,15 @@ import {COLORS, IMAGES} from '../assets';
 
 const CustomRatingBar = props => {
   return (
-    <View style={props.style, styles.customRatingBarStyle}>
+    <View style={(props.style, styles.customRatingBarStyle)}>
       {props.maxRating.map((data, index) => {
         return (
           <TouchableOpacity
             activeOpacity={0.7}
             key={index}
             onPress={() => {
-                props.onSelect(data);
-              }}
-            >
+              props.onSelect(data);
+            }}>
             <Image
               style={styles.starImageStyle}
               source={

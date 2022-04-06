@@ -5,15 +5,21 @@ import {Text} from '../components';
 //ASSETS
 import {COLORS} from '../assets';
 
-export default function RadioButtons({options, selectedOption, onSelect, style}) {
+export default function RadioButtons({
+  options,
+  selectedOption,
+  onSelect,
+  style,
+}) {
   return (
     <View
       style={{
-        flexDirection: 'row', alignItems: 'center', 
+        flexDirection: 'row',
+        alignItems: 'center',
       }}>
       {options.map(item => {
         return (
-          <View key={item.key} style={[style,  styles.buttonContainer, ]}>
+          <View key={item.key} style={[style, styles.buttonContainer]}>
             <TouchableOpacity
               style={[styles.circle, {marginLeft: 10}]}
               onPress={() => {

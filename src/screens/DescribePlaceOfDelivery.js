@@ -30,38 +30,36 @@ function DescribePlaceOfDelivery(props) {
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-     // console.log(props.route.params)
-    })
-  }, []) 
+      // console.log(props.route.params)
+    });
+  }, []);
 
-  const onGooglePlace = () =>{
-    props.navigation.navigate('GooglePlacesInput', {onReturn: (item) => {
-      console.log('log_item '+ JSON.stringify(item))
-        setAddress(item.address)
-        setCity(item.city)
+  const onGooglePlace = () => {
+    props.navigation.navigate('GooglePlacesInput', {
+      onReturn: item => {
+        console.log('log_item ' + JSON.stringify(item));
+        setAddress(item.address);
+        setCity(item.city);
         setCountry(item.country);
         setLat(item.lat);
         setLng(item.lng);
-    }})
-  }
+      },
+    });
+  };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
 
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      // style={styles.container}
-      >
+      <SafeAreaView>
         <Header
           title={getTranslation('describe_place')}
           onBack={() => {
             props.navigation.goBack();
           }}
         />
-        <ScrollView
-          //style={styles.container}
-          showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             style={[styles.inputView, {marginTop: 22, alignSelf: 'flex-start'}]}
             size="20"
@@ -84,52 +82,41 @@ function DescribePlaceOfDelivery(props) {
 
           <TouchableOpacity
             onPress={() => {
-             onGooglePlace();            
-            }}  
+              onGooglePlace();
+            }}
             style={[styles.inputView, styles.inputContainer]}>
             <Input
               value={address}
               placeholder={getTranslation('address')}
               editable={false}
               isLeft={IMAGES.home}
-              // onChangeText={text => {
-              //   setAddress(text);
-              // }}
             />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
               onGooglePlace();
-            }}  
-            style={[styles.inputView, styles.inputContainer]}>      
-          <Input
-            //style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('city')}
-            editable={false}
-            value={city}
-            isLeft={IMAGES.location}
-            // onChangeText={text => {
-            //   setCity(text);
-            // }}
-          />
-        </TouchableOpacity>
+            }}
+            style={[styles.inputView, styles.inputContainer]}>
+            <Input
+              placeholder={getTranslation('city')}
+              editable={false}
+              value={city}
+              isLeft={IMAGES.location}
+            />
+          </TouchableOpacity>
 
-        <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               onGooglePlace();
-            }}  
+            }}
             style={[styles.inputView, styles.inputContainer]}>
-          <Input
-            //style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('country')}
-            editable={false}
-            value={country}
-            isLeft={IMAGES.location}
-            // onChangeText={text => {
-            //   setCountry(text);
-            // }}
-          />
+            <Input
+              placeholder={getTranslation('country')}
+              editable={false}
+              value={country}
+              isLeft={IMAGES.location}
+            />
           </TouchableOpacity>
           <Input
             style={[styles.inputView, styles.inputContainer]}
@@ -144,13 +131,13 @@ function DescribePlaceOfDelivery(props) {
             style={[styles.inputView, {marginTop: 40, marginBottom: 80}]}
             title={getTranslation('show_list')}
             onPress={() => {
-              if(!address){
-                Toast.show('Please select address')
-              }else{
+              if (!address) {
+                Toast.show('Please select address');
+              } else {
                 props.navigation.navigate('RequestsListForPlaces', {
-                lat: lat,
-                lng: lng,
-              });
+                  lat: lat,
+                  lng: lng,
+                });
               }
             }}
           />

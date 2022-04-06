@@ -24,20 +24,27 @@ import {Text} from '../components';
 const Header = props => {
   return (
     <View style={[styles.container, props.style]}>
-     
       {props.onBack && (
         <TouchableOpacity style={styles.backContainer} onPress={props.onBack}>
           <Image
             style={styles.back}
             source={IMAGES.back}
             resizeMode="contain"
-            tintColor= {COLORS.white}
+            tintColor={COLORS.white}
           />
         </TouchableOpacity>
       )}
-     
+
       <Text
-        style={[props.centerTitleStyle, {flex: 1.0, justifyContent: 'center', alignSelf: 'center', marginLeft: 5 }]}
+        style={[
+          props.centerTitleStyle,
+          {
+            flex: 1.0,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            marginLeft: 5,
+          },
+        ]}
         size="18"
         weight="600"
         align="left"
@@ -53,11 +60,11 @@ const Header = props => {
             style={styles.back}
             source={IMAGES.edit}
             resizeMode="contain"
-            tintColor= {COLORS.white}
+            tintColor={COLORS.white}
           />
         </TouchableOpacity>
       )}
-       {props.onNotification && (
+      {props.onNotification && (
         <TouchableOpacity
           style={{justifyContent: 'center', marginEnd: 5}}
           onPress={props.onNotification}>
@@ -65,7 +72,7 @@ const Header = props => {
             style={styles.back}
             source={IMAGES.notification}
             resizeMode="contain"
-            tintColor= {COLORS.white}
+            tintColor={COLORS.white}
           />
         </TouchableOpacity>
       )}

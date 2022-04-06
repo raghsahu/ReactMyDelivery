@@ -19,23 +19,21 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
 //CONTEXT
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 
 function Home(props) {
   const {getTranslation} = useContext(LocalizationContext);
   const {user} = useContext(APPContext);
 
-  useEffect(() => {
-  
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
 
       <BottomBackground></BottomBackground>
-        
+
       <SafeAreaView style={styles.container}>
         <View
           style={{
@@ -48,9 +46,15 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={getTranslation('hello')+ ', '+ user.user_f_name + ' '+ user.user_l_name}
+          title={
+            getTranslation('hello') +
+            ', ' +
+            user.user_f_name +
+            ' ' +
+            user.user_l_name
+          }
           onNotification={() => {
-            props.navigation.navigate('Notification')
+            props.navigation.navigate('Notification');
           }}
         />
 
@@ -75,33 +79,32 @@ function Home(props) {
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
-             <TouchableOpacity
-             onPress={() => {
-               props.navigation.navigate('AddProduct');
-             }}
-             >
-              <View style={{}}>
-                <Image
-                  source={IMAGES.home_user}
-                  style={{
-                    height: 90,
-                    width: 90,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 5,
-                  }}
-                />
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('AddProduct');
+                }}>
+                <View style={{}}>
+                  <Image
+                    source={IMAGES.home_user}
+                    style={{
+                      height: 90,
+                      width: 90,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                      marginBottom: 5,
+                    }}
+                  />
 
-                <Text
-                  size="14"
-                  weight="500"
-                  align="center"
-                  color={COLORS.white}>
-                  {getTranslation('user')}
-                </Text>
-              </View>
-             </TouchableOpacity> 
-          
+                  <Text
+                    size="14"
+                    weight="500"
+                    align="center"
+                    color={COLORS.white}>
+                    {getTranslation('user')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={() => {
                   props.navigation.navigate('DescribePlaceOfDelivery');

@@ -17,28 +17,35 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
-import {Button, Header, Text, Input, NotificationItemList, BottomBackground, ProgressView} from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  NotificationItemList,
+  BottomBackground,
+  ProgressView,
+} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
 function Notification(props) {
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const {getNotifications, user} = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [notificationData, setNotifications] = useState([]);
 
   useEffect(() => {
-    getAllNotifications()
-   }, []);
+    getAllNotifications();
+  }, []);
 
-   const getAllNotifications = async () => {
+  const getAllNotifications = async () => {
     setLoading(true);
     const result = await getNotifications('1');
     setLoading(false);
-   // console.log('NotificationData ', result);
     if (result.status == true) {
-      setNotifications(result.data)
+      setNotifications(result.data);
     } else {
       Toast.show(result.error);
     }
@@ -54,7 +61,7 @@ function Notification(props) {
       <BottomBackground></BottomBackground>
 
       <SafeAreaView style={styles.container}>
-       <Header
+        <Header
           title={getTranslation('notifications')}
           onBack={() => {
             props.navigation.goBack();
@@ -66,11 +73,7 @@ function Notification(props) {
           data={notificationData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
-            return (
-              <NotificationItemList
-               item={item}
-              />
-            );
+            return <NotificationItemList item={item} />;
           }}
         />
       </SafeAreaView>
@@ -90,7 +93,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 16,
   },
-
 });
 
 export default Notification;

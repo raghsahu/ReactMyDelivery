@@ -14,12 +14,19 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function ForgotPassword(props) {
   const [email_mobile, setEmailMobile] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const [isLoading, setLoading] = useState(false);
   const {mForgot} = useContext(APPContext);
 
@@ -27,29 +34,27 @@ function ForgotPassword(props) {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!email_mobile) {
       Toast.show('Please enter email or mobile');
-    }else if(isNaN(email_mobile)){
-        //if input is not a number then here
-        if (reg.test(email_mobile) === false) {
-          Toast.show('Please enter valid email');
-        }else{
-          getOtp(false);
-        }
-    }else{
+    } else if (isNaN(email_mobile)) {
+      //if input is not a number then here
+      if (reg.test(email_mobile) === false) {
+        Toast.show('Please enter valid email');
+      } else {
+        getOtp(false);
+      }
+    } else {
       getOtp(true);
     }
-
   };
 
-  const getOtp = async (isMobile) => {
+  const getOtp = async isMobile => {
     setLoading(true);
     const result = await mForgot(email_mobile, isMobile);
     setLoading(false);
-    console.log('EmailMobileOtpResult', result);
     if (result.status == true) {
-     // Toast.show(result.error);
-     props.navigation.navigate('ResetPassword', {
-       otpResponse: result.data
-     });
+      // Toast.show(result.error);
+      props.navigation.navigate('ResetPassword', {
+        otpResponse: result.data,
+      });
     } else {
       Toast.show(result.error);
     }
@@ -62,15 +67,13 @@ function ForgotPassword(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <View
-       style={{flex: 1, justifyContent: 'center', }}
-      >
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <Image
           source={IMAGES.logo_with_shadow}
           style={{
             height: 258,
             width: 259,
-           // marginTop: 99,
+            // marginTop: 99,
             alignSelf: 'center',
             justifyContent: 'center',
           }}
@@ -93,9 +96,7 @@ function ForgotPassword(props) {
           align="center"
           color={COLORS.lightTextColor}
           onPress={() => {}}>
-          {
-            getTranslation('forgot_pw_screen_text')
-          }
+          {getTranslation('forgot_pw_screen_text')}
         </Text>
 
         <Input
@@ -111,7 +112,6 @@ function ForgotPassword(props) {
           style={[styles.inputView, {marginTop: 40}]}
           title={getTranslation('send')}
           onPress={() => {
-            //props.navigation.navigate('ResetPassword');
             onNext();
           }}
         />

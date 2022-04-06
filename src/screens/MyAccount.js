@@ -18,9 +18,16 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 import LinearGradient from 'react-native-linear-gradient';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
 
 import EditAccount from './EditAccount';
 import Incomplete from './Incomplete';
@@ -54,20 +61,18 @@ function MyAccount(props) {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         var temp = [];
-     
+
         for (let i = 0; i < results.rows.length; ++i) {
           temp.push(results.rows.item(i));
         }
         setProductListItems(temp);
-
       });
     });
   }, []);
 
   useEffect(() => {
-   tabIndex ? setIndex(tabIndex) : setIndex(1)
+    tabIndex ? setIndex(tabIndex) : setIndex(1);
   }, []);
-
 
   const deleteAccountModalVisibility = () => {
     setModalVisible(!isModalVisible);
@@ -216,22 +221,21 @@ function MyAccount(props) {
   };
 
   function makeCaptcha() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var text = '';
+    var possible =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (var i = 0; i < 6; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));
-      setCaptcha(text)
+    setCaptcha(text);
     return text;
   }
 
   const onDeleteAccount = async () => {
     if (!inputCaptcha) {
       Toast.show('Please enter verification code');
-     }
-    else if(captcha != inputCaptcha){
+    } else if (captcha != inputCaptcha) {
       Toast.show('verification code did not match');
-    }
-    else{
+    } else {
       setLoading(true);
       const result = await delUser(user.user_id);
       setLoading(false);
@@ -239,8 +243,8 @@ function MyAccount(props) {
       if (result.status == true) {
         Toast.show(result.error);
         deleteAccountModalVisibility();
-        setCaptcha('')
-        setInputCaptcha('')
+        setCaptcha('');
+        setInputCaptcha('');
         clearAllData();
         setTimeout(() => {
           props.navigation.dispatch(
@@ -254,7 +258,6 @@ function MyAccount(props) {
         Toast.show(result.error);
       }
     }
-
   };
 
   return (
@@ -290,7 +293,11 @@ function MyAccount(props) {
           showsVerticalScrollIndicator={false}>
           <View style={{flex: 1}}>
             <Image
-              source={user.user_img ? {uri: imageBaseUrl + user.user_img} : IMAGES.circle_placeholder}
+              source={
+                user.user_img
+                  ? {uri: imageBaseUrl + user.user_img}
+                  : IMAGES.circle_placeholder
+              }
               style={{
                 height: 114,
                 width: 114,
@@ -307,7 +314,11 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {user.user_f_name + ' '+ user.user_l_name +'               '+ user.user_name}
+              {user.user_f_name +
+                ' ' +
+                user.user_l_name +
+                '               ' +
+                user.user_name}
             </Text>
 
             <Text
@@ -316,7 +327,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              { '+'+ user.user_mb_no}
+              {'+' + user.user_mb_no}
             </Text>
 
             <Text
@@ -661,7 +672,7 @@ function MyAccount(props) {
                     padding: 5,
                   },
                 ]}
-               // placeholder={''}
+                // placeholder={''}
                 onChangeText={text => {
                   setInputCaptcha(text);
                 }}
@@ -728,11 +739,11 @@ function MyAccount(props) {
                   clearAllData();
                   logoutModalVisibility();
                   props.navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{name: 'Login', params: {isFromLogin: false}}],
-                  }),
-                );
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{name: 'Login', params: {isFromLogin: false}}],
+                    }),
+                  );
                 }}
               />
 
@@ -749,7 +760,6 @@ function MyAccount(props) {
       </Modal>
 
       {isLoading ? <ProgressView></ProgressView> : null}
-
     </View>
   );
 }

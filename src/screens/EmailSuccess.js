@@ -14,11 +14,11 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
 import {Button, Header, Text, Input, BottomBackground} from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 function EmailSuccess(props) {
   const {Mobile, Email} = props.route.params;
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
 
   return (
     <View style={styles.container}>

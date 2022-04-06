@@ -17,51 +17,20 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import {Button, Text, Input, Header, AdvertiseListItem, ProgressView, FilterItem} from '../components';
+import {
+  Button,
+  Text,
+  Input,
+  Header,
+  AdvertiseListItem,
+  ProgressView,
+  FilterItem,
+} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
-import {CommonUtilsContext} from '../context/CommonUtils';
+import {CommonUtilsContext, filterList} from '../context/CommonUtils';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 const {height, width} = Dimensions.get('screen');
-
-const optionsFilters = [
-  {
-    key: '1',
-    label: 'Publication Date',
-    value: 'Publication Date',
-    selected: false,
-  },
-  {
-    key: '2',
-    label: 'Duration of Ad',
-    value: 'Duration of Ad',
-    selected: false,
-  },
-  {
-    key: '3',
-    label: 'User Rating',
-    value: 'User Rating',
-    selected: false,
-  },
-  {
-      key: '4',
-      label: 'Price',
-      value: 'Price',
-      selected: false,
-    },
-    {
-      key: '5',
-      label: 'Limit Delivery Date',
-      value: 'Limit Delivery Date',
-      selected: false,
-    },
-    {
-      key: '6',
-      label: 'Commission',
-      value: 'Commission',
-      selected: false,
-    },
-];
 
 function RequestsListForPlaces(props) {
   const {lat, lng} = props.route.params;
@@ -76,24 +45,33 @@ function RequestsListForPlaces(props) {
   const [minCommission, setMinimumCommission] = useState('');
 
   useEffect(() => {
-    setOptionFilter(optionsFilters)
+    setOptionFilter(filterList);
     getRequestList();
-  }, []) 
+  }, []);
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
   };
 
-
   const getRequestList = async () => {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(true);
-    const result = await getFilterProduct(null, null, null, maxPrice, '1', null, minCommission, null, '2', lat, lng);
+    const result = await getFilterProduct(
+      null,
+      null,
+      null,
+      maxPrice,
+      '1',
+      null,
+      minCommission,
+      null,
+      '2',
+      lat,
+      lng,
+    );
     setLoading(false);
-   // console.log('MobileServerOtp ', result);
     if (result.status == true) {
       //Toast.show(result.error);
-     
     } else {
       Toast.show(result.error);
     }
@@ -129,11 +107,11 @@ function RequestsListForPlaces(props) {
               color={COLORS.textColor2}>
               {getTranslation('filter_by')}
             </Text>
-            <TouchableOpacity style={[styles.inputView, {alignSelf: 'center'}]}
-                onPress={() => {
-                setIsFilter(!isFilter);           
-                }}
-                >
+            <TouchableOpacity
+              style={[styles.inputView, {alignSelf: 'center'}]}
+              onPress={() => {
+                setIsFilter(!isFilter);
+              }}>
               <ImageBackground
                 source={IMAGES.rectangle_gray_border}
                 resizeMode="cover">
@@ -150,50 +128,47 @@ function RequestsListForPlaces(props) {
             </TouchableOpacity>
           </View>
 
-         {isFilter ?        
-          <View
-            style={[
-              styles.inputView,
-              {marginTop: 10, flex: 1, marginBottom: 30},
-            ]}>
+          {isFilter ? (
+            <View
+              style={[
+                styles.inputView,
+                {marginTop: 10, flex: 1, marginBottom: 30},
+              ]}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={optionsFilter}
+                keyExtractor={(item, index) => index.toString()}
+                numColumns={3}
+                renderItem={({item, index}) => {
+                  return (
+                    <FilterItem
+                      item={item}
+                      onFilter={id => {
+                        setFilterKey(id);
+                        const data = [...optionsFilter];
+                        for (let i = 0; i < data.length; i++) {
+                          if (i === index) {
+                            data[index].selected = !data[index].selected;
+                          } else {
+                            data[i].selected = false;
+                          }
+                        }
+                        setOptionFilter(data);
 
-            <FlatList
-            showsVerticalScrollIndicator={false}
-            data={optionsFilter}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={3}
-            renderItem={({item, index}) => {
-              return (
-                <FilterItem
-                  item={item}
-                  onFilter={(id) => {
-                    setFilterKey(id)
-                    const data = [...optionsFilter];
-                    for(let i =0; i<data.length; i++){
-                      if(i === index){
-                        data[index].selected = !data[index].selected;
-                      }else{
-                        data[i].selected = false;
-                      }
-                    }
-                      setOptionFilter(data); 
-
-                      if(id == '4' && data[index].selected){
-                        setMaximumPrice('')
-                        logoutModalVisibility();
-                      }else if(id == '6' && data[index].selected){
-                        setMinimumCommission('')
-                        logoutModalVisibility();
-                      }
-                  }}
-                />
-              );
-            }}
-          />
-          </View>
-          :    
-          null
-         }  
+                        if (id == '4' && data[index].selected) {
+                          setMaximumPrice('');
+                          logoutModalVisibility();
+                        } else if (id == '6' && data[index].selected) {
+                          setMinimumCommission('');
+                          logoutModalVisibility();
+                        }
+                      }}
+                    />
+                  );
+                }}
+              />
+            </View>
+          ) : null}
 
           <View style={{height: 5, backgroundColor: '#414141'}}></View>
 
@@ -289,16 +264,20 @@ function RequestsListForPlaces(props) {
               />
             </TouchableOpacity>
 
-              <Input
-                style={{marginHorizontal: 10, marginTop: 30}}
-                placeholder={filterKey == '4' ? 'Maximum Price' : 'Minimum Commission'}
-                isLeft={IMAGES.filterItem}
-                keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
-                onChangeText={text => {
-                  filterKey == '4' ? setMaximumPrice(text) : setMinimumCommission(text)
-                }}
-               // value={selectDate}
-              />
+            <Input
+              style={{marginHorizontal: 10, marginTop: 30}}
+              placeholder={
+                filterKey == '4' ? 'Maximum Price' : 'Minimum Commission'
+              }
+              isLeft={IMAGES.filterItem}
+              keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+              onChangeText={text => {
+                filterKey == '4'
+                  ? setMaximumPrice(text)
+                  : setMinimumCommission(text);
+              }}
+              // value={selectDate}
+            />
 
             <Button
               style={[
@@ -312,20 +291,17 @@ function RequestsListForPlaces(props) {
               ]}
               title={'Ok'}
               onPress={() => {
-                
-                if(filterKey == '4' ? !maxPrice : !minCommission){
-                  Toast.show('Please enter amount')
-                }else{
+                if (filterKey == '4' ? !maxPrice : !minCommission) {
+                  Toast.show('Please enter amount');
+                } else {
                   getRequestList();
                   logoutModalVisibility();
                 }
-                
               }}
             />
           </View>
         </View>
-      </Modal>      
-
+      </Modal>
     </View>
   );
 }
@@ -350,21 +326,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.borderColor,
     paddingHorizontal: 5,
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   viewWrapper: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   modalView1: {
-    // position: 'absolute',
     left: '40%',
     top: '40%',
     margin: 20,
     elevation: 5,
     transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
-    // height: 250,
-    // width: width * 0.85,
     backgroundColor: '#fff',
     borderRadius: 7,
   },

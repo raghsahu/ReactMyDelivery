@@ -30,45 +30,44 @@ function Incomplete(props) {
   useEffect(() => {
     if (props.data) {
       setProductListItems(props.data);
-    }else{
+    } else {
       db.transaction(tx => {
         tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
           var temp = [];
-       
+
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push(results.rows.item(i));
           }
           setProductListItems(temp);
-  
         });
       });
     }
-  
   }, []);
 
   const onDeleteProduct = () => {
     db.transaction(tx => {
       tx.executeSql(
-        'DELETE FROM table_product where product_id=?', [deleteProductId],
+        'DELETE FROM table_product where product_id=?',
+        [deleteProductId],
         (tx, results) => {
-          try{
-           // console.log('ResultsDelete', results.rowsAffected);
-            setProductListItems(productListItems.filter(item => item.id === deleteProductId))
+          try {
+            // console.log('ResultsDelete', results.rowsAffected);
+            setProductListItems(
+              productListItems.filter(item => item.id === deleteProductId),
+            );
             if (results.rowsAffected == 0) {
-            
             }
-          }catch(ex){
-             console.log(ex)
+          } catch (ex) {
+            console.log(ex);
           }
-        
         },
       );
     });
   };
 
-  const deleteModalVisibility = (id) => {
+  const deleteModalVisibility = id => {
     setDeleteModalVisible(!isDeleteModalVisible);
-    setDeleteProductId(id)
+    setDeleteProductId(id);
   };
 
   return (
@@ -125,7 +124,14 @@ function Incomplete(props) {
                 // position: 'absolute',
               }}>
               <Button
-                style={[{width: 90,  height: 41, alignSelf: 'center', justifyContent: 'center'}]}
+                style={[
+                  {
+                    width: 90,
+                    height: 41,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
                 title={'Yes'}
                 onPress={() => {
                   setDeleteModalVisible(!isDeleteModalVisible);

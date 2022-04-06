@@ -95,7 +95,6 @@ function AddProduct(props) {
         if (results.rows.length > 0) {
          setProdCount(results.rows.length)
         } 
-       // console.log('ResultsLength', results.rows.length);
       });
     });
   }
@@ -211,7 +210,6 @@ function AddProduct(props) {
         } else {
           Toast.show('Please add product');
         }
-       // console.log('ResultsLength', results.rows.length);
       });
     });
   };
@@ -243,31 +241,14 @@ function AddProduct(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      // style={styles.container}
-      >
+      <SafeAreaView>
         <Header
           title={getTranslation('describe_products') + '      '+ (prodCount) +'/5'}
           onBack={() => {
             props.navigation.goBack();
-            // Alert.alert(
-            //   'Success',
-            //   'Are you sure want to discard all products',
-            //   [
-            //     {
-            //       text: 'Yes',
-            //       onPress: () => {
-            //         onDiscard();
-            //         props.navigation.goBack();
-            //       },
-            //     },
-            //   ],
-            //   {cancelable: true},
-            // );
           }}
         />
         <ScrollView
-          //  style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
@@ -307,19 +288,13 @@ function AddProduct(props) {
               }}>
               <View
                 style={{
-                  // backgroundColor: COLORS.primaryColor,
-                  // height: 40,
-                  // width: 40,
-                  // borderRadius: 20,
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'absolute', //Here is the trick
-                  // bottom: 0,
                   alignSelf: 'center',
                 }}>
                 <Image
                   source={IMAGES.plus}
-                  //tintColor={COLORS.white}
                   style={{
                     height: 24,
                     width: 24,
@@ -382,9 +357,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('total_price')}
             value={getTotalPrice()}
-            editable={false}
-            //keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
-           
+            editable={false}           
           />
 
           <TextInput
@@ -455,7 +428,6 @@ function AddProduct(props) {
                   style={[styles.modalText]}
                   size="16"
                   weight="500"
-                  //align="center"
                   color={COLORS.textColor}>
                   {'Camera'}
                 </Text>
@@ -495,7 +467,6 @@ function AddProduct(props) {
                   style={[styles.modalText]}
                   size="16"
                   weight="500"
-                  //align="center"
                   color={COLORS.textColor}>
                   {'Photo library'}
                 </Text>
@@ -526,8 +497,6 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: COLORS.lightGray,
     borderRadius: 24,
-    // borderColor: COLORS.gray,
-    //borderWidth: 1,
     fontFamily: 'Poppins-Regular',
     fontWeight: '400',
     fontSize: 16,

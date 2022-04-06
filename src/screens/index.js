@@ -25,7 +25,6 @@ import AdSummaryDetails from './AdSummaryDetails';
 import AdModificationProposal from './AdModificationProposal';
 import GooglePlacesInput from './GooglePlacesInput';
 
-
 export {
   Splash,
   Login,

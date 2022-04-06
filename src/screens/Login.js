@@ -9,7 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
@@ -43,26 +43,25 @@ function Login(props) {
       Toast.show('Please enter email or mobile');
     } else if (!password) {
       Toast.show('Please enter password');
-    } else if(isNaN(email)){
-       //if input is not a number then here
-       if (reg.test(email) === false) {
+    } else if (isNaN(email)) {
+      //if input is not a number then here
+      if (reg.test(email) === false) {
         Toast.show('Please enter valid email');
-      }else{
+      } else {
         LoginApi();
       }
-    }else {
+    } else {
       LoginApi();
     }
   };
 
-  const LoginApi = async (isMobile) => {
+  const LoginApi = async isMobile => {
     setLoading(true);
     const result = await getLogin(email, password);
     setLoading(false);
-    console.log('LoginResult', result);
     if (result.status == true) {
-      setUser(result.data[0])
-      saveUserLoginData(result.data[0])
+      setUser(result.data[0]);
+      saveUserLoginData(result.data[0]);
       setTimeout(() => {
         props.navigation.dispatch(
           CommonActions.reset({
@@ -83,12 +82,8 @@ function Login(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      //style={styles.container}
-      >
-        <ScrollView
-          // style={styles.container}
-          showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Image
             source={IMAGES.logo_with_shadow}
             style={{

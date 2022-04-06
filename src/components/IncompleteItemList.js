@@ -5,19 +5,13 @@ const {height, width} = Dimensions.get('screen');
 import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 
 const IncompleteItemList = props => {
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const item = props.item;
 
   return (
-    // <TouchableOpacity
-    //   style={{
-    //     paddingVertical: 10,
-    //
-    //   }}
-    //   onPress={() => props.onPress()}>
     <View
       style={{
         flexDirection: 'row',
@@ -31,7 +25,9 @@ const IncompleteItemList = props => {
           margin: 5,
           // borderRadius: 12,
         }}
-        source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
+        source={
+          item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder
+        }
       />
 
       <View
@@ -50,10 +46,16 @@ const IncompleteItemList = props => {
         </Text>
 
         <Text color={COLORS.black} size="14" weight="500">
-          {getTranslation('web_link') +' : '+ item.web_link}
+          {getTranslation('web_link') + ' : ' + item.web_link}
         </Text>
         <Text color={COLORS.black} size="14" weight="500">
-          {'Price : '+ '€ '+ item.price_of_product  +' * '+  item.quantity + ' = € ' + item.price_of_product * item.quantity}
+          {'Price : ' +
+            '€ ' +
+            item.price_of_product +
+            ' * ' +
+            item.quantity +
+            ' = € ' +
+            item.price_of_product * item.quantity}
         </Text>
 
         <View

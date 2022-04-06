@@ -24,24 +24,13 @@ const AddProductsItemList = props => {
           //margin: 5,
         }
       }>
-     {/* {item.prod_img ?  */}
       <Image
-        style={{
-          width: 300,
-          height: 300,
-          borderRadius: 24,
-          marginHorizontal: 5,
-          justifyContent: 'center',
-          alignSelf: 'center',
-          marginTop: 10,
-        }}
+        style={styles.image}
         source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
       />
-      {/* : null } */}
 
       <View style={[styles.inputView, {marginTop: 20}]}>
         <Text
-          // style={[styles.inputView]}
           size="20"
           weight="500"
           align="left"
@@ -50,18 +39,13 @@ const AddProductsItemList = props => {
         </Text>
 
         <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 5,
-          }}>
+          style={styles.singleRow}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
             {getTranslation('web_link') + ' :'}
           </Text>
 
           <Text
-            style={{
-              marginLeft: 10,
-            }}
+            style={styles.text_right}
             color={'#35CCC1'}
             size="16"
             weight="500">
@@ -70,18 +54,13 @@ const AddProductsItemList = props => {
         </View>
 
         <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 5,
-          }}>
+          style={styles.singleRow}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
             {getTranslation('place_to_buy')}
           </Text>
 
           <Text
-            style={{
-              marginLeft: 10,
-            }}
+            style={styles.text_right}
             color={COLORS.darkGray}
             size="16"
             weight="500">
@@ -90,18 +69,13 @@ const AddProductsItemList = props => {
         </View>
 
         <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 5,
-          }}>
+          style={styles.singleRow}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
             {'Price :'}
           </Text>
 
           <Text
-            style={{
-              marginLeft: 10,
-            }}
+            style={styles.text_right}
             color={COLORS.primaryColor}
             size="16"
             weight="500">
@@ -110,18 +84,13 @@ const AddProductsItemList = props => {
         </View>
 
         <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 5,
-          }}>
+          style={styles.singleRow}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
             {getTranslation('additional_info')}
           </Text>
 
           <Text
-            style={{
-              marginLeft: 10,
-            }}
+            style={styles.text_right}
             color={COLORS.darkGray}
             size="16"
             weight="500">
@@ -147,6 +116,22 @@ const styles = StyleSheet.create({
   },
   inputView: {
     marginHorizontal: 30,
+  },
+  image:{
+    width: 300,
+    height: 300,
+    borderRadius: 24,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  singleRow: {
+    flexDirection: 'row',
+    marginTop: 5,
+  },
+  text_right:{
+    marginLeft: 10,
   },
 });
 

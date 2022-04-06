@@ -19,7 +19,7 @@ export default function DropdownPicker(props) {
 
   return (
     <View style={[styles.inputContainer, styles.inputView, {marginTop: 10}]}>
-     {props.isLeft && (
+      {props.isLeft && (
         <View
           style={{
             backgroundColor: COLORS.primaryColor,
@@ -38,21 +38,20 @@ export default function DropdownPicker(props) {
               width: 24,
               alignSelf: 'center',
               justifyContent: 'center',
-              
             }}
           />
         </View>
-        )}
+      )}
       <Picker
         dropdownIconColor={COLORS.black}
-       // placeholder={props.placeholder}
+        // placeholder={props.placeholder}
         //placeholderStyle={{color: COLORS.gray}}
         //placeholderIconColor={COLORS.gray}
         //itemStyle={{color: COLORS.black, backgroundColor: COLORS.black}}
         style={{
           color: COLORS.black,
           width: 250,
-         // placeholderTextColor: COLORS.gray,
+          // placeholderTextColor: COLORS.gray,
         }}
         ref={pickerRef}
         selectedValue={props.selectedValue}

@@ -12,41 +12,43 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import Toast from 'react-native-simple-toast';
 import {APPContext} from '../context/AppProvider';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView,} from '../components';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function EmailOtp(props) {
   const {Email, Mobile, CountryCode} = props.route.params;
   const [otp, setOtp] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const {verification_update, verification} = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [serverOtp, setServerOtp] = useState('');
-  const [seconds, setSeconds ] =  useState(0);
+  const [seconds, setSeconds] = useState(0);
 
-  useEffect(()=>{
+  useEffect(() => {
     let myInterval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds(seconds - 1);
-            }
-            if (seconds === 0) {
-                // if (minutes === 0) {
-                    clearInterval(myInterval)
-                // } else {
-                    //setMinutes(minutes - 1);
-                   // setSeconds(180);
-                //}
-            } 
-        }, 1000)
-        return ()=> {
-            clearInterval(myInterval);
-          };
-    });
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        clearInterval(myInterval);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+  });
 
   useEffect(() => {
     getEmailOtp();
@@ -56,42 +58,36 @@ function EmailOtp(props) {
     setLoading(true);
     const result = await verification(Email, '');
     setLoading(false);
-    console.log('EmailServerOtp ', result);
     if (result.status == true) {
       Toast.show(result.error);
-      setServerOtp(result.data.otp)
-      setOtp(result.data.otp)
-      setSeconds(180)
+      setServerOtp(result.data.otp);
+      setOtp(result.data.otp);
+      setSeconds(180);
     } else {
       Toast.show(result.error);
     }
   };
 
-
   const onNext = async () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!otp) {
       Toast.show('Please enter otp');
-     }
-    else if(otp != serverOtp){
+    } else if (otp != serverOtp) {
       Toast.show('Otp did not match');
-    }
-    else{
+    } else {
       setLoading(true);
-      const result = await verification_update(Email, otp, '' );
+      const result = await verification_update(Email, otp, '');
       setLoading(false);
       console.log('EmailOtpResult', result);
       if (result.status == true) {
-       // Toast.show(result.error);
         props.navigation.navigate('EmailSuccess', {
           Mobile: Mobile,
           Email: Email,
-        })
+        });
       } else {
         Toast.show(result.error);
       }
     }
-
   };
 
   return (
@@ -101,12 +97,8 @@ function EmailOtp(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView 
-      //style={styles.container}
-      >
-        <ScrollView
-         // style={styles.container}
-          showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Image
             source={IMAGES.email_verify_icon}
             style={{
@@ -119,92 +111,84 @@ function EmailOtp(props) {
           />
 
           <Input
-            style={[styles.inputView, styles.inputContainer,{marginTop: 30}]}
-            //placeholder={'omarbentchikou@hotmail.com'}
+            style={[styles.inputView, styles.inputContainer, {marginTop: 30}]}
             editable={false}
             value={Email}
           />
 
           <Text
-            style={[styles.inputContainer, styles.inputView,]}
+            style={[styles.inputContainer, styles.inputView]}
             size="16"
             weight="600"
             align="right"
             color={COLORS.primaryColor}
             onPress={() => {
-             // props.navigation.navigate('Register');
+              // props.navigation.navigate('Register');
             }}>
             {getTranslation('change')}
           </Text>
 
           <Text
-            style={[styles.inputContainer, styles.inputView,]}
+            style={[styles.inputContainer, styles.inputView]}
             size="14"
             weight="700"
             align="left"
-            color={COLORS.black}
-            >
+            color={COLORS.black}>
             {getTranslation('verify_email')}
           </Text>
 
-            <Text
-            style={[styles.inputContainer, styles.inputView,]}
+          <Text
+            style={[styles.inputContainer, styles.inputView]}
             size="14"
             weight="600"
             align="left"
-            color={COLORS.textColor}
-            >
-            { getTranslation('pls_enter_otp_sent_to') + ' ' + Email}
+            color={COLORS.textColor}>
+            {getTranslation('pls_enter_otp_sent_to') + ' ' + Email}
           </Text>
 
-         <OTPInputView
+          <OTPInputView
             style={[styles.inputView, {height: 48, marginTop: 24}]}
             pinCount={6}
             autoFocusOnLoad
             codeInputFieldStyle={styles.underlineStyleBase}
             codeInputHighlightStyle={styles.underlineStyleHighLighted}
-           // placeholderCharacter=''
-           // placeholderTextColor={'rgba(64,86,124,1)'}
-            code={""+otp}
+            // placeholderCharacter=''
+            // placeholderTextColor={'rgba(64,86,124,1)'}
+            code={'' + otp}
             onCodeFilled={code => {
               //console.log(`Code is ${code}, you are good to go!`);
-              setOtp(code)
+              setOtp(code);
             }}
           />
 
-           <Text
-            style={[styles.inputContainer, styles.inputView,]}
+          <Text
+            style={[styles.inputContainer, styles.inputView]}
             size="14"
             weight="600"
             align="center"
-            color={COLORS.textColor}
-            >
+            color={COLORS.textColor}>
             {getTranslation('or')}
           </Text>
 
           <TouchableOpacity
-          onPress={seconds === 0 ? getEmailOtp : null} 
-           style={[styles.inputContainer, styles.inputView,]}
-           >
-          <Text
-           // style={[styles.inputContainer, styles.inputView,]}
-            size="14"
-            weight="600"
-            align="right"
-            color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}
-            >
-            {getTranslation('resend') +' ('+ seconds + 's)'}
-          </Text>
+            onPress={seconds === 0 ? getEmailOtp : null}
+            style={[styles.inputContainer, styles.inputView]}>
+            <Text
+              size="14"
+              weight="600"
+              align="right"
+              color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}>
+              {getTranslation('resend') + ' (' + seconds + 's)'}
+            </Text>
           </TouchableOpacity>
 
           <Button
             style={[styles.inputView, {marginTop: 40, marginBottom: 20}]}
             title={getTranslation('confirm')}
             onPress={() => {
-             onNext();
+              onNext();
             }}
           />
-
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
@@ -227,7 +211,7 @@ const styles = StyleSheet.create({
     marginHorizontal: DIMENSION.marginHorizontal,
     alignSelf: 'center',
   },
-    underlineStyleBase: {
+  underlineStyleBase: {
     width: 48,
     height: 48,
     borderRadius: 24,

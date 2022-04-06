@@ -16,7 +16,7 @@ import {COLORS, IMAGES} from '../assets';
 import {Button, Header, Text, Input} from '../components';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
-import { APPContext } from "../context/AppProvider";
+import {APPContext} from '../context/AppProvider';
 //PACKAGES
 import {CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function Splash(props) {
   const {getUserLanguage, setI18nConfig, getTranslation} =
     useContext(LocalizationContext);
-    const { setUser } = useContext(APPContext);
+  const {setUser} = useContext(APPContext);
 
   useEffect(() => {
     (async () => {
@@ -39,8 +39,8 @@ function Splash(props) {
     AsyncStorage.getItem('user_login_data', (error, result) => {
       setTimeout(() => {
         if (result !== null) {
-          let data = JSON.parse(result)
-          setUser(data)
+          let data = JSON.parse(result);
+          setUser(data);
           props.navigation.dispatch(
             CommonActions.reset({
               index: 0,

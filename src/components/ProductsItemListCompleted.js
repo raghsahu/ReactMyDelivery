@@ -14,7 +14,7 @@ import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 
 const ProductsItemListCompleted = props => {
-const {getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   //const item = props.item;
 
   return (
@@ -31,7 +31,7 @@ const {getTranslation} = useContext(LocalizationContext);
             marginBottom: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {getTranslation('web_link') +' :'}
+            {getTranslation('web_link') + ' :'}
           </Text>
 
           <Text
@@ -71,7 +71,7 @@ const {getTranslation} = useContext(LocalizationContext);
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {getTranslation('price') +':'}
+            {getTranslation('price') + ':'}
           </Text>
 
           <Text

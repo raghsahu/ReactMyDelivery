@@ -4,31 +4,16 @@ import React, {createContext, useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
-import moment from 'moment'; // date format
 
 export const APPContext = createContext();
 
 export const AppProvider = props => {
   const [user, setUser] = useState(null);
 
-  const changeDateFormat = (date, format) => {
-    return moment(date).format(format);
-  };
-
-  const checkSpecialChar = string => {
-    var format = /[`~0-9!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi;
-    if (format.test(string)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   // mydelivery.sairoses.com
   const googleApiKey = 'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI';
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
-  const imageBaseUrl =
-    'http://mydelivery.prometteur.in/backend/application/webroot/';
+  const imageBaseUrl = 'http://mydelivery.prometteur.in/backend/application/webroot/';
 
   const webServices = {
     login: baseURL + 'mLogin',
@@ -309,8 +294,6 @@ export const AppProvider = props => {
   return (
     <APPContext.Provider
       value={{
-        changeDateFormat,
-        checkSpecialChar,
         imageBaseUrl,
         webServices,
         getError,

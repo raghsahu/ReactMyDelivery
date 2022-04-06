@@ -14,9 +14,16 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground, ProgressView} from '../components';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  BottomBackground,
+  ProgressView,
+} from '../components';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import { LocalizationContext } from '../context/LocalizationProvider';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
@@ -25,73 +32,62 @@ function MobileOtp(props) {
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [serverOtp, setServerOtp] = useState('');
-  const { getTranslation} = useContext(LocalizationContext);
+  const {getTranslation} = useContext(LocalizationContext);
   const {verification_update, verification} = useContext(APPContext);
-  const [seconds, setSeconds ] =  useState(0);
+  const [seconds, setSeconds] = useState(0);
 
-  useEffect(()=>{
+  useEffect(() => {
     let myInterval = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds(seconds - 1);
-            }
-            if (seconds === 0) {
-                // if (minutes === 0) {
-                    clearInterval(myInterval)
-                // } else {
-                    //setMinutes(minutes - 1);
-                   // setSeconds(180);
-                //}
-            } 
-        }, 1000)
-        return ()=> {
-            clearInterval(myInterval);
-          };
-    });
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        clearInterval(myInterval);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+  });
 
   useEffect(() => {
     getMobileOtp();
-    
   }, []);
 
   const getMobileOtp = async () => {
     setLoading(true);
     const result = await verification('', Mobile);
     setLoading(false);
-    console.log('MobileServerOtp ', result);
     if (result.status == true) {
       Toast.show(result.error);
-      setServerOtp(result.data.otp)
-      setOtp(result.data.otp)
-      setSeconds(10)
+      setServerOtp(result.data.otp);
+      setOtp(result.data.otp);
+      setSeconds(10);
     } else {
       Toast.show(result.error);
     }
   };
 
-
   const onNext = async () => {
     if (!otp) {
       Toast.show('Please enter otp');
-     }
-    else if(otp != serverOtp){
+    } else if (otp != serverOtp) {
       Toast.show('Otp did not match');
-    }
-    else{
+    } else {
       setLoading(true);
-      const result = await verification_update('', otp , Mobile);
+      const result = await verification_update('', otp, Mobile);
       setLoading(false);
       console.log('MobileOtpResult', result);
       if (result.status == true) {
-       // Toast.show(result.error);
-       props.navigation.navigate('SuccessScreen', {
-         Mobile : Mobile,
-         Email: Email,
-       });
+        // Toast.show(result.error);
+        props.navigation.navigate('SuccessScreen', {
+          Mobile: Mobile,
+          Email: Email,
+        });
       } else {
         Toast.show(result.error);
       }
     }
-
   };
 
   return (
@@ -100,13 +96,9 @@ function MobileOtp(props) {
         barStyle={'dark-content'}
         backgroundColor={COLORS.primaryColor}
       />
-       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      //style={{justifyContent: 'center', alignSelf: 'center'}}
-      >
-        <ScrollView
-          //style={styles.container}
-          showsVerticalScrollIndicator={false}>
+      <BottomBackground></BottomBackground>
+      <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Image
             source={IMAGES.logo_with_shadow}
             style={{
@@ -133,9 +125,7 @@ function MobileOtp(props) {
             weight="600"
             align="center"
             color={COLORS.textColor}>
-            {
-              getTranslation('pls_verify_mobile_to_continue') + ' * ' + Mobile
-            }
+            {getTranslation('pls_verify_mobile_to_continue') + ' * ' + Mobile}
           </Text>
 
           <OTPInputView
@@ -146,9 +136,9 @@ function MobileOtp(props) {
             codeInputHighlightStyle={styles.underlineStyleHighLighted}
             // placeholderCharacter=''
             // placeholderTextColor={'rgba(64,86,124,1)'}
-            code={""+otp}
+            code={'' + otp}
             onCodeFilled={code => {
-              setOtp(code)
+              setOtp(code);
               //console.log(`Code is ${code}, you are good to go!`);
             }}
           />
@@ -163,17 +153,16 @@ function MobileOtp(props) {
           </Text>
 
           <TouchableOpacity
-          onPress={seconds === 0 ? getMobileOtp : null} 
-           style={[styles.inputContainer, styles.inputView,]}
-           >
-          <Text
-            style={[styles.inputContainer, styles.inputView]}
-            size="16"
-            weight="500"
-            align="right"
-            color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}>
-             {getTranslation('resend') +' ('+ seconds + 's)'}
-          </Text>
+            onPress={seconds === 0 ? getMobileOtp : null}
+            style={[styles.inputContainer, styles.inputView]}>
+            <Text
+              style={[styles.inputContainer, styles.inputView]}
+              size="16"
+              weight="500"
+              align="right"
+              color={seconds === 0 ? COLORS.primaryColor : COLORS.textColor}>
+              {getTranslation('resend') + ' (' + seconds + 's)'}
+            </Text>
           </TouchableOpacity>
 
           <Button
@@ -181,12 +170,9 @@ function MobileOtp(props) {
             title={getTranslation('verify')}
             onPress={() => {
               onNext();
-            
             }}
           />
-          <View
-           style={{marginBottom: 30}}
-          ></View>
+          <View style={{marginBottom: 30}}></View>
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}

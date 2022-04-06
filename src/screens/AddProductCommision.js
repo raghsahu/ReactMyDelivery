@@ -73,7 +73,6 @@ function AddProductCommision(props) {
   }
 
   const onChange = (event, selectedDate) => {
-    //console.log('time_select ' + selectedDate);
     setShow(Platform.OS === 'ios');
 
     if (dateSelected) {
@@ -123,12 +122,12 @@ function AddProductCommision(props) {
         limitDay: selectDate1,
         acceptanceTime: selectTime,
         deliveryTime: selectTime1,
-      }
+      };
 
       props.navigation.navigate('AddProductSummary', {
         CommissionData: CommissionData,
       });
-      console.log('summary_gender '+ CommissionData.gender)
+      console.log('summary_gender ' + CommissionData.gender);
     }
   };
 
@@ -139,18 +138,14 @@ function AddProductCommision(props) {
         backgroundColor={COLORS.primaryColor}
       />
       <BottomBackground></BottomBackground>
-      <SafeAreaView
-      //style={styles.container}
-      >
+      <SafeAreaView>
         <Header
           title={getTranslation('describe_product_commission')}
           onBack={() => {
             props.navigation.goBack();
           }}
         />
-        <ScrollView
-          // style={styles.container}
-          showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
             size="18"
@@ -266,13 +261,12 @@ function AddProductCommision(props) {
               }}
               style={styles.day_hour}>
               <Input
-                //style={[{alignSelf: 'center'}]}
                 editable={false}
                 textAlign={'center'}
                 placeholder={getTranslation('day')}
                 value={selectDate ? selectDate : ''}
                 onChangeText={text => {
-                  setSelectDate(text)
+                  setSelectDate(text);
                 }}
               />
             </TouchableOpacity>
@@ -285,13 +279,12 @@ function AddProductCommision(props) {
               }}
               style={styles.day_hour}>
               <Input
-                //style={[{alignSelf: 'center'}]}
                 editable={false}
                 textAlign={'center'}
                 placeholder={getTranslation('hour')}
                 value={selectTime ? selectTime : ''}
                 onChangeText={text => {
-                  setSelectTime(text)
+                  setSelectTime(text);
                 }}
               />
             </TouchableOpacity>
@@ -308,7 +301,6 @@ function AddProductCommision(props) {
           <View
             style={[
               styles.inputView,
-              //styles.inputContainer,
               {flexDirection: 'row', justifyContent: 'space-between'},
             ]}>
             <TouchableOpacity
@@ -319,7 +311,6 @@ function AddProductCommision(props) {
               }}
               style={styles.day_hour}>
               <Input
-                //style={[{alignSelf: 'center'}]}
                 editable={false}
                 textAlign={'center'}
                 placeholder={getTranslation('day')}
@@ -338,7 +329,6 @@ function AddProductCommision(props) {
               }}
               style={styles.day_hour}>
               <Input
-                //style={[{alignSelf: 'center'}]}
                 editable={false}
                 textAlign={'center'}
                 placeholder={getTranslation('hour')}

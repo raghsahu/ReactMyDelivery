@@ -42,23 +42,16 @@ import Toast from 'react-native-simple-toast';
 import CountryPicker from 'rn-country-picker';
 import RNCountry from 'react-native-countries';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonUtilsContext} from '../context/CommonUtils';
 
 const options = [
   {
     key: '1',
     text: 'Man',
   },
-  // {
-  //   key: 'Women',
-  //   text: 'Women',
-  // },
 ];
 
 const optionsWomen = [
-  // {
-  //   key: 'Man',
-  //   text: 'Man',
-  // },
   {
     key: '2',
     text: 'Women',
@@ -86,7 +79,8 @@ function Register(props) {
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage, optionsLanguage} = useContext(LocalizationContext);
+  const {getTranslation, setI18nConfig, saveUserLanguage, optionsLanguage} =
+    useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -98,18 +92,17 @@ function Register(props) {
   const [currentLatitude, setCurrentLatitude] = useState('');
   const [locationStatus, setLocationStatus] = useState('');
 
-  const {webServices, checkSpecialChar, getError} = useContext(APPContext);
+  const {webServices, getError} = useContext(APPContext);
+  const {checkSpecialChar} = useContext(CommonUtilsContext);
 
   useEffect(() => {
     let countryNames = RNCountry.getCountryNamesWithCodes;
     countryNames.sort((a, b) => a.name.localeCompare(b.name));
     setCountryName(countryNames);
-    console.log('country_names ' + mSelectedCountryName);
   }, []);
 
   const _selectedValue = index => {
     setCountryCode(index);
-    console.log('country_code ' + index);
   };
 
   const onChange = (event, selectedDate) => {
@@ -142,7 +135,7 @@ function Register(props) {
       setSelectedLanguageKey('1');
     } else if (item == 'fr') {
       setSelectedLanguageKey('2');
-    }else if (item == 'sp') {
+    } else if (item == 'sp') {
       setSelectedLanguageKey('3');
     }
   };
@@ -152,14 +145,6 @@ function Register(props) {
       setI18nConfig(selectedLanguage);
       saveUserLanguage(selectedLanguage);
     }
-    // else {
-    //   Alert.alert('', 'Please select a language', [
-    //     {
-    //       text: getTranslation('ok'),
-    //       onPress: () => {},
-    //     },
-    //   ]);
-    // }
   };
 
   const setCheck = checkStatus => {
@@ -231,7 +216,7 @@ function Register(props) {
       Toast.show('Please enter mobile number');
     } else if (mobile.trim().length != 10) {
       Toast.show('Please enter 10 digit mobile number');
-    }else if (!address) {
+    } else if (!address) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
@@ -241,7 +226,7 @@ function Register(props) {
       Toast.show('Please enter password');
     } else if (!confirmPassword) {
       Toast.show('Please enter confirm password');
-    }else if(password != confirmPassword){
+    } else if (password != confirmPassword) {
       Toast.show('password & confirm password not match');
     } else if (!isSelected) {
       Toast.show('Please select terms & conditions');
@@ -275,7 +260,7 @@ function Register(props) {
       //       CommonActions.reset({
       //         index: 0,
       //         routes: [{name: 'EmailOtp', params: {isFromLogin: false,
-      //            Email: email, 
+      //            Email: email,
       //            Mobile: mobile,
       //            CountryCode: mCountryCode,
       //            }}],
@@ -337,7 +322,7 @@ function Register(props) {
           : '',
       );
     }
- 
+
     formData.append('user_fcm_key', user_fcm_key);
 
     return requestMultipart(webServices.register, 'post', formData);
@@ -349,9 +334,8 @@ function Register(props) {
       console.log('URL: ', url);
       console.log('METHOD: ', method);
       console.log('PARAMS: ', params);
-      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
-      
+
       const options = {
         method: 'POST',
         body: params,
@@ -361,36 +345,41 @@ function Register(props) {
         // }
       };
       var response = fetch(url, options)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log('aaaaa '+ JSON.stringify(data));
-        setLoading(false);
-        if (data && data.status == 1) {
-          Toast.show(data.msg);
-       
-        setTimeout(() => {
-          props.navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'EmailOtp', params: {isFromLogin: false,
-                 Email: email, 
-                 Mobile: mobile,
-                 CountryCode: mCountryCode,
-                 }}],
-            }),
-          );
-        }, 500);
-        onSelectLanguage();
-        }else {
-          Toast.show(data.msg);
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          setLoading(false);
+          if (data && data.status == 1) {
+            Toast.show(data.msg);
+
+            setTimeout(() => {
+              props.navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'EmailOtp',
+                      params: {
+                        isFromLogin: false,
+                        Email: email,
+                        Mobile: mobile,
+                        CountryCode: mCountryCode,
+                      },
+                    },
+                  ],
+                }),
+              );
+            }, 500);
+            onSelectLanguage();
+          } else {
+            Toast.show(data.msg);
           }
-      });
+        });
     } catch (e) {
       console.log(e);
-      return getError(e);
-      //return 'Something went wrong'
+      // return getError(e);
+      Toast.show('Something went wrong');
     }
   };
 
@@ -431,13 +420,10 @@ function Register(props) {
                 height: 60,
                 width: 60,
                 borderRadius: 30,
-                // alignItems: 'center',
                 justifyContent: 'center',
                 position: 'absolute', //Here is the trick
                 bottom: 0,
                 right: 0,
-                // marginLeft: 50,
-                //alignSelf: 'center',
               }}>
               <Image
                 source={IMAGES.camera}
@@ -503,7 +489,6 @@ function Register(props) {
                 shadowOpacity: 0.5,
                 shadowRadius: 2,
                 flexDirection: 'row',
-                // justifyContent: 'space-between',
               },
             ]}>
             <RadioButtons
@@ -551,15 +536,6 @@ function Register(props) {
                 borderRadius: 24,
               },
             ]}>
-            {/* <Input
-              style={[{width: 100}]}
-              placeholder={'Country'}
-              editable={false}
-              textAlign={'center'}
-              onChangeText={text => {
-                //setName(text);
-              }}
-            /> */}
             <CountryPicker
               //style={[{width: 100}]}
               disable={false}
@@ -607,16 +583,6 @@ function Register(props) {
               setCity(text);
             }}
           />
-
-          {/* <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('select_your_country')}
-            textAlign={'center'}
-            editable={false}
-            // onChangeText={text => {
-            //   setCountry(text);
-            // }}
-          /> */}
           <View
             style={[
               styles.inputView,
@@ -690,14 +656,6 @@ function Register(props) {
             title={getTranslation('register')}
             onPress={() => {
               onNext();
-        //       setTimeout(() => {
-        //     props.navigation.dispatch(
-        //     CommonActions.reset({
-        //       index: 0,
-        //       routes: [{name: 'EmailOtp', params: {isFromLogin: false, Email: 'rrr@mailinator.com'}}],
-        //     }),
-        //   );
-        // }, 500);
             }}
           />
 
@@ -816,7 +774,14 @@ function Register(props) {
           </View>
         </View>
       </ActionSheet>
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} maximumDate={new Date(Date.now() - 86400000)}/>}
+      {show && (
+        <DateTimePick
+          value={date}
+          mode={mode}
+          onChange={onChange}
+          maximumDate={new Date(Date.now() - 86400000)}
+        />
+      )}
     </View>
   );
 }

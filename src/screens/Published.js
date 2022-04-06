@@ -17,7 +17,14 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
-import {Button, Header, Text, Input, PublishedItemList, ProgressView} from '../components';
+import {
+  Button,
+  Header,
+  Text,
+  Input,
+  PublishedItemList,
+  ProgressView,
+} from '../components';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
@@ -38,10 +45,8 @@ function Published(props) {
     setLoading(true);
     const result = await publishedProduct(user.user_id, '0');
     setLoading(false);
-    //console.log('EmailServerOtp ', result);
     if (result.status == true) {
-      setPublishedItem(result.data)
-
+      setPublishedItem(result.data);
     } else {
       Toast.show(result.error);
     }
@@ -70,7 +75,6 @@ function Published(props) {
                 onDelete={() => {
                   deleteModalVisibility();
                 }}
-               
               />
             );
           }}
@@ -103,7 +107,14 @@ function Published(props) {
                 // position: 'absolute',
               }}>
               <Button
-                style={[{width: 90,  height: 41, alignSelf: 'center', justifyContent: 'center'}]}
+                style={[
+                  {
+                    width: 90,
+                    height: 41,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
                 title={'Yes'}
                 onPress={() => {
                   // props.navigation.navigate('Market')

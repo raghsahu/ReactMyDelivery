@@ -93,7 +93,6 @@ function AdModificationProposal(props) {
                 alignItems: 'center',
               }}>
               <Text
-                // style={{flex: 1}}
                 size="20"
                 weight="500"
                 align="left"
@@ -117,10 +116,9 @@ function AdModificationProposal(props) {
                 flex: 1,
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: 10
+                marginTop: 10,
               }}>
-            
-            <View
+              <View
                 style={{
                   flexDirection: 'row',
                 }}>
@@ -193,15 +191,6 @@ function AdModificationProposal(props) {
                   {'€ 6.00 x 1 = € 6.00'}
                 </Text>
               </View>
-
-              {/* <Text
-                style={[styles.rightButtons]}
-                color={COLORS.textColor5}
-                size="16"
-                weight="500"
-                onPress={() => {}}>
-                {getTranslation('changed')}
-              </Text> */}
             </View>
 
             <View
@@ -236,7 +225,7 @@ function AdModificationProposal(props) {
             <Text
               style={[
                 styles.rightButtons,
-                {position: 'absolute',  alignSelf: 'flex-end'},
+                {position: 'absolute', alignSelf: 'flex-end'},
               ]}
               color={COLORS.textColor5}
               size="16"
@@ -347,7 +336,6 @@ function AdModificationProposal(props) {
             <View
               style={{
                 marginTop: 5,
-                // flexDirection: 'row',
               }}>
               <View
                 style={{
@@ -368,15 +356,6 @@ function AdModificationProposal(props) {
                   {'Constantine Constantine,'}
                 </Text>
               </View>
-
-              {/* <Text
-                style={[styles.rightButtons, {marginRight: 0}]}
-                color={COLORS.textColor5}
-                size="16"
-                weight="500"
-                onPress={() => {}}>
-                {getTranslation('changed')}
-              </Text> */}
             </View>
           </View>
 

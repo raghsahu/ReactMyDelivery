@@ -37,23 +37,16 @@ import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionSheet from 'react-native-actions-sheet';
 import {APPContext} from '../context/AppProvider';
+import {CommonUtilsContext} from '../context/CommonUtils';
 
 const options = [
   {
     key: '1',
     text: 'Man',
   },
-  // {
-  //   key: 'Women',
-  //   text: 'Women',
-  // },
 ];
 
 const optionsWomen = [
-  // {
-  //   key: 'Man',
-  //   text: 'Man',
-  // },
   {
     key: '2',
     text: 'Women',
@@ -83,7 +76,13 @@ function EditAccount(props) {
   const [pwSecureTextOld, setPwSecureTextOld] = useState(true);
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage, saveUserLoginData, optionsLanguage} = useContext(LocalizationContext);
+  const {
+    getTranslation,
+    setI18nConfig,
+    saveUserLanguage,
+    saveUserLoginData,
+    optionsLanguage,
+  } = useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState(null);
   const [serverImage, setServerImage] = useState('');
@@ -93,43 +92,40 @@ function EditAccount(props) {
   const [mCountryName, setCountryName] = useState();
   const [mSelectedCountryName, setSelectedCountryName] = useState('India');
   const [userDetails, setUserDetails] = useState({});
-  const {user, setUser, checkSpecialChar, imageBaseUrl, webServices, getError} = useContext(APPContext);
+  const {user, setUser, imageBaseUrl, webServices, getError} =
+    useContext(APPContext);
+  const {checkSpecialChar} = useContext(CommonUtilsContext);
 
   useEffect(() => {
-    setName(user.user_f_name)
-    setLastName(user.user_l_name)
-    setUserName(user.user_name)
-    setSelectDate(user.user_dob)
-    setAddress(user.user_addr)
-    setCity(user.user_city)
-    setMobile(user.user_mb_no)
-    setEmail(user.user_email)
-    setServerImage(user.user_img)
-    setGender(user.user_gender == '1' ? options[0] : optionsWomen[0] )
-    setSelectedCountryName(user.user_country)
-    setSelectedLanguageKey(user.user_language)
+    setName(user.user_f_name);
+    setLastName(user.user_l_name);
+    setUserName(user.user_name);
+    setSelectDate(user.user_dob);
+    setAddress(user.user_addr);
+    setCity(user.user_city);
+    setMobile(user.user_mb_no);
+    setEmail(user.user_email);
+    setServerImage(user.user_img);
+    setGender(user.user_gender == '1' ? options[0] : optionsWomen[0]);
+    setSelectedCountryName(user.user_country);
+    setSelectedLanguageKey(user.user_language);
     if (user.user_language == '1') {
       setSelectedLanguage('en');
     } else if (user.user_language == '2') {
       setSelectedLanguage('fr');
-    }else if (user.user_language == '3') {
+    } else if (user.user_language == '3') {
       setSelectedLanguage('sp');
     }
-
   }, []);
 
   useEffect(() => {
-   // console.log('user_datttt ' + user.user_f_name);
-
     let countryNames = RNCountry.getCountryNamesWithCodes;
     countryNames.sort((a, b) => a.name.localeCompare(b.name));
     setCountryName(countryNames);
-    //console.log('country_names ' + mSelectedCountryName);
   }, []);
 
   const _selectedValue = index => {
     setCountryCode(index);
-    console.log('country_code ' + index);
   };
 
   const onChange = (event, selectedDate) => {
@@ -162,7 +158,7 @@ function EditAccount(props) {
       setSelectedLanguageKey('1');
     } else if (item == 'fr') {
       setSelectedLanguageKey('2');
-    }else if (item == 'sp') {
+    } else if (item == 'sp') {
       setSelectedLanguageKey('3');
     }
   };
@@ -172,14 +168,6 @@ function EditAccount(props) {
       setI18nConfig(selectedLanguage);
       saveUserLanguage(selectedLanguage);
     }
-    // else {
-    //   Alert.alert('', 'Please select a language', [
-    //     {
-    //       text: getTranslation('ok'),
-    //       onPress: () => {},
-    //     },
-    //   ]);
-    // }
   };
 
   const setCheck = checkStatus => {
@@ -203,10 +191,10 @@ function EditAccount(props) {
     console.log(result);
     if (result && result.assets.length > 0) {
       let uri = result.assets[0].uri;
-     // let items = [...images];
+      // let items = [...images];
       //items.push(uri);
       setImages(uri);
-      setCaptureImages(true)
+      setCaptureImages(true);
     }
     // }
   };
@@ -236,7 +224,7 @@ function EditAccount(props) {
       Toast.show('Please enter last name');
     } else if (!userName) {
       Toast.show('Please enter user name');
-    }else if (userName.trim().length < 3) {
+    } else if (userName.trim().length < 3) {
       Toast.show('User name must be minimum 3 character');
     } else if (checkSpecialChar(userName)) {
       Toast.show('Special character & number not allowed in username');
@@ -244,44 +232,42 @@ function EditAccount(props) {
       Toast.show('Please select gender');
     } else if (!selectDate) {
       Toast.show('Please enter date of birth');
-    } 
+    }
     // else if (!email) {
     //   Toast.show('Please enter email');
     // } else if (reg.test(email) === false) {
     //   Toast.show('Please enter valid email');
-    // } 
+    // }
     else if (!mobile) {
       Toast.show('Please enter mobile number');
     } else if (mobile.trim().length != 10) {
       Toast.show('Please enter 10 digit mobile number');
-    }else if (!address) {
+    } else if (!address) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
     } else if (!selectedLanguage) {
       Toast.show('Please select language');
     } else if (oldPassword) {
-     // Toast.show('Please select terms & conditions');
-     if (oldPassword != user.user_password) {
-      Toast.show('Old password not match');
-     }else if (!password) {
+      if (oldPassword != user.user_password) {
+        Toast.show('Old password not match');
+      } else if (!password) {
         Toast.show('Please enter password');
       } else if (!confirmPassword) {
         Toast.show('Please enter confirm password');
-      }else if(password != confirmPassword){
+      } else if (password != confirmPassword) {
         Toast.show('password & confirm password not match');
-      }else{
+      } else {
         UpdateUser();
       }
-    }
-    else {
+    } else {
       UpdateUser();
     }
   };
 
   const UpdateUser = async () => {
     setLoading(true);
-     await userUpdate(
+    await userUpdate(
       user.user_id,
       firstName,
       lastName,
@@ -300,7 +286,7 @@ function EditAccount(props) {
       images,
       ' ',
     );
-    console.log('AAa123 '+ result);
+    console.log('AAa123 ' + result);
     setLoading(false);
   };
 
@@ -355,7 +341,7 @@ function EditAccount(props) {
           : '',
       );
     }
- 
+
     formData.append('user_fcm_key', user_fcm_key);
 
     return await requestMultipart(webServices.userUpdate, 'post', formData);
@@ -367,58 +353,55 @@ function EditAccount(props) {
       console.log('URL: ', url);
       console.log('METHOD: ', method);
       console.log('PARAMS: ', params);
-      //console.log('Authorization', (user ? `Bearer ${user.user_session}` : ''))
       console.log('===================');
-      
+
       const options = {
         method: 'POST',
         body: params,
-        // If you add this, upload won't work
         headers: {
-          //'Content-Type': 'multipart/form-data',
           user_session: user ? user.user_session : '',
           user_id: user ? user.user_id : '',
-        }
+        },
       };
       var response = fetch(url, options)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log('aaaaa '+ JSON.stringify(data));
-        setLoading(false);
-        if (data && data.status == 1) {
-          Toast.show(data.msg);
-          onSelectLanguage();
-          setUser(data.result[0])
-          saveUserLoginData(data.result[0])
-          props.navigation.goBack();
-        }else {
-          Toast.show(data.msg);
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          console.log('aaaaa ' + JSON.stringify(data));
+          setLoading(false);
+          if (data && data.status == 1) {
+            Toast.show(data.msg);
+            onSelectLanguage();
+            setUser(data.result[0]);
+            saveUserLoginData(data.result[0]);
+            props.navigation.goBack();
+          } else {
+            Toast.show(data.msg);
           }
-      });
+        });
     } catch (e) {
       console.log(e);
-      return getError(e);
-      //return 'Something went wrong'
+      Toast.show('Something went wrong');
     }
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
       <SafeAreaView style={styles.container}>
-      
         <Header
           title={getTranslation('edit_account_details')}
           onBack={() => {
-             props.navigation.goBack();
+            props.navigation.goBack();
           }}
         />
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-
           <TouchableOpacity
             style={{
               height: 180,
@@ -427,8 +410,13 @@ function EditAccount(props) {
             }}
             onPress={onPressUpload}>
             <ImageBackground
-              source={captureImage == true ? {uri:images} : serverImage ? {uri: imageBaseUrl + serverImage} : IMAGES.signup_placeholder}
-          
+              source={
+                captureImage == true
+                  ? {uri: images}
+                  : serverImage
+                  ? {uri: imageBaseUrl + serverImage}
+                  : IMAGES.signup_placeholder
+              }
               style={{
                 height: 160,
                 width: 160,
@@ -447,13 +435,10 @@ function EditAccount(props) {
                 height: 60,
                 width: 60,
                 borderRadius: 30,
-                // alignItems: 'center',
                 justifyContent: 'center',
                 position: 'absolute', //Here is the trick
                 bottom: 0,
                 right: 0,
-                // marginLeft: 50,
-                //alignSelf: 'center',
               }}>
               <Image
                 source={IMAGES.camera}
@@ -469,7 +454,7 @@ function EditAccount(props) {
           </TouchableOpacity>
 
           <Text
-            style={[styles.inputView, {marginTop: 20,}]}
+            style={[styles.inputView, {marginTop: 20}]}
             size="18"
             weight="500"
             align="left"
@@ -506,7 +491,7 @@ function EditAccount(props) {
             }}
           />
 
-      <View
+          <View
             style={[
               styles.inputView,
               {
@@ -519,7 +504,6 @@ function EditAccount(props) {
                 shadowOpacity: 0.5,
                 shadowRadius: 2,
                 flexDirection: 'row',
-                // justifyContent: 'space-between',
               },
             ]}>
             <RadioButtons
@@ -536,7 +520,7 @@ function EditAccount(props) {
             />
           </View>
 
-         <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
+          <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
             <Input
               style={[{marginTop: 18}]}
               placeholder={getTranslation('date_of_birth')}
@@ -546,24 +530,13 @@ function EditAccount(props) {
             />
           </TouchableOpacity>
 
-{/* 
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('email_id')}
-            isLeft={IMAGES.message_icon}
-            onChangeText={text => {
-              setName(text);
-            }}
-          /> */}
-
-        <View
+          <View
             style={[
-             // styles.inputView,
+              // styles.inputView,
               styles.inputContainer,
               {flexDirection: 'row', flex: 1},
             ]}>
-        
-        <CountryPicker
+            <CountryPicker
               //style={[{width: 100}]}
               disable={false}
               animationType={'slide'}
@@ -592,13 +565,21 @@ function EditAccount(props) {
               }}
             />
 
-          <Button
-            style={[{width: 60, height: 40, alignSelf: 'center', justifyContent: 'center', marginRight: 5}]}
-            title={getTranslation('update')}
-            onPress={() => {
-             // props.navigation.navigate('EmailOtp')
+            <Button
+              style={[
+                {
+                  width: 60,
+                  height: 40,
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  marginRight: 5,
+                },
+              ]}
+              title={getTranslation('update')}
+              onPress={() => {
+                // props.navigation.navigate('EmailOtp')
               }}
-          />
+            />
           </View>
 
           <Input
@@ -620,7 +601,7 @@ function EditAccount(props) {
             }}
           />
 
-        <View
+          <View
             style={[
               styles.inputView,
               styles.inputContainer,
@@ -658,7 +639,7 @@ function EditAccount(props) {
           />
 
           <Text
-            style={[styles.inputView, {marginTop: 20,}]}
+            style={[styles.inputView, {marginTop: 20}]}
             size="18"
             weight="500"
             align="left"
@@ -679,7 +660,7 @@ function EditAccount(props) {
             }}
           />
 
-           <Input
+          <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('enter_new_pw')}
             secureTextEntry={pwSecureText}
@@ -710,7 +691,7 @@ function EditAccount(props) {
             title={getTranslation('save_changes')}
             onPress={() => {
               onNext();
-              }}
+            }}
           />
         </ScrollView>
       </SafeAreaView>
@@ -822,10 +803,6 @@ const styles = StyleSheet.create({
     width: 100,
     marginLeft: 10,
     justifyContent: 'center',
-    //padding: 10,
-    //borderWidth: 2,
-    //borderColor: '#303030',
-    //backgroundColor: 'white',
   },
   selectedCountryTextStyle: {
     paddingLeft: 5,

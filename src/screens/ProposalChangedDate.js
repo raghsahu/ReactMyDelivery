@@ -23,7 +23,10 @@ const {height, width} = Dimensions.get('screen');
 function ProposalChangedDate(props) {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.primaryColor} />
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={COLORS.primaryColor}
+      />
 
       <SafeAreaView style={styles.container}>
         <Header
@@ -173,25 +176,25 @@ function ProposalChangedDate(props) {
                 {'souris'}
               </Text>
 
-                  <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Web Link : '}
-              </Text>
-
-              <Text
+              <View
                 style={{
-                  marginLeft: 10,
-                }}
-                color={'#35CCC1'}
-                size="16"
-                weight="500">
-                {'hp.com'}
-              </Text>
-            </View>
+                  flexDirection: 'row',
+                  marginTop: 5,
+                }}>
+                <Text style={{}} color={COLORS.black} size="16" weight="600">
+                  {'Web Link : '}
+                </Text>
+
+                <Text
+                  style={{
+                    marginLeft: 10,
+                  }}
+                  color={'#35CCC1'}
+                  size="16"
+                  weight="500">
+                  {'hp.com'}
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -311,7 +314,8 @@ function ProposalChangedDate(props) {
             <Button
               style={[{width: 156}]}
               title={'Refuse'} //or Change Delivery Date (according to condition)
-              onPress={() => {props.navigation.goBack();
+              onPress={() => {
+                props.navigation.goBack();
               }}
             />
 
