@@ -93,7 +93,11 @@ function Register(props) {
   const [locationStatus, setLocationStatus] = useState('');
 
   const {webServices, getError} = useContext(APPContext);
-  const {checkSpecialChar} = useContext(CommonUtilsContext);
+  const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
+
+  useEffect(() => {
+    getUserCurrentLocation();
+  }, []);
 
   useEffect(() => {
     let countryNames = RNCountry.getCountryNamesWithCodes;
@@ -245,31 +249,11 @@ function Register(props) {
         mSelectedCountryName,
         selectedLanguageKey,
         password,
-        '10.0000',
-        '32.11',
+        lat,
+        lng,
         images,
         ' ',
       );
-      // setLoading(false);
-      // //console.log('RegisterResult', result);
-      // if (result.status == true) {
-      //   Toast.show(result.error);
-      //   onSelectLanguage();
-      //   setTimeout(() => {
-      //     props.navigation.dispatch(
-      //       CommonActions.reset({
-      //         index: 0,
-      //         routes: [{name: 'EmailOtp', params: {isFromLogin: false,
-      //            Email: email,
-      //            Mobile: mobile,
-      //            CountryCode: mCountryCode,
-      //            }}],
-      //       }),
-      //     );
-      //   }, 500);
-      // } else {
-      //   Toast.show(result.error);
-      // }
     }
   };
 

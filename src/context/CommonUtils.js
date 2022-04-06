@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
 import moment from 'moment'; // date format
+import Geolocation from '@react-native-community/geolocation';
 
 export const filterList = [
   {
@@ -44,6 +45,8 @@ export const CommonUtilsContext = createContext();
 
 export const CommonUtils = props => {
   const [optionsFilter, setOptionFilter] = useState([]);
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
 
   const changeDateFormat = (date, format) => {
     return moment(date).format(format);
@@ -58,6 +61,30 @@ export const CommonUtils = props => {
     }
   };
 
+  const getUserCurrentLocation = () => {
+    let latitude, longitude;
+
+    const config = {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 3600000,
+    };
+
+    Geolocation.getCurrentPosition(
+      info => {
+        const {coords} = info;
+        latitude = coords.latitude;
+        longitude = coords.longitude;
+        setLat(latitude);
+        setLng(longitude);
+        //console.log("INFO ", latitude);
+        // getUserCurrentAddress(latitude, longitude)A
+      },
+      error => console.log(error),
+      config,
+    );
+  };
+
   return (
     <CommonUtilsContext.Provider
       value={{
@@ -65,6 +92,9 @@ export const CommonUtils = props => {
         setOptionFilter,
         changeDateFormat,
         checkSpecialChar,
+        getUserCurrentLocation,
+        lat,
+        lng,
       }}>
       {props.children}
     </CommonUtilsContext.Provider>

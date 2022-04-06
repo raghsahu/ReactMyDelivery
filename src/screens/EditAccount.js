@@ -94,7 +94,11 @@ function EditAccount(props) {
   const [userDetails, setUserDetails] = useState({});
   const {user, setUser, imageBaseUrl, webServices, getError} =
     useContext(APPContext);
-  const {checkSpecialChar} = useContext(CommonUtilsContext);
+  const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
+
+  useEffect(() => {
+    getUserCurrentLocation();
+  }, []);
 
   useEffect(() => {
     setName(user.user_f_name);
@@ -281,12 +285,11 @@ function EditAccount(props) {
       mSelectedCountryName,
       selectedLanguageKey,
       password,
-      '10.0000',
-      '32.11',
+      lat,
+      lng,
       images,
       ' ',
     );
-    console.log('AAa123 ' + result);
     setLoading(false);
   };
 
