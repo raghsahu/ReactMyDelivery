@@ -56,7 +56,7 @@ function EmailOtp(props) {
 
   const getEmailOtp = async () => {
     setLoading(true);
-    const result = await verification(Email, '');
+    const result = await verification(Email, null);
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
@@ -76,7 +76,7 @@ function EmailOtp(props) {
       Toast.show('Otp did not match');
     } else {
       setLoading(true);
-      const result = await verification_update(Email, otp, '');
+      const result = await verification_update(Email, otp, null);
       setLoading(false);
       console.log('EmailOtpResult', result);
       if (result.status == true) {

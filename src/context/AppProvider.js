@@ -52,11 +52,18 @@ export const AppProvider = props => {
   };
 
   const verification = async (email, mobile) => {
-    let params = {
-      user_mb_no: mobile,
-      user_email: email,
-    };
-
+    let params ;
+    if(email){
+       params = {
+       // user_mb_no: mobile,
+         user_email: email,
+      };
+    }else{
+       params = {
+        user_mb_no: mobile,
+       // user_email: email,
+      };
+    }
     return await request(webServices.verification, 'post', params);
   };
 

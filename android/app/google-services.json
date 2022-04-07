@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "397368923340",
+    "firebase_url": "https://omar-app-bcf8a.firebaseio.com",
+    "project_id": "omar-app-bcf8a",
+    "storage_bucket": "omar-app-bcf8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397368923340:android:e9831afe2a92357eec1e69",
+        "android_client_info": {
+          "package_name": "com.mydelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397368923340-ruteal7rdalhi9t4a03hr78p1tngbmf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mydelivery",
+            "certificate_hash": "acd664a2f56cc7b03faa48109b50af33b379a8bd"
+          }
+        },
+        {
+          "client_id": "397368923340-c15kisjqtg7lj2lklnn57klf24g6nbrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiARIONg9zJ1KY3HzHGS15H3unLwy6I2A"
+        },
+        {
+          "current_key": "AIzaSyDDxmlL-H-JU20hLjxqCFRSbKSzSvcCgF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397368923340-c15kisjqtg7lj2lklnn57klf24g6nbrr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397368923340:android:fde60584247474f1ec1e69",
+        "android_client_info": {
+          "package_name": "com.prometteur.omarapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397368923340-bg3isblu2fsjpi6i5rgqr2cc2u81d8ve.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prometteur.omarapp",
+            "certificate_hash": "e364b49511757cc724e31858902f01c235064068"
+          }
+        },
+        {
+          "client_id": "397368923340-rjea2uudnkujtdtbganpgqm65q2v0bmu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prometteur.omarapp",
+            "certificate_hash": "9d3796d6d4e67484c21b2ca05a59d53b4ddb1215"
+          }
+        },
+        {
+          "client_id": "397368923340-c15kisjqtg7lj2lklnn57klf24g6nbrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiARIONg9zJ1KY3HzHGS15H3unLwy6I2A"
+        },
+        {
+          "current_key": "AIzaSyDDxmlL-H-JU20hLjxqCFRSbKSzSvcCgF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397368923340-c15kisjqtg7lj2lklnn57klf24g6nbrr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

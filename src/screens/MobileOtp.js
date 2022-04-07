@@ -56,13 +56,13 @@ function MobileOtp(props) {
 
   const getMobileOtp = async () => {
     setLoading(true);
-    const result = await verification('', Mobile);
+    const result = await verification(null, Mobile);
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
       setServerOtp(result.data.otp);
       setOtp(result.data.otp);
-      setSeconds(10);
+      setSeconds(180);
     } else {
       Toast.show(result.error);
     }
@@ -75,7 +75,7 @@ function MobileOtp(props) {
       Toast.show('Otp did not match');
     } else {
       setLoading(true);
-      const result = await verification_update('', otp, Mobile);
+      const result = await verification_update(null, otp, Mobile);
       setLoading(false);
       console.log('MobileOtpResult', result);
       if (result.status == true) {

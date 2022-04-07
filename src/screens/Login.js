@@ -60,16 +60,26 @@ function Login(props) {
     const result = await getLogin(email, password);
     setLoading(false);
     if (result.status == true) {
-      setUser(result.data[0]);
-      saveUserLoginData(result.data[0]);
-      setTimeout(() => {
-        props.navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'BottomBar', params: {isFromLogin: true}}],
-          }),
-        );
-      }, 500);
+      // if(result.data[0].user_mob_verify == '0'){
+      //   setTimeout(() => {
+      //     props.navigation.navigate('MobileOtp', {
+      //       Mobile: result.data[0].user_mb_no,
+      //       Email: result.data[0].user_email,
+      //     });
+      //   }, 500);
+      // }else{
+        setUser(result.data[0]);
+        saveUserLoginData(result.data[0]);
+        setTimeout(() => {
+          props.navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'BottomBar', params: {isFromLogin: true}}],
+            }),
+          );
+        }, 500);
+      //}
+    
     } else {
       Toast.show(result.error);
     }
