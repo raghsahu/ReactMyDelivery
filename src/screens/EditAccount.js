@@ -92,7 +92,7 @@ function EditAccount(props) {
   const [mCountryName, setCountryName] = useState();
   const [mSelectedCountryName, setSelectedCountryName] = useState('India');
   const [userDetails, setUserDetails] = useState({});
-  const {user, setUser, imageBaseUrl, webServices, getError} =
+  const {user, setUser, imageBaseUrl, webServices, getError, fcmToken} =
     useContext(APPContext);
   const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
 
@@ -288,9 +288,8 @@ function EditAccount(props) {
       lat,
       lng,
       images,
-      ' ',
+      fcmToken,
     );
-    setLoading(false);
   };
 
   const userUpdate = async (
@@ -371,7 +370,6 @@ function EditAccount(props) {
           return response.json();
         })
         .then(data => {
-          console.log('aaaaa ' + JSON.stringify(data));
           setLoading(false);
           if (data && data.status == 1) {
             Toast.show(data.msg);
@@ -563,6 +561,8 @@ function EditAccount(props) {
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
               value={mobile}
+              maxLength={10}
+              keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
               onChangeText={text => {
                 setMobile(text);
               }}

@@ -73,6 +73,7 @@ function AddProductCommision(props) {
   }
 
   const onChange = (event, selectedDate) => {
+   // console.log('selected_time '+ selectedDate)
     setShow(Platform.OS === 'ios');
 
     if (dateSelected) {
@@ -80,17 +81,18 @@ function AddProductCommision(props) {
       setDate(currentDate);
 
       if (secondDate === 'true') {
-        setSelectDate1(moment(currentDate).format('YYYY-MM-DD'));
+          setSelectDate1(moment(currentDate).format('YYYY-MM-DD'));
+        } else {
+          setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
+        }
       } else {
-        setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
+        if (secondTime === 'true') {
+          setSelectTime1(moment(selectedDate).format('HH:mm:ss'));
+        } else {
+          setSelectTime(moment(selectedDate).format('HH:mm:ss'));
+        }
+        
       }
-    } else {
-      if (secondTime === 'true') {
-        setSelectTime1(moment(selectedDate).format('HH:MM:SS'));
-      } else {
-        setSelectTime(moment(selectedDate).format('HH:MM:SS'));
-      }
-    }
   };
 
   const showMode = currentMode => {
@@ -120,8 +122,8 @@ function AddProductCommision(props) {
         gender: gender.key,
         acceptanceDay: selectDate,
         limitDay: selectDate1,
-        acceptanceTime: selectTime,
-        deliveryTime: selectTime1,
+        acceptanceTime: selectTime + ':00',
+        deliveryTime: selectTime1 + ':00',
       };
 
       props.navigation.navigate('AddProductSummary', {
@@ -352,7 +354,14 @@ function AddProductCommision(props) {
           <View style={{marginBottom: 30}}></View>
         </ScrollView>
       </SafeAreaView>
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
+      {show && (
+        <DateTimePick
+          value={date}
+          mode={mode}
+          onChange={onChange}
+          minimumDate={new Date()}
+        />
+      )}
     </View>
   );
 }

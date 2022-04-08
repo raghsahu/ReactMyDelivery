@@ -23,6 +23,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import {Button, Text, Input, Header, BottomBackground} from '../components';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {CommonUtilsContext} from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import {openDatabase} from 'react-native-sqlite-storage';
 var db = openDatabase({name: 'DescribeProduct.db'});
@@ -39,6 +40,7 @@ function AddProduct(props) {
   const [prodImg, setProdImg] = useState('');
   const [prodCount, setProdCount] = useState(0);
   const {getTranslation} = useContext(LocalizationContext);
+  const {validURL} = useContext(CommonUtilsContext);
 
   useEffect(() => {
     db.transaction(function (txn) {
@@ -62,13 +64,6 @@ function AddProduct(props) {
   useEffect(() => {
     getSavedProductCount()
   }, []);
-
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-  //   return () => {
-  //     BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
-  //   };
-  // }, []);
 
   function handleBackButtonClick() {
     Alert.alert(
@@ -155,6 +150,8 @@ function AddProduct(props) {
       Toast.show('Please enter product name');
     } else if (!webLink) {
       Toast.show('Please enter web link');
+    }else if (!validURL(webLink)) {
+      Toast.show('Please enter valid web link');
     } else if (!priceOfProduct) {
       Toast.show('Please enter price of product');
     } else if (!quantity) {

@@ -161,7 +161,7 @@ function AddProductSummary(props) {
         CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
         '0',
         '0',
-        prodTotalPrice + CommissionData.globalCommission,
+        totalToPayPrice,
         'offline payment',
       );
       setLoading(false);
@@ -447,14 +447,14 @@ function AddProductSummary(props) {
             </Text>
           </View>
 
-          <Text
+          {/* <Text
             style={{marginRight: 20, marginTop: 10}}
             color={COLORS.primaryColor}
             size="16"
             weight="500"
             align={'right'}>
             {getTranslation('info')}
-          </Text>
+          </Text> */}
 
           <View
             style={[
@@ -559,7 +559,7 @@ function AddProductSummary(props) {
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {'€ ' + (prodTotalPrice + CommissionData.globalCommission)}
+              {'€ ' + totalToPayPrice}
             </Text>
 
             <Text

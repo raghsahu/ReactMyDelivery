@@ -20,11 +20,16 @@ import {APPContext} from '../context/AppProvider';
 //PACKAGES
 import {CommonActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 function Splash(props) {
   const {getUserLanguage, setI18nConfig, getTranslation} =
     useContext(LocalizationContext);
-  const {setUser} = useContext(APPContext);
+  const {setUser, setFcmToken} = useContext(APPContext);
+
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +39,14 @@ function Splash(props) {
       });
     })();
   }, []);
+
+  const checkToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      setFcmToken(fcmToken);
+      // console.log('fcm_token '+fcmToken);
+    } 
+   }
 
   const moveToNext = () => {
     AsyncStorage.getItem('user_login_data', (error, result) => {

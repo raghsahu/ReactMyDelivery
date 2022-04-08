@@ -17,7 +17,7 @@ export default function DateTimePick(props) {
       is24Hour={false}
       display="default"
       onChange={props.onChange}
-      // minimumDate={new Date(2020, 0, 1)}
+      minimumDate={props.minimumDate ? props.minimumDate : null}
       maximumDate={props.maximumDate ? props.maximumDate : null}
     />
   );

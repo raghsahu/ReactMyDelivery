@@ -9,6 +9,7 @@ export const APPContext = createContext();
 
 export const AppProvider = props => {
   const [user, setUser] = useState(null);
+  const [fcmToken, setFcmToken] = useState('');
 
   // mydelivery.sairoses.com
   const googleApiKey = 'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI';
@@ -306,6 +307,8 @@ export const AppProvider = props => {
         getError,
         setUser,
         user,
+        fcmToken,
+        setFcmToken,
         googleApiKey,
         baseURL,
         getLogin,

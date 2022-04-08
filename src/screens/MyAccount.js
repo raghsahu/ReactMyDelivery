@@ -54,7 +54,7 @@ function MyAccount(props) {
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const {delUser, user, imageBaseUrl} = useContext(APPContext);
+  const {delUser, user, imageBaseUrl, setUser} = useContext(APPContext);
   const [productListItems, setProductListItems] = useState([]);
 
   useEffect(() => {
@@ -284,7 +284,13 @@ function MyAccount(props) {
             props.navigation.navigate('EditAccount');
           }}
           onBack={() => {
-            props.navigation.goBack();
+           // props.navigation.goBack();
+           props.navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{name: 'BottomBar'}],
+                    }),
+                  );
           }}
         />
 
@@ -314,11 +320,11 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {user.user_f_name +
+              {user ? user.user_f_name +
                 ' ' +
                 user.user_l_name +
                 '               ' +
-                user.user_name}
+                user.user_name : ''}
             </Text>
 
             <Text
@@ -737,6 +743,7 @@ function MyAccount(props) {
                 title={getTranslation('yes')}
                 onPress={() => {
                   clearAllData();
+                  setUser(null);
                   logoutModalVisibility();
                   props.navigation.dispatch(
                     CommonActions.reset({

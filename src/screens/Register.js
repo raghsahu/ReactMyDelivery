@@ -92,7 +92,7 @@ function Register(props) {
   const [currentLatitude, setCurrentLatitude] = useState('');
   const [locationStatus, setLocationStatus] = useState('');
 
-  const {webServices, getError} = useContext(APPContext);
+  const {webServices, getError, fcmToken} = useContext(APPContext);
   const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
 
   useEffect(() => {
@@ -252,7 +252,7 @@ function Register(props) {
         lat,
         lng,
         images,
-        ' ',
+        fcmToken,
       );
     }
   };
@@ -543,7 +543,7 @@ function Register(props) {
             <Input
               style={[{flex: 1}]}
               placeholder={getTranslation('mobile_no')}
-              //textAlign={'center'}
+              maxLength={10}
               keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
               onChangeText={text => {
                 setMobile(text);

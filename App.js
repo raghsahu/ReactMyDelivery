@@ -43,7 +43,7 @@ import {
   LocalizationContext,
 } from './src/context/LocalizationProvider';
 import {APPContext, AppProvider} from './src/context/AppProvider';
-import {CommonUtilsContext, CommonUtils} from './src/context/CommonUtils';
+import {CommonUtils} from './src/context/CommonUtils';
 
 import {COLORS, IMAGES, DIMENSION} from './src/assets';
 
