@@ -49,9 +49,11 @@ function Home(props) {
           title={
             getTranslation('hello') +
             ', ' +
+            user ?
             user.user_f_name +
             ' ' +
             user.user_l_name
+            : ''
           }
           onNotification={() => {
             props.navigation.navigate('Notification');

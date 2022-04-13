@@ -78,7 +78,6 @@ function EmailOtp(props) {
       setLoading(true);
       const result = await verification_update(Email, otp, null);
       setLoading(false);
-      console.log('EmailOtpResult', result);
       if (result.status == true) {
         props.navigation.navigate('EmailSuccess', {
           Mobile: Mobile,

@@ -77,7 +77,6 @@ function MobileOtp(props) {
       setLoading(true);
       const result = await verification_update(null, otp, Mobile);
       setLoading(false);
-      console.log('MobileOtpResult', result);
       if (result.status == true) {
         // Toast.show(result.error);
         props.navigation.navigate('SuccessScreen', {
