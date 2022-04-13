@@ -14,10 +14,12 @@ import {Text, Button} from '../components';
 import {Rating} from 'react-native-ratings';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
 
 const AsSenderItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
-  //const item = props.item;
+  const {imageBaseUrl} = useContext(APPContext);
+  const item = props.item;
 
   return (
     <TouchableOpacity
@@ -31,7 +33,7 @@ const AsSenderItemList = props => {
         props.onSummary();
       }}>
       <Text color={COLORS.textColor2} size="8" weight="bold" align={'right'}>
-        {getTranslation('publication_date') + ' : 2022-01-13'}
+        {getTranslation('publication_date') + ' : '+ item.ad_create_date}
       </Text>
 
       <View>
@@ -49,7 +51,7 @@ const AsSenderItemList = props => {
               //isDisabled= {true}
               type="custom"
               ratingColor="#04D9C5"
-              startingValue={4}
+              startingValue={item.user_rating ? item.user_rating : 0}
               ratingBackgroundColor="#c8c7c8"
               ratingCount={5}
               imageSize={13}
@@ -61,7 +63,12 @@ const AsSenderItemList = props => {
         </View>
 
         <View style={styles.imageView}>
-          <Image style={styles.image} source={IMAGES.circle_placeholder} />
+          <Image style={styles.image} 
+          source={
+              item.user_img
+                ? {uri: imageBaseUrl + item.user_img}
+                : IMAGES.circle_placeholder
+            } />
 
           <View
             style={{
@@ -171,6 +178,11 @@ const AsSenderItemList = props => {
           </View>
         </View>
       </View>
+      <View
+        style={{
+          height: 1,
+          backgroundColor: '#D5D5D5',
+        }}></View>
     </TouchableOpacity>
   );
 };

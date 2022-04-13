@@ -42,7 +42,8 @@ function RequestsListForPlaces(props) {
   const [filterKey, setFilterKey] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [maxPrice, setMaximumPrice] = useState('');
-  const [minCommission, setMinimumCommission] = useState('');
+  const [minCommission, setMinimumCommission] = useState(0);
+  const [requestItem, setRequestItem] = useState([]);
 
   useEffect(() => {
     setOptionFilter(filterList);
@@ -57,21 +58,22 @@ function RequestsListForPlaces(props) {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(true);
     const result = await getFilterProduct(
-      null,
-      null,
-      null,
-      maxPrice,
-      '1',
-      null,
-      minCommission,
-      null,
-      '2',
-      lat,
-      lng,
+      // null,
+      // null,
+      // null,
+      // maxPrice,
+      // '1',
+      // null,
+      // minCommission,
+      // null,
+      // '0',
+      // lat,
+      // lng,
     );
     setLoading(false);
     if (result.status == true) {
       //Toast.show(result.error);
+      setRequestItem(result.data);
     } else {
       Toast.show(result.error);
     }
@@ -195,18 +197,19 @@ function RequestsListForPlaces(props) {
                 weight="500"
                 align="center"
                 color={COLORS.textColor2}>
-                {'Total: 1'}
+                {'Total: '+ requestItem.length}
               </Text>
             </TouchableOpacity>
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={['']}
+            data={requestItem}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
               return (
                 <AdvertiseListItem
                   mainViewStyle={[styles.inputView, {marginBottom: 20}]}
+                  item={item}
                   onSummary={() => {
                     // navigation.navigate('SummaryTransaction')
                     props.navigation.navigate('AdSummaryDetails');

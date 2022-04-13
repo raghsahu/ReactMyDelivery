@@ -33,7 +33,6 @@ function SuccessScreen(props) {
   const {getTranslation} = useContext(LocalizationContext);
   const {check_user, setUser, user} = useContext(APPContext);
 
-  useEffect(() => {}, []);
 
   const onNext = async () => {
     setLoading(true);

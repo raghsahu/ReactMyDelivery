@@ -198,7 +198,7 @@ export const AppProvider = props => {
           headers: {
             //'Authorization': user ? `Bearer ${user.user_session}` : ''
             user_session: user ? user.user_session : '',
-            user_id: user ? user.user_id : '',
+            user_id: user ? "21" : '',
           },
         });
 
