@@ -743,7 +743,7 @@ function MyAccount(props) {
                 title={getTranslation('yes')}
                 onPress={() => {
                   clearAllData();
-                  setUser(null);
+                 // setUser(null);
                   logoutModalVisibility();
                   props.navigation.dispatch(
                     CommonActions.reset({
