@@ -168,7 +168,7 @@ function AddProduct(props) {
               placeToBuy,
               priceOfProduct,
               quantity,
-              ''+totalPrice,
+              totalPrice.toString(),
               additionalInfo,
               prodImg,
             ],

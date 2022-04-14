@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,10 +11,11 @@ import {
   Modal,
   Dimensions,
   TextInput,
+  FlatList,
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -22,20 +23,34 @@ import {
   Text,
   Input,
   Header,
-  BottomBackground,
-  RadioButtons,
   CheckBox,
   DateTimePick,
+  DeliveryManSummaryProductsItemList,
+  ProgressView,
 } from '../components';
-import {Rating} from 'react-native-ratings';
+import { Rating } from 'react-native-ratings';
 import moment from 'moment'; // date format
 
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
+import { APPContext } from '../context/AppProvider';
+//package
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {PermissionsAndroid} from 'react-native';
+import ActionSheet from 'react-native-actions-sheet';
+import Toast from 'react-native-simple-toast';
+import {openDatabase} from 'react-native-sqlite-storage';
+var db = openDatabase({name: 'DescribeProduct.db'});
 
 function AdSummaryDetails(props) {
-  const {getTranslation} = useContext(LocalizationContext);
+  const actionSheetRef = useRef();
+  const [item, setItem] = useState({});
+  const [products, setItemProducts] = useState([]);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
+  const { getAdAccept, user } = useContext(APPContext);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
@@ -47,7 +62,7 @@ function AdSummaryDetails(props) {
   const [dateSelected, setDateSelected] = useState(false);
   const [reasonToChange, setReasonToChange] = useState('');
   const [isSelected, setSelection] = useState(false);
-  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [isPaymentDialogModalVisibility, setPaymentDialogModalVisibility] = useState(false);
   const [isProposalToModificationOfAd, setProposalToModificationOfAd] =
     useState(false);
   const [isPlaceOfDeliveryModalVisible, setPlaceOfDeliveryModalVisible] =
@@ -59,9 +74,120 @@ function AdSummaryDetails(props) {
     setChangePriceQuantityModalVisible,
   ] = useState(false);
   const [isCommissionModalVisible, setCommissionModalVisible] = useState(false);
+  const [prodTotalPrice, setTotalPrice] = useState(0);
+  const [totalToPayPrice, setTotalToPay] = useState(0);
+  const [isLoading, setLoading] = useState(false);
+  const [prodImg, setProdImg] = useState('');
+  const [modifyProdId, setModifyProdId] = useState('');
 
-  const logoutModalVisibility = () => {
-    setLogoutModalVisible(!isLogoutModalVisible);
+  useEffect(() => {
+    const item = props.route.params.ProdData;
+    setItem(item);
+    setItemProducts(item.products)
+
+    var totalPrice = 0;
+    for (let i = 0; i < products.length; i++) {
+      totalPrice =
+        totalPrice + products[i].prod_price * products[i].prod_qnty;
+    }
+    setTotalPrice(totalPrice);
+    const totalToPay = totalPrice + parseInt(item.ad_cmsn_price);
+    setTotalToPay(totalToPay);
+
+  }, []);
+
+  useEffect(() => {
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='modify_product'",
+        [],
+        function (tx, res) {
+          console.log('item:', res.rows.length);
+          if (res.rows.length == 0) {
+            txn.executeSql('DROP TABLE IF EXISTS modify_product', []);
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS modify_product( product_id INTEGER PRIMARY KEY AUTOINCREMENT, prod_id VARCHAR(100),  prod_user_id VARCHAR(255),  prod_ad_id VARCHAR(255), prod_name VARCHAR(255), prod_web_link VARCHAR(255), prod_place_purchase VARCHAR(255), prod_place_delivery VARCHAR(255), prod_price VARCHAR(255), prod_qnty VARCHAR(255), prod_price_total VARCHAR(255), prod_info VARCHAR(255), prod_img VARCHAR(255))',
+              [],
+            );
+          }
+        },
+      );
+    });
+  }, []);
+
+  const setAllOldDataInLocalDb = () => {
+    for (let i = 0; i < products.length; i++) {
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'INSERT INTO modify_product (prod_id, prod_user_id, prod_ad_id, prod_name, prod_web_link, prod_place_purchase, prod_place_delivery, prod_price, prod_qnty, prod_price_total, prod_info, prod_img) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+        [
+          products[i].prod_id,
+          products[i].prod_user_id,
+          products[i].prod_ad_id,
+          products[i].prod_name,
+          products[i].prod_web_link,
+          products[i].prod_place_purchase,
+          products[i].prod_place_delivery,
+          products[i].prod_price,
+          products[i].prod_qnty,
+          products[i].prod_price_total,
+          products[i].prod_info,
+          products[i].prod_img,
+        ],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+          
+          }
+        },
+      );
+    });
+  }
+  };
+
+  const onDiscard = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM modify_product',
+        (tx, results) => {
+          try{
+            console.log('ResultsDelete', results.rowsAffected);
+           
+            if (results.rowsAffected == 0) {
+             
+            }
+          }catch(ex){
+             console.log(ex)
+          }
+        
+        },
+      );
+    });
+  };
+
+  const updateImageInModifyDb = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE modify_product set prod_img=?, where prod_id=?',
+        [prodImg, modifyProdId],
+        (tx, results) => {
+          try{
+            console.log('ResultsUpdate', results.rowsAffected);
+           
+            if (results.rowsAffected == 0) {
+             
+            }
+          }catch(ex){
+             console.log(ex)
+          }
+        }
+      );
+    });
+  };
+  
+
+  const PaymentDialogModalVisibility = () => {
+    setPaymentDialogModalVisibility(!isPaymentDialogModalVisibility);
   };
 
   const proposalToModificationOfAd = () => {
@@ -106,9 +232,74 @@ function AdSummaryDetails(props) {
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
-      setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+      setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
     } else {
-      setSelectTime(moment(selectedDate).format('HH:MM'));
+      setSelectTime(moment(selectedDate).format('HH:mm:ss'));
+    }
+  };
+
+  const onNext = async () => {
+    setLoading(true);
+    const result = await getAdAccept(
+      user.user_id,
+      item.ad_id,
+      selectDate,
+      selectTime,
+      '3', //ad accept type = 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
+      '0', //0-pending,1-success,2-cancel,3-return
+      totalToPayPrice,
+      'No payment'
+    );
+    setLoading(false);
+    if (result.status == true) {
+      Toast.show(result.error);
+      props.navigation.navigate('SummaryTransaction', {
+        status: '',
+        summaryData: result.data[0],
+      });
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+  const onPressUpload = () => {
+    actionSheetRef.current?.setModalVisible(true);
+  };
+
+  const onPressLibrary = async type => {
+    var result = null;
+    // if (requestExternalStoreageRead()) {
+    if (type == 1) {
+      result = await launchCamera();
+      actionSheetRef.current?.setModalVisible(false);
+    } else {
+      result = await launchImageLibrary();
+      actionSheetRef.current?.setModalVisible(false);
+    }
+    console.log(result);
+    if (result && result.assets.length > 0) {
+      let uri = result.assets[0].uri;
+      // let items = [...images];
+      //items.push(uri);
+      setProdImg(uri);
+    }
+    // }
+  };
+
+  const requestExternalStoreageRead = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'My Delivery ...',
+          message: 'App needs access to external storage',
+        },
+      );
+
+      return granted == PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      //Handle this error
+      return false;
     }
   };
 
@@ -141,22 +332,22 @@ function AdSummaryDetails(props) {
                 },
               ]}>
               <Text
-                style={[{marginStart: 15, marginTop: 15, marginBottom: 40}]}
+                style={[{ marginStart: 15, marginTop: 15, marginBottom: 40 }]}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'User'}
+                {item.user_f_name + ' ' + item.user_l_name}
               </Text>
               <View
-                style={{marginStart: 15, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginStart: 15, marginTop: 15, flexDirection: 'row' }}>
                 <Text
-                  style={[{marginStart: 15}]}
+                  style={[{ marginStart: 15 }]}
                   size="18"
                   weight="500"
                   align="left"
                   color={COLORS.black}>
-                  {'0'}
+                  {item.user_rating}
                 </Text>
                 <Rating
                   type="custom"
@@ -166,22 +357,22 @@ function AdSummaryDetails(props) {
                   ratingCount={1}
                   imageSize={20}
                   // onFinishRating={this.ratingCompleted}
-                  style={{marginTop: 1, marginStart: 15, paddingVertical: 1}}
+                  style={{ marginTop: 1, marginStart: 15, paddingVertical: 1 }}
                 />
                 <Text
-                  style={[{marginStart: 10, marginEnd: 15}]}
+                  style={[{ marginStart: 10, marginEnd: 15 }]}
                   size="18"
                   weight="500"
                   align="left"
                   color={COLORS.black}>
-                  {'0'}
+                  {item.user_rating_count}
                 </Text>
               </View>
             </View>
           )}
 
           <Text
-            style={[styles.inputView, {marginTop: 20}]}
+            style={[styles.inputView, { marginTop: 20 }]}
             size="18"
             weight="500"
             align="left"
@@ -189,172 +380,42 @@ function AdSummaryDetails(props) {
             {getTranslation('products_details')}
           </Text>
 
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              marginTop: 20,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={products}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return <DeliveryManSummaryProductsItemList
+                item={item}
+                isProposalToModificationOfAd={isProposalToModificationOfAd}
+                photosModalVisibleModalVisibility={(prod_id) => {
+                  //console.log('prod_iddddd '+ prod_id)
+                  setModifyProdId(prod_id)
+                  photosModalVisibleModalVisibility();
+                }}
+                webLinkModalVisibleModalVisibility={() => {
+                  webLinkModalVisibleModalVisibility();
+                }}
+                changePriceQuantityModalVisibleModalVisibility={() => {
+                  changePriceQuantityModalVisibleModalVisibility();
+                }}
+              />;
             }}
-            source={IMAGES.product_placeholder}
           />
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
-            <Text
-              // style={[styles.inputView]}
-              size="20"
-              weight="500"
-              align="left"
-              color={COLORS.textColor}>
-              {'souris'}
-            </Text>
-            {isProposalToModificationOfAd && (
-              <Text
-                style={[styles.rightButtons, {position: 'absolute'}]}
-                size="16"
-                weight="500"
-                align="left"
-                color={COLORS.white}
-                onPress={() => {
-                  photosModalVisibleModalVisibility();
-                }}>
-                {getTranslation('change_photo')}
-              </Text>
-            )}
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('web_link') + ' :'}
-                </Text>
-
-                <Text
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  color={'#35CCC1'}
-                  size="16"
-                  weight="500">
-                  {'hp.com'}
-                </Text>
-              </View>
-              {isProposalToModificationOfAd && (
-                <Text
-                  style={styles.rightButtons}
-                  color={COLORS.white}
-                  size="16"
-                  weight="500"
-                  onPress={() => {
-                    webLinkModalVisibleModalVisibility();
-                  }}>
-                  {getTranslation('change')}
-                </Text>
-              )}
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('place_to_buy')}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('price') + ' :'}
-                </Text>
-
-                <Text
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  color={COLORS.primaryColor}
-                  size="16"
-                  weight="500">
-                  {'€ 6.00 x 1 = € 6.00'}
-                </Text>
-              </View>
-              {isProposalToModificationOfAd && (
-                <Text
-                  style={[styles.rightButtons]}
-                  color={COLORS.white}
-                  size="16"
-                  weight="500"
-                  onPress={() => {
-                    changePriceQuantityModalVisibleModalVisibility();
-                  }}>
-                  {getTranslation('change')}
-                </Text>
-              )}
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('additional_info')}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-          </View>
-
-          <View
+          {/* <View
             style={{
               backgroundColor: COLORS.borderColor2,
               height: 2,
               marginTop: 10,
-            }}></View>
+            }}></View> */}
 
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
+          <View style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}>
             {isProposalToModificationOfAd && (
               <Text
                 style={[
                   styles.rightButtons,
-                  {position: 'absolute', marginTop: 10, paddingVertical: 10},
+                  { position: 'absolute', marginTop: 10, paddingVertical: 10 },
                 ]}
                 color={COLORS.white}
                 size="16"
@@ -381,7 +442,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ 2.00'}
+                {'€ ' + item.ad_cmsn_price}
               </Text>
             </View>
 
@@ -401,7 +462,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ 1.00'}
+                {'€ ' + item.ad_cmsn_delivery}
               </Text>
             </View>
             <View
@@ -420,7 +481,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'Both'}
+                {getAdGender(item.ad_gender)}
               </Text>
             </View>
 
@@ -440,7 +501,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                {item.ad_accept_limit}
               </Text>
             </View>
 
@@ -460,7 +521,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                {item.ad_delivery_limit}
               </Text>
             </View>
 
@@ -485,12 +546,12 @@ function AdSummaryDetails(props) {
                   color={COLORS.textColor4}
                   size="16"
                   weight="500">
-                  {'Constantine Constantine,'}
+                  {item.ad_delv_addr}
                 </Text>
               </View>
               {isProposalToModificationOfAd && (
                 <Text
-                  style={[styles.rightButtons, {marginRight: 0}]}
+                  style={[styles.rightButtons, { marginRight: 0 }]}
                   color={COLORS.white}
                   size="16"
                   weight="500"
@@ -521,18 +582,24 @@ function AdSummaryDetails(props) {
                 }}>
                 <Button
                   type={1}
-                  style={[{width: 156, backgroundColor: COLORS.homeBg}]}
+                  style={[{ width: 156, backgroundColor: COLORS.homeBg }]}
                   title={getTranslation('to_propose')}
                   onPress={() => {
                     proposalToModificationOfAd();
+                    //save all data to local db for changes,
+                     setAllOldDataInLocalDb(); 
                   }}
                 />
 
                 <Button
-                  style={[{width: 156}]}
+                  style={[{ width: 156 }]}
                   title={getTranslation('accept')}
                   onPress={() => {
-                    logoutModalVisibility();
+                    if (!isSelected) {
+                      Toast.show('Please select Contract terms');
+                    } else {
+                      PaymentDialogModalVisibility();
+                    }
                   }}
                 />
               </View>
@@ -551,7 +618,7 @@ function AdSummaryDetails(props) {
                 style={[styles.inputView, styles.comment]}
                 placeholder={getTranslation('why_this_change')}
                 multiline={true}
-                //value={''}
+              //value={''}
               />
 
               <View
@@ -577,11 +644,12 @@ function AdSummaryDetails(props) {
                   title={getTranslation('to_cancel')} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     proposalToModificationOfAd();
+                    onDiscard();
                   }}
                 />
 
                 <Button
-                  style={[{width: 156}]}
+                  style={[{ width: 156 }]}
                   title={getTranslation('to_propose')}
                   onPress={() => {
                     props.navigation.navigate('AdModificationProposal');
@@ -593,12 +661,91 @@ function AdSummaryDetails(props) {
         </ScrollView>
       </SafeAreaView>
 
+      {isLoading ? <ProgressView></ProgressView> : null}
+
+      <ActionSheet ref={actionSheetRef}>
+        <View style={[styles.bottomView, {}]}>
+          <View style={[styles.bottomViewItem, {}]}>
+            <TouchableOpacity onPress={() => onPressLibrary(1)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.camera}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  color={COLORS.textColor}>
+                  {'Camera'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                borderColor: COLORS.primaryColor,
+                borderWidth: 1,
+              }}></View>
+            <TouchableOpacity onPress={() => onPressLibrary(2)}>
+              <View style={[styles.bottomViewIcon, {}]}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primaryColor,
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={IMAGES.photos}
+                    tintColor={COLORS.white}
+                    style={{
+                      height: 24,
+                      width: 24,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={[styles.modalText]}
+                  size="16"
+                  weight="500"
+                  color={COLORS.textColor}>
+                  {'Photo library'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ActionSheet>
+
       <Modal
         animationType="slide"
         transparent
-        visible={isLogoutModalVisible}
+        visible={isPaymentDialogModalVisibility}
         presentationStyle="overFullScreen"
-        onDismiss={logoutModalVisibility}>
+        onDismiss={PaymentDialogModalVisibility}>
         <View style={styles.viewWrapper}>
           <View style={styles.modalView1}>
             <Text
@@ -626,7 +773,7 @@ function AdSummaryDetails(props) {
                 right: 0,
               }}
               onPress={() => {
-                logoutModalVisibility();
+                PaymentDialogModalVisibility();
               }}>
               <Image
                 style={{
@@ -638,7 +785,7 @@ function AdSummaryDetails(props) {
             </TouchableOpacity>
 
             <Text
-              style={{marginTop: 20}}
+              style={{ marginTop: 20 }}
               size="18"
               weight="500"
               align="center"
@@ -647,16 +794,16 @@ function AdSummaryDetails(props) {
             </Text>
 
             <Text
-              style={{marginTop: 20}}
+              style={{ marginTop: 20 }}
               size="18"
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {'€ 3.00'}
+              {'€ ' + totalToPayPrice}
             </Text>
 
             <Text
-              style={{marginTop: 20, marginHorizontal: 20}}
+              style={{ marginTop: 20, marginHorizontal: 20 }}
               size="16"
               weight="400"
               align="center"
@@ -665,7 +812,7 @@ function AdSummaryDetails(props) {
             </Text>
 
             <Text
-              style={{marginTop: 20}}
+              style={{ marginTop: 20 }}
               size="16"
               weight="400"
               align="center"
@@ -678,7 +825,7 @@ function AdSummaryDetails(props) {
                 showDatepicker('date');
                 setDateSelected(true);
               }}
-              style={{marginHorizontal: 10, marginTop: 20}}>
+              style={{ marginHorizontal: 10, marginTop: 20 }}>
               <Input
                 //style={{marginHorizontal: 10, marginTop: 20}}
                 placeholder={'Day'}
@@ -696,7 +843,7 @@ function AdSummaryDetails(props) {
                 showDatepicker('time');
                 setDateSelected(false);
               }}
-              style={{marginVertical: 10, marginHorizontal: 10}}>
+              style={{ marginVertical: 10, marginHorizontal: 10 }}>
               <Input
                 placeholder={'Hour'}
                 isLeft={IMAGES.time}
@@ -720,10 +867,15 @@ function AdSummaryDetails(props) {
               ]}
               title={'Ok'}
               onPress={() => {
-                logoutModalVisibility();
-                props.navigation.navigate('SummaryTransaction', {
-                  status: '',
-                });
+                if (!selectDate) {
+                  Toast.show('Please enter day');
+                } else if (!selectTime) {
+                  Toast.show('Please enter time');
+                } else {
+                  PaymentDialogModalVisibility();
+                  onNext();
+
+                }
               }}
             />
           </View>
@@ -747,7 +899,7 @@ function AdSummaryDetails(props) {
                 borderRadius: 20,
               }}>
               <Text
-                style={{marginTop: 20, marginHorizontal: 20}}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
                 weight="500"
                 align="left"
@@ -755,7 +907,7 @@ function AdSummaryDetails(props) {
                 {'Place of Delivery (New)'}
               </Text>
               <Input
-                style={{marginTop: 30, marginBottom: 50, marginHorizontal: 10}}
+                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
                 placeholder={''}
                 isLeft={IMAGES.location}
                 onChangeText={text => {
@@ -813,7 +965,7 @@ function AdSummaryDetails(props) {
                 borderRadius: 20,
               }}>
               <Text
-                style={{marginTop: 20, marginHorizontal: 20}}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
                 weight="500"
                 align="left"
@@ -821,7 +973,7 @@ function AdSummaryDetails(props) {
                 {'Web Link (New)'}
               </Text>
               <Input
-                style={{marginTop: 30, marginBottom: 50, marginHorizontal: 10}}
+                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
                 placeholder={''}
                 isLeft={IMAGES.weblink}
                 onChangeText={text => {
@@ -879,14 +1031,15 @@ function AdSummaryDetails(props) {
                 borderRadius: 20,
               }}>
               <Text
-                style={{marginTop: 20, marginHorizontal: 20}}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
                 {'Photos (New)'}
               </Text>
-              <View
+              <TouchableOpacity
+               onPress={onPressUpload}
                 style={{
                   alignItems: 'center',
                   marginHorizontal: 20,
@@ -901,17 +1054,17 @@ function AdSummaryDetails(props) {
                     height: 34,
                     marginTop: 20,
                   }}
-                  source={IMAGES.photos}
+                  source={prodImg ? {uri: prodImg} : IMAGES.photos}
                 />
                 <Text
-                  style={{marginTop: 10, marginBottom: 20}}
+                  style={{ marginTop: 10, marginBottom: 20 }}
                   size="18"
                   weight="500"
                   align="left"
                   color={'#787878'}>
                   {'Upload Photos'}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -928,16 +1081,40 @@ function AdSummaryDetails(props) {
                 style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
-                  // props.navigation.navigate('SendSuggestion', {
-                  //   headerTitle: 'Complain',
-                  // });
+                  setProdImg('')
+                  photosModalVisibleModalVisibility();
                 }}
               />
               <Button
                 style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
-                  photosModalVisibleModalVisibility();
+                  if(!prodImg){
+                    Toast.show('Please capture image')
+                  }else{
+                    //Toast.show('captured image')
+                    //updateImageInModifyDb();
+                    db.transaction((tx) => {
+                      tx.executeSql(
+                        'SELECT * FROM modify_product where prod_id = ?',
+                        ['71'],
+                        (tx, results) => {
+                          var len = results.rows.length;
+                          if (len > 0) {
+                            let res = results.rows.item(0);
+                            console.log('prod_imgggg ', res.prod_img)
+                            
+                          } else {
+                            Toast.show('No user found');
+                            
+                          }
+                        }
+                      );
+                    });
+                    
+                  }
+                 
+
                 }}
               />
             </View>
@@ -962,17 +1139,17 @@ function AdSummaryDetails(props) {
                 borderRadius: 20,
               }}>
               <Text
-                style={{marginTop: 20, marginHorizontal: 20}}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
                 weight="500"
                 align="left"
                 color={COLORS.black}>
                 {'Price - Quantity (New)'}
               </Text>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{width: '50%'}}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ width: '50%' }}>
                   <Text
-                    style={{marginTop: 20, marginLeft: 20}}
+                    style={{ marginTop: 20, marginLeft: 20 }}
                     size="14"
                     weight="500"
                     align="left"
@@ -980,7 +1157,7 @@ function AdSummaryDetails(props) {
                     {'Enter price in €'}
                   </Text>
                   <Input
-                    style={{marginTop: 7, marginHorizontal: 10}}
+                    style={{ marginTop: 7, marginHorizontal: 10 }}
                     placeholder={''}
                     isLeft={IMAGES.percentage}
                     value={'6.00'}
@@ -989,9 +1166,9 @@ function AdSummaryDetails(props) {
                     }}
                   />
                 </View>
-                <View style={{width: '50%'}}>
+                <View style={{ width: '50%' }}>
                   <Text
-                    style={{marginTop: 20, marginLeft: 5}}
+                    style={{ marginTop: 20, marginLeft: 5 }}
                     size="14"
                     weight="500"
                     align="left"
@@ -999,7 +1176,7 @@ function AdSummaryDetails(props) {
                     {'Quantity'}
                   </Text>
                   <Input
-                    style={{marginTop: 7, marginEnd: 10}}
+                    style={{ marginTop: 7, marginEnd: 10 }}
                     placeholder={''}
                     isLeft={IMAGES.quantity}
                     onChangeText={text => {
@@ -1009,7 +1186,7 @@ function AdSummaryDetails(props) {
                 </View>
               </View>
               <Text
-                style={{alignSelf: 'center', marginTop: 20}}
+                style={{ alignSelf: 'center', marginTop: 20 }}
                 size="14"
                 weight="500"
                 align="left"
@@ -1082,7 +1259,7 @@ function AdSummaryDetails(props) {
                 borderRadius: 20,
               }}>
               <Text
-                style={{marginTop: 20, marginHorizontal: 20}}
+                style={{ marginTop: 20, marginHorizontal: 20 }}
                 size="18"
                 weight="500"
                 align="left"
@@ -1091,7 +1268,7 @@ function AdSummaryDetails(props) {
               </Text>
               <View>
                 <Text
-                  style={{marginTop: 20}}
+                  style={{ marginTop: 20 }}
                   size="14"
                   weight="500"
                   align="center"
@@ -1099,7 +1276,7 @@ function AdSummaryDetails(props) {
                   {'Enter Global Commission in €'}
                 </Text>
                 <Input
-                  style={{marginTop: 7, marginHorizontal: 10}}
+                  style={{ marginTop: 7, marginHorizontal: 10 }}
                   placeholder={''}
                   isLeft={IMAGES.percentage}
                   onChangeText={text => {
@@ -1114,7 +1291,7 @@ function AdSummaryDetails(props) {
                   flexDirection: 'row',
                 }}>
                 <Text
-                  style={{alignSelf: 'center'}}
+                  style={{ alignSelf: 'center' }}
                   size="18"
                   weight="500"
                   align="left"
@@ -1122,7 +1299,7 @@ function AdSummaryDetails(props) {
                   {'Your commission:'}
                 </Text>
                 <Text
-                  style={{paddingHorizontal: 10}}
+                  style={{ paddingHorizontal: 10 }}
                   size="18"
                   weight="500"
                   align="center"
@@ -1160,7 +1337,7 @@ function AdSummaryDetails(props) {
           </View>
         </View>
       </Modal>
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} minimumDate={new Date()} />}
     </View>
   );
 }
@@ -1186,7 +1363,7 @@ const styles = StyleSheet.create({
     top: '30%',
     margin: 20,
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     // height: 250,
     // width: width * 0.85,
     backgroundColor: '#fff',
@@ -1216,6 +1393,30 @@ const styles = StyleSheet.create({
   },
   modalConfirmButton: {
     width: 132,
+  },
+  bottomView: {
+    height: 150,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: '#ffffff',
+  },
+  bottomViewItem: {
+    margin: 25,
+    borderColor: COLORS.primaryColor,
+    borderWidth: 2,
+    borderRadius: 8,
+  },
+  bottomViewIcon: {
+    flexDirection: 'row',
+    height: 50,
+    marginStart: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginStart: 20,
   },
 });
 

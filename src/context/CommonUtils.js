@@ -48,6 +48,33 @@ export const CommonUtils = props => {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
 
+  const adGender = [
+    {
+      key: '1',
+      text: 'Man',
+    },
+    {
+      key: '2',
+      text: 'Women',
+    },
+    {
+      key: '3',
+      text: 'Both',
+    },
+  ];
+
+  const getAdGender = genderKey => {
+    if(genderKey == '1'){
+      return 'Man';
+    }else if(genderKey == '2'){
+      return 'Women';
+    }else if(genderKey == '3'){
+      return 'Both';
+    }
+
+    return '';
+  };
+
   const changeDateFormat = (date, format) => {
     return moment(date).format(format);
   };
@@ -106,6 +133,8 @@ export const CommonUtils = props => {
         lat,
         lng,
         validURL,
+        adGender,
+        getAdGender,
       }}>
       {props.children}
     </CommonUtilsContext.Provider>

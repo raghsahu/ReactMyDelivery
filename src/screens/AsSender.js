@@ -46,11 +46,9 @@ function AsSender(props) {
               return (
                 <AsSenderItemList
                   onSummary={() => {
-                    // navigation.navigate('SummaryTransaction')
                     props.onSummary();
                   }}
                   onRating={() => {
-                    // navigation.navigate('SummaryTransaction')
                     props.onRating();
                   }}
                 />
@@ -59,7 +57,6 @@ function AsSender(props) {
               return (
                 <AsSenderItemList
                   onSummary={() => {
-                    // navigation.navigate('SummaryTransaction')
                     props.onSummary();
                   }}
                 />

@@ -211,9 +211,9 @@ function RequestsListForPlaces(props) {
                   mainViewStyle={[styles.inputView, {marginBottom: 20}]}
                   item={item}
                   onSummary={() => {
-                    // navigation.navigate('SummaryTransaction')
-                    props.navigation.navigate('AdSummaryDetails');
-                    // props.onSummary()
+                    props.navigation.navigate('AdSummaryDetails', {
+                      ProdData: item,
+                    });
                   }}
                 />
               );

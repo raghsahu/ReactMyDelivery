@@ -23,22 +23,31 @@ import {
   Input,
   Header,
   BottomBackground,
-  RadioButtons,
-  CheckBox,
+  DeliveryManSummaryProductsItemList,
   ProductsItemList,
   DateTimePick,
+  ProgressView,
 } from '../components';
 import moment from 'moment'; // date format
 
 const {height, width} = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {Rating} from 'react-native-ratings';
+import Toast from 'react-native-simple-toast';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {APPContext} from '../context/AppProvider';
+import {CommonUtilsContext} from '../context/CommonUtils';
 
 function SummaryTransaction(props) {
   const {status} = props.route.params;
+  const [item, setItem] = useState({});
+  const [products, setItemProducts] = useState([]);
+  const [user_x, setUser_X] = useState([]);
+  const [user_y, setUser_Y] = useState([]);
   const {getTranslation} = useContext(LocalizationContext);
+  const {imageBaseUrl, putDateTimeChangeRequest} = useContext(APPContext);
+  const {getAdGender} = useContext(CommonUtilsContext);
   const [name, setName] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
@@ -50,6 +59,15 @@ function SummaryTransaction(props) {
   const [selectDate, setSelectDate] = useState('');
   const [selectTime, setSelectTime] = useState('');
   const [dateSelected, setDateSelected] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const item = props.route.params.summaryData;
+    setItem(item);
+    setItemProducts(item.products)
+    setUser_X(item.user_x[0])
+    setUser_Y(item.user_y[0])
+  }, []);
 
   function showDatepicker(mode) {
     showMode(mode);
@@ -67,9 +85,9 @@ function SummaryTransaction(props) {
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
-      setSelectDate(moment(currentDate).format('DD-MM-YYYY'));
+      setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
     } else {
-      setSelectTime(moment(selectedDate).format('HH:MM'));
+      setSelectTime(moment(selectedDate).format('HH:mm:ss'));
     }
   };
 
@@ -85,6 +103,22 @@ function SummaryTransaction(props) {
     setSelection(checkStatus);
   };
 
+  const onNext = async () => {
+    setLoading(true);
+    const result = await putDateTimeChangeRequest(
+      item.ad_id,
+      selectDate,
+      selectTime,
+    );
+    setLoading(false);
+    if (result.status == true) {
+      Toast.show(result.error);
+      
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -96,7 +130,10 @@ function SummaryTransaction(props) {
         <Header
           title={getTranslation('summary_of_txn')}
           onBack={() => {
-            props.navigation.goBack();
+          //  props.navigation.goBack();
+          props.navigation.navigate('MyAccount', {
+            tabIndex: 3,
+          });
           }}
         />
         <BottomBackground></BottomBackground>
@@ -144,7 +181,7 @@ function SummaryTransaction(props) {
                   weight="500"
                   align="center"
                   color={COLORS.black}>
-                  {'BsVonq1bDv'}
+                  {item.acpt_code}
                 </Text>
               </View>
 
@@ -187,7 +224,8 @@ function SummaryTransaction(props) {
                       borderRadius: 32,
                       resizeMode: 'contain',
                     }}
-                    source={IMAGES.circle_placeholder}
+                    source={user_x.user_img ? {uri: imageBaseUrl + user_x.user_img} : IMAGES.circle_placeholder}
+              
                   />
 
                   <View
@@ -196,7 +234,7 @@ function SummaryTransaction(props) {
                       margin: 5,
                     }}>
                     <Text color={COLORS.black} size="16" weight="500">
-                      {'Souad Bentchikou'}
+                      {user_x.user_f_name + ' '+ user_x.user_l_name}
                     </Text>
 
                     <View style={{marginTop: 10, flexDirection: 'row'}}>
@@ -206,7 +244,7 @@ function SummaryTransaction(props) {
                         weight="500"
                         align="left"
                         color={COLORS.black}>
-                        {'0'}
+                        {user_x.user_rating}
                       </Text>
                       <Rating
                         type="custom"
@@ -228,7 +266,7 @@ function SummaryTransaction(props) {
                         weight="500"
                         align="left"
                         color={COLORS.black}>
-                        {'0 ' + getTranslation('ratings')}
+                        {user_x.user_rating_count +' ' + getTranslation('ratings')}
                       </Text>
                     </View>
                   </View>
@@ -248,13 +286,14 @@ function SummaryTransaction(props) {
 
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={['', '']}
+            data={products}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
-              return <ProductsItemList />;
+              return <DeliveryManSummaryProductsItemList
+              item={item} />;
             }}
           />
-
+       
           <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
             <View
               style={{
@@ -272,7 +311,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ 3.00'}
+                {'€ '+ item.ad_cmsn_price}
               </Text>
             </View>
 
@@ -292,7 +331,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ 3.00'}
+                {'€ '+ item.ad_cmsn_delivery}
               </Text>
             </View>
             <View
@@ -311,7 +350,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {getTranslation('both')}
+                {getAdGender(item.ad_gender)}
               </Text>
             </View>
 
@@ -331,7 +370,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                {item.ad_accept_limit}
               </Text>
             </View>
 
@@ -351,7 +390,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                {item.ad_delivery_limit}
               </Text>
             </View>
 
@@ -372,7 +411,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'Constantine Constantine Algerie'}
+                {item.ad_delv_addr}
               </Text>
             </View>
           </View>
@@ -421,7 +460,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'Omar Benchikou'}
+                {user_y.user_f_name + ' '+ user_y.user_l_name}
               </Text>
             </View>
             <View
@@ -440,7 +479,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'2022-01-15'}
+                {item.acpt_date}
               </Text>
             </View>
 
@@ -460,7 +499,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'12:00'}
+                {item.acpt_time}
               </Text>
             </View>
           </View>
@@ -586,7 +625,7 @@ function SummaryTransaction(props) {
 
               <Button
                 style={[{width: 160}]}
-                title={getTranslation('chat')}
+                title={getTranslation('chat')} // X-chat (delivery man chat with user)
                 type={1}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
@@ -598,6 +637,8 @@ function SummaryTransaction(props) {
           )}
         </ScrollView>
       </SafeAreaView>
+
+      {isLoading ? <ProgressView></ProgressView> : null}
 
       <Modal
         animationType="slide"
@@ -757,8 +798,9 @@ function SummaryTransaction(props) {
                 title={getTranslation('propose')}
                 onPress={() => {
                   ChangeDateModalVisibility();
-                  props.navigation.navigate('ProposalChangedDate');
-                  setEnableTxnCodeBtn(true);
+                    onNext();
+                 // props.navigation.navigate('ProposalChangedDate');
+                 // setEnableTxnCodeBtn(true);
                 }}
               />
             </View>
@@ -766,7 +808,9 @@ function SummaryTransaction(props) {
         </View>
       </Modal>
 
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} />}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange} 
+      minimumDate={new Date()}
+      />}
     </View>
   );
 }
