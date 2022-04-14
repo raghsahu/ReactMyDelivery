@@ -26,22 +26,10 @@ import {
 import moment from 'moment'; // date format
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
+import {CommonUtilsContext} from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 
-const options = [
-  {
-    key: '1',
-    text: 'Man',
-  },
-  {
-    key: '2',
-    text: 'Women',
-  },
-  {
-    key: '3',
-    text: 'Both',
-  },
-];
+
 
 function AddProductCommision(props) {
   const [globalCommission, setGlobalCommission] = useState(null);
@@ -53,6 +41,7 @@ function AddProductCommision(props) {
   const [selectTime1, setSelectTime1] = useState('');
 
   const {getTranslation} = useContext(LocalizationContext);
+  const {adGender} = useContext(CommonUtilsContext);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -223,7 +212,7 @@ function AddProductCommision(props) {
             <RadioButtons
               selectedOption={gender}
               onSelect={onSelect}
-              options={options}
+              options={adGender}
             />
           </View>
 

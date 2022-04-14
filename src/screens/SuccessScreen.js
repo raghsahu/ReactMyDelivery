@@ -31,7 +31,7 @@ function SuccessScreen(props) {
   const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
   const {getTranslation} = useContext(LocalizationContext);
-  const {check_user, setUser, user} = useContext(APPContext);
+  const {check_user, setUser} = useContext(APPContext);
 
 
   const onNext = async () => {

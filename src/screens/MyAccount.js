@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -15,10 +15,10 @@ import {
   TextInput,
 } from 'react-native';
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 import LinearGradient from 'react-native-linear-gradient';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 //COMMON COMPONENT
 import {
   Button,
@@ -35,17 +35,17 @@ import Published from './Published';
 import AsSender from './AsSender';
 
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
-const {height, width} = Dimensions.get('screen');
-import {openDatabase} from 'react-native-sqlite-storage';
-var db = openDatabase({name: 'DescribeProduct.db'});
+const { height, width } = Dimensions.get('screen');
+import { openDatabase } from 'react-native-sqlite-storage';
+var db = openDatabase({ name: 'DescribeProduct.db' });
 
 function MyAccount(props) {
-  const {tabIndex} = props.route.params ? props.route.params : 1;
-  const {getTranslation, clearAllData} = useContext(LocalizationContext);
+  const { tabIndex } = props.route.params ? props.route.params : 1;
+  const { getTranslation, clearAllData } = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(0);
@@ -54,7 +54,7 @@ function MyAccount(props) {
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const {delUser, user, imageBaseUrl, setUser} = useContext(APPContext);
+  const { delUser, user, imageBaseUrl, setUser } = useContext(APPContext);
   const [productListItems, setProductListItems] = useState([]);
 
   useEffect(() => {
@@ -122,9 +122,9 @@ function MyAccount(props) {
               styles.buttonStyle,
               index1 === 1
                 ? {
-                    borderBottomColor: COLORS.primaryColor,
-                    borderBottomWidth: 1,
-                  }
+                  borderBottomColor: COLORS.primaryColor,
+                  borderBottomWidth: 1,
+                }
                 : null,
             ]}
             onPress={() => setIndex1(1)}>
@@ -143,9 +143,9 @@ function MyAccount(props) {
               styles.buttonStyle,
               index1 === 2
                 ? {
-                    borderBottomColor: COLORS.primaryColor,
-                    borderBottomWidth: 1,
-                  }
+                  borderBottomColor: COLORS.primaryColor,
+                  borderBottomWidth: 1,
+                }
                 : null,
             ]}
             onPress={() => setIndex1(2)}>
@@ -163,9 +163,9 @@ function MyAccount(props) {
               styles.buttonStyle,
               index1 === 3
                 ? {
-                    borderBottomColor: COLORS.primaryColor,
-                    borderBottomWidth: 1,
-                  }
+                  borderBottomColor: COLORS.primaryColor,
+                  borderBottomWidth: 1,
+                }
                 : null,
             ]}
             onPress={() => setIndex1(3)}>
@@ -250,7 +250,7 @@ function MyAccount(props) {
           props.navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'Splash', params: {isFromLogin: true}}],
+              routes: [{ name: 'Splash', params: { isFromLogin: true } }],
             }),
           );
         }, 500);
@@ -284,25 +284,26 @@ function MyAccount(props) {
             props.navigation.navigate('EditAccount');
           }}
           onBack={() => {
-           // props.navigation.goBack();
-           props.navigation.dispatch(
-                    CommonActions.reset({
-                      index: 0,
-                      routes: [{name: 'BottomBar'}],
-                    }),
-                  );
+            // props.navigation.goBack();
+            props.navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'BottomBar' }],
+              }),
+            );
           }}
         />
 
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <Image
-              source={
+              source={user ?
                 user.user_img
-                  ? {uri: imageBaseUrl + user.user_img}
-                  : IMAGES.circle_placeholder
+                  ? { uri: imageBaseUrl + user.user_img }
+                  : IMAGES.circle_placeholder 
+                  : IMAGES.circle_placeholder 
               }
               style={{
                 height: 114,
@@ -315,7 +316,7 @@ function MyAccount(props) {
             />
 
             <Text
-              style={[styles.inputView, {marginTop: 5}]}
+              style={[styles.inputView, { marginTop: 5 }]}
               size="16"
               weight="500"
               align="center"
@@ -328,21 +329,21 @@ function MyAccount(props) {
             </Text>
 
             <Text
-              style={[styles.inputView, {marginTop: 3}]}
+              style={[styles.inputView, { marginTop: 3 }]}
               size="16"
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'+' + user.user_mb_no}
+              {'+' + user ? user.user_mb_no : ''}
             </Text>
 
             <Text
-              style={[styles.inputView, {marginTop: 3}]}
+              style={[styles.inputView, { marginTop: 3 }]}
               size="16"
               weight="500"
               align="center"
               color={COLORS.white}>
-              {user.user_email}
+              {user ? user.user_email : ''}
             </Text>
 
             <View
@@ -423,7 +424,7 @@ function MyAccount(props) {
                 // position: 'absolute',
               }}>
               <TouchableOpacity
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Suggestion',
@@ -443,7 +444,7 @@ function MyAccount(props) {
                     marginRight: 5,
                   }}>
                   <Text
-                    style={{paddingLeft: 10, paddingRight: 10}}
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
                     size="16"
                     weight="500"
                     align="center"
@@ -454,7 +455,7 @@ function MyAccount(props) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
                     headerTitle: 'Send Complaint',
@@ -474,7 +475,7 @@ function MyAccount(props) {
                     marginLeft: 5,
                   }}>
                   <Text
-                    style={{paddingLeft: 10, paddingRight: 10}}
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
                     size="16"
                     weight="500"
                     align="center"
@@ -495,7 +496,7 @@ function MyAccount(props) {
                 },
               ]}>
               <Text
-                style={[styles.inputView, {justifyContent: 'center'}]}
+                style={[styles.inputView, { justifyContent: 'center' }]}
                 size="18"
                 weight="500"
                 align="left"
@@ -508,7 +509,7 @@ function MyAccount(props) {
               showsHorizontalScrollIndicator={false}
               horizontal={true}>
               <View
-                style={{flexDirection: 'row', backgroundColor: COLORS.white}}>
+                style={{ flexDirection: 'row', backgroundColor: COLORS.white }}>
                 {/*To set the FirstScreen*/}
                 <TouchableOpacity
                   style={[
@@ -604,7 +605,7 @@ function MyAccount(props) {
         <View style={styles.viewWrapper}>
           <View style={styles.modalView}>
             <Text
-              style={{alignSelf: 'center', marginTop: 15, marginHorizontal: 10}}
+              style={{ alignSelf: 'center', marginTop: 15, marginHorizontal: 10 }}
               size="20"
               weight="500"
               align="left"
@@ -627,7 +628,7 @@ function MyAccount(props) {
                 },
               ]}>
               <Text
-                style={[{alignSelf: 'center', justifyContent: 'center'}]}
+                style={[{ alignSelf: 'center', justifyContent: 'center' }]}
                 size="20"
                 weight="500"
                 align="left"
@@ -694,7 +695,7 @@ function MyAccount(props) {
                 // position: 'absolute',
               }}>
               <Button
-                style={[{width: 104}]}
+                style={[{ width: 104 }]}
                 title={getTranslation('yes')}
                 onPress={() => {
                   onDeleteAccount();
@@ -702,7 +703,7 @@ function MyAccount(props) {
               />
 
               <Button
-                style={[{width: 104}]}
+                style={[{ width: 104 }]}
                 title={getTranslation('no')}
                 onPress={() => {
                   deleteAccountModalVisibility();
@@ -722,7 +723,7 @@ function MyAccount(props) {
         <View style={styles.viewWrapper}>
           <View style={styles.modalView1}>
             <Text
-              style={{alignSelf: 'center', marginTop: 15, marginHorizontal: 10}}
+              style={{ alignSelf: 'center', marginTop: 15, marginHorizontal: 10 }}
               size="20"
               weight="500"
               align="left"
@@ -739,23 +740,23 @@ function MyAccount(props) {
                 // position: 'absolute',
               }}>
               <Button
-                style={[{width: 104}]}
+                style={[{ width: 104 }]}
                 title={getTranslation('yes')}
                 onPress={() => {
                   clearAllData();
-                  setUser(null);
                   logoutModalVisibility();
+                  setUser({}); //set user data to null
                   props.navigation.dispatch(
                     CommonActions.reset({
                       index: 0,
-                      routes: [{name: 'Login', params: {isFromLogin: false}}],
+                      routes: [{ name: 'Splash', params: { isFromLogin: false } }],
                     }),
                   );
                 }}
               />
 
               <Button
-                style={[{width: 104}]}
+                style={[{ width: 104 }]}
                 title={getTranslation('no')}
                 onPress={() => {
                   logoutModalVisibility();
@@ -811,7 +812,7 @@ const styles = StyleSheet.create({
     top: '40%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 300,
     width: width * 0.85,
     backgroundColor: '#fff',
@@ -822,7 +823,7 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 180,
     width: width * 0.85,
     backgroundColor: '#fff',

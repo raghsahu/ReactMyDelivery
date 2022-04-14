@@ -65,8 +65,8 @@ const AsSenderItemList = props => {
         <View style={styles.imageView}>
           <Image style={styles.image} 
           source={
-              item.user_img
-                ? {uri: imageBaseUrl + item.user_img}
+              item.products[0].prod_img
+                ? {uri: imageBaseUrl + item.products[0].prod_img}
                 : IMAGES.circle_placeholder
             } />
 
@@ -75,7 +75,7 @@ const AsSenderItemList = props => {
               margin: 5,
             }}>
             <Text style={{}} color={COLORS.textColor} size="18" weight="500">
-              {'Test3'}
+              {item.products[0].prod_name}
             </Text>
 
             <View
@@ -99,7 +99,7 @@ const AsSenderItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'Constantine Constantine, Algerie '}
+                {item.products[0].prod_place_delivery}
               </Text>
             </View>
           </View>
@@ -115,7 +115,7 @@ const AsSenderItemList = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {'2021-11-07 14:42'}
+            {item.ad_accept_limit}
           </Text>
         </View>
 
@@ -129,7 +129,7 @@ const AsSenderItemList = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {'2021-11-07 14:42'}
+            {item.ad_delivery_limit}
           </Text>
         </View>
 
@@ -155,7 +155,7 @@ const AsSenderItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ 6.00'}
+              {'€ '+ item.products[0].prod_price}
             </Text>
           </View>
 
@@ -173,7 +173,7 @@ const AsSenderItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ 6.00'}
+              {'€ '+ item.ad_cmsn_delivery}
             </Text>
           </View>
         </View>

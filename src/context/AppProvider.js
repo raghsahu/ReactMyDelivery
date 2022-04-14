@@ -31,6 +31,8 @@ export const AppProvider = props => {
     upload_imgs: baseURL + 'upload_imgs',
     ads_by_status: baseURL + 'fields/ads_by_status',
     getProductFilter: baseURL + 'fields/product',
+    ad_accept: baseURL + 'madd/ad_accept',
+    change_date_time: baseURL + 'madd/change_date_time',
   };
 
   const getLogin = async (email, pw) => {
@@ -121,7 +123,8 @@ export const AppProvider = props => {
       product_data: product_data,
       ad_user_id: ad_user_id,
       ad_cmsn_price: ad_cmsn_price,
-      ad_cmsn_delivery: ad_cmsn_delivery,
+      ad_cmsn_delivery: '0',
+      ad_delv_addr: ad_cmsn_delivery,
       ad_gender: ad_gender,
       ad_accept_limit: ad_accept_limit,
       ad_delivery_limit: ad_delivery_limit,
@@ -161,6 +164,28 @@ export const AppProvider = props => {
     return await request(webServices.getProductFilter, 'post', params);
   };
 
+  const getAdAccept = async (user_id, ad_id,selectDate, selectTime, ad_accept_type, acpt_pay_status,acpt_pay_amount,acpt_pay_info ) => {
+    let params = {
+      acpt_user_id: user_id,
+      acpt_ad_id: ad_id,
+      acpt_date: selectDate,
+      acpt_time: selectTime,
+      acpt_pay_status: acpt_pay_status,
+      acpt_pay_amount: acpt_pay_amount,
+      acpt_pay_info: acpt_pay_info,
+      acpt_type: ad_accept_type, 
+    };
+    return await request(webServices.ad_accept, 'post', params);
+  };
+  const putDateTimeChangeRequest = async (ad_id,selectDate, selectTime ) => {
+    let params = {
+      ad_id: ad_id,
+      change_date: selectDate,
+      change_time: selectTime,
+    };
+    return await request(webServices.change_date_time, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
@@ -198,7 +223,7 @@ export const AppProvider = props => {
           headers: {
             //'Authorization': user ? `Bearer ${user.user_session}` : ''
             user_session: user ? user.user_session : '',
-            user_id: user ? "21" : '',
+            user_id: user ? user.user_id : '',
           },
         });
 
@@ -322,6 +347,8 @@ export const AppProvider = props => {
         add_Product,
         publishedProduct,
         getFilterProduct,
+        getAdAccept,
+        putDateTimeChangeRequest,
       }}>
       {props.children}
     </APPContext.Provider>
