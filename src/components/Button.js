@@ -24,7 +24,8 @@ const Button = props => {
         props.type == 1
           ? [styles.border, props.style]
           : [styles.shadow, props.style]
-      }>
+      }
+      >
       <View
         style={[styles.container, {height: props.height ? props.height : 48}]}>
         <View style={{flexDirection: 'row'}}>

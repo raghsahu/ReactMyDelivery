@@ -49,7 +49,7 @@ function AdSummaryDetails(props) {
   const [item, setItem] = useState({});
   const [products, setItemProducts] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
-  const { getAdGender } = useContext(CommonUtilsContext);
+  const { getAdGender, validURL } = useContext(CommonUtilsContext);
   const { getAdAccept, user } = useContext(APPContext);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
@@ -79,6 +79,10 @@ function AdSummaryDetails(props) {
   const [isLoading, setLoading] = useState(false);
   const [prodImg, setProdImg] = useState('');
   const [modifyProdId, setModifyProdId] = useState('');
+  const [newWebLink, setNewWebLink] = useState('');
+  const [newPrice, setNewPrice] = useState('');
+  const [newQuantity, setNewQunatity] = useState('');
+  const [newTotalPrice, setNewTotalPrice] = useState('');
 
   useEffect(() => {
     const item = props.route.params.ProdData;
@@ -168,15 +172,15 @@ function AdSummaryDetails(props) {
   const updateImageInModifyDb = () => {
     db.transaction((tx) => {
       tx.executeSql(
-        'UPDATE modify_product set prod_img=?, where prod_id=?',
+        'UPDATE modify_product set prod_img=? where prod_id=?',
         [prodImg, modifyProdId],
         (tx, results) => {
           try{
-            console.log('ResultsUpdate', results.rowsAffected);
+            //console.log('ResultsUpdate', results.rowsAffected);
            
-            if (results.rowsAffected == 0) {
-             
-            }
+            if (results.rowsAffected > 0) {
+              photosModalVisibleModalVisibility();
+            }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
           }
@@ -184,6 +188,51 @@ function AdSummaryDetails(props) {
       );
     });
   };
+
+  const updateWebLinkInModifyDb = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE modify_product set prod_web_link=? where prod_id=?',
+        [newWebLink, modifyProdId],
+        (tx, results) => {
+          try{
+            if (results.rowsAffected > 0) {
+              webLinkModalVisibleModalVisibility();
+            }else{Toast.show('Error update');}
+          }catch(ex){
+             console.log(ex)
+          }
+        }
+      );
+    });
+  };
+
+  const updatePriceInModifyDb = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE modify_product set prod_price=?, prod_qnty=?, prod_price_total=? where prod_id=?',
+        [newPrice, newQuantity, newTotalPrice.toString(), modifyProdId],
+        (tx, results) => {
+          try{
+            if (results.rowsAffected > 0) {
+              changePriceQuantityModalVisibleModalVisibility();
+            }else{Toast.show('Error update');}
+          }catch(ex){
+             console.log(ex)
+          }
+        }
+      );
+    });
+  };
+
+  const getTotalPrice = () => {
+    if (newPrice && newQuantity) {
+      var totalPriceForProduct = newPrice * newQuantity
+      return '€ '+ totalPriceForProduct;
+      setNewTotalPrice(totalPriceForProduct)
+    }
+    return '€'
+  }
   
 
   const PaymentDialogModalVisibility = () => {
@@ -974,10 +1023,10 @@ function AdSummaryDetails(props) {
               </Text>
               <Input
                 style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
-                placeholder={''}
+                placeholder={'Enter web link'}
                 isLeft={IMAGES.weblink}
                 onChangeText={text => {
-                  // setDay(text);
+                  setNewWebLink(text);
                 }}
               />
             </View>
@@ -996,9 +1045,8 @@ function AdSummaryDetails(props) {
                 style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
-                  // props.navigation.navigate('SendSuggestion', {
-                  //   headerTitle: 'Complain',
-                  // });
+                  setNewWebLink('')
+                  webLinkModalVisibleModalVisibility();
                 }}
               />
 
@@ -1006,7 +1054,14 @@ function AdSummaryDetails(props) {
                 style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
-                  webLinkModalVisibleModalVisibility();
+                  if (!newWebLink) {
+                    Toast.show('Please enter web link');
+                  }else if (!validURL(newWebLink)) {
+                    Toast.show('Please enter valid web link');
+                  }else{
+                    updateWebLinkInModifyDb();
+                  }
+                 
                 }}
               />
             </View>
@@ -1092,25 +1147,26 @@ function AdSummaryDetails(props) {
                   if(!prodImg){
                     Toast.show('Please capture image')
                   }else{
-                    //Toast.show('captured image')
-                    //updateImageInModifyDb();
-                    db.transaction((tx) => {
-                      tx.executeSql(
-                        'SELECT * FROM modify_product where prod_id = ?',
-                        ['71'],
-                        (tx, results) => {
-                          var len = results.rows.length;
-                          if (len > 0) {
-                            let res = results.rows.item(0);
-                            console.log('prod_imgggg ', res.prod_img)
+                    updateImageInModifyDb();
+
+                    //show selected prod id image
+                    // db.transaction((tx) => {
+                    //   tx.executeSql(
+                    //     'SELECT * FROM modify_product where prod_id = ?',
+                    //     [modifyProdId],
+                    //     (tx, results) => {
+                    //       var len = results.rows.length;
+                    //       if (len > 0) {
+                    //         let res = results.rows.item(0);
+                    //         console.log('prod_imgggg ', res.prod_img)
                             
-                          } else {
-                            Toast.show('No user found');
+                    //       } else {
+                    //         Toast.show('No user found');
                             
-                          }
-                        }
-                      );
-                    });
+                    //       }
+                    //     }
+                    //   );
+                    // });
                     
                   }
                  
@@ -1160,9 +1216,10 @@ function AdSummaryDetails(props) {
                     style={{ marginTop: 7, marginHorizontal: 10 }}
                     placeholder={''}
                     isLeft={IMAGES.percentage}
-                    value={'6.00'}
+                    //value={newPrice}
+                   keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                     onChangeText={text => {
-                      // setDay(text);
+                       setNewPrice(text);
                     }}
                   />
                 </View>
@@ -1178,9 +1235,11 @@ function AdSummaryDetails(props) {
                   <Input
                     style={{ marginTop: 7, marginEnd: 10 }}
                     placeholder={''}
+                    //value={newQuantity}
                     isLeft={IMAGES.quantity}
+                    keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                     onChangeText={text => {
-                      // setDay(text);
+                       setNewQunatity(text);
                     }}
                   />
                 </View>
@@ -1207,7 +1266,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="center"
                 color={COLORS.primaryColor}>
-                {'€ 6.00'}
+                {getTotalPrice()}
               </Text>
             </View>
             <View
@@ -1225,16 +1284,24 @@ function AdSummaryDetails(props) {
                 style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
-                  // props.navigation.navigate('SendSuggestion', {
-                  //   headerTitle: 'Complain',
-                  // });
+                  setNewPrice(''); 
+                  setNewQunatity('');
+                  setNewTotalPrice('');
+                  changePriceQuantityModalVisibleModalVisibility();
                 }}
               />
               <Button
                 style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
-                  changePriceQuantityModalVisibleModalVisibility();
+                  if (!newPrice) {
+                    Toast.show('Please enter price of product');
+                  } else if (!newQuantity) {
+                    Toast.show('Please enter quantity');
+                  }else{
+                    updatePriceInModifyDb();
+                  }
+                 
                 }}
               />
             </View>

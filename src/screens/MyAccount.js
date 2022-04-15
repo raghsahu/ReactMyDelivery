@@ -334,7 +334,7 @@ function MyAccount(props) {
               weight="500"
               align="center"
               color={COLORS.white}>
-              {'+' + user ? user.user_mb_no : ''}
+              {'+' + user.user_mb_code + ' '+ user.user_mb_no }
             </Text>
 
             <Text
@@ -501,7 +501,7 @@ function MyAccount(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {getTranslation('announcement')}
+                { index == 3 || index == 4 ? getTranslation('transactions') : getTranslation('announcement')}
               </Text>
             </View>
 

@@ -30,16 +30,17 @@ function SuccessScreen(props) {
   const {Mobile, Email} = props.route.params;
   const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const {getTranslation} = useContext(LocalizationContext);
+  const {getTranslation, saveUserLoginData} = useContext(LocalizationContext);
   const {check_user, setUser} = useContext(APPContext);
 
 
   const onNext = async () => {
     setLoading(true);
-    const result = await check_user('', Mobile);
+    const result = await check_user(Email);
     setLoading(false);
     if (result.status == true) {
       setUser(result.data[0]);
+      saveUserLoginData(result.data[0]);
       props.navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -85,13 +86,13 @@ function SuccessScreen(props) {
           style={[styles.inputView, {marginTop: 50, width: 270}]}
           title={getTranslation('done')}
           onPress={() => {
-            // onNext();
-            props.navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: 'Login'}],
-              }),
-            );
+             onNext();
+            // props.navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [{name: 'Login'}],
+            //   }),
+            // );
           }}
         />
       </View>

@@ -70,9 +70,9 @@ export const AppProvider = props => {
     return await request(webServices.verification, 'post', params);
   };
 
-  const check_user = async (email, mobile) => {
+  const check_user = async (email) => {
     let params = {
-      user_mb_no: mobile,
+      //user_mb_no: mobile,
       user_email: email,
     };
 
@@ -117,14 +117,14 @@ export const AppProvider = props => {
     return await request(webServices.notifications, 'post', params);
   };
 
-  const add_Product = async (product_data, ad_user_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
+  const add_Product = async (product_data, ad_user_id, ad_cmsn_price, ad_cmsn_delivery, placeOfDelivery, ad_gender, ad_accept_limit, ad_delivery_limit,
     ad_type, ad_pay_status, ad_pay_amount, ad_pay_info) => {
     let params = {
       product_data: product_data,
       ad_user_id: ad_user_id,
       ad_cmsn_price: ad_cmsn_price,
-      ad_cmsn_delivery: '0',
-      ad_delv_addr: ad_cmsn_delivery,
+      ad_cmsn_delivery: ad_cmsn_delivery,
+      ad_delv_addr: placeOfDelivery,
       ad_gender: ad_gender,
       ad_accept_limit: ad_accept_limit,
       ad_delivery_limit: ad_delivery_limit,

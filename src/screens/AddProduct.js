@@ -16,6 +16,7 @@ import {
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import {PermissionsAndroid} from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 
@@ -99,23 +100,30 @@ function AddProduct(props) {
   };
 
   const onPressLibrary = async type => {
-    var result = null;
-    // if (requestExternalStoreageRead()) {
+   // var result = null;
     if (type == 1) {
-      result = await launchCamera();
+     // result = await launchCamera();
       actionSheetRef.current?.setModalVisible(false);
+      ImagePicker.openCamera({
+        width: 300,
+        height: 300,
+        cropping: true,
+      }).then(image => { 
+         //do something with the image
+         setProdImg(image.path);
+         console.log('crop_image ', image);
+      })
     } else {
-      result = await launchImageLibrary();
+      var result = await launchImageLibrary();
       actionSheetRef.current?.setModalVisible(false);
+      console.log(result);
+      if (result && result.assets.length > 0) {
+        let uri = result.assets[0].uri;
+        // let items = [...images];
+        //items.push(uri);
+        setProdImg(uri);
+      }
     }
-    console.log(result);
-    if (result && result.assets.length > 0) {
-      let uri = result.assets[0].uri;
-      // let items = [...images];
-      //items.push(uri);
-      setProdImg(uri);
-    }
-    // }
   };
 
   const requestExternalStoreageRead = async () => {
@@ -143,6 +151,13 @@ function AddProduct(props) {
     }
     return ''
   }
+
+  const handleInputChange = (text) => {
+    const numericRegex = /^([0-9]{0,100})+$/
+    if(numericRegex.test(text)) {
+        setQuantity(text)
+    }
+}
 
   const onNext = () => {
     if(prodCount < 5){
@@ -240,7 +255,7 @@ function AddProduct(props) {
       <BottomBackground></BottomBackground>
       <SafeAreaView>
         <Header
-          title={getTranslation('describe_products') + '      '+ (prodCount) +'/5'}
+          title={getTranslation('describe_products') + '      '+ (prodCount == 5 ? 5 : prodCount +1) +'/5'}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -336,7 +351,10 @@ function AddProduct(props) {
             value={priceOfProduct}
             keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
-              setPriceOfProduct(text);
+              const validated = text.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+                if (validated) {
+                  setPriceOfProduct(text)
+                }
             }}
           />
 
@@ -345,8 +363,10 @@ function AddProduct(props) {
             placeholder={getTranslation('quantity')}
             value={quantity}
             keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+            textContentType={'telephoneNumber'}
+            dataDetectorTypes={'phoneNumber'}
             onChangeText={text => {
-              setQuantity(text);
+              handleInputChange(text);
             }}
           />
 

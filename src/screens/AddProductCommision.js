@@ -33,6 +33,7 @@ import Toast from 'react-native-simple-toast';
 
 function AddProductCommision(props) {
   const [globalCommission, setGlobalCommission] = useState(null);
+  const [deliveryCommission, setDeliveryCommission] = useState('1');
   const [placeOfDelivery, setPlaceOfDelivery] = useState('');
   const [gender, setSelectedGender] = useState(null);
   const [selectDate, setSelectDate] = useState('');
@@ -48,6 +49,7 @@ function AddProductCommision(props) {
   const [secondDate, setSecondDate] = useState('false');
   const [secondTime, setSecondTime] = useState('false');
   const [dateSelected, setDateSelected] = useState(false);
+  //const [address, setAddress] = useState('');
 
   const onSelect = item => {
     if (gender && gender.key === item.key) {
@@ -107,6 +109,7 @@ function AddProductCommision(props) {
     } else {
       const CommissionData = {
         globalCommission: globalCommission,
+        ad_cmsn_delivery: deliveryCommission,
         placeOfDelivery: placeOfDelivery,
         gender: gender.key,
         acceptanceDay: selectDate,
@@ -121,6 +124,36 @@ function AddProductCommision(props) {
       console.log('summary_gender ' + CommissionData.gender);
     }
   };
+
+  const onGooglePlace = () => {
+    props.navigation.navigate('GooglePlacesInput', {
+      onReturn: item => {
+        console.log('log_item ' + JSON.stringify(item));
+        setPlaceOfDelivery(item.address);
+        // setCity(item.city);
+        // setCountry(item.country);
+        // setLat(item.lat);
+        // setLng(item.lng);
+      },
+    });
+  };
+
+  const getCommissionPrice = () => {
+    if (globalCommission) {
+      var totalCommission = globalCommission * 0.80  //80% of global commission
+
+      const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+      if (validated) {
+        return ''+ totalCommission;
+       // setDeliveryCommission(totalCommission)
+      }else{
+        return '1';
+       // setDeliveryCommission('1')
+      }
+      setDeliveryCommission(totalCommission.toString())
+    }
+    return '1'
+  }
 
   return (
     <View style={styles.container}>
@@ -161,7 +194,7 @@ function AddProductCommision(props) {
             weight="400"
             align="left"
             color={COLORS.textColor}>
-            {getTranslation('deliveryman_commission')}
+            {getTranslation('deliveryman_commission') + ' : '+ getCommissionPrice()}
           </Text>
 
           <View
@@ -182,13 +215,22 @@ function AddProductCommision(props) {
             {getTranslation('place_of_delivery')}
           </Text>
 
-          <Input
-            style={[styles.inputView, styles.inputContainer]}
-            placeholder={getTranslation('place_of_delivery')}
-            onChangeText={text => {
-              setPlaceOfDelivery(text);
+          <TouchableOpacity
+            onPress={() => {
+              onGooglePlace();
             }}
+            style={[styles.inputView, styles.inputContainer]}
+            >
+          <Input
+           // style={[styles.inputView, styles.inputContainer]}
+           editable={false}
+           value={placeOfDelivery}
+            placeholder={getTranslation('place_of_delivery')}
+            // onChangeText={text => {
+            //   setPlaceOfDelivery(text);
+            // }}
           />
+          </TouchableOpacity>
 
           <View
             style={[
@@ -348,11 +390,20 @@ function AddProductCommision(props) {
           value={date}
           mode={mode}
           onChange={onChange}
-          minimumDate={new Date()}
+          minimumDate={secondDate === 'false' ? new Date() : selectDate ? addDays(selectDate, 1) : new Date()}
+          maximumDate={new Date(Date.now() + 86400000*365)}
         />
       )}
     </View>
   );
+
+
+  function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
 }
 
 const styles = StyleSheet.create({

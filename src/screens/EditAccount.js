@@ -39,6 +39,8 @@ import ActionSheet from 'react-native-actions-sheet';
 import {APPContext} from '../context/AppProvider';
 import {CommonUtilsContext} from '../context/CommonUtils';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 const options = [
   {
     key: '1',
@@ -88,9 +90,9 @@ function EditAccount(props) {
   const [serverImage, setServerImage] = useState('');
   const [captureImage, setCaptureImages] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [mCountryCode, setCountryCode] = useState('91');
+  const [mCountryCode, setCountryCode] = useState();
   const [mCountryName, setCountryName] = useState();
-  const [mSelectedCountryName, setSelectedCountryName] = useState('India');
+  const [mSelectedCountryName, setSelectedCountryName] = useState('Select your country');
   const [userDetails, setUserDetails] = useState({});
   const {user, setUser, imageBaseUrl, webServices, getError, fcmToken} =
     useContext(APPContext);
@@ -113,6 +115,7 @@ function EditAccount(props) {
     setGender(user.user_gender == '1' ? options[0] : optionsWomen[0]);
     setSelectedCountryName(user.user_country);
     setSelectedLanguageKey(user.user_language);
+    setCountryCode(user.user_mb_code ? user.user_mb_code : '213')
     if (user.user_language == '1') {
       setSelectedLanguage('en');
     } else if (user.user_language == '2') {
@@ -183,24 +186,34 @@ function EditAccount(props) {
   };
 
   const onPressLibrary = async type => {
-    var result = null;
-    // if (requestExternalStoreageRead()) {
+  //  var result = null;
     if (type == 1) {
-      result = await launchCamera();
+     // result = await launchCamera();
       actionSheetRef.current?.setModalVisible(false);
+      ImagePicker.openCamera({
+        width: 300,
+        height: 300,
+        cropping: true,
+      }).then(image => { 
+         //do something with the image
+         setImages(image.path);
+         setCaptureImages(true);
+
+         console.log('crop_image ', images);
+      })
+
     } else {
-      result = await launchImageLibrary();
+      var result = await launchImageLibrary();
       actionSheetRef.current?.setModalVisible(false);
+      console.log(result);
+      if (result && result.assets.length > 0) {
+        let uri = result.assets[0].uri;
+        // let items = [...images];
+        //items.push(uri);
+        setImages(uri);
+        setCaptureImages(true);
+      }
     }
-    console.log(result);
-    if (result && result.assets.length > 0) {
-      let uri = result.assets[0].uri;
-      // let items = [...images];
-      //items.push(uri);
-      setImages(uri);
-      setCaptureImages(true);
-    }
-    // }
   };
 
   const requestExternalStoreageRead = async () => {
@@ -250,6 +263,8 @@ function EditAccount(props) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
+    }else if (mSelectedCountryName == "Select your country") {
+      Toast.show('Please select country');
     } else if (!selectedLanguage) {
       Toast.show('Please select language');
     } else if (oldPassword) {
@@ -558,7 +573,7 @@ function EditAccount(props) {
             />
 
             <Input
-              style={[{flex: 1}]}
+              style={[{flex: 1, paddingLeft: 10}]}
               placeholder={getTranslation('mobile_no')}
               value={mobile}
               maxLength={10}
@@ -620,6 +635,12 @@ function EditAccount(props) {
                 onValueChange={(itemValue, itemIndex) =>
                   setSelectedCountryName(itemValue)
                 }>
+                   <Picker.Item
+                  // color={COLORS.gray}
+                  key={'0'}
+                  label={'Select your country'}
+                  value={'0'}
+                />
                 {mCountryName.map(val => {
                   return (
                     <Picker.Item
@@ -783,7 +804,8 @@ function EditAccount(props) {
           value={date}
           mode={mode}
           onChange={onChange}
-          maximumDate={new Date(Date.now() - 86400000)}
+          //maximumDate={new Date(Date.now() - 86400000)}
+          maximumDate={new Date(moment().subtract(18, "years"))} // till 18 year past date disable from current
         />
       )}
     </View>

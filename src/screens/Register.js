@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,12 +13,13 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
-import {Session} from '../context';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
+import { Session } from '../context';
 import ActionSheet from 'react-native-actions-sheet';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {PermissionsAndroid} from 'react-native';
-import {Picker} from '@react-native-picker/picker'; //for dropdown
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+import { PermissionsAndroid } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; //for dropdown
 
 //COMMON COMPONENT
 import {
@@ -34,15 +35,14 @@ import {
 
 import moment from 'moment'; // date format
 
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
 //PACKAGES
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import CountryPicker from 'rn-country-picker';
 import RNCountry from 'react-native-countries';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CommonUtilsContext} from '../context/CommonUtils';
+import { CommonUtilsContext } from '../context/CommonUtils';
 
 const options = [
   {
@@ -79,21 +79,17 @@ function Register(props) {
   const [selectedLanguageKey, setSelectedLanguageKey] = useState('1');
   const [pwSecureText, setPwSecureText] = useState(true);
   const [pwSecureText1, setPwSecureText1] = useState(true);
-  const {getTranslation, setI18nConfig, saveUserLanguage, optionsLanguage} =
+  const { getTranslation, setI18nConfig, saveUserLanguage, optionsLanguage } =
     useContext(LocalizationContext);
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const [mCountryCode, setCountryCode] = useState('91');
+  const [mCountryCode, setCountryCode] = useState('213');
   const [mCountryName, setCountryName] = useState();
-  const [mSelectedCountryName, setSelectedCountryName] = useState('India');
+  const [mSelectedCountryName, setSelectedCountryName] = useState('Select your country');
 
-  const [currentLongitude, setCurrentLongitude] = useState('');
-  const [currentLatitude, setCurrentLatitude] = useState('');
-  const [locationStatus, setLocationStatus] = useState('');
-
-  const {webServices, getError, fcmToken} = useContext(APPContext);
-  const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
+  const { webServices, getError, fcmToken } = useContext(APPContext);
+  const { checkSpecialChar, getUserCurrentLocation, lat, lng } = useContext(CommonUtilsContext);
 
   useEffect(() => {
     getUserCurrentLocation();
@@ -160,24 +156,32 @@ function Register(props) {
   };
 
   const onPressLibrary = async type => {
-    var result = null;
-    // if (requestExternalStoreageRead()) {
-    if (type == 1) {
-      result = await launchCamera();
-      actionSheetRef.current?.setModalVisible(false);
-    } else {
-      result = await launchImageLibrary();
-      actionSheetRef.current?.setModalVisible(false);
-    }
-    console.log(result);
-    if (result && result.assets.length > 0) {
-      let uri = result.assets[0].uri;
-      let items = [...images];
-      items.push(uri);
-      setImages(uri);
-    }
-    // }
-  };
+    //  var result = null;
+      if (type == 1) {
+       // result = await launchCamera();
+        actionSheetRef.current?.setModalVisible(false);
+        ImagePicker.openCamera({
+          width: 300,
+          height: 300,
+          cropping: true,
+        }).then(image => { 
+           //do something with the image
+           setImages(image.path);
+           console.log('crop_image ', image);
+        })
+  
+      } else {
+        var result = await launchImageLibrary();
+        actionSheetRef.current?.setModalVisible(false);
+        console.log(result);
+        if (result && result.assets.length > 0) {
+          let uri = result.assets[0].uri;
+          // let items = [...images];
+          //items.push(uri);
+          setImages(uri);
+        }
+      }
+    };
 
   const requestExternalStoreageRead = async () => {
     try {
@@ -218,13 +222,17 @@ function Register(props) {
       Toast.show('Please enter valid email');
     } else if (!mobile) {
       Toast.show('Please enter mobile number');
-    } else if (mobile.trim().length != 10) {
-      Toast.show('Please enter 10 digit mobile number');
-    } else if (!address) {
+    }
+    // else if (mobile.trim().length != 10) {
+    //   Toast.show('Please enter 10 digit mobile number');
+    // } 
+    else if (!address) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
-    } else if (!selectedLanguage) {
+    } else if (mSelectedCountryName == "Select your country") {
+      Toast.show('Please select country');
+    }else if (!selectedLanguage) {
       Toast.show('Please select language');
     } else if (!password) {
       Toast.show('Please enter password');
@@ -253,6 +261,7 @@ function Register(props) {
         lng,
         images,
         fcmToken,
+        mCountryCode,
       );
     }
   };
@@ -274,6 +283,7 @@ function Register(props) {
     user_lon,
     user_img,
     user_fcm_key,
+    user_mb_code,
   ) => {
     const formData = new FormData();
     formData.append('user_f_name', user_f_name);
@@ -296,18 +306,19 @@ function Register(props) {
         'user_img',
         user_img
           ? {
-              uri:
-                Platform.OS === 'android'
-                  ? user_img
-                  : user_img.replace('file://', ''),
-              name: 'userProfile.jpg',
-              type: 'image/jpg',
-            }
+            uri:
+              Platform.OS === 'android'
+                ? user_img
+                : user_img.replace('file://', ''),
+            name: 'userProfile.jpg',
+            type: 'image/jpg',
+          }
           : '',
       );
     }
 
     formData.append('user_fcm_key', user_fcm_key);
+    formData.append('user_mb_code', user_mb_code);
 
     return requestMultipart(webServices.register, 'post', formData);
   };
@@ -385,7 +396,7 @@ function Register(props) {
             }}
             onPress={onPressUpload}>
             <ImageBackground
-              source={images ? {uri: images} : IMAGES.signup_placeholder}
+              source={images ? { uri: images } : IMAGES.signup_placeholder}
               style={{
                 height: 160,
                 width: 160,
@@ -425,7 +436,7 @@ function Register(props) {
           <Text
             style={[
               styles.inputView,
-              {marginTop: 20, marginBottom: 10, alignSelf: 'center'},
+              { marginTop: 20, marginBottom: 10, alignSelf: 'center' },
             ]}
             size="24"
             weight="500"
@@ -469,7 +480,7 @@ function Register(props) {
                 padding: 10,
                 elevation: 2,
                 shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
+                shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.5,
                 shadowRadius: 2,
                 flexDirection: 'row',
@@ -482,7 +493,7 @@ function Register(props) {
             />
 
             <RadioButtons
-              style={[{marginLeft: 70}]}
+              style={[{ marginLeft: 70 }]}
               selectedOption={selectedOption}
               onSelect={onSelect}
               options={optionsWomen}
@@ -491,7 +502,7 @@ function Register(props) {
 
           <TouchableOpacity onPress={showDatepicker} style={styles.inputView}>
             <Input
-              style={[{marginTop: 18}]}
+              style={[{ marginTop: 18 }]}
               placeholder={getTranslation('date_of_birth')}
               editable={false}
               isLeft={IMAGES.date}
@@ -520,6 +531,7 @@ function Register(props) {
                 borderRadius: 24,
               },
             ]}>
+
             <CountryPicker
               //style={[{width: 100}]}
               disable={false}
@@ -540,8 +552,25 @@ function Register(props) {
               selectedValue={_selectedValue}
             />
 
+            {/* <TouchableOpacity 
+      onPress={() => {
+        showCountryCodePicker();
+      }}
+      style={[{flex: 1}]}>
+          <Input
+             // style={[{flex: 1}]}
+              placeholder={'Country'}
+              editable={false}
+              value={mCountryCode}
+              //keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+              onChangeText={text => {
+               // setMobile(text);
+              }}
+            />
+            </TouchableOpacity> */}
+
             <Input
-              style={[{flex: 1}]}
+              style={[{ flex: 1, marginLeft: 15 }]}
               placeholder={getTranslation('mobile_no')}
               maxLength={10}
               keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
@@ -580,9 +609,18 @@ function Register(props) {
             {mCountryName ? (
               <Picker
                 selectedValue={mSelectedCountryName}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedCountryName(itemValue)
-                }>
+                onValueChange={(itemValue, itemIndex) => {
+                  if (itemValue != '0') {
+                    setSelectedCountryName(itemValue)
+                  }
+
+                }} >
+                <Picker.Item
+                  // color={COLORS.gray}
+                  key={'0'}
+                  label={'Select your country'}
+                  value={'0'}
+                />
                 {mCountryName.map(val => {
                   return (
                     <Picker.Item
@@ -636,7 +674,7 @@ function Register(props) {
             onChecked={setCheck}
           />
           <Button
-            style={[styles.inputView, {marginTop: 30}]}
+            style={[styles.inputView, { marginTop: 30 }]}
             title={getTranslation('register')}
             onPress={() => {
               onNext();
@@ -654,17 +692,17 @@ function Register(props) {
               },
             ]}>
             <Text
-              style={{alignSelf: 'center'}}
+              style={{ alignSelf: 'center' }}
               size="16"
               weight="600"
               align="center"
               color={COLORS.lightTextColor}
-              onPress={() => {}}>
+              onPress={() => { }}>
               {getTranslation('already_account')}
             </Text>
 
             <Text
-              style={{alignSelf: 'center', marginLeft: 5}}
+              style={{ alignSelf: 'center', marginLeft: 5 }}
               size="18"
               weight="600"
               align="center"
@@ -758,12 +796,14 @@ function Register(props) {
           </View>
         </View>
       </ActionSheet>
+
       {show && (
         <DateTimePick
           value={date}
           mode={mode}
           onChange={onChange}
-          maximumDate={new Date(Date.now() - 86400000)}
+          //maximumDate={new Date(Date.now() - 86400000)} // future date disable from current
+          maximumDate={new Date(moment().subtract(18, "years"))} // till 18 year past date disable from current
         />
       )}
     </View>
@@ -817,7 +857,7 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     height: 48,
-    width: 100,
+    width: 80,
     marginLeft: 10,
     justifyContent: 'center',
     //padding: 10,

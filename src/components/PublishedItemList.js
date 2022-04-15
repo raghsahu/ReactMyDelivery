@@ -47,6 +47,7 @@ const PublishedItemList = props => {
             style={{
               padding: 5,
               marginTop: 10,
+              flex: 1,
             }}>
             <Text
               style={{marginBottom: 5}}
@@ -74,6 +75,8 @@ const PublishedItemList = props => {
               <Text
                 style={{
                   marginLeft: 5,
+                  //marginRight: 10,
+                  //flex: 1,
                 }}
                 color={COLORS.primaryColor}
                 size="16"
@@ -211,7 +214,7 @@ const PublishedItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {item.ad_cmsn_price}
+              {item.ad_cmsn_delivery}
             </Text>
           </View>
         </View>

@@ -77,6 +77,17 @@ function AddProductSummary(props) {
     setSelection(checkStatus);
   };
 
+  //CommissionData.globalCommission - CommissionData.globalCommission * 0.80
+  const getFeesDetails = () => {
+      var totalCommission = CommissionData.globalCommission - CommissionData.globalCommission * 0.80 //80% of global commission
+      const validated = totalCommission.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+      if (validated) {
+        return ''+ totalCommission;
+      }
+
+      return totalCommission;
+  }
+
   var tempImages = [];
   const onNext = () => {
     setLoading(true);
@@ -155,6 +166,7 @@ function AddProductSummary(props) {
         JSON.stringify(temp),
         user.user_id,
         CommissionData.globalCommission,
+        CommissionData.globalCommission * 0.80,
         CommissionData.placeOfDelivery,
         CommissionData.gender,
         CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
@@ -348,16 +360,16 @@ function AddProductSummary(props) {
             </Text>
 
             <Text
-              style={{justifyContent: 'center', alignSelf: 'center'}}
+              style={{justifyContent: 'center', alignSelf: 'center', marginRight: 10}}
               color={COLORS.textColor4}
               size="14"
               align="center"
               weight="500">
-              {getTranslation('deliveryman_commission')}
+              {getTranslation('delivery_man_commission')}
             </Text>
 
             <Text
-              style={{justifyContent: 'center', alignSelf: 'center'}}
+              style={{justifyContent: 'center', alignSelf: 'center', marginRight: 20}}
               color={COLORS.textColor4}
               size="14"
               align="center"
@@ -416,7 +428,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {CommissionData.globalCommission}
+              {CommissionData.globalCommission * 0.80}
             </Text>
 
             <Image
@@ -443,7 +455,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {'0.00'}
+              {CommissionData.globalCommission * 0.20}
             </Text>
           </View>
 

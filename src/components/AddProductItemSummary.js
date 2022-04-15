@@ -3,7 +3,7 @@ import {
   View,
   Dimensions,
   Image,
-  TouchableOpacity,
+  ScrollView,
   StyleSheet,
 } from 'react-native';
 const {height, width} = Dimensions.get('screen');
@@ -89,13 +89,17 @@ const AddProductsItemList = props => {
             {getTranslation('additional_info')}
           </Text>
 
+          {/* <ScrollView 
+          style={[styles.text_right, {height: 70}]}>  */}
           <Text
             style={styles.text_right}
             color={COLORS.darkGray}
             size="16"
             weight="500">
             {item.additional_info}
+            {/* {'qwerty uiopasd fghj klmn bvcxz asdf qrwreec yruro prvfk ddkdfn jdjdf djdjd djdjdd ddjsdjdj djdjd djdd djddj djd djd jd djbd djd '} */}
           </Text>
+          {/* </ScrollView>  */}
         </View>
       </View>
 
@@ -131,6 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   text_right:{
+    flex: 1,
     marginLeft: 10,
   },
 });
