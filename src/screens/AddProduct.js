@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,24 +10,25 @@ import {
   ImageBackground,
   TextInput,
   Alert,
-  BackHandler, 
+  BackHandler,
+  FlatList,
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 
 //COMMON COMPONENT
-import {Button, Text, Input, Header, BottomBackground} from '../components';
+import { Button, Text, Input, Header, BottomBackground } from '../components';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {CommonUtilsContext} from '../context/CommonUtils';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
-import {openDatabase} from 'react-native-sqlite-storage';
-var db = openDatabase({name: 'DescribeProduct.db'});
+import { openDatabase } from 'react-native-sqlite-storage';
+var db = openDatabase({ name: 'DescribeProduct.db' });
 
 function AddProduct(props) {
   const actionSheetRef = useRef();
@@ -38,10 +39,10 @@ function AddProduct(props) {
   const [quantity, setQuantity] = useState('');
   const [totalPrice, setTotalPrice] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
-  const [prodImg, setProdImg] = useState('');
+  const [prodImg, setProdImg] = useState([]);
   const [prodCount, setProdCount] = useState(0);
-  const {getTranslation} = useContext(LocalizationContext);
-  const {validURL} = useContext(CommonUtilsContext);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { validURL } = useContext(CommonUtilsContext);
 
   useEffect(() => {
     db.transaction(function (txn) {
@@ -79,18 +80,18 @@ function AddProduct(props) {
           },
         },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
     return true;
   }
 
 
-  const getSavedProductCount = () =>{
+  const getSavedProductCount = () => {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         if (results.rows.length > 0) {
-         setProdCount(results.rows.length)
-        } 
+          setProdCount(results.rows.length)
+        }
       });
     });
   }
@@ -100,18 +101,21 @@ function AddProduct(props) {
   };
 
   const onPressLibrary = async type => {
-   // var result = null;
+    // var result = null;
     if (type == 1) {
-     // result = await launchCamera();
+      // result = await launchCamera();
       actionSheetRef.current?.setModalVisible(false);
       ImagePicker.openCamera({
         width: 300,
         height: 300,
         cropping: true,
-      }).then(image => { 
-         //do something with the image
-         setProdImg(image.path);
-         console.log('crop_image ', image);
+      }).then(image => {
+        //do something with the image
+        let uri = image.path;
+        let items = [...prodImg];
+        items.push(uri);
+        setProdImg(items);
+        // console.log('crop_image ', image);
       })
     } else {
       var result = await launchImageLibrary();
@@ -119,11 +123,13 @@ function AddProduct(props) {
       console.log(result);
       if (result && result.assets.length > 0) {
         let uri = result.assets[0].uri;
-        // let items = [...images];
-        //items.push(uri);
-        setProdImg(uri);
+        let items = [...prodImg];
+        items.push(uri);
+        setProdImg(items);
+        // console.log('prodImguri ', uri)
       }
     }
+    console.log('prodImggggg ', prodImg.length)
   };
 
   const requestExternalStoreageRead = async () => {
@@ -146,7 +152,7 @@ function AddProduct(props) {
   const getTotalPrice = () => {
     if (priceOfProduct && quantity) {
       var totalPriceForProduct = priceOfProduct * quantity
-      return ''+ totalPriceForProduct;
+      return '' + totalPriceForProduct;
       setTotalPrice(totalPriceForProduct)
     }
     return ''
@@ -154,26 +160,29 @@ function AddProduct(props) {
 
   const handleInputChange = (text) => {
     const numericRegex = /^([0-9]{0,100})+$/
-    if(numericRegex.test(text)) {
-        setQuantity(text)
+    if (numericRegex.test(text)) {
+      setQuantity(text)
     }
-}
+  }
 
   const onNext = () => {
-    if(prodCount < 5){
-    if (!productName) {
-      Toast.show('Please enter product name');
-    } else if (!webLink) {
-      Toast.show('Please enter web link');
-    }else if (!validURL(webLink)) {
-      Toast.show('Please enter valid web link');
-    } else if (!priceOfProduct) {
-      Toast.show('Please enter price of product');
-    } else if (!quantity) {
-      Toast.show('Please enter quantity');
-    } else if (!prodImg) {
-      Toast.show('Please capture product image');
-    } else {
+    if (prodCount < 5) {
+      if (!productName) {
+        Toast.show('Please enter product name');
+      } else if (!webLink) {
+        Toast.show('Please enter web link');
+      } else if (!validURL(webLink)) {
+        Toast.show('Please enter valid web link');
+      } else if (!priceOfProduct) {
+        Toast.show('Please enter price of product');
+      } else if (!quantity) {
+        Toast.show('Please enter quantity');
+      } else if (prodImg.length < 1 ) {
+        Toast.show('Please capture product image');
+      } else {
+       // var commaSepImage = prodImg.join(","); 
+       // console.log('commaSep ', commaSepImage)
+
         db.transaction(function (tx) {
           tx.executeSql(
             'INSERT INTO table_product (product_name, web_link, place_to_buy, price_of_product, quantity, total_price, additional_info, prod_img) VALUES (?,?,?,?,?,?,?,?)',
@@ -185,7 +194,7 @@ function AddProduct(props) {
               quantity,
               totalPrice.toString(),
               additionalInfo,
-              prodImg,
+              JSON.stringify(prodImg),
             ],
             (tx, results) => {
               console.log('Results', results.rowsAffected);
@@ -198,18 +207,20 @@ function AddProduct(props) {
                 setQuantity('');
                 setTotalPrice('');
                 setAdditionalInfo('');
-                setProdImg('');
-  
+                prodImg.splice(0, prodImg.length);
+                prodImg.length=0;
+                setProdImg(prodImg);
+
                 //get all saved product count
                 getSavedProductCount()
-  
+
                 //*** */
               }
             },
           );
         });
       }
-    }else{
+    } else {
       Toast.show('You can add max 5 products')
     }
   };
@@ -231,16 +242,16 @@ function AddProduct(props) {
       tx.executeSql(
         'DELETE FROM table_product',
         (tx, results) => {
-          try{
+          try {
             console.log('ResultsDelete', results.rowsAffected);
-           
-            if (results.rowsAffected == 0) {
-             
+
+            if (results.rowsAffected > 0) {
+
             }
-          }catch(ex){
-             console.log(ex)
+          } catch (ex) {
+            console.log(ex)
           }
-        
+
         },
       );
     });
@@ -255,7 +266,7 @@ function AddProduct(props) {
       <BottomBackground></BottomBackground>
       <SafeAreaView>
         <Header
-          title={getTranslation('describe_products') + '      '+ (prodCount == 5 ? 5 : prodCount +1) +'/5'}
+          title={getTranslation('describe_products') + '      ' + (prodCount == 5 ? 5 : prodCount + 1) + '/5'}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -263,7 +274,7 @@ function AddProduct(props) {
         <ScrollView
           showsVerticalScrollIndicator={false}>
           <Text
-            style={[styles.inputView, {marginTop: 20, alignSelf: 'center'}]}
+            style={[styles.inputView, { marginTop: 20, alignSelf: 'center' }]}
             size="22"
             weight="500"
             align="center"
@@ -287,9 +298,16 @@ function AddProduct(props) {
               marginTop: 20,
               alignSelf: 'center',
             }}
-            onPress={onPressUpload}>
+            onPress={() => {
+              if(prodImg.length==3){
+                Toast.show('you can upload maximum 3 photos')
+              }else{
+                onPressUpload()
+              }
+            }}>
             <ImageBackground
-              source={prodImg ? {uri: prodImg} : IMAGES.rectangle_gray_border}
+              // source={prodImg ? {uri: prodImg} : IMAGES.rectangle_gray_border}
+              source={IMAGES.rectangle_gray_border}
               style={{
                 height: 100,
                 width: 100,
@@ -316,7 +334,7 @@ function AddProduct(props) {
                 />
 
                 <Text
-                  style={[{marginTop: 10, alignSelf: 'center'}]}
+                  style={[{ marginTop: 10, alignSelf: 'center' }]}
                   size="12"
                   weight="400"
                   align="center"
@@ -326,6 +344,42 @@ function AddProduct(props) {
               </View>
             </ImageBackground>
           </TouchableOpacity>
+
+          <FlatList
+            data={prodImg}
+            horizontal={true}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            ListHeaderComponent={() => {
+              return (
+                <View style={styles.common} />
+              )
+            }}
+            ListFooterComponent={() => {
+              return (
+                <View style={styles.common} />
+              )
+            }}
+            renderItem={({ item, index }) => {
+              return (
+                <ImageBackground style={styles.imageUpload}
+                  resizeMode='cover'
+                  source={item ? { uri: item } : null}>
+                  <TouchableOpacity onPress={() => {
+                    var items = [...prodImg]
+                    items = items.filter((e) => e != item)
+                    setProdImg(items)
+                  }}>
+                    <Image
+                      source={IMAGES.close}
+                      style={
+                        styles.crossIcon
+                      }
+                    />
+                  </TouchableOpacity>
+                </ImageBackground>
+              )
+            }} />
 
           <Input
             style={[styles.inputView, styles.inputContainer]}
@@ -352,9 +406,9 @@ function AddProduct(props) {
             keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
               const validated = text.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
-                if (validated) {
-                  setPriceOfProduct(text)
-                }
+              if (validated) {
+                setPriceOfProduct(text)
+              }
             }}
           />
 
@@ -374,7 +428,7 @@ function AddProduct(props) {
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('total_price')}
             value={getTotalPrice()}
-            editable={false}           
+            editable={false}
           />
 
           <TextInput
@@ -398,7 +452,7 @@ function AddProduct(props) {
               },
             ]}>
             <Button
-              style={[{width: 130}]}
+              style={[{ width: 130 }]}
               title={getTranslation('add_product')}
               onPress={() => {
                 onNext();
@@ -406,14 +460,14 @@ function AddProduct(props) {
             />
 
             <Button
-              style={[{width: 130}]}
+              style={[{ width: 130 }]}
               title={getTranslation('thats_all')}
               onPress={() => {
                 onNextAddCommission();
               }}
             />
           </View>
-          <View style={{marginBottom: 30}}></View>
+          <View style={{ marginBottom: 30 }}></View>
         </ScrollView>
       </SafeAreaView>
       <ActionSheet ref={actionSheetRef}>
@@ -542,6 +596,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginStart: 20,
+  },
+  imageUpload: {
+    height: 70,
+    width: 70,
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: COLORS.sky,
+    marginRight: 8,
+    marginTop: 20,
+  },
+  uploadLice: {
+    marginHorizontal: 40,
+    marginTop: 26
+  },
+  common: {
+    width: 50
+  },
+  crossIcon: {
+    alignSelf: 'flex-end',
+    margin: 6,
+    height: 20,
+    width: 20,
   },
 });
 

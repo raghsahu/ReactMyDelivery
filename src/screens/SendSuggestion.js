@@ -44,6 +44,7 @@ function SendSuggestion(props) {
           // value={message}
           border={{borderColor: COLORS.gray, borderWidth: 1}}
           placeholder="Type a message"
+          multiline={true}
           onChangeText={text => {
             //setMessage(text);
           }}

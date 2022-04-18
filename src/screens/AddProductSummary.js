@@ -93,14 +93,16 @@ function AddProductSummary(props) {
     setLoading(true);
     for (let i = 0; i < productListItems.length; i++) {
       const formData = new FormData();
-      formData.append('prod_img[]', {
-        uri:
-          Platform.OS === 'android'
-            ? productListItems[i].prod_img
-            : productListItems[i].prod_img.replace('file://', ''),
-        name: 'userProfile.jpg',
-        type: 'image/jpg',
+     // console.log('prod_imgffff: ', JSON.parse(productListItems[i].prod_img));
+      let jsonObject = JSON.parse(productListItems[i].prod_img);
+      jsonObject.forEach((item, j) => {
+        formData.append("prod_img[]", {
+          uri: item,
+          type: "image/jpeg",
+          name: `Productfile${j}.jpg`,
+        });
       });
+
       requestMultipart(webServices.upload_imgs, 'post', formData);
     }
   };
@@ -132,6 +134,7 @@ function AddProductSummary(props) {
               uploadProductAllData();
             }
           } else {
+            setLoading(false);
             Toast.show(data.msg);
           }
         });

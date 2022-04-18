@@ -246,6 +246,7 @@ function MyAccount(props) {
         setCaptcha('');
         setInputCaptcha('');
         clearAllData();
+        onDiscard();
         setTimeout(() => {
           props.navigation.dispatch(
             CommonActions.reset({
@@ -258,6 +259,26 @@ function MyAccount(props) {
         Toast.show(result.error);
       }
     }
+  };
+
+  const onDiscard = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM table_product',
+        (tx, results) => {
+          try {
+            console.log('ResultsDelete', results.rowsAffected);
+
+            if (results.rowsAffected > 0) {
+
+            }
+          } catch (ex) {
+            console.log(ex)
+          }
+
+        },
+      );
+    });
   };
 
   return (
@@ -746,6 +767,7 @@ function MyAccount(props) {
                   clearAllData();
                   logoutModalVisibility();
                   setUser({}); //set user data to null
+                  onDiscard();
                   props.navigation.dispatch(
                     CommonActions.reset({
                       index: 0,

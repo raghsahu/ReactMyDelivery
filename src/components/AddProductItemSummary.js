@@ -13,9 +13,21 @@ import {COLORS, IMAGES} from '../assets';
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 
+import {
+  PagerTabIndicator,
+  IndicatorViewPager,
+  PagerTitleIndicator,
+  PagerDotIndicator,
+} from '@shankarmorwal/rn-viewpager';
+
 const AddProductsItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
   const item = props.item;
+
+  const setImages = () => {
+    let jsonObject = JSON.parse(item.prod_img);
+    return jsonObject;
+  };
 
   return (
     <View
@@ -28,6 +40,17 @@ const AddProductsItemList = props => {
         style={styles.image}
         source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
       />
+       <IndicatorViewPager
+          style={styles.pagerStyle}
+          indicator={
+            <PagerDotIndicator pageCount={setImages.length} />
+          }>
+            <Image
+            style={styles.image}
+            source={setImages.length>0 ? {uri: setImages[0]} : IMAGES.product_placeholder}
+          />
+         
+        </IndicatorViewPager>
 
       <View style={[styles.inputView, {marginTop: 20}]}>
         <Text
