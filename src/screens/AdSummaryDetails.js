@@ -501,7 +501,7 @@ function AdSummaryDetails(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('deliveryman_commission')}
+                {getTranslation('deliveryman_commission')+ ' :'}
               </Text>
 
               <Text

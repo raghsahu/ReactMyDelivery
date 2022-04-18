@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
+  TextInput,
 } from 'react-native';
 
 //ASSETS
@@ -21,6 +22,7 @@ const {height, width} = Dimensions.get('screen');
 function SendSuggestion(props) {
   const {headerTitle} = props.route.params;
   const [name, setName] = useState('');
+  const [height, setHeight] = useState(42)
 
   return (
     <View style={styles.container}>
@@ -39,16 +41,22 @@ function SendSuggestion(props) {
       </SafeAreaView>
 
       <View style={styles.inputView}>
-        <Input
-          style={styles.input}
-          // value={message}
-          border={{borderColor: COLORS.gray, borderWidth: 1}}
+     
+         <View style={{borderColor: COLORS.gray, borderWidth: 1, borderRadius: 24, marginEnd: 5, backgroundColor: COLORS.lightGray,}}>
+         <TextInput
+          style={[styles.input]}
+          //placeholderTextColor={COLORS.placeHolderTextColor}
           placeholder="Type a message"
           multiline={true}
+          border={{borderColor: COLORS.gray, borderWidth: 1}}
+          autoCapitalize="none"
+          autoCorrect={false}
+          onContentSizeChange={e => setHeight(e.nativeEvent.contentSize.height)}
           onChangeText={text => {
             //setMessage(text);
           }}
         />
+        </View>
 
         <TouchableOpacity
           onPress={() => {
@@ -98,6 +106,11 @@ const styles = StyleSheet.create({
   input: {
     width: width - 80,
     marginRight: 10,
+    flex: 1.0,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '400',
+    fontSize: 16,
+    color: COLORS.black,
   },
   back: {
     height: 24,

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   View,
   Dimensions,
@@ -6,28 +6,23 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import {Text, Button} from '../components';
-import {LocalizationContext} from '../context/LocalizationProvider';
-
-import {
-  PagerTabIndicator,
-  IndicatorViewPager,
-  PagerTitleIndicator,
-  PagerDotIndicator,
-} from '@shankarmorwal/rn-viewpager';
+import { Text, Button } from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import PagerView from 'react-native-pager-view';
 
 const AddProductsItemList = props => {
-  const {getTranslation} = useContext(LocalizationContext);
+  const { getTranslation } = useContext(LocalizationContext);
   const item = props.item;
 
-  const setImages = () => {
-    let jsonObject = JSON.parse(item.prod_img);
-    return jsonObject;
-  };
+  const getTotalPrice = () => {
+      var totalPriceForProduct = item.price_of_product * item.quantity
+      return '' + totalPriceForProduct.toFixed(2);
+
+  }
 
   return (
     <View
@@ -36,23 +31,26 @@ const AddProductsItemList = props => {
           //margin: 5,
         }
       }>
-      <Image
+      {/* <Image
         style={styles.image}
         source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
-      />
-       <IndicatorViewPager
-          style={styles.pagerStyle}
-          indicator={
-            <PagerDotIndicator pageCount={setImages.length} />
-          }>
-            <Image
-            style={styles.image}
-            source={setImages.length>0 ? {uri: setImages[0]} : IMAGES.product_placeholder}
-          />
-         
-        </IndicatorViewPager>
+      /> */}
+      <PagerView style={styles.image} initialPage={0}>
+        {JSON.parse(item.prod_img).map(x => {
+         // console.log(x);
+          return (
+            <View >
+              <Image
+                style={styles.image}
+                source={{uri: x}}
+              />
+            </View>
+          )
+        })}
+  
+      </PagerView>
 
-      <View style={[styles.inputView, {marginTop: 20}]}>
+      <View style={[styles.inputView, { marginTop: 20 }]}>
         <Text
           size="20"
           weight="500"
@@ -102,7 +100,7 @@ const AddProductsItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'€ '+ item.price_of_product  +' * '+  item.quantity + ' = € ' + item.price_of_product * item.quantity }
+            {'€ ' + item.price_of_product + ' * ' + item.quantity + ' = € ' + getTotalPrice()}
           </Text>
         </View>
 
@@ -144,7 +142,16 @@ const styles = StyleSheet.create({
   inputView: {
     marginHorizontal: 30,
   },
-  image:{
+  ViewPager: {
+    width: 310,
+    height: 310,
+    //borderRadius: 24,
+    //marginHorizontal: 5,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  image: {
     width: 300,
     height: 300,
     borderRadius: 24,
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
   },
-  text_right:{
+  text_right: {
     flex: 1,
     marginLeft: 10,
   },

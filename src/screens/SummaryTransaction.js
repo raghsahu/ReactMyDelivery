@@ -340,7 +340,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('ad_seen_by') + ' :'}
+                {getTranslation('ad_seen_by') }
               </Text>
 
               <Text

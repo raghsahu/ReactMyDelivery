@@ -37,8 +37,8 @@ const PublishedItemList = props => {
               margin: 5,
             }}
             source={
-              item.products[0].prod_img
-                ? {uri: imageBaseUrl + item.products[0].prod_img}
+              item.user_img
+                ? {uri: imageBaseUrl + item.user_img}
                 : IMAGES.circle_placeholder
             }
           />
@@ -54,7 +54,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor2}
               size="18"
               weight="500">
-              {item.products[0].prod_name}
+              {item.user_f_name + ' '+ item.user_l_name}
             </Text>
 
             <View

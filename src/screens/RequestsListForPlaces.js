@@ -15,6 +15,7 @@ import {
 
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
+import moment from 'moment'; // date format
 
 //COMMON COMPONENT
 import {
@@ -41,14 +42,28 @@ function RequestsListForPlaces(props) {
   const [isFilter, setIsFilter] = useState(false);
   const [filterKey, setFilterKey] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [maxPrice, setMaximumPrice] = useState('');
-  const [minCommission, setMinimumCommission] = useState(0);
+  const [maxPrice, setMaximumPrice] = useState('1000');
+  const [minCommission, setMinimumCommission] = useState('1');
   const [requestItem, setRequestItem] = useState([]);
+  const [currentDate, setCurrentDate] = useState();
 
   useEffect(() => {
     setOptionFilter(filterList);
+   // getCurrentDate();
     getRequestList();
+
   }, []);
+
+  const getCurrentDate=()=>{
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    //Alert.alert(date + '-' + month + '-' + year);
+    // You can turn it in to your desired format
+    return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
+}
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -58,17 +73,17 @@ function RequestsListForPlaces(props) {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(true);
     const result = await getFilterProduct(
-      // null,
-      // null,
-      // null,
-      // maxPrice,
-      // '1',
-      // null,
-      // minCommission,
-      // null,
-      // '0',
-      // lat,
-      // lng,
+    //   getCurrentDate(),
+    //   '4',
+    //   getCurrentDate(),
+    //   maxPrice,
+    //   '1',
+    //   '10000',
+    //   minCommission,
+    //   getCurrentDate(),
+    //  // '2',
+    //   lat,
+    //   lng,
     );
     setLoading(false);
     if (result.status == true) {
@@ -76,6 +91,7 @@ function RequestsListForPlaces(props) {
       setRequestItem(result.data);
     } else {
       Toast.show(result.error);
+      setRequestItem([]);
     }
   };
 
@@ -157,11 +173,63 @@ function RequestsListForPlaces(props) {
                         }
                         setOptionFilter(data);
 
-                        if (id == '4' && data[index].selected) {
-                          setMaximumPrice('');
+                        if(id == '1'){
+                           requestItem.sort((a,b)=>{
+                            const dateA = new Date(`${a.ad_create_date}`).valueOf();
+                            const dateB = new Date(`${b.ad_create_date}`).valueOf();
+                            if(data[index].selected){
+                              if(dateA > dateB){
+                                return -1; // return -1 here for DESC order
+                              }
+                            }else{
+                              if(dateB > dateA){
+                                return -1; // return -1 here for DESC order
+                              }
+                            }
+                            
+                            return 1 // return 1 here for DESC Order
+                          });
+                         
+                        }else if(id == '2'){
+
+                        }else if(id == '3'){
+                          requestItem.sort((a,b)=>{
+                            const rating1 = a.user_x[0].user_rating_count;
+                            const rating2 = b.user_x[0].user_rating_count;
+                            if(data[index].selected){
+                              if(rating1 > rating2){
+                                return -1; // return -1 here for DESC order
+                              }
+                            }else{
+                              if(rating2 > rating1){
+                                return -1; // return -1 here for DESC order
+                              }
+                            }
+                            
+                            return 1 // return 1 here for DESC Order
+                          });
+
+                        }else if(id == '4' && data[index].selected){
+                          // setMaximumPrice('');
                           logoutModalVisibility();
-                        } else if (id == '6' && data[index].selected) {
-                          setMinimumCommission('');
+                        }else if(id == '5'){
+                          requestItem.sort((a,b)=>{
+                            var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                            var dateB = new Date(moment(b.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                            if(data[index].selected){
+                              if(dateA > dateB){
+                                return -1; // return -1 here for DESC order
+                              }
+                            }else{
+                              if(dateB > dateA){
+                                return -1; // return -1 here for ASC order
+                              }
+                            }
+                            
+                            return 1 // return 1 here for DESC Order
+                          });
+                        }else if(id == '6' && data[index].selected){
+                          // setMinimumCommission('1');
                           logoutModalVisibility();
                         }
                       }}

@@ -152,8 +152,7 @@ function AddProduct(props) {
   const getTotalPrice = () => {
     if (priceOfProduct && quantity) {
       var totalPriceForProduct = priceOfProduct * quantity
-      return '' + totalPriceForProduct;
-      setTotalPrice(totalPriceForProduct)
+      return '' + totalPriceForProduct.toFixed(2);
     }
     return ''
   }
@@ -177,11 +176,11 @@ function AddProduct(props) {
         Toast.show('Please enter price of product');
       } else if (!quantity) {
         Toast.show('Please enter quantity');
-      } else if (prodImg.length < 1 ) {
+      } else if (prodImg.length < 1) {
         Toast.show('Please capture product image');
       } else {
-       // var commaSepImage = prodImg.join(","); 
-       // console.log('commaSep ', commaSepImage)
+        // var commaSepImage = prodImg.join(","); 
+        // console.log('commaSep ', commaSepImage)
 
         db.transaction(function (tx) {
           tx.executeSql(
@@ -192,7 +191,7 @@ function AddProduct(props) {
               placeToBuy,
               priceOfProduct,
               quantity,
-              totalPrice.toString(),
+              getTotalPrice(),
               additionalInfo,
               JSON.stringify(prodImg),
             ],
@@ -208,7 +207,7 @@ function AddProduct(props) {
                 setTotalPrice('');
                 setAdditionalInfo('');
                 prodImg.splice(0, prodImg.length);
-                prodImg.length=0;
+                prodImg.length = 0;
                 setProdImg(prodImg);
 
                 //get all saved product count
@@ -299,9 +298,9 @@ function AddProduct(props) {
               alignSelf: 'center',
             }}
             onPress={() => {
-              if(prodImg.length==3){
+              if (prodImg.length == 3) {
                 Toast.show('you can upload maximum 3 photos')
-              }else{
+              } else {
                 onPressUpload()
               }
             }}>

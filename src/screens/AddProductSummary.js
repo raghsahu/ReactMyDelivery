@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -29,23 +29,23 @@ import {
   ProgressView,
 } from '../components';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
 import Toast from 'react-native-simple-toast';
-import {APPContext} from '../context/AppProvider';
-const {height, width} = Dimensions.get('screen');
-import {openDatabase} from 'react-native-sqlite-storage';
-var db = openDatabase({name: 'DescribeProduct.db'});
+import { APPContext } from '../context/AppProvider';
+const { height, width } = Dimensions.get('screen');
+import { openDatabase } from 'react-native-sqlite-storage';
+var db = openDatabase({ name: 'DescribeProduct.db' });
 
 function AddProductSummary(props) {
-  const {CommissionData} = props.route.params;
+  const { CommissionData } = props.route.params;
   const [productListItems, setProductListItems] = useState([]);
   const [prodTotalPrice, setTotalPrice] = useState(0);
   const [totalToPayPrice, setTotalToPay] = useState(0);
 
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const {getTranslation} = useContext(LocalizationContext);
-  const {user, webServices, getError, add_Product} = useContext(APPContext);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { user, webServices, getError, add_Product } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -58,13 +58,13 @@ function AddProductSummary(props) {
           totalPrice =
             totalPrice +
             results.rows.item(i).price_of_product *
-              results.rows.item(i).quantity;
+            results.rows.item(i).quantity;
         }
         setProductListItems(temp);
-        setTotalPrice(totalPrice);
+        setTotalPrice(totalPrice.toFixed(2));
         const totalToPay =
           totalPrice + parseInt(CommissionData.globalCommission);
-        setTotalToPay(totalToPay);
+        setTotalToPay(totalToPay.toFixed(2));
       });
     });
   }, []);
@@ -77,15 +77,8 @@ function AddProductSummary(props) {
     setSelection(checkStatus);
   };
 
-  //CommissionData.globalCommission - CommissionData.globalCommission * 0.80
-  const getFeesDetails = () => {
-      var totalCommission = CommissionData.globalCommission - CommissionData.globalCommission * 0.80 //80% of global commission
-      const validated = totalCommission.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
-      if (validated) {
-        return ''+ totalCommission;
-      }
-
-      return totalCommission;
+  const checkDecimal = (amount) => {
+    return amount.toFixed(2);
   }
 
   var tempImages = [];
@@ -93,7 +86,7 @@ function AddProductSummary(props) {
     setLoading(true);
     for (let i = 0; i < productListItems.length; i++) {
       const formData = new FormData();
-     // console.log('prod_imgffff: ', JSON.parse(productListItems[i].prod_img));
+      // console.log('prod_imgffff: ', JSON.parse(productListItems[i].prod_img));
       let jsonObject = JSON.parse(productListItems[i].prod_img);
       jsonObject.forEach((item, j) => {
         formData.append("prod_img[]", {
@@ -230,7 +223,7 @@ function AddProductSummary(props) {
           style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
-            style={[{backgroundColor: COLORS.white, padding: 10}]}
+            style={[{ backgroundColor: COLORS.white, padding: 10 }]}
             size="18"
             weight="500"
             align="center"
@@ -250,12 +243,13 @@ function AddProductSummary(props) {
             showsVerticalScrollIndicator={false}
             data={productListItems}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              return <AddProductsItemList item={item} />;
+            renderItem={({ item, index }) => {
+              return <AddProductsItemList
+                item={item} />;
             }}
           />
 
-          <View style={[styles.inputView, {marginTop: 20}]}>
+          <View style={[styles.inputView, { marginTop: 20 }]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -275,8 +269,8 @@ function AddProductSummary(props) {
                 {CommissionData.gender == '1'
                   ? 'Man'
                   : CommissionData.gender == '2'
-                  ? 'Women'
-                  : 'Both'}
+                    ? 'Women'
+                    : 'Both'}
               </Text>
             </View>
 
@@ -354,7 +348,7 @@ function AddProductSummary(props) {
               },
             ]}>
             <Text
-              style={{justifyContent: 'center', alignSelf: 'center'}}
+              style={{ justifyContent: 'center', alignSelf: 'center' }}
               color={COLORS.textColor4}
               size="14"
               align="center"
@@ -363,7 +357,7 @@ function AddProductSummary(props) {
             </Text>
 
             <Text
-              style={{justifyContent: 'center', alignSelf: 'center', marginRight: 10}}
+              style={{ justifyContent: 'center', alignSelf: 'center', marginRight: 10 }}
               color={COLORS.textColor4}
               size="14"
               align="center"
@@ -372,7 +366,7 @@ function AddProductSummary(props) {
             </Text>
 
             <Text
-              style={{justifyContent: 'center', alignSelf: 'center', marginRight: 20}}
+              style={{ justifyContent: 'center', alignSelf: 'center', marginRight: 20 }}
               color={COLORS.textColor4}
               size="14"
               align="center"
@@ -431,7 +425,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {CommissionData.globalCommission * 0.80}
+              {checkDecimal(CommissionData.globalCommission * 0.80)}
             </Text>
 
             <Image
@@ -458,7 +452,7 @@ function AddProductSummary(props) {
               size="16"
               align="center"
               weight="500">
-              {CommissionData.globalCommission * 0.20}
+              {checkDecimal(CommissionData.globalCommission * 0.20)}
             </Text>
           </View>
 
@@ -501,7 +495,7 @@ function AddProductSummary(props) {
           />
 
           <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
+            style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
             title={getTranslation('accept')}
             onPress={() => {
               if (isSelected) {
@@ -560,7 +554,7 @@ function AddProductSummary(props) {
             </TouchableOpacity>
 
             <Text
-              style={{marginTop: 10}}
+              style={{ marginTop: 10 }}
               size="18"
               weight="500"
               align="center"
@@ -569,7 +563,7 @@ function AddProductSummary(props) {
             </Text>
 
             <Text
-              style={{marginTop: 10}}
+              style={{ marginTop: 10 }}
               size="18"
               weight="500"
               align="center"
@@ -578,7 +572,7 @@ function AddProductSummary(props) {
             </Text>
 
             <Text
-              style={{marginTop: 10}}
+              style={{ marginTop: 10 }}
               size="16"
               weight="400"
               align="center"
@@ -595,7 +589,7 @@ function AddProductSummary(props) {
               }}>
               <Button
                 style={[
-                  {width: 200, justifyContent: 'center', alignSelf: 'center'},
+                  { width: 200, justifyContent: 'center', alignSelf: 'center' },
                 ]}
                 title={getTranslation('ok')}
                 onPress={() => {
@@ -631,7 +625,7 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 250,
     width: width * 0.85,
     backgroundColor: '#fff',
