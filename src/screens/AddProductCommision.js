@@ -49,7 +49,8 @@ function AddProductCommision(props) {
   const [secondDate, setSecondDate] = useState('false');
   const [secondTime, setSecondTime] = useState('false');
   const [dateSelected, setDateSelected] = useState(false);
-  //const [address, setAddress] = useState('');
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
 
   const onSelect = item => {
     if (gender && gender.key === item.key) {
@@ -109,13 +110,15 @@ function AddProductCommision(props) {
     } else {
       const CommissionData = {
         globalCommission: globalCommission,
-        ad_cmsn_delivery: deliveryCommission,
+        ad_cmsn_delivery: getCommissionPrice(),
         placeOfDelivery: placeOfDelivery,
         gender: gender.key,
         acceptanceDay: selectDate,
         limitDay: selectDate1,
         acceptanceTime: selectTime + ':00',
         deliveryTime: selectTime1 + ':00',
+        ad_lat: lat,
+        ad_lon: lng,
       };
 
       props.navigation.navigate('AddProductSummary', {
@@ -132,8 +135,8 @@ function AddProductCommision(props) {
         setPlaceOfDelivery(item.address);
         // setCity(item.city);
         // setCountry(item.country);
-        // setLat(item.lat);
-        // setLng(item.lng);
+        setLat(item.lat);
+        setLng(item.lng);
       },
     });
   };
@@ -144,13 +147,13 @@ function AddProductCommision(props) {
 
       const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
       if (validated) {
-        return ''+ totalCommission;
+        return ''+ totalCommission.toFixed(2);
        // setDeliveryCommission(totalCommission)
       }else{
         return '1';
        // setDeliveryCommission('1')
       }
-      setDeliveryCommission(totalCommission.toString())
+     // setDeliveryCommission(totalCommission.toString())
     }
     return '1'
   }

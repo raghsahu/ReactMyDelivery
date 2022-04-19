@@ -797,8 +797,14 @@ function SummaryTransaction(props) {
                 style={[{width: 100}]}
                 title={getTranslation('propose')}
                 onPress={() => {
-                  ChangeDateModalVisibility();
+                  if (!selectDate) {
+                    Toast.show('Please enter day');
+                  } else if (!selectTime) {
+                    Toast.show('Please enter time');
+                  } else {
+                    ChangeDateModalVisibility();
                     onNext();
+                  }
                  // props.navigation.navigate('ProposalChangedDate');
                  // setEnableTxnCodeBtn(true);
                 }}

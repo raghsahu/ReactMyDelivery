@@ -48,6 +48,7 @@ function AdSummaryDetails(props) {
   const actionSheetRef = useRef();
   const [item, setItem] = useState({});
   const [products, setItemProducts] = useState([]);
+  const [dbProducts, setItemDbProducts] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender, validURL } = useContext(CommonUtilsContext);
   const { getAdAccept, user } = useContext(APPContext);
@@ -83,6 +84,10 @@ function AdSummaryDetails(props) {
   const [newPrice, setNewPrice] = useState('');
   const [newQuantity, setNewQunatity] = useState('');
   const [newTotalPrice, setNewTotalPrice] = useState('');
+  const [newGlobalCommission, setNewGlobalCommission] = useState('');
+  const [newPlaceOfDelivery, setNewPlaceOfDelivery] = useState('');
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
 
   useEffect(() => {
     const item = props.route.params.ProdData;
@@ -141,12 +146,28 @@ function AdSummaryDetails(props) {
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-          
+            //setItemProducts(item.products)
+            getAllSavedProducts();
+
           }
         },
       );
     });
   }
+  };
+
+  const getAllSavedProducts = () => {
+    setItemDbProducts([]);
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM modify_product', [], (tx, results) => {
+        var temp = [];
+
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        setItemDbProducts(temp);
+      });
+    });
   };
 
   const onDiscard = () => {
@@ -180,6 +201,7 @@ function AdSummaryDetails(props) {
            
             if (results.rowsAffected > 0) {
               photosModalVisibleModalVisibility();
+              getAllSavedProducts();
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -198,6 +220,7 @@ function AdSummaryDetails(props) {
           try{
             if (results.rowsAffected > 0) {
               webLinkModalVisibleModalVisibility();
+              getAllSavedProducts();
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -211,11 +234,12 @@ function AdSummaryDetails(props) {
     db.transaction((tx) => {
       tx.executeSql(
         'UPDATE modify_product set prod_price=?, prod_qnty=?, prod_price_total=? where prod_id=?',
-        [newPrice, newQuantity, newTotalPrice.toString(), modifyProdId],
+        [newPrice, newQuantity, getTotalPrice(), modifyProdId],
         (tx, results) => {
           try{
             if (results.rowsAffected > 0) {
               changePriceQuantityModalVisibleModalVisibility();
+              getAllSavedProducts();
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -228,11 +252,41 @@ function AdSummaryDetails(props) {
   const getTotalPrice = () => {
     if (newPrice && newQuantity) {
       var totalPriceForProduct = newPrice * newQuantity
-      return '€ '+ totalPriceForProduct;
-      setNewTotalPrice(totalPriceForProduct)
+      return ''+totalPriceForProduct.toFixed(2);
+      //setNewTotalPrice(totalPriceForProduct)
     }
-    return '€'
+    return ''
   }
+
+  const getCommissionPrice = () => {
+    if (newGlobalCommission) {
+      var totalCommission = newGlobalCommission * 0.80  //80% of global commission
+
+      const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+      if (validated) {
+        return ''+ totalCommission.toFixed(2);
+       // setDeliveryCommission(totalCommission)
+      }else{
+        return '1';
+       // setDeliveryCommission('1')
+      }
+      //setDeliveryCommission(totalCommission.toString())
+    }
+    return '1'
+  }
+
+  const onGooglePlace = () => {
+    props.navigation.navigate('GooglePlacesInput', {
+      onReturn: item => {
+        console.log('log_item ' + JSON.stringify(item));
+        setNewPlaceOfDelivery(item.address);
+        // setCity(item.city);
+        // setCountry(item.country);
+        setLat(item.lat);
+        setLng(item.lng);
+      },
+    });
+  };
   
 
   const PaymentDialogModalVisibility = () => {
@@ -294,7 +348,7 @@ function AdSummaryDetails(props) {
       item.ad_id,
       selectDate,
       selectTime,
-      '3', //ad accept type = 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
+      '3', //ad accept type == 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
       '0', //0-pending,1-success,2-cancel,3-return
       totalToPayPrice,
       'No payment'
@@ -431,7 +485,9 @@ function AdSummaryDetails(props) {
 
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={products}
+            data={isProposalToModificationOfAd ? dbProducts : products}
+            //onRefresh={getAllSavedProducts()}
+            //refreshing={isFetching}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return <DeliveryManSummaryProductsItemList
@@ -442,10 +498,12 @@ function AdSummaryDetails(props) {
                   setModifyProdId(prod_id)
                   photosModalVisibleModalVisibility();
                 }}
-                webLinkModalVisibleModalVisibility={() => {
+                webLinkModalVisibleModalVisibility={(prod_id) => {
+                  setModifyProdId(prod_id)
                   webLinkModalVisibleModalVisibility();
                 }}
-                changePriceQuantityModalVisibleModalVisibility={() => {
+                changePriceQuantityModalVisibleModalVisibility={(prod_id) => {
+                  setModifyProdId(prod_id)
                   changePriceQuantityModalVisibleModalVisibility();
                 }}
               />;
@@ -491,7 +549,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ ' + item.ad_cmsn_price}
+                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + newGlobalCommission :  '€ ' + item.ad_cmsn_price )  : '€ ' + item.ad_cmsn_price}
               </Text>
             </View>
 
@@ -511,7 +569,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ ' + item.ad_cmsn_delivery}
+                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + getCommissionPrice(): '€ ' + item.ad_cmsn_delivery)  : '€ ' + item.ad_cmsn_delivery}
               </Text>
             </View>
             <View
@@ -595,7 +653,7 @@ function AdSummaryDetails(props) {
                   color={COLORS.textColor4}
                   size="16"
                   weight="500">
-                  {item.ad_delv_addr}
+                  {isProposalToModificationOfAd ? (newPlaceOfDelivery? newPlaceOfDelivery : item.ad_delv_addr):  item.ad_delv_addr}
                 </Text>
               </View>
               {isProposalToModificationOfAd && (
@@ -636,6 +694,7 @@ function AdSummaryDetails(props) {
                   onPress={() => {
                     proposalToModificationOfAd();
                     //save all data to local db for changes,
+                    onDiscard();
                      setAllOldDataInLocalDb(); 
                   }}
                 />
@@ -692,6 +751,7 @@ function AdSummaryDetails(props) {
                   ]}
                   title={getTranslation('to_cancel')} //or Change Delivery Date (according to condition)
                   onPress={() => {
+                    setNewGlobalCommission('');
                     proposalToModificationOfAd();
                     onDiscard();
                   }}
@@ -955,14 +1015,24 @@ function AdSummaryDetails(props) {
                 color={COLORS.black}>
                 {'Place of Delivery (New)'}
               </Text>
-              <Input
-                style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
-                placeholder={''}
-                isLeft={IMAGES.location}
-                onChangeText={text => {
-                  // setDay(text);
+           <TouchableOpacity
+                onPress={() => {
+                  onGooglePlace();
                 }}
+           // style={[styles.inputView, styles.inputContainer]}
+           style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
+            >
+              <Input
+               // style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
+                placeholder={''}
+                value={newPlaceOfDelivery}
+                isLeft={IMAGES.location}
+                editable={false}
+                // onChangeText={text => {
+                //   // setDay(text);
+                // }}
               />
+              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -979,9 +1049,7 @@ function AdSummaryDetails(props) {
                 style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
-                  // props.navigation.navigate('SendSuggestion', {
-                  //   headerTitle: 'Complain',
-                  // });
+                  placeOfDeliveryModalVisibleModalVisibility();
                 }}
               />
 
@@ -1216,10 +1284,13 @@ function AdSummaryDetails(props) {
                     style={{ marginTop: 7, marginHorizontal: 10 }}
                     placeholder={''}
                     isLeft={IMAGES.percentage}
-                    //value={newPrice}
+                    value={newPrice}
                    keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                     onChangeText={text => {
-                       setNewPrice(text);
+                      const validated = text.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+                      if (validated) {
+                        setNewPrice(text);
+                      }
                     }}
                   />
                 </View>
@@ -1235,11 +1306,14 @@ function AdSummaryDetails(props) {
                   <Input
                     style={{ marginTop: 7, marginEnd: 10 }}
                     placeholder={''}
-                    //value={newQuantity}
+                    value={newQuantity}
                     isLeft={IMAGES.quantity}
                     keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                     onChangeText={text => {
-                       setNewQunatity(text);
+                       const numericRegex = /^([0-9]{0,100})+$/
+                        if (numericRegex.test(text)) {
+                          setNewQunatity(text)
+                        }
                     }}
                   />
                 </View>
@@ -1266,7 +1340,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="center"
                 color={COLORS.primaryColor}>
-                {getTotalPrice()}
+                {'€ '+getTotalPrice()}
               </Text>
             </View>
             <View
@@ -1346,8 +1420,9 @@ function AdSummaryDetails(props) {
                   style={{ marginTop: 7, marginHorizontal: 10 }}
                   placeholder={''}
                   isLeft={IMAGES.percentage}
+                  keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                   onChangeText={text => {
-                    // setDay(text);
+                    setNewGlobalCommission(text);
                   }}
                 />
               </View>
@@ -1371,7 +1446,7 @@ function AdSummaryDetails(props) {
                   weight="500"
                   align="center"
                   color={COLORS.primaryColor}>
-                  {'€ 0.50'}
+                  {'€ '+ getCommissionPrice()}
                 </Text>
               </View>
             </View>
@@ -1390,6 +1465,7 @@ function AdSummaryDetails(props) {
                 style={[styles.modalCancelButton]}
                 title={'Cancel'} //or Change Delivery Date (according to condition)
                 onPress={() => {
+                  setNewGlobalCommission('');
                   commissionModalVisibleModalVisibility();
                 }}
               />

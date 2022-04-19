@@ -33,6 +33,7 @@ import EditAccount from './EditAccount';
 import Incomplete from './Incomplete';
 import Published from './Published';
 import AsSender from './AsSender';
+import InProgressAsUser from './InProgressAsUser';
 
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
@@ -49,7 +50,7 @@ function MyAccount(props) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(0);
-  const [index1, setIndex1] = useState(3);
+  const [index1, setIndex1] = useState(1);
   const [tabStatus, setTabStatus] = useState();
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
@@ -185,22 +186,43 @@ function MyAccount(props) {
   const RenderElement2 = () => {
     //You can add N number of Views here in if-else condition
     if (index1 === 1) {
-      //Return the FirstScreen as a child to set in Parent View
-      return null;
-      //<AsSender />;
+      if (tabStatus === 'completed') {
+        return null;
+      } else {
+        return (
+        <InProgressAsUser
+          subTabIndex={index1}
+          tabStatus={tabStatus}
+          // onSummary={() => {
+          //   props.navigation.navigate('SummaryTransaction');
+          // }}
+        />
+        );
+      }
     } else if (index1 === 2) {
-      //Return the SecondScreen as a child to set in Parent View
-      return null;
-      //<AsSender />;
+      if (tabStatus === 'completed') {
+        return null;
+      } else {
+        return (
+        <InProgressAsUser
+          subTabIndex={index1}
+          tabStatus={tabStatus}
+          // onSummary={() => {
+          //   props.navigation.navigate('SummaryTransaction');
+          // }}
+        />
+        );
+      }
+     
     } else if (index1 === 3) {
       //Return the SecondScreen as a child to set in Parent View
       if (tabStatus === 'completed') {
         return (
           <AsSender
             onSummary={() => {
-              props.navigation.navigate('SummaryTransaction', {
-                status: 'completed',
-              });
+              // props.navigation.navigate('SummaryTransaction', {
+              //   status: 'completed',
+              // });
             }}
             onRating={() => {
               props.navigation.navigate('RatingReview');
@@ -208,14 +230,15 @@ function MyAccount(props) {
           />
         );
       } else {
-        return null;
-        //(
-        // <AsSender
-        //   onSummary={() => {
-        //     props.navigation.navigate('SummaryTransaction');
-        //   }}
-        // />
-        // );
+        return (
+          <InProgressAsUser
+            subTabIndex={index1}
+            tabStatus={tabStatus}
+            // onSummary={() => {
+            //   props.navigation.navigate('SummaryTransaction');
+            // }}
+          />
+          );
       }
     }
   };

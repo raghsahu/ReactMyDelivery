@@ -20,6 +20,7 @@ import ProgressView from './ProgressView';
 import AddProductsItemList from './AddProductItemSummary';
 import FilterItem from './FilterItem';
 import DeliveryManSummaryProductsItemList from './DeliveryManSummaryProductsItemList';
+import InProgressItemList from './InProgressItemList';
 
 export {
   Text,
@@ -44,4 +45,5 @@ export {
   AddProductsItemList,
   FilterItem,
   DeliveryManSummaryProductsItemList,
+  InProgressItemList,
 };

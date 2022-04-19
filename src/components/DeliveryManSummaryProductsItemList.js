@@ -13,12 +13,27 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
+import PagerView from 'react-native-pager-view';
 
 const DeliveryManSummaryProductsItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
-  //const [isProposalToModificationOfAd, setProposalToModificationOfAd] =  useState(false);
   const {imageBaseUrl} = useContext(APPContext);
   const item = props.item;
+
+  const setImages = prodImg => {
+    var imageArray = prodImg.split(',');
+   // console.log('imaggggg '+ imageArray[0])
+    return imageArray ? imageArray[0]: '' 
+  };
+
+  const isValidHttpUrl = prodImg => {
+    if (prodImg.includes('file:')) { 
+      // Found world
+      return true
+    }
+      return false
+
+  };
 
   return (
     <View
@@ -28,17 +43,27 @@ const DeliveryManSummaryProductsItemList = props => {
         }
       }>
      <Image
-            style={{
-              width: 300,
-              height: 300,
-              marginTop: 20,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}
-            source={item.prod_img ? {uri: imageBaseUrl + item.prod_img} : IMAGES.product_placeholder}
+          style={styles.image}
+            source={props.isProposalToModificationOfAd ? {uri: isValidHttpUrl(item.prod_img ) ? item.prod_img : imageBaseUrl+ item.prod_img } : 
+              setImages(item.prod_img)
+                ? {uri: imageBaseUrl + setImages(item.prod_img)}
+                : IMAGES.product_placeholder
+            }
           />
+          {/* <PagerView style={styles.image} initialPage={0}>
+            {setImages(item.prod_img).map(x => {
+            // console.log(x);
+              return (
+                <View >
+                  <Image
+                    style={styles.image}
+                    source={{uri: x}}
+                  />
+                </View>
+              )
+            })}
+      
+          </PagerView> */}
 
           <View style={[styles.inputView, { marginTop: 20 }]}>
             <Text
@@ -94,7 +119,7 @@ const DeliveryManSummaryProductsItemList = props => {
                   size="16"
                   weight="500"
                   onPress={() => {
-                    props.webLinkModalVisibleModalVisibility();
+                    props.webLinkModalVisibleModalVisibility(item.prod_id);
                   }}>
                   {getTranslation('change')}
                 </Text>
@@ -152,7 +177,7 @@ const DeliveryManSummaryProductsItemList = props => {
                   size="16"
                   weight="500"
                   onPress={() => {
-                    props.changePriceQuantityModalVisibleModalVisibility();
+                    props.changePriceQuantityModalVisibleModalVisibility(item.prod_id);
                   }}>
                   {getTranslation('change')}
                 </Text>
@@ -199,13 +224,13 @@ const styles = StyleSheet.create({
     marginHorizontal: DIMENSION.marginHorizontal,
   },
   image:{
-    width: 300,
-    height: 300,
-    borderRadius: 24,
-    marginHorizontal: 5,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginTop: 10,
+      width: 300,
+      height: 300,
+      marginTop: 20,
+      borderRadius: 35,
+      marginHorizontal: 5,
+      justifyContent: 'center',
+      alignSelf: 'center',
   },
    rightButtons: {
     // position: 'absolute',

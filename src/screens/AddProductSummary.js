@@ -171,6 +171,8 @@ function AddProductSummary(props) {
         '0',
         totalToPayPrice,
         'offline payment',
+        CommissionData.ad_lat,
+        CommissionData.ad_lon,
       );
       setLoading(false);
       if (result.status == true) {

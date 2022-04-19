@@ -42,7 +42,7 @@ function RequestsListForPlaces(props) {
   const [isFilter, setIsFilter] = useState(false);
   const [filterKey, setFilterKey] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [maxPrice, setMaximumPrice] = useState('1000');
+  const [maxPrice, setMaximumPrice] = useState('10000000');
   const [minCommission, setMinimumCommission] = useState('1');
   const [requestItem, setRequestItem] = useState([]);
   const [currentDate, setCurrentDate] = useState();
@@ -73,17 +73,13 @@ function RequestsListForPlaces(props) {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(true);
     const result = await getFilterProduct(
-    //   getCurrentDate(),
-    //   '4',
-    //   getCurrentDate(),
-    //   maxPrice,
-    //   '1',
-    //   '10000',
-    //   minCommission,
-    //   getCurrentDate(),
-    //  // '2',
-    //   lat,
-    //   lng,
+      maxPrice,
+      '1',
+      '10000000',
+      minCommission,
+       getCurrentDate(),
+       lat,
+       lng,
     );
     setLoading(false);
     if (result.status == true) {
@@ -174,6 +170,9 @@ function RequestsListForPlaces(props) {
                         setOptionFilter(data);
 
                         if(id == '1'){
+                          // setMaximumPrice('10000');
+                          // setMinimumCommission('1');
+                          // getRequestList();
                            requestItem.sort((a,b)=>{
                             const dateA = new Date(`${a.ad_create_date}`).valueOf();
                             const dateB = new Date(`${b.ad_create_date}`).valueOf();
@@ -191,8 +190,27 @@ function RequestsListForPlaces(props) {
                           });
                          
                         }else if(id == '2'){
-
+                          // setMaximumPrice('10000');
+                          // setMinimumCommission('1');
+                          // getRequestList();
+                          requestItem.sort((a,b)=>{
+                            var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                            var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+                            if(data[index].selected){
+                              if(dateB > dateA){
+                                return -1 // return -1 here for DESC order
+                              }
+                            }else{
+                              if(dateA > dateB){
+                                return -1 // return -1 here for ASC order
+                              }
+                            }    
+                           return 1 // return 1 here for DESC Order
+                          });
                         }else if(id == '3'){
+                          // setMaximumPrice('10000');
+                          // setMinimumCommission('1');
+                          // getRequestList();
                           requestItem.sort((a,b)=>{
                             const rating1 = a.user_x[0].user_rating_count;
                             const rating2 = b.user_x[0].user_rating_count;
@@ -213,6 +231,9 @@ function RequestsListForPlaces(props) {
                           // setMaximumPrice('');
                           logoutModalVisibility();
                         }else if(id == '5'){
+                          // setMaximumPrice('10000');
+                          // setMinimumCommission('1');
+                          // getRequestList();
                           requestItem.sort((a,b)=>{
                             var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
                             var dateB = new Date(moment(b.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();

@@ -16,7 +16,7 @@ import {Rating} from 'react-native-ratings';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 
-const AsSenderItemList = props => {
+const AdvertiseListItem = props => {
   const {getTranslation} = useContext(LocalizationContext);
   const {imageBaseUrl} = useContext(APPContext);
   const item = props.item;
@@ -43,7 +43,7 @@ const AsSenderItemList = props => {
               {getTranslation('application_rate')}
             </Text>
             <Text style={{}} color={COLORS.textColor} size="8" weight="400">
-              {getTranslation('number_evaluation') + ' 31'}
+              {getTranslation('number_evaluation') + ''+ item.user_rating ? item.user_rating : '0'}
             </Text>
           </View>
           <View style={styles.ratingView}>
@@ -65,8 +65,8 @@ const AsSenderItemList = props => {
         <View style={styles.imageView}>
           <Image style={styles.image} 
           source={
-              item.products[0].prod_img
-                ? {uri: imageBaseUrl + item.products[0].prod_img}
+              item.user_img
+                ? {uri: imageBaseUrl + item.user_img}
                 : IMAGES.circle_placeholder
             } />
 
@@ -243,4 +243,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AsSenderItemList;
+export default AdvertiseListItem;

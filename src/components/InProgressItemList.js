@@ -8,7 +8,7 @@ import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 
-const PublishedItemList = props => {
+const InProgressItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
   const {imageBaseUrl} = useContext(APPContext);
   const item = props.item;
@@ -81,7 +81,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.products[0].prod_place_delivery}
+                {''}
               </Text>
             </View>
           </View>
@@ -106,12 +106,12 @@ const PublishedItemList = props => {
                 backgroundColor: '#C2C2C2',
               },
             ]}
-            title={getTranslation('expired')}
+            title={'Complaint'}
             type={2}
             //onPress={() => {props.onModify()}}
           />
 
-          <Button
+          {/* <Button
             style={[
               {
                 width: 93,
@@ -127,7 +127,7 @@ const PublishedItemList = props => {
             onPress={() => {
               props.onDelete();
             }}
-          />
+          /> */}
         </View>
 
         <View
@@ -194,7 +194,7 @@ const PublishedItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {item.products[0].prod_price_total}
+              {''}
             </Text>
           </View>
 
@@ -228,4 +228,4 @@ const PublishedItemList = props => {
   );
 };
 
-export default PublishedItemList;
+export default InProgressItemList;

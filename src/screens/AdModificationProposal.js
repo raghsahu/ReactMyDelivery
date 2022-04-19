@@ -521,9 +521,9 @@ function AdModificationProposal(props) {
               style={[{width: 156}]}
               title={getTranslation('accept')}
               onPress={() => {
-                props.navigation.navigate('SummaryTransaction', {
-                  status: '',
-                });
+                // props.navigation.navigate('SummaryTransaction', {
+                //   status: '',
+                // });
               }}
             />
           </View>

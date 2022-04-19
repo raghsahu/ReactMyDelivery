@@ -118,7 +118,7 @@ export const AppProvider = props => {
   };
 
   const add_Product = async (product_data, ad_user_id, ad_cmsn_price, ad_cmsn_delivery, placeOfDelivery, ad_gender, ad_accept_limit, ad_delivery_limit,
-    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info) => {
+    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_lat, ad_lon) => {
     let params = {
       product_data: product_data,
       ad_user_id: ad_user_id,
@@ -132,6 +132,8 @@ export const AppProvider = props => {
       ad_pay_status: ad_pay_status,
       ad_pay_amount: ad_pay_amount,
       ad_pay_info: ad_pay_info,
+      ad_lat: ad_lat,
+      ad_lon: ad_lon,
     };
 
     return await request(webServices.addProduct, 'post', params);
@@ -145,18 +147,13 @@ export const AppProvider = props => {
     return await request(webServices.ads_by_status, 'post', params);
   };
 
-  const getFilterProduct = async (publication_date, advertiser_rating, duration_ad, max_price,min_price,max_cmsn,min_cmsn,
-    last_delv_date,ad_type,user_lat, user_lon ) => {
+  const getFilterProduct = async ( max_price, min_price,max_cmsn,min_cmsn,last_delv_date,user_lat, user_lon ) => {
     let params = {
-      publication_date: publication_date,
-      advertiser_rating: advertiser_rating,
-      duration_ad: duration_ad,
       max_price: max_price,
       min_price: min_price,
       max_cmsn: max_cmsn,
       min_cmsn: min_cmsn,
-      last_delv_date: last_delv_date,
-      ad_type: ad_type,
+     // last_delv_date: last_delv_date,
       user_lat: user_lat,
       user_lon: user_lon,
  
