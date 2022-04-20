@@ -33,6 +33,8 @@ export const AppProvider = props => {
     getProductFilter: baseURL + 'fields/product',
     ad_accept: baseURL + 'madd/ad_accept',
     change_date_time: baseURL + 'madd/change_date_time',
+    change_request: baseURL + 'madd/change_request',
+    del_ads: baseURL + 'del/ads_by_status',
   };
 
   const getLogin = async (email, pw) => {
@@ -139,6 +141,26 @@ export const AppProvider = props => {
     return await request(webServices.addProduct, 'post', params);
   };
 
+  const change_request = async (product_data, ad_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
+    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change) => {
+    let params = {
+      product_data: product_data,
+      ad_id: ad_id,
+      ad_cmsn_price: ad_cmsn_price,
+      ad_cmsn_delivery: ad_cmsn_delivery,
+      ad_gender: ad_gender,
+      ad_accept_limit: ad_accept_limit,
+      ad_delivery_limit: ad_delivery_limit,
+      ad_type: ad_type,
+      ad_pay_status: ad_pay_status,
+      ad_pay_amount: ad_pay_amount,
+      ad_pay_info: ad_pay_info,
+      ad_why_this_change: ad_why_this_change,
+    };
+
+    return await request(webServices.change_request, 'post', params);
+  };
+
   const publishedProduct = async (user_id, ad_status) => {
     let params = {
       ad_user_id: user_id,
@@ -181,6 +203,14 @@ export const AppProvider = props => {
       change_time: selectTime,
     };
     return await request(webServices.change_date_time, 'post', params);
+  };
+
+  const del_ads = async (ad_id) => {
+    let params = {
+      delete : ad_id,
+
+    };
+    return await request(webServices.del_ads, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -346,6 +376,8 @@ export const AppProvider = props => {
         getFilterProduct,
         getAdAccept,
         putDateTimeChangeRequest,
+        change_request,
+        del_ads,
       }}>
       {props.children}
     </APPContext.Provider>

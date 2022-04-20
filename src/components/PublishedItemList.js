@@ -1,17 +1,25 @@
-import React, {useContext} from 'react';
-import {View, Dimensions, Image, TouchableOpacity} from 'react-native';
-const {height, width} = Dimensions.get('screen');
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Dimensions, Image, TouchableOpacity } from 'react-native';
+const { height, width } = Dimensions.get('screen');
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import {Text, Button} from '../components';
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
+import { Text, Button } from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import moment from 'moment'; // date format
 
 const PublishedItemList = props => {
-  const {getTranslation} = useContext(LocalizationContext);
-  const {imageBaseUrl} = useContext(APPContext);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
+
+  var dateA = new Date(moment(props.item.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
+  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+
+  useEffect(() => {
+
+  }, []);
 
   return (
     <View style={{}}>
@@ -38,7 +46,7 @@ const PublishedItemList = props => {
             }}
             source={
               item.user_img
-                ? {uri: imageBaseUrl + item.user_img}
+                ? { uri: imageBaseUrl + item.user_img }
                 : IMAGES.circle_placeholder
             }
           />
@@ -50,11 +58,11 @@ const PublishedItemList = props => {
               flex: 1,
             }}>
             <Text
-              style={{marginBottom: 5}}
+              style={{ marginBottom: 5 }}
               color={COLORS.textColor2}
               size="18"
               weight="500">
-              {item.user_f_name + ' '+ item.user_l_name}
+              {item.user_f_name + ' ' + item.user_l_name}
             </Text>
 
             <View
@@ -95,21 +103,25 @@ const PublishedItemList = props => {
             marginTop: 5,
             marginRight: 0,
           }}>
-          <Button
-            style={[
-              {
-                width: 93,
-                height: 29,
-                borderRadius: 0,
-                alignSelf: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#C2C2C2',
-              },
-            ]}
-            title={getTranslation('expired')}
-            type={2}
+
+          {dateB < dateA || dateB === dateA ?
+            <Button
+              style={[
+                {
+                  width: 93,
+                  height: 29,
+                  borderRadius: 0,
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#C2C2C2',
+                },
+              ]}
+              title={getTranslation('expired')}
+              type={2}
             //onPress={() => {props.onModify()}}
-          />
+            />
+            :
+            null}
 
           <Button
             style={[
@@ -125,7 +137,7 @@ const PublishedItemList = props => {
             ]}
             title={getTranslation('delete')}
             onPress={() => {
-              props.onDelete();
+              props.onDelete(item.ad_id);
             }}
           />
         </View>

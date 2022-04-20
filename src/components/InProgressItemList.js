@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Dimensions, Image, TouchableOpacity} from 'react-native';
 const {height, width} = Dimensions.get('screen');
 //ASSETS
@@ -11,7 +11,15 @@ import {APPContext} from '../context/AppProvider';
 const InProgressItemList = props => {
   const {getTranslation} = useContext(LocalizationContext);
   const {imageBaseUrl} = useContext(APPContext);
+  const [products, setProducts] = useState({});
   const item = props.item;
+
+  useEffect(() => {
+    if(props.item.hasOwnProperty('products')){
+      setProducts(props.item.products[0])
+    }
+   
+}, []);
 
   return (
     <View style={{}}>
@@ -81,7 +89,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {''}
+                {products.prod_place_delivery}
               </Text>
             </View>
           </View>
@@ -194,7 +202,7 @@ const InProgressItemList = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {''}
+              {products.prod_price_total}
             </Text>
           </View>
 

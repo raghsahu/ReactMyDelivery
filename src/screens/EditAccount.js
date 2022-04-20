@@ -299,7 +299,7 @@ function EditAccount(props) {
       city,
       mSelectedCountryName,
       selectedLanguageKey,
-      password,
+      password ? password : user.user_password,
       lat,
       lng,
       images,

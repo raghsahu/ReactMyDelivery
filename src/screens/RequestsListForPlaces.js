@@ -45,11 +45,10 @@ function RequestsListForPlaces(props) {
   const [maxPrice, setMaximumPrice] = useState('10000000');
   const [minCommission, setMinimumCommission] = useState('1');
   const [requestItem, setRequestItem] = useState([]);
-  const [currentDate, setCurrentDate] = useState();
+
 
   useEffect(() => {
     setOptionFilter(filterList);
-   // getCurrentDate();
     getRequestList();
 
   }, []);
@@ -194,14 +193,14 @@ function RequestsListForPlaces(props) {
                           // setMinimumCommission('1');
                           // getRequestList();
                           requestItem.sort((a,b)=>{
-                            var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-                            var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+                            var dateA = a.duration_ad;
+                            var dateB = b.duration_ad;
                             if(data[index].selected){
-                              if(dateB > dateA){
+                              if(parseInt(dateA) > parseInt(dateB)){
                                 return -1 // return -1 here for DESC order
                               }
                             }else{
-                              if(dateA > dateB){
+                              if(parseInt(dateB) > parseInt(dateA)){
                                 return -1 // return -1 here for ASC order
                               }
                             }    

@@ -51,7 +51,7 @@ function MyAccount(props) {
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [index, setIndex] = useState(0);
   const [index1, setIndex1] = useState(1);
-  const [tabStatus, setTabStatus] = useState();
+  const [tabStatus, setTabStatus] = useState('');
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -186,7 +186,7 @@ function MyAccount(props) {
   const RenderElement2 = () => {
     //You can add N number of Views here in if-else condition
     if (index1 === 1) {
-      if (tabStatus === 'completed') {
+      if (tabStatus == 'completed') {
         return null;
       } else {
         return (
@@ -200,7 +200,7 @@ function MyAccount(props) {
         );
       }
     } else if (index1 === 2) {
-      if (tabStatus === 'completed') {
+      if (tabStatus == 'completed') {
         return null;
       } else {
         return (
@@ -216,7 +216,7 @@ function MyAccount(props) {
      
     } else if (index1 === 3) {
       //Return the SecondScreen as a child to set in Parent View
-      if (tabStatus === 'completed') {
+      if (tabStatus == 'completed') {
         return (
           <AsSender
             onSummary={() => {

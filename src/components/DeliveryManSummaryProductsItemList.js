@@ -44,7 +44,7 @@ const DeliveryManSummaryProductsItemList = props => {
       }>
      <Image
           style={styles.image}
-            source={props.isProposalToModificationOfAd ? {uri: isValidHttpUrl(item.prod_img ) ? item.prod_img : imageBaseUrl+ item.prod_img } : 
+            source={props.isProposalToModificationOfAd ? {uri: isValidHttpUrl(setImages(item.prod_img)) ? setImages(item.prod_img) : imageBaseUrl+ setImages(item.prod_img) } : 
               setImages(item.prod_img)
                 ? {uri: imageBaseUrl + setImages(item.prod_img)}
                 : IMAGES.product_placeholder
@@ -167,7 +167,7 @@ const DeliveryManSummaryProductsItemList = props => {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {'€ '+ item.prod_price  +' * '+  item.prod_qnty + ' = € ' + item.prod_price_total }
+                  {'€ '+ item.prod_price  +' * '+  item.prod_qnty + ' = € ' + parseFloat(item.prod_price_total).toFixed(2) }
                 </Text>
               </View>
               {props.isProposalToModificationOfAd && (

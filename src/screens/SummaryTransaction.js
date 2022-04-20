@@ -789,6 +789,8 @@ function SummaryTransaction(props) {
                 ]}
                 title={getTranslation('cancel')}
                 onPress={() => {
+                  setSelectDate('')
+                  setSelectTime('')
                   ChangeDateModalVisibility();
                 }}
               />

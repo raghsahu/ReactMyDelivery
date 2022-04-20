@@ -35,7 +35,7 @@ function AddProduct(props) {
   const [productName, setProductName] = useState('');
   const [webLink, setWebLinkName] = useState('');
   const [placeToBuy, setPlaceToBuy] = useState('');
-  const [priceOfProduct, setPriceOfProduct] = useState('');
+  const [priceOfProduct, setPriceOfProduct] = useState();
   const [quantity, setQuantity] = useState('');
   const [totalPrice, setTotalPrice] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
@@ -189,7 +189,7 @@ function AddProduct(props) {
               productName,
               webLink,
               placeToBuy,
-              priceOfProduct,
+              parseFloat(priceOfProduct).toFixed(2),
               quantity,
               getTotalPrice(),
               additionalInfo,

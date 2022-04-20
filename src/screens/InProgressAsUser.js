@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,35 +14,33 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
-const {height, width} = Dimensions.get('screen');
+import { COLORS, IMAGES, DIMENSION } from '../assets';
+const { height, width } = Dimensions.get('screen');
 //COMMON COMPONENT
 import {
   Button,
   Text,
   InProgressItemList,
   ProgressView,
+  ProductsItemList,
 } from '../components';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
 function InProgressAsUser(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const {user, imageBaseUrl, publishedProduct} = useContext(APPContext);
-  const {getTranslation} = useContext(LocalizationContext);
+  const { user, imageBaseUrl, publishedProduct } = useContext(APPContext);
+  const { getTranslation } = useContext(LocalizationContext);
   const [inProgressItem, setInProgressItem] = useState([]);
-  const [index1, setIndex1] = useState(1);
-  const [tabStatus, setTabStatus] = useState('');
 
   useEffect(() => {
-      setTabStatus(props.tabStatus)
-      setIndex1(props.subTabIndex)
-    //if(tabStatus === 'inProgress'){
-        getInProgressItemList();
-   // }
+    console.log('indexxxx ', props.subTabIndex + ' ' + props.tabStatus)
+    if (props.tabStatus === 'inProgress') {
+      getInProgressItemList();
+    }
   }, []);
 
   const getInProgressItemList = async () => {
@@ -50,7 +48,36 @@ function InProgressAsUser(props) {
     const result = await publishedProduct(user.user_id, '1,2,3,4,5');
     setLoading(false);
     if (result.status == true) {
-      setInProgressItem(result.data);
+      if (props.subTabIndex === 1) {
+         setInProgressItem(result.data);
+        //old native code logic
+        //   for (Result adws : acceptedAdsList) {
+        //     if (adws.getUserX().size()!=0 &&
+        //             adws.getUserX().get(0) != null &&
+        //             adws.getUserX().get(0).getUserId().equals(Constants.userDetails.getUserId())
+        //             && !adws.getAdUserId().equals(Constants.userDetails.getUserId())) {
+        //         u_AcceptsList.add(adws);
+
+
+        //     }
+        // }
+        // setInProgressItem([]);
+        // for (let i = 0; i < result.data.length; i++) {
+        //   if (result.data[i].user_x.length != 0
+        //     &&
+        //     result.data[i].user_x[0].user_id == user.user_id
+        //   ) {
+        //    // console.log('prodddd ', result.data[i])
+        //     setInProgressItem(...inProgressItem, result.data[i]);
+
+        //   }
+        // }
+      } else if (props.subTabIndex === 2) {
+
+      } else if (props.subTabIndex === 3) {
+
+      }
+
     } else {
       Toast.show(result.error);
       setInProgressItem([]);
@@ -73,13 +100,13 @@ function InProgressAsUser(props) {
           showsVerticalScrollIndicator={false}
           data={inProgressItem}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             return (
               <InProgressItemList
                 item={item}
-                // onDelete={() => {
-                //   deleteModalVisibility();
-                // }}
+              // onDelete={() => {
+              //   deleteModalVisibility();
+              // }}
               />
             );
           }}
@@ -95,7 +122,7 @@ function InProgressAsUser(props) {
         <View style={styles.viewWrapper}>
           <View style={styles.modalView1}>
             <Text
-              style={{alignSelf: 'center', marginTop: 15, marginHorizontal: 10}}
+              style={{ alignSelf: 'center', marginTop: 15, marginHorizontal: 10 }}
               size="20"
               weight="500"
               align="left"
@@ -127,7 +154,7 @@ function InProgressAsUser(props) {
               />
 
               <Button
-                style={[{width: 90, height: 41, justifyContent: 'center'}]}
+                style={[{ width: 90, height: 41, justifyContent: 'center' }]}
                 title={'No'}
                 onPress={() => {
                   deleteModalVisibility();
@@ -161,7 +188,7 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 140,
     width: width * 0.85,
     backgroundColor: '#fff',

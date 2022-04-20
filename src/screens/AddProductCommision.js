@@ -32,7 +32,7 @@ import Toast from 'react-native-simple-toast';
 
 
 function AddProductCommision(props) {
-  const [globalCommission, setGlobalCommission] = useState(null);
+  const [globalCommission, setGlobalCommission] = useState();
   const [deliveryCommission, setDeliveryCommission] = useState('1');
   const [placeOfDelivery, setPlaceOfDelivery] = useState('');
   const [gender, setSelectedGender] = useState(null);
@@ -109,7 +109,7 @@ function AddProductCommision(props) {
       Toast.show('Please enter limit delivery time');
     } else {
       const CommissionData = {
-        globalCommission: globalCommission,
+        globalCommission: globalCommission.toFixed(2),
         ad_cmsn_delivery: getCommissionPrice(),
         placeOfDelivery: placeOfDelivery,
         gender: gender.key,

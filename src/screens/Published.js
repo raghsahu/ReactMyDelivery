@@ -33,9 +33,10 @@ import Toast from 'react-native-simple-toast';
 function Published(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const {user, imageBaseUrl, publishedProduct} = useContext(APPContext);
+  const {user, del_ads, publishedProduct} = useContext(APPContext);
   const {getTranslation} = useContext(LocalizationContext);
   const [publishedItem, setPublishedItem] = useState([]);
+  const [deletedAdId, setDeletedAdId] = useState('');
 
   useEffect(() => {
     getPublishedProduct();
@@ -47,6 +48,18 @@ function Published(props) {
     setLoading(false);
     if (result.status == true) {
       setPublishedItem(result.data);
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+  const getDeleteAd = async () => {
+    setLoading(true);
+    const result = await del_ads(deletedAdId);
+    //setLoading(false);
+    if (result.status == true) {
+      deleteModalVisibility();
+      getPublishedProduct();
     } else {
       Toast.show(result.error);
     }
@@ -72,7 +85,8 @@ function Published(props) {
             return (
               <PublishedItemList
                 item={item}
-                onDelete={() => {
+                onDelete={(ad_id) => {
+                  setDeletedAdId(item.ad_id)
                   deleteModalVisibility();
                 }}
               />
@@ -117,7 +131,7 @@ function Published(props) {
                 ]}
                 title={'Yes'}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  getDeleteAd();
                 }}
               />
 

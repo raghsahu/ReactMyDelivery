@@ -43,7 +43,7 @@ const AdvertiseListItem = props => {
               {getTranslation('application_rate')}
             </Text>
             <Text style={{}} color={COLORS.textColor} size="8" weight="400">
-              {getTranslation('number_evaluation') + ''+ item.user_rating ? item.user_rating : '0'}
+              {getTranslation('number_evaluation') + ' '+ (item.user_rating ? ''+item.user_rating : '0')}
             </Text>
           </View>
           <View style={styles.ratingView}>
@@ -155,7 +155,7 @@ const AdvertiseListItem = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ '+ item.products[0].prod_price}
+              {'€ '+ parseFloat(item.products[0].prod_price).toFixed(2)}
             </Text>
           </View>
 
@@ -173,7 +173,7 @@ const AdvertiseListItem = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ '+ item.ad_cmsn_delivery}
+              {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
             </Text>
           </View>
         </View>

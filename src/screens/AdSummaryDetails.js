@@ -51,7 +51,7 @@ function AdSummaryDetails(props) {
   const [dbProducts, setItemDbProducts] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender, validURL } = useContext(CommonUtilsContext);
-  const { getAdAccept, user } = useContext(APPContext);
+  const { getAdAccept, user, webServices, change_request } = useContext(APPContext);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
@@ -61,7 +61,6 @@ function AdSummaryDetails(props) {
   const [selectDate, setSelectDate] = useState('');
   const [selectTime, setSelectTime] = useState('');
   const [dateSelected, setDateSelected] = useState(false);
-  const [reasonToChange, setReasonToChange] = useState('');
   const [isSelected, setSelection] = useState(false);
   const [isPaymentDialogModalVisibility, setPaymentDialogModalVisibility] = useState(false);
   const [isProposalToModificationOfAd, setProposalToModificationOfAd] =
@@ -86,8 +85,11 @@ function AdSummaryDetails(props) {
   const [newTotalPrice, setNewTotalPrice] = useState('');
   const [newGlobalCommission, setNewGlobalCommission] = useState('');
   const [newPlaceOfDelivery, setNewPlaceOfDelivery] = useState('');
+  const [whyThisChange, setWhyThisChange] = useState('');
+  const [newTotalToPayPrice, setNewTotalToPay] = useState('');
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
+  const [changedItem, setChangedItem] = useState(false);
 
   useEffect(() => {
     const item = props.route.params.ProdData;
@@ -95,13 +97,13 @@ function AdSummaryDetails(props) {
     setItemProducts(item.products)
 
     var totalPrice = 0;
-    for (let i = 0; i < products.length; i++) {
+    for (let i = 0; i < item.products.length; i++) {
       totalPrice =
-        totalPrice + products[i].prod_price * products[i].prod_qnty;
+        totalPrice + (item.products[i].prod_price * item.products[i].prod_qnty);
     }
     setTotalPrice(totalPrice);
-    const totalToPay = totalPrice + parseInt(item.ad_cmsn_price);
-    setTotalToPay(totalToPay);
+    const totalToPay = parseInt(totalPrice) + parseInt(item.ad_cmsn_price);
+    setTotalToPay(totalToPay.toFixed(2));
 
   }, []);
 
@@ -202,6 +204,7 @@ function AdSummaryDetails(props) {
             if (results.rowsAffected > 0) {
               photosModalVisibleModalVisibility();
               getAllSavedProducts();
+              setChangedItem(true)
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -221,6 +224,7 @@ function AdSummaryDetails(props) {
             if (results.rowsAffected > 0) {
               webLinkModalVisibleModalVisibility();
               getAllSavedProducts();
+              setChangedItem(true)
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -240,6 +244,10 @@ function AdSummaryDetails(props) {
             if (results.rowsAffected > 0) {
               changePriceQuantityModalVisibleModalVisibility();
               getAllSavedProducts();
+              setNewQunatity('');
+              setNewPrice('');
+              setNewTotalPrice('');
+              setChangedItem(true)
             }else{Toast.show('Error update');}
           }catch(ex){
              console.log(ex)
@@ -261,18 +269,17 @@ function AdSummaryDetails(props) {
   const getCommissionPrice = () => {
     if (newGlobalCommission) {
       var totalCommission = newGlobalCommission * 0.80  //80% of global commission
-
-      const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
-      if (validated) {
-        return ''+ totalCommission.toFixed(2);
-       // setDeliveryCommission(totalCommission)
-      }else{
-        return '1';
-       // setDeliveryCommission('1')
-      }
-      //setDeliveryCommission(totalCommission.toString())
+      
+     // const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
+     // if (validated) {
+        return parseFloat(totalCommission).toFixed(2);
+    //  }else{
+     //   return '1';
+     // }
+    }else{
+      return '1'
     }
-    return '1'
+  
   }
 
   const onGooglePlace = () => {
@@ -284,6 +291,8 @@ function AdSummaryDetails(props) {
         // setCountry(item.country);
         setLat(item.lat);
         setLng(item.lng);
+        setChangedItem(true)
+        //**********store in db */
       },
     });
   };
@@ -350,7 +359,7 @@ function AdSummaryDetails(props) {
       selectTime,
       '3', //ad accept type == 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
       '0', //0-pending,1-success,2-cancel,3-return
-      totalToPayPrice,
+      isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice,
       'No payment'
     );
     setLoading(false);
@@ -403,6 +412,143 @@ function AdSummaryDetails(props) {
     } catch (err) {
       //Handle this error
       return false;
+    }
+  };
+
+  const isValidHttpUrl = prodImg => {
+    if (prodImg.includes('file:')) { 
+      // Found world
+      return true
+    }
+      return false
+
+  };
+
+  var tempImages = [];
+  const sendRequestForEdit = () =>{
+    setLoading(true);
+    for (let i = 0; i < dbProducts.length; i++) {
+      const formData = new FormData();
+      // console.log('prod_imgffff: ', JSON.parse(productListItems[i].prod_img));
+      let imageUrlFile = dbProducts[i].prod_img;
+      if(isValidHttpUrl(imageUrlFile)){
+          formData.append("prod_img[]", {
+            uri: imageUrlFile,
+            type: "image/jpeg",
+            name: `Productfile${i}.jpg`,
+          });
+
+          requestMultipart(webServices.upload_imgs, 'post', formData);
+      }else{
+        tempImages.push(imageUrlFile);
+        if (tempImages.length == dbProducts.length) {
+          uploadProductAllData();
+        }
+      }
+     
+    }
+  }
+
+  const requestMultipart = (url, method, params) => {
+    try {
+      console.log('===================');
+      console.log('URL: ', url);
+      console.log('METHOD: ', method);
+      console.log('PARAMS: ', params);
+      console.log('===================');
+
+      const options = {
+        method: 'POST',
+        body: params,
+        headers: {
+          user_session: user ? user.user_session : '',
+          user_id: user ? user.user_id : '',
+        },
+      };
+      var response = fetch(url, options)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.status == 1) {
+            tempImages.push(data.result.images);
+            if (tempImages.length == dbProducts.length) {
+              uploadProductAllData();
+            }
+          } else {
+            setLoading(false);
+            Toast.show(data.msg);
+          }
+        });
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+      Toast.show('Something went wrong');
+    }
+  };
+
+  const uploadProductAllData = async () => {
+    try {
+      
+      var temp = [];
+      for (let i = 0; i < dbProducts.length; i++) {
+        const ProductData = {
+          prod_id: dbProducts[i].prod_id,
+          prod_user_id: dbProducts[i].prod_user_id,
+          prod_ad_id: dbProducts[i].prod_ad_id,
+          prod_name: dbProducts[i].prod_name,
+          prod_web_link: dbProducts[i].prod_web_link,
+          prod_place_purchase: dbProducts[i].prod_place_purchase,
+          prod_place_delivery: newPlaceOfDelivery ? newPlaceOfDelivery : dbProducts[i].prod_place_delivery,
+          prod_price: dbProducts[i].prod_price,
+          prod_qnty: dbProducts[i].prod_qnty,
+          prod_price_total: dbProducts[i].prod_price_total,
+          prod_info: dbProducts[i].prod_info,
+          prod_img: tempImages[i],
+        };
+        temp.push(ProductData);
+      }
+
+      //*******after edit total to pay price********* */
+      var totalPrice = 0;
+    for (let i = 0; i < dbProducts.length; i++) {
+      totalPrice = totalPrice + (dbProducts[i].prod_price * dbProducts[i].prod_qnty);
+    }
+    const totalToPay = totalPrice + parseInt(newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price);
+    setNewTotalToPay(totalToPay.toFixed(2));
+
+      const result = await change_request(
+        JSON.stringify(temp),
+        item.ad_id,
+        newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price,
+        newGlobalCommission ? getCommissionPrice(): item.ad_cmsn_delivery,
+        //CommissionData.placeOfDelivery,
+        item.ad_gender,
+        item.ad_accept_limit,
+        item.ad_delivery_limit,
+        '0',
+        '0',
+        totalToPay,
+        'offline payment',
+        whyThisChange,
+      );
+      setLoading(false);
+      if (result.status == true) {
+        Toast.show(result.error);
+       // onNext();
+
+        setNewGlobalCommission('');
+        proposalToModificationOfAd();
+        onDiscard();
+        setChangedItem(false)
+
+      } else {
+        Toast.show(result.error);
+      }
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+      Toast.show('Something went wrong');
     }
   };
 
@@ -486,8 +632,6 @@ function AdSummaryDetails(props) {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={isProposalToModificationOfAd ? dbProducts : products}
-            //onRefresh={getAllSavedProducts()}
-            //refreshing={isFetching}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return <DeliveryManSummaryProductsItemList
@@ -549,7 +693,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + newGlobalCommission :  '€ ' + item.ad_cmsn_price )  : '€ ' + item.ad_cmsn_price}
+                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + parseFloat(newGlobalCommission).toFixed(2) :  '€ ' + parseFloat(item.ad_cmsn_price).toFixed(2) )  : '€ ' + parseFloat(item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -726,7 +870,10 @@ function AdSummaryDetails(props) {
                 style={[styles.inputView, styles.comment]}
                 placeholder={getTranslation('why_this_change')}
                 multiline={true}
-              //value={''}
+                value={whyThisChange}
+                onChangeText={text => {
+                  setWhyThisChange(text);
+                }}
               />
 
               <View
@@ -752,8 +899,10 @@ function AdSummaryDetails(props) {
                   title={getTranslation('to_cancel')} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     setNewGlobalCommission('');
+                    setNewPlaceOfDelivery('');
                     proposalToModificationOfAd();
                     onDiscard();
+                    setChangedItem(false)
                   }}
                 />
 
@@ -761,7 +910,25 @@ function AdSummaryDetails(props) {
                   style={[{ width: 156 }]}
                   title={getTranslation('to_propose')}
                   onPress={() => {
-                    props.navigation.navigate('AdModificationProposal');
+                    if(!whyThisChange){
+                      Toast.show('Please enter why this change')
+                    }else if(!changedItem){
+                      Toast.show('Please change any fields')
+                    }                   
+                    else{
+                         //*******after edit total to pay price********* */
+                        var totalPrice = 0;
+                        for (let i = 0; i < dbProducts.length; i++) {
+                          totalPrice = totalPrice + (dbProducts[i].prod_price * dbProducts[i].prod_qnty);
+                        }
+                        const totalToPay = totalPrice + parseInt(newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price);
+                        setNewTotalToPay(totalToPay);
+
+                        sendRequestForEdit();
+                      //PaymentDialogModalVisibility();
+                      
+                    }
+                  
                   }}
                 />
               </View>
@@ -882,6 +1049,8 @@ function AdSummaryDetails(props) {
                 right: 0,
               }}
               onPress={() => {
+                setSelectDate('')
+                setSelectTime('')
                 PaymentDialogModalVisibility();
               }}>
               <Image
@@ -908,7 +1077,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {'€ ' + totalToPayPrice}
+              {isProposalToModificationOfAd ? (newTotalToPayPrice ? '€ '+newTotalToPayPrice : ' € '+ totalToPayPrice) : ' € '+ totalToPayPrice }
             </Text>
 
             <Text
@@ -940,9 +1109,7 @@ function AdSummaryDetails(props) {
                 placeholder={'Day'}
                 isLeft={IMAGES.date}
                 editable={false}
-                onChangeText={text => {
-                  setDay(text);
-                }}
+                
                 value={selectDate}
               />
             </TouchableOpacity>
@@ -958,9 +1125,7 @@ function AdSummaryDetails(props) {
                 isLeft={IMAGES.time}
                 value={selectTime}
                 editable={false}
-                onChangeText={text => {
-                  setHour(text);
-                }}
+                
               />
             </TouchableOpacity>
 
@@ -982,8 +1147,11 @@ function AdSummaryDetails(props) {
                   Toast.show('Please enter time');
                 } else {
                   PaymentDialogModalVisibility();
-                  onNext();
-
+                  if(isProposalToModificationOfAd){
+                    sendRequestForEdit();
+                  }else{
+                    onNext();
+                  }
                 }
               }}
             />
@@ -1017,6 +1185,7 @@ function AdSummaryDetails(props) {
               </Text>
            <TouchableOpacity
                 onPress={() => {
+                  placeOfDeliveryModalVisibleModalVisibility();
                   onGooglePlace();
                 }}
            // style={[styles.inputView, styles.inputContainer]}
@@ -1216,28 +1385,7 @@ function AdSummaryDetails(props) {
                     Toast.show('Please capture image')
                   }else{
                     updateImageInModifyDb();
-
-                    //show selected prod id image
-                    // db.transaction((tx) => {
-                    //   tx.executeSql(
-                    //     'SELECT * FROM modify_product where prod_id = ?',
-                    //     [modifyProdId],
-                    //     (tx, results) => {
-                    //       var len = results.rows.length;
-                    //       if (len > 0) {
-                    //         let res = results.rows.item(0);
-                    //         console.log('prod_imgggg ', res.prod_img)
-                            
-                    //       } else {
-                    //         Toast.show('No user found');
-                            
-                    //       }
-                    //     }
-                    //   );
-                    // });
-                    
                   }
-                 
 
                 }}
               />
@@ -1285,7 +1433,7 @@ function AdSummaryDetails(props) {
                     placeholder={''}
                     isLeft={IMAGES.percentage}
                     value={newPrice}
-                   keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+                    keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                     onChangeText={text => {
                       const validated = text.match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
                       if (validated) {
@@ -1419,10 +1567,11 @@ function AdSummaryDetails(props) {
                 <Input
                   style={{ marginTop: 7, marginHorizontal: 10 }}
                   placeholder={''}
+                  value={newGlobalCommission}
                   isLeft={IMAGES.percentage}
                   keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
                   onChangeText={text => {
-                    setNewGlobalCommission(text);
+                    setNewGlobalCommission(text)
                   }}
                 />
               </View>
@@ -1473,7 +1622,13 @@ function AdSummaryDetails(props) {
                 style={[styles.modalConfirmButton]}
                 title={'Confirm'}
                 onPress={() => {
-                  commissionModalVisibleModalVisibility();
+                  if(!newGlobalCommission){
+                    Toast.show('Please enter global commission')
+                  }else{
+                        setChangedItem(true)
+                        commissionModalVisibleModalVisibility();
+                  }
+                 
                 }}
               />
             </View>
