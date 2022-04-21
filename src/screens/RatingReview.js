@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,34 +6,79 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
+  TouchableOpacity,
   TextInput,
+  Share,
+  Platform,
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
 import {
   Button,
   Header,
   Text,
-  Input,
   BottomBackground,
-  CustomRatingBar,
+  ProgressView,
 } from '../components';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {Rating} from 'react-native-ratings';
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { Rating } from 'react-native-ratings';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import Toast from 'react-native-simple-toast';
+import { APPContext } from '../context/AppProvider';
 
 function RatingReview(props) {
-  const [defaultRating, setDefaultRating] = useState(0);
-  // To set the max number of Stars
-  const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
-  const {getTranslation} = useContext(LocalizationContext);
+  const { userName } = props.route.params;
+  const [ratingForUser, setRatingForUser] = useState(0);
+  const { getTranslation } = useContext(LocalizationContext);
+  const [commentForUser, setCommentForUser] = useState('');
+  const { putRating, user } = useContext(APPContext);
+  const [isLoading, setLoading] = useState(false);
 
-  const onSelect = item => {
-    setDefaultRating(item);
+  const onSelect = rating => {
+    setRatingForUser(rating);
+    // console.log('user_nnnnn ', userName)
+  };
+
+  const shareApp = async () => {
+    try {
+      const result = await Share.share({
+          title: 'App link',
+          message: 'Let me recommend you this application \n\n , https://play.google.com/store/apps/details?id=com.mydelivery',
+          url: 'https://play.google.com/store/apps/details?id=com.mydelivery'
+     
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+     // alert(error.message);
+      console.log('errorOnShare ', error)
+    }
+  };
+
+  const onNext = async () => {
+    setLoading(true);
+    const result = await putRating(
+      user.user_id,
+      commentForUser,
+      ratingForUser,
+    );
+    setLoading(false);
+    if (result.status == true) {
+      Toast.show(result.error);
+      props.navigation.goBack();
+
+    } else {
+      Toast.show(result.error);
+    }
   };
 
   return (
@@ -52,7 +97,7 @@ function RatingReview(props) {
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text
-            style={[{marginTop: 20, marginBottom: 20}]}
+            style={[{ marginTop: 20, marginBottom: 20 }]}
             size="18"
             weight="500"
             align="center"
@@ -69,14 +114,14 @@ function RatingReview(props) {
             ratingCount={5}
             imageSize={45}
             // onFinishRating={this.ratingCompleted}
-            style={{marginTop: 1, paddingVertical: 1}}
+            style={{ marginTop: 1, paddingVertical: 1 }}
           />
 
           <TextInput
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('leave_comment')}
             multiline={true}
-            //value={''}
+          //value={''}
           />
 
           <View
@@ -90,31 +135,33 @@ function RatingReview(props) {
             ]}></View>
 
           <Text
-            style={[{marginTop: 20, marginBottom: 20}]}
+            style={[{ marginTop: 20, marginBottom: 20 }]}
             size="18"
             weight="500"
             align="center"
             color={COLORS.black}>
-            {'Please rate Test'}
+            {'Please rate ' + props.route.params.userName}
           </Text>
 
           <Rating
             type="custom"
             tintColor={COLORS.white}
             ratingColor="#04D9C5"
-            startingValue={0}
+            startingValue={ratingForUser}
             ratingBackgroundColor="#DBDBDB"
             ratingCount={5}
             imageSize={45}
-            // onFinishRating={this.ratingCompleted}
-            style={{marginTop: 1, paddingVertical: 1}}
+            onFinishRating={onSelect}
+            style={{ marginTop: 1, paddingVertical: 1 }}
           />
 
           <TextInput
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('leave_comment')}
             multiline={true}
-            //value={''}
+            onChangeText={text => {
+              setCommentForUser(text);
+            }}
           />
 
           <View
@@ -128,7 +175,7 @@ function RatingReview(props) {
               },
             ]}>
             <Text
-              style={{justifyContent: 'center'}}
+              style={{ justifyContent: 'center' }}
               size="18"
               weight="500"
               align="left"
@@ -136,7 +183,7 @@ function RatingReview(props) {
               {getTranslation('share_now')}
             </Text>
 
-            <View
+            <TouchableOpacity
               style={{
                 backgroundColor: COLORS.primaryColor,
                 height: 52,
@@ -145,25 +192,37 @@ function RatingReview(props) {
                 marginLeft: 20,
                 alignSelf: 'center',
                 justifyContent: 'center',
-              }}>
+              }}
+              onPress={() => {
+                shareApp();
+              }}
+            >
               <Image
                 style={styles.shareImg}
                 source={IMAGES.share}
                 resizeMode="contain"
-                // tintColor={COLORS.primaryColor}
+              // tintColor={COLORS.primaryColor}
               />
-            </View>
+            </TouchableOpacity>
           </View>
 
           <Button
-            style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}
+            style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}
             title={getTranslation('submit')}
             onPress={() => {
+              if (!commentForUser) {
+                Toast.show('Please enter comment for user rate')
+              } else if (ratingForUser == 0) {
+                Toast.show('Please enter rating')
+              } else {
+                onNext();
+              }
               // props.navigation.navigate('SuccessScreen');
             }}
           />
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

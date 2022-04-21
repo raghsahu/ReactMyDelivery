@@ -29,6 +29,7 @@ import {
   AdSummaryDetails,
   AdModificationProposal,
   GooglePlacesInput,
+  PublishedAdsDetails,
 } from './src/screens';
 //TABBAR
 import {TabBar} from './src/components';
@@ -258,6 +259,7 @@ const App = () => {
                 component={AdModificationProposal}
               />
               <Screen name="GooglePlacesInput" component={GooglePlacesInput} />
+              <Screen name="PublishedAdsDetails" component={PublishedAdsDetails} />
             </Navigator>
           </NavigationContainer>
         </AppProvider>

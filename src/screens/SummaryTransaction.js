@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
 import {
@@ -30,26 +30,24 @@ import {
 } from '../components';
 import moment from 'moment'; // date format
 
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {Rating} from 'react-native-ratings';
+import { Rating } from 'react-native-ratings';
 import Toast from 'react-native-simple-toast';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
-import {CommonUtilsContext} from '../context/CommonUtils';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
 
 function SummaryTransaction(props) {
-  const {status} = props.route.params;
+  const { status, subTabIndex } = props.route.params;
   const [item, setItem] = useState({});
   const [products, setItemProducts] = useState([]);
   const [user_x, setUser_X] = useState([]);
   const [user_y, setUser_Y] = useState([]);
-  const {getTranslation} = useContext(LocalizationContext);
-  const {imageBaseUrl, putDateTimeChangeRequest} = useContext(APPContext);
-  const {getAdGender} = useContext(CommonUtilsContext);
-  const [name, setName] = useState('');
-  const [isSelected, setSelection] = useState(false);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { imageBaseUrl, putDateTimeChangeRequest } = useContext(APPContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
   const [enableTxnCodeBtn, setEnableTxnCodeBtn] = useState(false);
@@ -67,6 +65,8 @@ function SummaryTransaction(props) {
     setItemProducts(item.products)
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
+
+    //console.log('subTabIndex ', subTabIndex)
   }, []);
 
   function showDatepicker(mode) {
@@ -113,7 +113,7 @@ function SummaryTransaction(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
-      
+
     } else {
       Toast.show(result.error);
     }
@@ -130,20 +130,22 @@ function SummaryTransaction(props) {
         <Header
           title={getTranslation('summary_of_txn')}
           onBack={() => {
-          //  props.navigation.goBack();
-          props.navigation.navigate('MyAccount', {
-            tabIndex: 3,
-          });
+            //  props.navigation.goBack();
+            props.navigation.navigate('MyAccount', {
+              tabIndex: 3,
+            });
           }}
         />
         <BottomBackground></BottomBackground>
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          {status === 'completed' ? null : (
+          <View>
+            {/* {status === 'completed' ? null
+             :  */}
             <View>
               <Text
-                style={[styles.inputView, {marginTop: 20}]}
+                style={[styles.inputView, { marginTop: 20 }]}
                 size="18"
                 weight="500"
                 align="left"
@@ -160,7 +162,7 @@ function SummaryTransaction(props) {
                   height: 80,
                   shadowColor: 'black',
                   shadowOpacity: 0.26,
-                  shadowOffset: {width: 0, height: 2},
+                  shadowOffset: { width: 0, height: 2 },
                   shadowRadius: 10,
                   elevation: 3,
                   borderRadius: 12,
@@ -184,99 +186,201 @@ function SummaryTransaction(props) {
                   {item.acpt_code}
                 </Text>
               </View>
+            </View>
+            {/* } */}
 
-              <Text
-                style={[styles.inputView, {marginTop: 20}]}
-                size="18"
-                weight="500"
-                align="left"
-                color={COLORS.textColor}>
-                {'User Details'}
-              </Text>
+            {status === 'inProgress' && subTabIndex === 1 ?
+              <View>
+                <Text
+                  style={[styles.inputView, { marginTop: 20 }]}
+                  size="18"
+                  weight="500"
+                  align="left"
+                  color={COLORS.textColor}>
+                  {'Deliveryman Details'}
+                </Text>
 
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  marginTop: 20,
-                  width: '85%',
-                  height: 80,
-                  shadowColor: 'black',
-                  shadowOpacity: 0.26,
-                  shadowOffset: {width: 0, height: 2},
-                  shadowRadius: 10,
-                  elevation: 3,
-                  borderRadius: 12,
-                  backgroundColor: 'white',
-                  flex: 1,
-                }}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    margin: 5,
-                    backgroundColor: COLORS.white,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    marginTop: 20,
+                    width: '85%',
+                    height: 80,
+                    shadowColor: 'black',
+                    shadowOpacity: 0.26,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowRadius: 10,
+                    elevation: 3,
+                    borderRadius: 12,
+                    backgroundColor: 'white',
+                    flex: 1,
                   }}>
-                  <Image
-                    style={{
-                      width: 64,
-                      height: 64,
-                      margin: 5,
-                      borderRadius: 32,
-                      resizeMode: 'contain',
-                    }}
-                    source={user_x.user_img ? {uri: imageBaseUrl + user_x.user_img} : IMAGES.circle_placeholder}
-              
-                  />
-
                   <View
                     style={{
-                      flex: 1,
+                      flexDirection: 'row',
                       margin: 5,
+                      backgroundColor: COLORS.white,
                     }}>
-                    <Text color={COLORS.black} size="16" weight="500">
-                      {user_x.user_f_name + ' '+ user_x.user_l_name}
-                    </Text>
+                    <Image
+                      style={{
+                        width: 64,
+                        height: 64,
+                        margin: 5,
+                        borderRadius: 32,
+                        resizeMode: 'contain',
+                      }}
+                      source={user_y.user_img ? { uri: imageBaseUrl + user_y.user_img } : IMAGES.circle_placeholder}
 
-                    <View style={{marginTop: 10, flexDirection: 'row'}}>
-                      <Text
-                        style={[{marginStart: 15}]}
-                        size="18"
-                        weight="500"
-                        align="left"
-                        color={COLORS.black}>
-                        {user_x.user_rating}
+                    />
+
+                    <View
+                      style={{
+                        flex: 1,
+                        margin: 5,
+                      }}>
+                      <Text color={COLORS.black} size="16" weight="500">
+                        {user_y.user_f_name + ' ' + user_y.user_l_name}
                       </Text>
-                      <Rating
-                        type="custom"
-                        ratingColor="#04D9C5"
-                        startingValue={1}
-                        ratingBackgroundColor="#04D9C5"
-                        ratingCount={1}
-                        imageSize={20}
-                        // onFinishRating={this.ratingCompleted}
-                        style={{
-                          marginTop: 1,
-                          marginStart: 15,
-                          paddingVertical: 1,
-                        }}
-                      />
-                      <Text
-                        style={[{marginStart: 10, marginEnd: 15}]}
-                        size="18"
-                        weight="500"
-                        align="left"
-                        color={COLORS.black}>
-                        {user_x.user_rating_count +' ' + getTranslation('ratings')}
-                      </Text>
+
+                      <View style={{ marginTop: 10, flexDirection: 'row' }}>
+                        <Text
+                          style={[{ marginStart: 15 }]}
+                          size="18"
+                          weight="500"
+                          align="left"
+                          color={COLORS.black}>
+                          {user_y.user_rating}
+                        </Text>
+                        <Rating
+                          type="custom"
+                          ratingColor="#04D9C5"
+                          startingValue={1}
+                          ratingBackgroundColor="#04D9C5"
+                          ratingCount={1}
+                          imageSize={20}
+                          // onFinishRating={this.ratingCompleted}
+                          style={{
+                            marginTop: 1,
+                            marginStart: 15,
+                            paddingVertical: 1,
+                          }}
+                        />
+                        <Text
+                          style={[{ marginStart: 10, marginEnd: 15 }]}
+                          size="18"
+                          weight="500"
+                          align="left"
+                          color={COLORS.black}>
+                          {user_y.user_rating_count + ' ' + getTranslation('ratings')}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
-            </View>
-          )}
+              :
+
+              status != 'completed' ?
+                <View>
+                  <Text
+                    style={[styles.inputView, { marginTop: 20 }]}
+                    size="18"
+                    weight="500"
+                    align="left"
+                    color={COLORS.textColor}>
+                    {'User Details'}
+                  </Text>
+
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      marginTop: 20,
+                      width: '85%',
+                      height: 80,
+                      shadowColor: 'black',
+                      shadowOpacity: 0.26,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 10,
+                      elevation: 3,
+                      borderRadius: 12,
+                      backgroundColor: 'white',
+                      flex: 1,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        margin: 5,
+                        backgroundColor: COLORS.white,
+                      }}>
+                      <Image
+                        style={{
+                          width: 64,
+                          height: 64,
+                          margin: 5,
+                          borderRadius: 32,
+                          resizeMode: 'contain',
+                        }}
+                        source={user_x.user_img ? { uri: imageBaseUrl + user_x.user_img } : IMAGES.circle_placeholder}
+
+                      />
+
+                      <View
+                        style={{
+                          flex: 1,
+                          margin: 5,
+                        }}>
+                        <Text color={COLORS.black} size="16" weight="500">
+                          {user_x.user_f_name + ' ' + user_x.user_l_name}
+                        </Text>
+
+                        <View style={{ marginTop: 10, flexDirection: 'row' }}>
+                          <Text
+                            style={[{ marginStart: 15 }]}
+                            size="18"
+                            weight="500"
+                            align="left"
+                            color={COLORS.black}>
+                            {user_x.user_rating}
+                          </Text>
+                          <Rating
+                            type="custom"
+                            ratingColor="#04D9C5"
+                            startingValue={1}
+                            ratingBackgroundColor="#04D9C5"
+                            ratingCount={1}
+                            imageSize={20}
+                            // onFinishRating={this.ratingCompleted}
+                            style={{
+                              marginTop: 1,
+                              marginStart: 15,
+                              paddingVertical: 1,
+                            }}
+                          />
+                          <Text
+                            style={[{ marginStart: 10, marginEnd: 15 }]}
+                            size="18"
+                            weight="500"
+                            align="left"
+                            color={COLORS.black}>
+                            {user_x.user_rating_count + ' ' + getTranslation('ratings')}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                :
+                null
+
+            }
+
+          </View>
+
 
           <Text
-            style={[styles.inputView, {marginTop: 20}]}
+            style={[styles.inputView, { marginTop: 20 }]}
             size="18"
             weight="500"
             align="left"
@@ -288,13 +392,13 @@ function SummaryTransaction(props) {
             showsVerticalScrollIndicator={false}
             data={products}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return <DeliveryManSummaryProductsItemList
-              item={item} />;
+                item={item} />;
             }}
           />
-       
-          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
+
+          <View style={[styles.inputView, { marginTop: 10, marginBottom: 20 }]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -311,7 +415,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ '+ item.ad_cmsn_price}
+                {'€ ' + item.ad_cmsn_price}
               </Text>
             </View>
 
@@ -331,7 +435,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ '+ item.ad_cmsn_delivery}
+                {'€ ' + item.ad_cmsn_delivery}
               </Text>
             </View>
             <View
@@ -340,7 +444,7 @@ function SummaryTransaction(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('ad_seen_by') }
+                {getTranslation('ad_seen_by')}
               </Text>
 
               <Text
@@ -423,7 +527,7 @@ function SummaryTransaction(props) {
               marginTop: 10,
             }}></View>
 
-          <View style={[styles.inputView, {marginTop: 10, marginBottom: 20}]}>
+          <View style={[styles.inputView, { marginTop: 10, marginBottom: 20 }]}>
             <View
               style={{
                 flexDirection: 'row',
@@ -460,7 +564,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {user_y.user_f_name + ' '+ user_y.user_l_name}
+                {user_y.user_f_name + ' ' + user_y.user_l_name}
               </Text>
             </View>
             <View
@@ -532,7 +636,8 @@ function SummaryTransaction(props) {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {'2020-04-02 12:05 by John Ben'}
+                  {'**** by *****'} 
+                  {/* 2020-04-02 12:05 by John Ben */}
                 </Text>
               </View>
 
@@ -555,7 +660,8 @@ function SummaryTransaction(props) {
                   color={COLORS.darkGray}
                   size="16"
                   weight="500">
-                  {'€600 + €32,4 + €8,1 = €638'}
+                  {/* {'€600 + €32,4 + €8,1 = €638'} */}
+                  {'€*** + €*** + €** = €****'}
                 </Text>
               </View>
             </View>
@@ -574,11 +680,23 @@ function SummaryTransaction(props) {
 
           {status == 'completed' ? (
             <Button
-              style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
+              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
               title={'Rating'}
               // type={1}
               onPress={() => {
-                props.navigation.navigate('RatingReview');
+              
+                if(status === 'completed' && subTabIndex === 1){
+                  
+                  props.navigation.navigate('RatingReview', {
+                    userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                  });
+                }else{
+                  props.navigation.navigate('RatingReview', {
+                    userName:  user_x.user_f_name + ' ' + user_x.user_l_name,
+                  });
+                  
+                }
+               
               }}
             />
           ) : (
@@ -591,20 +709,21 @@ function SummaryTransaction(props) {
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
-              {/* <Button
-                style={[{width: 156}]}
-                title={'Complaint'} //or Change Delivery Date (according to condition)
-                onPress={() => {
-                  props.navigation.navigate('SendSuggestion', {
-                    headerTitle: 'Complain',
-                  });
-                }}
-              /> */}
+              {status == 'inProgress' ? (
+                <Button
+                  style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
+                  title={'Complaint'} //or Change Delivery Date (according to condition)
+                  onPress={() => {
+                    // props.navigation.navigate('SendSuggestion', {
+                    //   headerTitle: 'Complain',
+                    // });
+                  }}
+                />) : null}
 
-              {!enableTxnCodeBtn ? (
+              {status == 'deliveryAccepted' ? (
                 <Button
                   style={[
-                    {width: 160, justifyContent: 'center', alignSelf: 'center'},
+                    { width: 160, justifyContent: 'center', alignSelf: 'center' },
                   ]}
                   title={'Change Delivery Date'} //or Change Delivery Date (according to condition)
                   onPress={() => {
@@ -615,7 +734,7 @@ function SummaryTransaction(props) {
 
               {enableTxnCodeBtn ? (
                 <Button
-                  style={[{width: 156}]}
+                  style={[{ width: 156 }]}
                   title={getTranslation('txn_code')} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     TxnCodeModalVisibility();
@@ -624,7 +743,7 @@ function SummaryTransaction(props) {
               ) : null}
 
               <Button
-                style={[{width: 160}]}
+                style={[{ width: 160 }]}
                 title={getTranslation('chat')} // X-chat (delivery man chat with user)
                 type={1}
                 onPress={() => {
@@ -660,7 +779,7 @@ function SummaryTransaction(props) {
             />
 
             <Text
-              style={{marginTop: 20}}
+              style={{ marginTop: 20 }}
               size="18"
               weight="500"
               align="center"
@@ -669,7 +788,7 @@ function SummaryTransaction(props) {
             </Text>
 
             <OTPInputView
-              style={[{height: 32, marginTop: 24}]}
+              style={[{ height: 32, marginTop: 24 }]}
               pinCount={10}
               autoFocusOnLoad
               codeInputFieldStyle={styles.underlineStyleBase}
@@ -692,7 +811,7 @@ function SummaryTransaction(props) {
               <Button
                 style={[
                   styles.inputView,
-                  {width: 100, justifyContent: 'center'},
+                  { width: 100, justifyContent: 'center' },
                 ]}
                 title={getTranslation('cancel')}
                 onPress={() => {
@@ -701,7 +820,7 @@ function SummaryTransaction(props) {
               />
 
               <Button
-                style={[{width: 100}]}
+                style={[{ width: 100 }]}
                 title={getTranslation('confirm')}
                 onPress={() => {
                   TxnCodeModalVisibility();
@@ -736,7 +855,7 @@ function SummaryTransaction(props) {
             </Text>
 
             <Text
-              style={{padding: 10, alignSelf: 'center'}}
+              style={{ padding: 10, alignSelf: 'center' }}
               size="18"
               weight="500"
               align="center"
@@ -785,7 +904,7 @@ function SummaryTransaction(props) {
               <Button
                 style={[
                   styles.inputView,
-                  {width: 100, justifyContent: 'center'},
+                  { width: 100, justifyContent: 'center' },
                 ]}
                 title={getTranslation('cancel')}
                 onPress={() => {
@@ -796,7 +915,7 @@ function SummaryTransaction(props) {
               />
 
               <Button
-                style={[{width: 100}]}
+                style={[{ width: 100 }]}
                 title={getTranslation('propose')}
                 onPress={() => {
                   if (!selectDate) {
@@ -807,8 +926,8 @@ function SummaryTransaction(props) {
                     ChangeDateModalVisibility();
                     onNext();
                   }
-                 // props.navigation.navigate('ProposalChangedDate');
-                 // setEnableTxnCodeBtn(true);
+                  // props.navigation.navigate('ProposalChangedDate');
+                  // setEnableTxnCodeBtn(true);
                 }}
               />
             </View>
@@ -816,8 +935,8 @@ function SummaryTransaction(props) {
         </View>
       </Modal>
 
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} 
-      minimumDate={new Date()}
+      {show && <DateTimePick value={date} mode={mode} onChange={onChange}
+        minimumDate={new Date()}
       />}
     </View>
   );
@@ -843,7 +962,7 @@ const styles = StyleSheet.create({
     top: '40%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 320,
     width: width * 0.83,
     backgroundColor: '#fff',
@@ -854,7 +973,7 @@ const styles = StyleSheet.create({
     top: '40%',
     left: '50%',
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     height: 350,
     width: width * 0.83,
     backgroundColor: '#fff',

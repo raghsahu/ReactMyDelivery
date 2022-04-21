@@ -366,7 +366,7 @@ function AdSummaryDetails(props) {
     if (result.status == true) {
       Toast.show(result.error);
       props.navigation.navigate('SummaryTransaction', {
-        status: '',
+        status: 'deliveryAccepted',
         summaryData: result.data[0],
       });
     } else {
@@ -654,29 +654,8 @@ function AdSummaryDetails(props) {
             }}
           />
 
-          {/* <View
-            style={{
-              backgroundColor: COLORS.borderColor2,
-              height: 2,
-              marginTop: 10,
-            }}></View> */}
-
           <View style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}>
-            {isProposalToModificationOfAd && (
-              <Text
-                style={[
-                  styles.rightButtons,
-                  { position: 'absolute', marginTop: 10, paddingVertical: 10 },
-                ]}
-                color={COLORS.white}
-                size="16"
-                weight="500"
-                onPress={() => {
-                  commissionModalVisibleModalVisibility();
-                }}>
-                {getTranslation('change')}
-              </Text>
-            )}
+           
             <View
               style={{
                 flexDirection: 'row',
@@ -697,10 +676,26 @@ function AdSummaryDetails(props) {
               </Text>
             </View>
 
+            {isProposalToModificationOfAd && (
+              <Text
+                style={[
+                  styles.rightButtons,
+                  {marginTop: 0.5, },
+                ]}
+                color={COLORS.white}
+                size="16"
+                weight="500"
+                onPress={() => {
+                  commissionModalVisibleModalVisibility();
+                }}>
+                {getTranslation('change')}
+              </Text>
+            )}
+
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 5,
+                marginTop: isProposalToModificationOfAd ? 0.5 : 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
                 {getTranslation('deliveryman_commission')+ ' :'}
@@ -713,9 +708,10 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + getCommissionPrice(): '€ ' + item.ad_cmsn_delivery)  : '€ ' + item.ad_cmsn_delivery}
+                {isProposalToModificationOfAd ? (newGlobalCommission ? '€ ' + getCommissionPrice(): '€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2))  : '€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
+
             <View
               style={{
                 flexDirection: 'row',

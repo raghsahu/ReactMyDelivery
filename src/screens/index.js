@@ -24,6 +24,7 @@ import RequestsListForPlaces from './RequestsListForPlaces';
 import AdSummaryDetails from './AdSummaryDetails';
 import AdModificationProposal from './AdModificationProposal';
 import GooglePlacesInput from './GooglePlacesInput';
+import PublishedAdsDetails from './PublishedAdsDetails';
 
 export {
   Splash,
@@ -52,4 +53,5 @@ export {
   AdSummaryDetails,
   AdModificationProposal,
   GooglePlacesInput,
+  PublishedAdsDetails,
 };

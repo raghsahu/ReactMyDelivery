@@ -109,7 +109,7 @@ function AddProductCommision(props) {
       Toast.show('Please enter limit delivery time');
     } else {
       const CommissionData = {
-        globalCommission: globalCommission.toFixed(2),
+        globalCommission: parseFloat(globalCommission).toFixed(2),
         ad_cmsn_delivery: getCommissionPrice(),
         placeOfDelivery: placeOfDelivery,
         gender: gender.key,
@@ -147,7 +147,7 @@ function AddProductCommision(props) {
 
       const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
       if (validated) {
-        return ''+ totalCommission.toFixed(2);
+        return ''+parseFloat(totalCommission).toFixed(2);
        // setDeliveryCommission(totalCommission)
       }else{
         return '1';

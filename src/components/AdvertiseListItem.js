@@ -48,14 +48,13 @@ const AdvertiseListItem = props => {
           </View>
           <View style={styles.ratingView}>
             <Rating
-              //isDisabled= {true}
+              readonly= {true}
               type="custom"
               ratingColor="#04D9C5"
               startingValue={item.user_rating ? item.user_rating : 0}
               ratingBackgroundColor="#c8c7c8"
               ratingCount={5}
               imageSize={13}
-              isDisabled={false}
               // onFinishRating={this.ratingCompleted}
               style={{paddingVertical: 1}}
             />

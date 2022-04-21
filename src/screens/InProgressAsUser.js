@@ -37,17 +37,22 @@ function InProgressAsUser(props) {
   const [inProgressItem, setInProgressItem] = useState([]);
 
   useEffect(() => {
-    console.log('indexxxx ', props.subTabIndex + ' ' + props.tabStatus)
+    //console.log('indexxxx ', props.subTabIndex + ' ' + props.tabStatus)
     if (props.tabStatus === 'inProgress') {
-      getInProgressItemList();
+      getInProgressItemList('1,2,3,4,5');
+    }else{
+      getInProgressItemList('6');
     }
   }, []);
 
-  const getInProgressItemList = async () => {
+  const getInProgressItemList = async (status) => {
     setLoading(true);
-    const result = await publishedProduct(user.user_id, '1,2,3,4,5');
+    const result = await publishedProduct(user.user_id, status);
     setLoading(false);
     if (result.status == true) {
+      if(result.data.length > 0){
+
+      setInProgressItem([]);
       if (props.subTabIndex === 1) {
          setInProgressItem(result.data);
         //old native code logic
@@ -60,24 +65,56 @@ function InProgressAsUser(props) {
 
 
         //     }
-        // }
-        // setInProgressItem([]);
-        // for (let i = 0; i < result.data.length; i++) {
-        //   if (result.data[i].user_x.length != 0
-        //     &&
-        //     result.data[i].user_x[0].user_id == user.user_id
-        //   ) {
-        //    // console.log('prodddd ', result.data[i])
-        //     setInProgressItem(...inProgressItem, result.data[i]);
-
-        //   }
-        // }
+        // }****************************
+    
+        let todos = [...inProgressItem]; 
+        for (let i = 0; i < result.data.length; i++) {
+          if (result.data[i].user_x.length != 0
+            &&
+            result.data[i].user_x[0].user_id == user.user_id
+          ) {
+            todos.push(result.data[i])
+          }
+        }
+        setInProgressItem(todos);
       } else if (props.subTabIndex === 2) {
+        let todos = [...inProgressItem]; 
+        for (let i = 0; i < result.data.length; i++) {
+          if (result.data[i].user_y.length != 0
+            &&
+            result.data[i].user_y[0].user_id == user.user_id
+          ) {
+            todos.push(result.data[i])
+          }
+        }
+        setInProgressItem(todos);
 
       } else if (props.subTabIndex === 3) {
+        // if (adws.getUserZ().size() != 0 &&
+        // adws.getUserZ().get(0) != null &&
+        // adws.getUserZ().get(0).getUserId().equals(Constants.userDetails.getUserId())
+        //   && !Constants.userDetails.getUserId().equals(adws.getAdUserId())) {
+        //       s_AcceptsList.add(adws);
+        //   }
+
+        let todos = [...inProgressItem]; 
+        for (let i = 0; i < result.data.length; i++) {
+          if (result.data[i].user_z.length != 0
+            &&
+            result.data[i].user_z[0].user_id == user.user_id
+           // &&
+            //result.data[i].user_id != user.user_id
+          ) {
+            todos.push(result.data[i])
+          }
+        }
+        setInProgressItem(todos);
 
       }
-
+        
+    }else{
+      //Toast.show('No record found');
+    }
     } else {
       Toast.show(result.error);
       setInProgressItem([]);
@@ -104,9 +141,13 @@ function InProgressAsUser(props) {
             return (
               <InProgressItemList
                 item={item}
-              // onDelete={() => {
-              //   deleteModalVisibility();
-              // }}
+                tabStatus={props.tabStatus}
+                onSummary={() => {
+                props.onSummary(item);
+              }}
+              onRating={() => {
+                props.onRating(item);
+              }}
               />
             );
           }}

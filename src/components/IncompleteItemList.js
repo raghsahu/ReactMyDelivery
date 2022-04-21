@@ -1,14 +1,14 @@
-import React, {useContext} from 'react';
-import {View, Dimensions, Image, TouchableOpacity} from 'react-native';
-const {height, width} = Dimensions.get('screen');
+import React, { useContext } from 'react';
+import { View, Dimensions, Image, TouchableOpacity } from 'react-native';
+const { height, width } = Dimensions.get('screen');
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import {Text, Button} from '../components';
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { Text, Button } from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 
 const IncompleteItemList = props => {
-  const {getTranslation} = useContext(LocalizationContext);
+  const { getTranslation } = useContext(LocalizationContext);
   const item = props.item;
 
   return (
@@ -20,13 +20,13 @@ const IncompleteItemList = props => {
       }}>
       <Image
         style={{
-          width: 95,
-          height: 95,
+          width: 70,
+          height: 70,
           margin: 5,
-          // borderRadius: 12,
+          borderRadius: 35,
         }}
         source={
-          item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder
+          item.prod_img ? { uri: JSON.parse(item.prod_img)[0] } : IMAGES.product_placeholder
         }
       />
 

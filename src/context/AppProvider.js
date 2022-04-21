@@ -35,6 +35,7 @@ export const AppProvider = props => {
     change_date_time: baseURL + 'madd/change_date_time',
     change_request: baseURL + 'madd/change_request',
     del_ads: baseURL + 'del/ads_by_status',
+    rating: baseURL + 'madd/rating',
   };
 
   const getLogin = async (email, pw) => {
@@ -213,6 +214,16 @@ export const AppProvider = props => {
     return await request(webServices.del_ads, 'post', params);
   };
 
+  const putRating = async (rate_user_id, rate_rating, rate_comment) => {
+    let params = {
+      rate_user_id : rate_user_id,
+      rate_rating: rate_rating,
+      rate_comment: rate_comment
+
+    };
+    return await request(webServices.rating, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
@@ -378,6 +389,7 @@ export const AppProvider = props => {
         putDateTimeChangeRequest,
         change_request,
         del_ads,
+        putRating,
       }}>
       {props.children}
     </APPContext.Provider>

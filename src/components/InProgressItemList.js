@@ -22,6 +22,11 @@ const InProgressItemList = props => {
 }, []);
 
   return (
+    <TouchableOpacity
+      onPress={() => {
+        props.onSummary();
+      }}
+    >
     <View style={{}}>
       <View
         style={{
@@ -103,7 +108,7 @@ const InProgressItemList = props => {
             marginTop: 5,
             marginRight: 0,
           }}>
-          <Button
+          {/* <Button
             style={[
               {
                 width: 93,
@@ -117,25 +122,28 @@ const InProgressItemList = props => {
             title={'Complaint'}
             type={2}
             //onPress={() => {props.onModify()}}
-          />
-
-          {/* <Button
+          /> */}
+        {props.tabStatus === 'completed'? 
+          <Button
             style={[
               {
                 width: 93,
                 height: 29,
                 marginTop: 5,
-                backgroundColor: COLORS.red,
+                backgroundColor: COLORS.primaryColor,
                 borderRadius: 0,
                 alignSelf: 'center',
                 justifyContent: 'center',
               },
             ]}
-            title={getTranslation('delete')}
+            title={getTranslation('rating')}
             onPress={() => {
-              props.onDelete();
+              props.onRating();
             }}
-          /> */}
+          />
+          :
+          null
+          }
         </View>
 
         <View
@@ -233,6 +241,7 @@ const InProgressItemList = props => {
           backgroundColor: '#D5D5D5',
         }}></View>
     </View>
+    </TouchableOpacity>
   );
 };
 

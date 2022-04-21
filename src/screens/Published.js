@@ -89,6 +89,9 @@ function Published(props) {
                   setDeletedAdId(item.ad_id)
                   deleteModalVisibility();
                 }}
+                onPublishedAdsDetails={() => {
+                  props.onPublishedAdsDetails(item);
+                }}
               />
             );
           }}

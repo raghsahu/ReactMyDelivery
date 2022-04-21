@@ -32,6 +32,7 @@ import {
 import { LocalizationContext } from '../context/LocalizationProvider';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
 const { height, width } = Dimensions.get('screen');
 import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'DescribeProduct.db' });
@@ -46,6 +47,7 @@ function AddProductSummary(props) {
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const { getTranslation } = useContext(LocalizationContext);
   const { user, webServices, getError, add_Product } = useContext(APPContext);
+  const{getAdGender} = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -78,7 +80,7 @@ function AddProductSummary(props) {
   };
 
   const checkDecimal = (amount) => {
-    return amount.toFixed(2);
+    return parseFloat(amount).toFixed(2);
   }
 
   var tempImages = [];
@@ -268,11 +270,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.gender == '1'
-                  ? 'Man'
-                  : CommissionData.gender == '2'
-                    ? 'Women'
-                    : 'Both'}
+                {getAdGender(CommissionData.gender)}
               </Text>
             </View>
 
