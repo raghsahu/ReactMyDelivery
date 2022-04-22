@@ -48,7 +48,7 @@ function MyAccount(props) {
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const { delUser, user, imageBaseUrl, setUser } = useContext(APPContext);
+  const { delUser, user, imageBaseUrl, setUser, check_code } = useContext(APPContext);
   const [productListItems, setProductListItems] = useState([]);
 
   useEffect(() => {
@@ -216,7 +216,16 @@ function MyAccount(props) {
                 summaryData: item,
               });
             }}
-
+            onComplaint={() => {
+              props.navigation.navigate('SendSuggestion', {
+                headerTitle: 'Complain',
+              });
+            }}
+            onCodeExchange={(data) => {
+              props.navigation.navigate('ExchangeSuccessSummary', {
+                summaryData: data,
+               });
+            }}
           />
         );
       }
@@ -250,6 +259,11 @@ function MyAccount(props) {
                 status: tabStatus,
                 subTabIndex: index1,
                 summaryData: item,
+              });
+            }}
+            onComplaint={() =>{
+              props.navigation.navigate('SendSuggestion', {
+                headerTitle: 'Complain',
               });
             }}
           />
@@ -348,6 +362,7 @@ function MyAccount(props) {
     });
   };
 
+ 
   return (
     <View style={styles.container}>
       <StatusBar
@@ -918,6 +933,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 7,
   },
+ 
   buttonStyle: {
     flex: 1,
     alignItems: 'center',
@@ -926,6 +942,7 @@ const styles = StyleSheet.create({
     margin: 5,
     height: 40,
   },
+
 });
 
 export default MyAccount;

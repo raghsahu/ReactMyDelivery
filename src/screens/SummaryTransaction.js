@@ -46,18 +46,21 @@ function SummaryTransaction(props) {
   const [user_x, setUser_X] = useState([]);
   const [user_y, setUser_Y] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
-  const { imageBaseUrl, putDateTimeChangeRequest } = useContext(APPContext);
+  const { imageBaseUrl, putDateTimeChangeRequest, check_code } = useContext(APPContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
-  const [enableTxnCodeBtn, setEnableTxnCodeBtn] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [selectDate, setSelectDate] = useState('');
   const [selectTime, setSelectTime] = useState('');
   const [dateSelected, setDateSelected] = useState(false);
+  const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
+
+  var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
 
   useEffect(() => {
     const item = props.route.params.summaryData;
@@ -113,6 +116,23 @@ function SummaryTransaction(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
+
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+  const checkCodeApi = async () => {
+    setLoading(true);
+    const result = await check_code(item.ad_id ,otp);
+    setLoading(false);
+   // console.log('check_codedeeeee ', result)
+    if (result.status == true) {
+      Toast.show(result.error);
+       TxnCodeModalVisibility();
+       props.navigation.navigate('ExchangeSuccessSummary', {
+        summaryData: result.data,
+       });
 
     } else {
       Toast.show(result.error);
@@ -709,18 +729,39 @@ function SummaryTransaction(props) {
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
-              {status == 'inProgress' ? (
+              {status == 'inProgress' && dateB > dateA ? 
                 <Button
                   style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
                   title={'Complaint'} //or Change Delivery Date (according to condition)
                   onPress={() => {
-                    // props.navigation.navigate('SendSuggestion', {
-                    //   headerTitle: 'Complain',
-                    // });
+                    props.navigation.navigate('SendSuggestion', {
+                      headerTitle: 'Complain',
+                    });
                   }}
-                />) : null}
+                /> :
+                subTabIndex ===1 ?
+                <Button
+                style={[
+                  {
+                    width: 133,
+                    height: 36,
+                    marginTop: 5,
+                    backgroundColor: COLORS.primaryColor,
+                    borderRadius: 133/2,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
+                title={getTranslation('txn_code')}
+                onPress={() => {
+                  TxnCodeModalVisibility();
+                }}
+              />
+              :
+              null
+                 }
 
-              {status == 'deliveryAccepted' ? (
+              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex ===2 && dateB < dateA) ? (
                 <Button
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
@@ -728,16 +769,6 @@ function SummaryTransaction(props) {
                   title={'Change Delivery Date'} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     ChangeDateModalVisibility();
-                  }}
-                />
-              ) : null}
-
-              {enableTxnCodeBtn ? (
-                <Button
-                  style={[{ width: 156 }]}
-                  title={getTranslation('txn_code')} //or Change Delivery Date (according to condition)
-                  onPress={() => {
-                    TxnCodeModalVisibility();
                   }}
                 />
               ) : null}
@@ -790,14 +821,17 @@ function SummaryTransaction(props) {
             <OTPInputView
               style={[{ height: 32, marginTop: 24 }]}
               pinCount={10}
-              autoFocusOnLoad
+              autoFocusOnLoad={false}
+              keyboardType={'email-address'}
               codeInputFieldStyle={styles.underlineStyleBase}
               codeInputHighlightStyle={styles.underlineStyleHighLighted}
               // placeholderCharacter=''
               // placeholderTextColor={'rgba(64,86,124,1)'}
-              onCodeFilled={code => {
-                //console.log(`Code is ${code}, you are good to go!`);
-              }}
+              //code={otp}
+              onCodeFilled = {(code => {
+                //console.log(`Code is ${code}, you are good to go!`)
+                setOtp(code);
+            })}
             />
 
             <View
@@ -815,6 +849,7 @@ function SummaryTransaction(props) {
                 ]}
                 title={getTranslation('cancel')}
                 onPress={() => {
+                  setOtp('')
                   TxnCodeModalVisibility();
                 }}
               />
@@ -823,8 +858,15 @@ function SummaryTransaction(props) {
                 style={[{ width: 100 }]}
                 title={getTranslation('confirm')}
                 onPress={() => {
-                  TxnCodeModalVisibility();
-                  props.navigation.navigate('ExchangeSuccessSummary');
+                  if(!otp){
+                    Toast.show('Please enter 10 digit txn code')
+                  }else if(otp.length!=10){
+                    Toast.show('Please enter 10 digit txn code')
+                  }
+                  else{
+                     checkCodeApi(); 
+                  }
+                 
                 }}
               />
             </View>
@@ -959,12 +1001,12 @@ const styles = StyleSheet.create({
   },
   modalView1: {
     position: 'absolute',
-    top: '40%',
+    top: '50%',
     left: '50%',
     elevation: 5,
-    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
+    transform: [{ translateX: -(width * 0.46) }, { translateY: -90 }],
     height: 320,
-    width: width * 0.83,
+    width: width * 0.93,
     backgroundColor: '#fff',
     borderRadius: 7,
   },
@@ -985,10 +1027,11 @@ const styles = StyleSheet.create({
   },
   underlineStyleBase: {
     width: 32,
-    height: 32,
+    height: 40,
     borderRadius: 16,
-    backgroundColor: COLORS.lightGray,
+    //backgroundColor: COLORS.lightGray,
     color: COLORS.black,
+    
   },
   underlineStyleHighLighted: {
     borderColor: COLORS.primaryColor,

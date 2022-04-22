@@ -6,9 +6,6 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  TouchableOpacity,
-  ImageBackground,
-  Modal,
   Dimensions,
   FlatList,
 } from 'react-native';
@@ -20,18 +17,47 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {
   Button,
   Text,
-  Input,
-  Header,
   BottomBackground,
-  RadioButtons,
-  CheckBox,
   ProductsItemListCompleted,
 } from '../components';
 
 const {height, width} = Dimensions.get('screen');
-import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonActions } from '@react-navigation/native';
 
 function ExchangeSuccessSummary(props) {
+  const [item, setItem] = useState({});
+  const [products, setItemProducts] = useState([]);
+  const [user_x, setUser_X] = useState([]);
+  const [user_y, setUser_Y] = useState([]);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
+  const [prodTotalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    const item = props.route.params.summaryData[0];
+    setItem(item);
+    setItemProducts(props.route.params.summaryData[0].products)
+    setUser_X(item.user_x[0])
+    setUser_Y(item.user_y[0])
+  }, []);
+
+  const getProductPrice = () => {
+  var totalPrice = 0;
+    for (let i = 0; i < products.length; i++) {
+      totalPrice =
+        totalPrice + (products[i].prod_price * products[i].prod_qnty);
+    }
+    //setTotalPrice(totalPrice);
+    return parseFloat(totalPrice).toFixed(2)
+  };
+
+  const checkDecimal = (amount) => {
+    return parseFloat(amount).toFixed(2);
+  }
+
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -79,13 +105,13 @@ function ExchangeSuccessSummary(props) {
             <Text
               style={
                 {
-                  //marginLeft: 10,
+                  //flex: 1,
                 }
               }
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€600 + €32,4 + €8,1 = €638'}
+              {'€'+ getProductPrice() + ' + €'+  parseFloat(item.ad_cmsn_delivery).toFixed(2)  + ' + €' + checkDecimal(item.ad_cmsn_price * 0.20) + ' = €'+ parseFloat(item.ad_pay_amount).toFixed(2)}
             </Text>
 
             <Text
@@ -93,7 +119,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.black}
               size="18"
               weight="500">
-              {'is credited to the account of John Ben'}
+              {'is credited to the account of '+ user_y.user_f_name + ' ' + user_y.user_l_name}
             </Text>
           </View>
 
@@ -127,7 +153,9 @@ function ExchangeSuccessSummary(props) {
             title={'Comment & Rating'}
             type={1}
             onPress={() => {
-              props.navigation.navigate('RatingReview');
+              props.navigation.navigate('RatingReview', {
+                userName: item.user_y[0].user_f_name + ' ' + item.user_y[0].user_l_name,
+              });
             }}
           />
 
@@ -149,10 +177,11 @@ function ExchangeSuccessSummary(props) {
 
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={['', '']}
+            data={products}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
-              return <ProductsItemListCompleted />;
+              return <ProductsItemListCompleted
+              item={item} />;
             }}
           />
 
@@ -173,7 +202,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ 3.00'}
+                {'€ ' + parseFloat(item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -193,7 +222,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ 3.00'}
+                {'€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
             <View
@@ -212,7 +241,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'Both'}
+                {getAdGender(item.ad_gender)}
               </Text>
             </View>
 
@@ -232,7 +261,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                {item.ad_accept_limit}
               </Text>
             </View>
 
@@ -252,7 +281,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                {item.ad_delivery_limit}
               </Text>
             </View>
 
@@ -273,7 +302,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'Warje, Pune'}
+                {item.ad_delv_addr}
               </Text>
             </View>
           </View>
@@ -312,7 +341,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'Omar Benchikou'}
+                {user_y.user_f_name + ' ' + user_y.user_l_name}
               </Text>
             </View>
             <View
@@ -331,7 +360,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'2022-01-15'}
+                {item.acpt_date}
               </Text>
             </View>
 
@@ -351,7 +380,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'12:00'}
+                {item.acpt_time}
               </Text>
             </View>
           </View>
@@ -378,11 +407,12 @@ function ExchangeSuccessSummary(props) {
             <Text
               style={{
                 marginLeft: 10,
+                flex: 1,
               }}
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'2020-04-02 12:05 by John Ben'}
+              {item.ad_delv_pick_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
             </Text>
           </View>
 
@@ -401,11 +431,12 @@ function ExchangeSuccessSummary(props) {
             <Text
               style={{
                 marginLeft: 10,
+                flex: 1,
               }}
               color={COLORS.darkGray}
               size="16"
               weight="500">
-              {'€600 + €32,4 + €8,1 = €638'}
+              {'€'+ getProductPrice() + ' + €'+  parseFloat(item.ad_cmsn_delivery).toFixed(2)  + ' + €' + checkDecimal(item.ad_cmsn_price * 0.20) + ' = €'+ parseFloat(item.ad_pay_amount).toFixed(2)}
             </Text>
           </View>
 
@@ -419,7 +450,12 @@ function ExchangeSuccessSummary(props) {
             <Button
               title={'Done'}
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'BottomBar' }],
+                  }),
+                );
               }}
             />
           </View>

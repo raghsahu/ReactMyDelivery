@@ -15,7 +15,7 @@ import {LocalizationContext} from '../context/LocalizationProvider';
 
 const ProductsItemListCompleted = props => {
   const {getTranslation} = useContext(LocalizationContext);
-  //const item = props.item;
+  const item = props.item;
 
   return (
     <View
@@ -41,7 +41,7 @@ const ProductsItemListCompleted = props => {
             color={'#35CCC1'}
             size="16"
             weight="500">
-            {'www.com'}
+            {item.prod_web_link}
           </Text>
         </View>
 
@@ -61,7 +61,7 @@ const ProductsItemListCompleted = props => {
             color={COLORS.darkGray}
             size="16"
             weight="500">
-            {''}
+            {item.prod_place_purchase}
           </Text>
         </View>
 
@@ -81,7 +81,7 @@ const ProductsItemListCompleted = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'€ 2.00 x 1 = € 2.00'}
+            {'€ '+ item.prod_price  +' * '+  item.prod_qnty + ' = € ' + parseFloat(item.prod_price_total).toFixed(2)}
           </Text>
         </View>
 
@@ -101,7 +101,7 @@ const ProductsItemListCompleted = props => {
             color={COLORS.darkGray}
             size="16"
             weight="500">
-            {''}
+            {item.prod_info}
           </Text>
         </View>
       </View>

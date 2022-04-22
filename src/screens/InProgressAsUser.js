@@ -28,16 +28,18 @@ import {
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function InProgressAsUser(props) {
-  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const { user, imageBaseUrl, publishedProduct } = useContext(APPContext);
+  const { user, imageBaseUrl, publishedProduct , check_code} = useContext(APPContext);
   const { getTranslation } = useContext(LocalizationContext);
   const [inProgressItem, setInProgressItem] = useState([]);
+  const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [selectedAdId, setSelectedAdId] = useState('');
 
   useEffect(() => {
-    //console.log('indexxxx ', props.subTabIndex + ' ' + props.tabStatus)
     if (props.tabStatus === 'inProgress') {
       getInProgressItemList('1,2,3,4,5');
     }else{
@@ -121,9 +123,24 @@ function InProgressAsUser(props) {
     }
   };
 
-  const deleteModalVisibility = () => {
-    setDeleteModalVisible(!isDeleteModalVisible);
+  const TxnCodeModalVisibility = () => {
+    setTxnCodeModalVisible(!isTxnCodeModalVisible);
   };
+
+  const checkCodeApi = async () => {
+    setLoading(true);
+    const result = await check_code(selectedAdId ,otp);
+    setLoading(false);
+   // console.log('check_codedeeeee ', result)
+    if (result.status == true) {
+      Toast.show(result.error);
+       TxnCodeModalVisibility();
+       props.onCodeExchange(result.data)
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -142,11 +159,19 @@ function InProgressAsUser(props) {
               <InProgressItemList
                 item={item}
                 tabStatus={props.tabStatus}
+                subTabIndex={props.subTabIndex}
                 onSummary={() => {
                 props.onSummary(item);
               }}
               onRating={() => {
                 props.onRating(item);
+              }}
+              onComplaint={() => {
+                props.onComplaint();
+              }}
+              onCodeExchange={() => {
+                setSelectedAdId(item.ad_id)
+                TxnCodeModalVisibility();
               }}
               />
             );
@@ -154,57 +179,91 @@ function InProgressAsUser(props) {
         />
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
+   
       <Modal
         animationType="slide"
         transparent
-        visible={isDeleteModalVisible}
+        visible={isTxnCodeModalVisible}
         presentationStyle="overFullScreen"
-        onDismiss={isDeleteModalVisible}>
+        onDismiss={isTxnCodeModalVisible}>
         <View style={styles.viewWrapper}>
-          <View style={styles.modalView1}>
+          <View style={styles.modalView2}>
+            <Image
+              source={IMAGES.right_tick_icon}
+              style={{
+                height: 56,
+                width: 56,
+                marginTop: 20,
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}
+            />
+
             <Text
-              style={{ alignSelf: 'center', marginTop: 15, marginHorizontal: 10 }}
-              size="20"
+              style={{ marginTop: 20 }}
+              size="18"
               weight="500"
-              align="left"
+              align="center"
               color={COLORS.black}>
-              {'Are you sure to delete this announcement'}
+              {getTranslation('pls_confirm_txn')}
             </Text>
+
+            <OTPInputView
+              style={[{ height: 32, marginTop: 24 }]}
+              pinCount={10}
+              autoFocusOnLoad={false}
+              keyboardType={'email-address'}
+              codeInputFieldStyle={styles.underlineStyleBase}
+              codeInputHighlightStyle={styles.underlineStyleHighLighted}
+              // placeholderCharacter=''
+              // placeholderTextColor={'rgba(64,86,124,1)'}
+              //code={otp}
+              onCodeFilled = {(code => {
+                //console.log(`Code is ${code}, you are good to go!`)
+                setOtp(code);
+            })}
+            />
 
             <View
               style={{
                 marginHorizontal: DIMENSION.marginHorizontal,
-                marginTop: 20,
+                marginTop: 30,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
               <Button
                 style={[
-                  {
-                    width: 90,
-                    height: 41,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                  },
+                  styles.inputView,
+                  { width: 100, justifyContent: 'center' },
                 ]}
-                title={'Yes'}
+                title={getTranslation('cancel')}
                 onPress={() => {
-                  // props.navigation.navigate('Market')
+                  setOtp('')
+                  TxnCodeModalVisibility();
                 }}
               />
 
               <Button
-                style={[{ width: 90, height: 41, justifyContent: 'center' }]}
-                title={'No'}
+                style={[{ width: 100 }]}
+                title={getTranslation('confirm')}
                 onPress={() => {
-                  deleteModalVisibility();
+                  if(!otp){
+                    Toast.show('Please enter 10 digit txn code')
+                  }else if(otp.length!=10){
+                    Toast.show('Please enter 10 digit txn code')
+                  }
+                  else{
+                     checkCodeApi(); 
+                  }
+                 
                 }}
               />
             </View>
           </View>
         </View>
       </Modal>
+
     </View>
   );
 }
@@ -234,6 +293,29 @@ const styles = StyleSheet.create({
     width: width * 0.85,
     backgroundColor: '#fff',
     borderRadius: 7,
+  },
+  modalView2: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    elevation: 5,
+    transform: [{ translateX: -(width * 0.46) }, { translateY: -90 }],
+    height: 320,
+    width: width * 0.93,
+    backgroundColor: '#fff',
+    borderRadius: 7,
+  },
+  underlineStyleBase: {
+    width: 32,
+    height: 40,
+    borderRadius: 16,
+    //backgroundColor: COLORS.lightGray,
+    color: COLORS.black,
+    
+  },
+  underlineStyleHighLighted: {
+    borderColor: COLORS.primaryColor,
+    color: COLORS.black,
   },
 });
 

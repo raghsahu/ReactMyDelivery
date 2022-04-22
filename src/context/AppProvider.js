@@ -36,6 +36,7 @@ export const AppProvider = props => {
     change_request: baseURL + 'madd/change_request',
     del_ads: baseURL + 'del/ads_by_status',
     rating: baseURL + 'madd/rating',
+    check_code: baseURL + 'fields/check_code',
   };
 
   const getLogin = async (email, pw) => {
@@ -223,6 +224,14 @@ export const AppProvider = props => {
     };
     return await request(webServices.rating, 'post', params);
   };
+  const check_code = async (acpt_ad_id, acpt_code) => {
+    let params = {
+      acpt_ad_id : acpt_ad_id,
+      acpt_code: acpt_code,
+
+    };
+    return await request(webServices.check_code, 'post', params);
+  };
 
   const request = async (url, method, params) => {
     try {
@@ -390,6 +399,7 @@ export const AppProvider = props => {
         change_request,
         del_ads,
         putRating,
+        check_code,
       }}>
       {props.children}
     </APPContext.Provider>
