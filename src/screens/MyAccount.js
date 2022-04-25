@@ -217,9 +217,9 @@ function MyAccount(props) {
               });
             }}
             onComplaint={() => {
-              props.navigation.navigate('SendSuggestion', {
-                headerTitle: 'Complain',
-              });
+              // props.navigation.navigate('SendSuggestion', {
+              //   headerTitle: 'Complain',
+              // });
             }}
             onCodeExchange={(data) => {
               props.navigation.navigate('ExchangeSuccessSummary', {

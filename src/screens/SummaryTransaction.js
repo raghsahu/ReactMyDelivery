@@ -34,6 +34,7 @@ const { height, width } = Dimensions.get('screen');
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { Rating } from 'react-native-ratings';
 import Toast from 'react-native-simple-toast';
+import firestore from '@react-native-firebase/firestore'
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
@@ -46,7 +47,7 @@ function SummaryTransaction(props) {
   const [user_x, setUser_X] = useState([]);
   const [user_y, setUser_Y] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
-  const { imageBaseUrl, putDateTimeChangeRequest, check_code } = useContext(APPContext);
+  const { imageBaseUrl, putDateTimeChangeRequest, check_code , user} = useContext(APPContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
@@ -58,6 +59,10 @@ function SummaryTransaction(props) {
   const [dateSelected, setDateSelected] = useState(false);
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [chatRoomId, setChatRoomId] = useState('');
+  const [loginUserId, setLoginUserId] = useState('');
+  const [msgRecieverId, setMessageRecieverId] = useState('');
+  const [finalNodeId, setFinalNodeId] = useState('');
 
   var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
   var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
@@ -68,9 +73,80 @@ function SummaryTransaction(props) {
     setItemProducts(item.products)
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
+    setLoginUserId(user.user_id);
 
-    //console.log('subTabIndex ', subTabIndex)
+      setFinalNodeId(getNodeId(item.ad_id, item.user_x[0].user_id, item.user_y[0].user_id))
+ 
+    
   }, []);
+
+  const getNodeId = (ad_id , user1 , user2) => {
+      return ad_id + '_'+ user1 + '_'+ user2
+  };
+
+  const checkChatRoom = (headerTitle) => {
+
+    //*********get all thread***** */
+    const unsubscribe = firestore()
+      .collection('MESSAGES')
+      .onSnapshot(querySnapshot => {
+        const threads = querySnapshot.docs.map(documentSnapshot => {
+          return {
+            _id: documentSnapshot.id,
+            name: '',
+            ...documentSnapshot.data()
+          }
+        })
+
+        const threadId = findLinkByName(threads, finalNodeId);
+        if (threadId) {
+          setChatRoomId(threadId)
+          props.navigation.navigate('SendSuggestion', {
+                      headerTitle: headerTitle,
+                      chatRoomId: chatRoomId,
+                      finalNodeId: finalNodeId,
+                      
+                    })
+        } else {
+          NewThreadCreate(headerTitle);
+        }
+      })
+    return () => unsubscribe()
+
+
+  };
+
+  const NewThreadCreate = (headerTitle) => {
+    //// create new thread using firebase & firestore
+    firestore()
+      .collection('MESSAGES')
+      .add({
+        name: finalNodeId,
+        createdAt: new Date().getTime(),
+      })
+      .then(docRef => {
+        setChatRoomId(docRef.id)
+        docRef.collection(finalNodeId).add({
+          text: `Chat room created. Welcome!`,
+          createdAt: new Date().getTime(),
+          system: true
+        })
+        props.navigation.navigate('SendSuggestion', {
+                      headerTitle: headerTitle,
+                      chatRoomId: chatRoomId,
+                      finalNodeId: finalNodeId,
+                     
+                    })
+      })
+  };
+
+  function findLinkByName(threads, name) {
+    for (const item of threads) {
+      if (item.name === name) {
+        return item._id;
+      }
+    }
+  }
 
   function showDatepicker(mode) {
     showMode(mode);
@@ -124,15 +200,15 @@ function SummaryTransaction(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(item.ad_id ,otp);
+    const result = await check_code(item.ad_id, otp);
     setLoading(false);
-   // console.log('check_codedeeeee ', result)
+    // console.log('check_codedeeeee ', result)
     if (result.status == true) {
       Toast.show(result.error);
-       TxnCodeModalVisibility();
-       props.navigation.navigate('ExchangeSuccessSummary', {
+      TxnCodeModalVisibility();
+      props.navigation.navigate('ExchangeSuccessSummary', {
         summaryData: result.data,
-       });
+      });
 
     } else {
       Toast.show(result.error);
@@ -656,7 +732,7 @@ function SummaryTransaction(props) {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {'**** by *****'} 
+                  {'**** by *****'}
                   {/* 2020-04-02 12:05 by John Ben */}
                 </Text>
               </View>
@@ -704,19 +780,19 @@ function SummaryTransaction(props) {
               title={'Rating'}
               // type={1}
               onPress={() => {
-              
-                if(status === 'completed' && subTabIndex === 1){
-                  
+
+                if (status === 'completed' && subTabIndex === 1) {
+
                   props.navigation.navigate('RatingReview', {
                     userName: user_y.user_f_name + ' ' + user_y.user_l_name,
                   });
-                }else{
+                } else {
                   props.navigation.navigate('RatingReview', {
-                    userName:  user_x.user_f_name + ' ' + user_x.user_l_name,
+                    userName: user_x.user_f_name + ' ' + user_x.user_l_name,
                   });
-                  
+
                 }
-               
+
               }}
             />
           ) : (
@@ -729,7 +805,7 @@ function SummaryTransaction(props) {
                 justifyContent: 'space-between',
                 // position: 'absolute',
               }}>
-              {status == 'inProgress' && dateB > dateA ? 
+              {status == 'inProgress' && dateB > dateA ?
                 <Button
                   style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
                   title={'Complaint'} //or Change Delivery Date (according to condition)
@@ -739,29 +815,29 @@ function SummaryTransaction(props) {
                     });
                   }}
                 /> :
-                subTabIndex ===1 ?
-                <Button
-                style={[
-                  {
-                    width: 133,
-                    height: 36,
-                    marginTop: 5,
-                    backgroundColor: COLORS.primaryColor,
-                    borderRadius: 133/2,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                  },
-                ]}
-                title={getTranslation('txn_code')}
-                onPress={() => {
-                  TxnCodeModalVisibility();
-                }}
-              />
-              :
-              null
-                 }
+                subTabIndex === 1 ?
+                  <Button
+                    style={[
+                      {
+                        width: 133,
+                        height: 36,
+                        marginTop: 5,
+                        backgroundColor: COLORS.primaryColor,
+                        borderRadius: 133 / 2,
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                      },
+                    ]}
+                    title={getTranslation('txn_code')}
+                    onPress={() => {
+                      TxnCodeModalVisibility();
+                    }}
+                  />
+                  :
+                  null
+              }
 
-              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex ===2 && dateB < dateA) ? (
+              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB < dateA) ? (
                 <Button
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
@@ -778,9 +854,23 @@ function SummaryTransaction(props) {
                 title={getTranslation('chat')} // X-chat (delivery man chat with user)
                 type={1}
                 onPress={() => {
-                  props.navigation.navigate('SendSuggestion', {
-                    headerTitle: 'Souad Bentchikou',
-                  });
+                  let headerTitle = ''
+                  {
+                    status === 'inProgress' && subTabIndex === 1 ?
+                      headerTitle = user_y.user_f_name + ' ' + user_y.user_l_name
+                      :
+                      status != 'completed' ?
+                        headerTitle = user_x.user_f_name + ' ' + user_x.user_l_name
+                        :
+                        ''
+                  }
+                  checkChatRoom(headerTitle);
+                 // if (chatRoomId) {
+                    // props.navigation.navigate('SendSuggestion', {
+                    //   headerTitle: headerTitle,
+                    //   chatRoomId: chatRoomId,
+                    // })
+                  //}
                 }}
               />
             </View>
@@ -828,10 +918,10 @@ function SummaryTransaction(props) {
               // placeholderCharacter=''
               // placeholderTextColor={'rgba(64,86,124,1)'}
               //code={otp}
-              onCodeFilled = {(code => {
+              onCodeFilled={(code => {
                 //console.log(`Code is ${code}, you are good to go!`)
                 setOtp(code);
-            })}
+              })}
             />
 
             <View
@@ -858,15 +948,15 @@ function SummaryTransaction(props) {
                 style={[{ width: 100 }]}
                 title={getTranslation('confirm')}
                 onPress={() => {
-                  if(!otp){
+                  if (!otp) {
                     Toast.show('Please enter 10 digit txn code')
-                  }else if(otp.length!=10){
+                  } else if (otp.length != 10) {
                     Toast.show('Please enter 10 digit txn code')
                   }
-                  else{
-                     checkCodeApi(); 
+                  else {
+                    checkCodeApi();
                   }
-                 
+
                 }}
               />
             </View>
@@ -1031,7 +1121,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     //backgroundColor: COLORS.lightGray,
     color: COLORS.black,
-    
+
   },
   underlineStyleHighLighted: {
     borderColor: COLORS.primaryColor,
