@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 import moment from 'moment'; // date format
 
 //COMMON COMPONENT
@@ -27,23 +27,23 @@ import {
   ProgressView,
   FilterItem,
 } from '../components';
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {CommonUtilsContext, filterList} from '../context/CommonUtils';
-import {APPContext} from '../context/AppProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { CommonUtilsContext, filterList } from '../context/CommonUtils';
+import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 
 function RequestsListForPlaces(props) {
-  const {lat, lng} = props.route.params;
-  const {getTranslation} = useContext(LocalizationContext);
-  const {optionsFilter, setOptionFilter} = useContext(CommonUtilsContext);
-  const {user, getFilterProduct} = useContext(APPContext);
+  const { lat, lng } = props.route.params;
+  const { getTranslation } = useContext(LocalizationContext);
+  const { optionsFilter, setOptionFilter } = useContext(CommonUtilsContext);
+  const { user, getFilterProduct } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
   const [filterKey, setFilterKey] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [maxPrice, setMaximumPrice] = useState('10000000');
-  const [minCommission, setMinimumCommission] = useState('1');
+  const [maxPrice, setMaximumPrice] = useState('');
+  const [minCommission, setMinimumCommission] = useState('');
   const [requestItem, setRequestItem] = useState([]);
 
 
@@ -53,7 +53,7 @@ function RequestsListForPlaces(props) {
 
   }, []);
 
-  const getCurrentDate=()=>{
+  const getCurrentDate = () => {
 
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
@@ -62,7 +62,7 @@ function RequestsListForPlaces(props) {
     //Alert.alert(date + '-' + month + '-' + year);
     // You can turn it in to your desired format
     return year + '-' + month + '-' + date;//format: dd-mm-yyyy;
-}
+  }
 
   const logoutModalVisibility = () => {
     setLogoutModalVisible(!isLogoutModalVisible);
@@ -72,13 +72,13 @@ function RequestsListForPlaces(props) {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(true);
     const result = await getFilterProduct(
-      maxPrice,
+      maxPrice ? maxPrice : '10000000',
       '1',
       '10000000',
-      minCommission,
-       getCurrentDate(),
-       lat,
-       lng,
+      minCommission ? minCommission : '1',
+      getCurrentDate(),
+      lat,
+      lng,
     );
     setLoading(false);
     if (result.status == true) {
@@ -89,6 +89,15 @@ function RequestsListForPlaces(props) {
       setRequestItem([]);
     }
   };
+
+  const handleInputChange = (text) => {
+    const numericRegex = /^([0-9]{0,100})+$/
+    if (numericRegex.test(text)) {
+     filterKey == '4'
+     ? setMaximumPrice(text)
+     : setMinimumCommission(text);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -113,7 +122,7 @@ function RequestsListForPlaces(props) {
               flexDirection: 'row',
             }}>
             <Text
-              style={[styles.inputView, {alignSelf: 'center'}]}
+              style={[styles.inputView, { alignSelf: 'center' }]}
               size="20"
               weight="500"
               align="center"
@@ -121,9 +130,41 @@ function RequestsListForPlaces(props) {
               {getTranslation('filter_by')}
             </Text>
             <TouchableOpacity
-              style={[styles.inputView, {alignSelf: 'center'}]}
+              style={[styles.inputView, { alignSelf: 'center' }]}
               onPress={() => {
                 setIsFilter(!isFilter);
+                if (filterKey == '4') {
+                  requestItem.sort((a, b) => {
+                    var priceA = a.products[0].prod_price;
+                    var priceB = b.products[0].prod_price;
+                    if (isFilter) {
+                      if (parseInt(priceA) > parseInt(priceB)) {
+                        return -1 // return -1 here for DESC order
+                      }
+                    } else {
+                      if (parseInt(priceB) > parseInt(priceA)) {
+                        return -1 // return -1 here for ASC order
+                      }
+                    }
+                    return 1 // return 1 here for DESC Order
+                  });
+
+                } else if(filterKey == '6'){
+                  requestItem.sort((a, b) => {
+                    var priceA = a.ad_cmsn_delivery;
+                    var priceB = b.ad_cmsn_delivery;
+                    if (isFilter) {
+                      if (parseInt(priceA) > parseInt(priceB)) {
+                        return -1 // return -1 here for DESC order
+                      }
+                    } else {
+                      if (parseInt(priceB) > parseInt(priceA)) {
+                        return -1 // return -1 here for ASC order
+                      }
+                    }
+                    return 1 // return 1 here for DESC Order
+                  });
+                }
               }}>
               <ImageBackground
                 source={IMAGES.rectangle_gray_border}
@@ -141,126 +182,218 @@ function RequestsListForPlaces(props) {
             </TouchableOpacity>
           </View>
 
-          {isFilter ? (
-            <View
-              style={[
-                styles.inputView,
-                {marginTop: 10, flex: 1, marginBottom: 30},
-              ]}>
-              <FlatList
-                showsVerticalScrollIndicator={false}
-                data={optionsFilter}
-                keyExtractor={(item, index) => index.toString()}
-                numColumns={3}
-                renderItem={({item, index}) => {
-                  return (
-                    <FilterItem
-                      item={item}
-                      onFilter={id => {
-                        setFilterKey(id);
-                        const data = [...optionsFilter];
-                        for (let i = 0; i < data.length; i++) {
-                          if (i === index) {
-                            data[index].selected = !data[index].selected;
+          <View
+            style={[
+              { marginTop: 10, flex: 1, marginBottom: 30 },
+            ]}>
+            <FlatList
+              style={[styles.inputView,]}
+              showsVerticalScrollIndicator={false}
+              data={optionsFilter}
+              keyExtractor={(item, index) => index.toString()}
+              numColumns={3}
+              renderItem={({ item, index }) => {
+                return (
+                  <FilterItem
+                    item={item}
+                    onFilter={id => {
+                      setFilterKey(id);
+                      const data = [...optionsFilter];
+                      for (let i = 0; i < data.length; i++) {
+                        if (i === index) {
+                          data[index].selected = !data[index].selected;
+                        } else {
+                          data[i].selected = false;
+                        }
+                      }
+                      setOptionFilter(data);
+
+                      if (id == '1') {
+                        // setMaximumPrice('10000');
+                        // setMinimumCommission('1');
+                        // getRequestList();
+                        requestItem.sort((a, b) => {
+                          const dateA = new Date(`${a.ad_create_date}`).valueOf();
+                          const dateB = new Date(`${b.ad_create_date}`).valueOf();
+                          if (data[index].selected) {
+                            if (dateA > dateB) {
+                              return -1; // return -1 here for DESC order
+                            }
                           } else {
-                            data[i].selected = false;
+                            if (dateB > dateA) {
+                              return -1; // return -1 here for DESC order
+                            }
                           }
-                        }
-                        setOptionFilter(data);
 
-                        if(id == '1'){
-                          // setMaximumPrice('10000');
-                          // setMinimumCommission('1');
-                          // getRequestList();
-                           requestItem.sort((a,b)=>{
-                            const dateA = new Date(`${a.ad_create_date}`).valueOf();
-                            const dateB = new Date(`${b.ad_create_date}`).valueOf();
-                            if(data[index].selected){
-                              if(dateA > dateB){
-                                return -1; // return -1 here for DESC order
-                              }
-                            }else{
-                              if(dateB > dateA){
-                                return -1; // return -1 here for DESC order
-                              }
-                            }
-                            
-                            return 1 // return 1 here for DESC Order
-                          });
-                         
-                        }else if(id == '2'){
-                          // setMaximumPrice('10000');
-                          // setMinimumCommission('1');
-                          // getRequestList();
-                          requestItem.sort((a,b)=>{
-                            var dateA = a.duration_ad;
-                            var dateB = b.duration_ad;
-                            if(data[index].selected){
-                              if(parseInt(dateA) > parseInt(dateB)){
-                                return -1 // return -1 here for DESC order
-                              }
-                            }else{
-                              if(parseInt(dateB) > parseInt(dateA)){
-                                return -1 // return -1 here for ASC order
-                              }
-                            }    
-                           return 1 // return 1 here for DESC Order
-                          });
-                        }else if(id == '3'){
-                          // setMaximumPrice('10000');
-                          // setMinimumCommission('1');
-                          // getRequestList();
-                          requestItem.sort((a,b)=>{
-                            const rating1 = a.user_x[0].user_rating_count;
-                            const rating2 = b.user_x[0].user_rating_count;
-                            if(data[index].selected){
-                              if(rating1 > rating2){
-                                return -1; // return -1 here for DESC order
-                              }
-                            }else{
-                              if(rating2 > rating1){
-                                return -1; // return -1 here for DESC order
-                              }
-                            }
-                            
-                            return 1 // return 1 here for DESC Order
-                          });
+                          return 1 // return 1 here for DESC Order
+                        });
 
-                        }else if(id == '4' && data[index].selected){
-                          // setMaximumPrice('');
-                          logoutModalVisibility();
-                        }else if(id == '5'){
-                          // setMaximumPrice('10000');
-                          // setMinimumCommission('1');
-                          // getRequestList();
-                          requestItem.sort((a,b)=>{
-                            var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-                            var dateB = new Date(moment(b.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-                            if(data[index].selected){
-                              if(dateA > dateB){
-                                return -1; // return -1 here for DESC order
-                              }
-                            }else{
-                              if(dateB > dateA){
-                                return -1; // return -1 here for ASC order
-                              }
+                      } else if (id == '2') {
+                        // setMaximumPrice('10000');
+                        // setMinimumCommission('1');
+                        // getRequestList();
+                        requestItem.sort((a, b) => {
+                          var dateA = a.duration_ad;
+                          var dateB = b.duration_ad;
+                          if (data[index].selected) {
+                            if (parseInt(dateA) > parseInt(dateB)) {
+                              return -1 // return -1 here for DESC order
                             }
-                            
-                            return 1 // return 1 here for DESC Order
-                          });
-                        }else if(id == '6' && data[index].selected){
-                          // setMinimumCommission('1');
-                          logoutModalVisibility();
-                        }
-                      }}
-                    />
-                  );
+                          } else {
+                            if (parseInt(dateB) > parseInt(dateA)) {
+                              return -1 // return -1 here for ASC order
+                            }
+                          }
+                          return 1 // return 1 here for DESC Order
+                        });
+                      } else if (id == '3') {
+                        // setMaximumPrice('10000');
+                        // setMinimumCommission('1');
+                        // getRequestList();
+                        requestItem.sort((a, b) => {
+                          const rating1 = a.user_rating;
+                          const rating2 = b.user_rating;
+                          if (data[index].selected) {
+                            if (rating1 > rating2) {
+                              return -1; // return -1 here for DESC order
+                            }
+                          }
+                           else {
+                            if (rating2 > rating1) {
+                              return -1; // return -1 here for DESC order
+                            }
+                          }
+
+                          return 1 // return 1 here for DESC Order
+                        });
+
+                      } else if (id == '4' && data[index].selected) {
+                        // // setMaximumPrice('');
+                        //logoutModalVisibility();
+
+                      } else if (id == '5') {
+                        // setMaximumPrice('10000');
+                        // setMinimumCommission('1');
+                        // getRequestList();
+                        requestItem.sort((a, b) => {
+                          var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                          var dateB = new Date(moment(b.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                          if (data[index].selected) {
+                            if (dateA > dateB) {
+                              return -1; // return -1 here for DESC order
+                            }
+                          } else {
+                            if (dateB > dateA) {
+                              return -1; // return -1 here for ASC order
+                            }
+                          }
+
+                          return 1 // return 1 here for DESC Order
+                        });
+                      } else if (id == '6' && data[index].selected) {
+                        // // setMinimumCommission('1');
+                        //logoutModalVisibility();
+                      }
+                    }}
+                  />
+                );
+              }}
+            />
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flex: 1,
+              }}>
+                {filterKey == '4' ? 
+              <TouchableOpacity
+                style={[styles.inputView, {
+                  alignSelf: 'flex-start',
+                   marginLeft: 60,
+                  }]}
+                onPress={() => {
+                  logoutModalVisibility();
+                }}>
+
+                <Image
+                  style={{
+                    width: 12,
+                    height: 12,
+                    margin: 5,
+                  }}
+                  source={IMAGES.downArrow}
+                />
+
+              </TouchableOpacity>
+               : 
+               <TouchableOpacity
+               style={[styles.inputView, {
+                 alignSelf: 'flex-start',
+                  marginLeft: 60,
+                 }]}
+               onPress={() => {
+                 //setIsFilter(!isFilter);
+               }}>
+
+               <Image
+                 style={{
+                   width: 0,
+                   height: 0,
+                   margin: 5,
+                 }}
+                 source={IMAGES.downArrow}
+               />
+
+             </TouchableOpacity>
+               } 
+
+            {filterKey == '6' ? 
+              <TouchableOpacity
+                style={[styles.inputView, { alignSelf: 'flex-end', marginRight: 60 ,
+              }]}
+                onPress={() => {
+                  logoutModalVisibility();
+                }}>
+
+                <Image
+                  style={{
+                    width: 12,
+                    height: 12,
+                    margin: 5,
+
+                  }}
+                  source={IMAGES.downArrow}
+                />
+
+              </TouchableOpacity>
+              : 
+              <TouchableOpacity
+              style={[styles.inputView, {
+                alignSelf: 'flex-end', marginRight: 60 
+                }]}
+              onPress={() => {
+                //setIsFilter(!isFilter);
+              }}>
+
+              <Image
+                style={{
+                  width: 0,
+                  height: 0,
+                  margin: 5,
                 }}
+                source={IMAGES.downArrow}
               />
-            </View>
-          ) : null}
 
-          <View style={{height: 5, backgroundColor: '#414141'}}></View>
+            </TouchableOpacity>
+              }
+
+            </View>
+
+            <View style={{ height: 5, backgroundColor: '#414141' }}></View>
+          </View>
+
+
 
           <View
             style={{
@@ -271,21 +404,21 @@ function RequestsListForPlaces(props) {
               flexDirection: 'row',
             }}>
             <Text
-              style={[styles.inputView, {alignSelf: 'center'}]}
+              style={[styles.inputView, { alignSelf: 'center' }]}
               size="18"
               weight="500"
               align="center"
               color={COLORS.textColor2}>
               {'Advertise List'}
             </Text>
-            <TouchableOpacity style={[styles.inputView, {alignSelf: 'center'}]}>
+            <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
               <Text
-                style={[{alignSelf: 'center'}]}
+                style={[{ alignSelf: 'center' }]}
                 size="18"
                 weight="500"
                 align="center"
                 color={COLORS.textColor2}>
-                {'Total: '+ requestItem.length}
+                {'Total: ' + requestItem.length}
               </Text>
             </TouchableOpacity>
           </View>
@@ -293,10 +426,10 @@ function RequestsListForPlaces(props) {
             showsVerticalScrollIndicator={false}
             data={requestItem}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <AdvertiseListItem
-                  mainViewStyle={[styles.inputView, {marginBottom: 20}]}
+                  mainViewStyle={[styles.inputView, { marginBottom: 20 }]}
                   item={item}
                   onSummary={() => {
                     props.navigation.navigate('AdSummaryDetails', {
@@ -356,18 +489,19 @@ function RequestsListForPlaces(props) {
             </TouchableOpacity>
 
             <Input
-              style={{marginHorizontal: 10, marginTop: 30}}
+              style={{ marginHorizontal: 10, marginTop: 30 }}
               placeholder={
                 filterKey == '4' ? 'Maximum Price' : 'Minimum Commission'
               }
               isLeft={IMAGES.filterItem}
               keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
+              textContentType={'telephoneNumber'}
+              dataDetectorTypes={'phoneNumber'}
+              value={ filterKey == '4' ? maxPrice : minCommission}
               onChangeText={text => {
-                filterKey == '4'
-                  ? setMaximumPrice(text)
-                  : setMinimumCommission(text);
+                handleInputChange(text);
               }}
-              // value={selectDate}
+            // value={selectDate}
             />
 
             <Button
@@ -428,7 +562,7 @@ const styles = StyleSheet.create({
     top: '40%',
     margin: 20,
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     backgroundColor: '#fff',
     borderRadius: 7,
   },

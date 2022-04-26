@@ -59,10 +59,6 @@ function SummaryTransaction(props) {
   const [dateSelected, setDateSelected] = useState(false);
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const [chatRoomId, setChatRoomId] = useState('');
-  const [loginUserId, setLoginUserId] = useState('');
-  const [msgRecieverId, setMessageRecieverId] = useState('');
-  const [finalNodeId, setFinalNodeId] = useState('');
 
   var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
   var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
@@ -73,11 +69,7 @@ function SummaryTransaction(props) {
     setItemProducts(item.products)
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
-    setLoginUserId(user.user_id);
 
-      setFinalNodeId(getNodeId(item.ad_id, item.user_x[0].user_id, item.user_y[0].user_id))
- 
-    
   }, []);
 
   const getNodeId = (ad_id , user1 , user2) => {
@@ -85,7 +77,9 @@ function SummaryTransaction(props) {
   };
 
   const checkChatRoom = (headerTitle) => {
+    console.log('finalNode ', getNodeId(item.ad_id, user_x.user_id, user_y.user_id))
 
+    if(getNodeId(item.ad_id, user_x.user_id, user_y.user_id)){
     //*********get all thread***** */
     const unsubscribe = firestore()
       .collection('MESSAGES')
@@ -98,21 +92,28 @@ function SummaryTransaction(props) {
           }
         })
 
-        const threadId = findLinkByName(threads, finalNodeId);
-        if (threadId) {
-          setChatRoomId(threadId)
-          props.navigation.navigate('SendSuggestion', {
-                      headerTitle: headerTitle,
-                      chatRoomId: chatRoomId,
-                      finalNodeId: finalNodeId,
-                      
-                    })
-        } else {
+        if(threads.length > 0){
+          const threadId = findLinkByName(threads, getNodeId(item.ad_id, user_x.user_id, user_y.user_id));
+          if (threadId) {
+            props.navigation.navigate('ChatScreen', {
+                        headerTitle: headerTitle,
+                        chatRoomId: threadId,
+                        finalNodeId: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
+                        
+                      })
+          } else {
+            NewThreadCreate(headerTitle);
+          }
+        }else {
           NewThreadCreate(headerTitle);
         }
+        
       })
     return () => unsubscribe()
 
+  }else{
+    console.log('finalNodeNot found ')
+  }
 
   };
 
@@ -121,22 +122,24 @@ function SummaryTransaction(props) {
     firestore()
       .collection('MESSAGES')
       .add({
-        name: finalNodeId,
+        name: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
         createdAt: new Date().getTime(),
       })
       .then(docRef => {
-        setChatRoomId(docRef.id)
-        docRef.collection(finalNodeId).add({
+        docRef.collection(getNodeId(item.ad_id, user_x.user_id, user_y.user_id)).add({
           text: `Chat room created. Welcome!`,
           createdAt: new Date().getTime(),
           system: true
         })
-        props.navigation.navigate('SendSuggestion', {
-                      headerTitle: headerTitle,
-                      chatRoomId: chatRoomId,
-                      finalNodeId: finalNodeId,
-                     
-                    })
+        if(docRef.id){
+          props.navigation.navigate('ChatScreen', {
+            headerTitle: headerTitle,
+            chatRoomId: docRef.id,
+            finalNodeId: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
+           
+          })
+        }
+    
       })
   };
 
@@ -200,9 +203,8 @@ function SummaryTransaction(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(item.ad_id, otp);
+    const result = await check_code(item.ad_id, otp, '3');
     setLoading(false);
-    // console.log('check_codedeeeee ', result)
     if (result.status == true) {
       Toast.show(result.error);
       TxnCodeModalVisibility();
@@ -763,18 +765,9 @@ function SummaryTransaction(props) {
             </View>
           ) : null}
 
-          {/* //hide & show button with conditions */}
-
-          {/* <Button
-            style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
-            title={'Evaluation Done'}
-            // type={1}
-            onPress={() => {
-              
-            }}
-          /> */}
-
+         
           {status == 'completed' ? (
+            subTabIndex ===1 && user_y.rating_status == '0' ?
             <Button
               style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
               title={'Rating'}
@@ -795,6 +788,39 @@ function SummaryTransaction(props) {
 
               }}
             />
+            :
+            subTabIndex ===2 && user_x.rating_status == '0' ?
+            <Button
+              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+              title={'Rating'}
+              // type={1}
+              onPress={() => {
+
+                if (status === 'completed' && subTabIndex === 1) {
+
+                  props.navigation.navigate('RatingReview', {
+                    userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                  });
+                } else {
+                  props.navigation.navigate('RatingReview', {
+                    userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                  });
+
+                }
+
+              }}
+            />
+            :
+            <Button
+              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+              title={'Evaluation Done'}
+              // type={1}
+              onPress={() => {
+                  //evalution done
+                  props.navigation.goBack();
+
+              }}
+            />
           ) : (
             <View
               style={{
@@ -810,9 +836,9 @@ function SummaryTransaction(props) {
                   style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
                   title={'Complaint'} //or Change Delivery Date (according to condition)
                   onPress={() => {
-                    props.navigation.navigate('SendSuggestion', {
-                      headerTitle: 'Complain',
-                    });
+                    // props.navigation.navigate('SendSuggestion', {
+                    //   headerTitle: 'Complain',
+                    // });
                   }}
                 /> :
                 subTabIndex === 1 ?
@@ -837,7 +863,7 @@ function SummaryTransaction(props) {
                   null
               }
 
-              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB < dateA) ? (
+              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB <= dateA) ? (
                 <Button
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
@@ -865,12 +891,6 @@ function SummaryTransaction(props) {
                         ''
                   }
                   checkChatRoom(headerTitle);
-                 // if (chatRoomId) {
-                    // props.navigation.navigate('SendSuggestion', {
-                    //   headerTitle: headerTitle,
-                    //   chatRoomId: chatRoomId,
-                    // })
-                  //}
                 }}
               />
             </View>

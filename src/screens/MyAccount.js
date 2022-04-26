@@ -48,7 +48,7 @@ function MyAccount(props) {
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const { delUser, user, imageBaseUrl, setUser, check_code } = useContext(APPContext);
+  const { delUser, user, imageBaseUrl, setUser } = useContext(APPContext);
   const [productListItems, setProductListItems] = useState([]);
 
   useEffect(() => {
@@ -217,9 +217,9 @@ function MyAccount(props) {
               });
             }}
             onComplaint={() => {
-              // props.navigation.navigate('SendSuggestion', {
-              //   headerTitle: 'Complain',
-              // });
+              props.navigation.navigate('SendSuggestion', {
+                headerTitle: 'Complain',
+              });
             }}
             onCodeExchange={(data) => {
               props.navigation.navigate('ExchangeSuccessSummary', {

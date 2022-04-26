@@ -10,6 +10,7 @@ import ResetPassword from './ResetPassword';
 import Home from './Home';
 import MyAccount from './MyAccount';
 import SendSuggestion from './SendSuggestion';
+import ChatScreen from './ChatScreen';
 import EditAccount from './EditAccount';
 import Notification from './Notification';
 import AddProduct from './AddProduct';
@@ -54,4 +55,5 @@ export {
   AdModificationProposal,
   GooglePlacesInput,
   PublishedAdsDetails,
+  ChatScreen,
 };

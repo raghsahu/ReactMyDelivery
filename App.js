@@ -15,6 +15,7 @@ import {
   Home,
   MyAccount,
   SendSuggestion,
+  ChatScreen,
   EditAccount,
   Notification,
   AddProduct,
@@ -224,6 +225,7 @@ const App = () => {
               <Screen name="SuccessScreen" component={SuccessScreen} />
               <Screen name="MyAccount" component={MyAccount} />
               <Screen name="SendSuggestion" component={SendSuggestion} />
+              <Screen name="ChatScreen" component={ChatScreen} />
               <Screen name="EditAccount" component={EditAccount} />
               <Screen name="Notification" component={Notification} />
               <Screen name="AddProduct" component={AddProduct} />

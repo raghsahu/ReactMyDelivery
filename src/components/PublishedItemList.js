@@ -208,7 +208,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.products[0].prod_price_total}
+                {parseFloat(item.products[0].prod_price_total).toFixed(2)}
               </Text>
             </View>
 
@@ -228,7 +228,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.ad_cmsn_delivery}
+                {parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>

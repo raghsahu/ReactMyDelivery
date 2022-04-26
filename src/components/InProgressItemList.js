@@ -98,7 +98,7 @@ const InProgressItemList = props => {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {products.prod_place_delivery}
+                  {item.ad_delv_addr}
                 </Text>
               </View>
             </View>
@@ -129,7 +129,7 @@ const InProgressItemList = props => {
                onPress={() => {props.onComplaint()}}
               />
               :
-              props.subTabIndex ===1 ?
+              props.subTabIndex ===1 &&  props.tabStatus != 'completed' ?
               <Button
               style={[
                 {
@@ -151,6 +151,7 @@ const InProgressItemList = props => {
             null
             }
             {props.tabStatus === 'completed' ?
+              props.subTabIndex ===1 && item.user_y[0].rating_status == '0' ?
               <Button
                 style={[
                   {
@@ -166,6 +167,30 @@ const InProgressItemList = props => {
                 title={getTranslation('rating')}
                 onPress={() => {
                   props.onRating();
+                }}
+              />
+              :
+              
+              props.subTabIndex ===2 && item.user_x[0].rating_status == '0' ?
+              <Button
+                style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                title={'Rating'}
+                // type={1}
+                onPress={() => {
+  
+                  props.onRating();
+  
+                }}
+              />
+              :
+              <Button
+                style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                title={'Evaluation Done'}
+                // type={1}
+                onPress={() => {
+                    //evalution done
+                    //props.navigation.goBa
+  
                 }}
               />
               :
@@ -216,6 +241,7 @@ const InProgressItemList = props => {
 
           <View
             style={{
+              flex: 1,
               flexDirection: 'row',
               marginTop: 5,
               marginBottom: 10,
@@ -225,6 +251,7 @@ const InProgressItemList = props => {
               style={{
                 flexDirection: 'row',
                 marginLeft: 5,
+                flex: 1,
               }}>
               <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
                 {getTranslation('price') + ' :'}
@@ -237,7 +264,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {products.prod_price_total}
+                {parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -245,6 +272,7 @@ const InProgressItemList = props => {
               style={{
                 flexDirection: 'row',
                 marginLeft: 5,
+                flex: 1,
               }}>
               <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
                 {getTranslation('deliveryman_commission') + ' :'}
@@ -253,6 +281,8 @@ const InProgressItemList = props => {
               <Text
                 style={{
                   marginLeft: 10,
+                  justifyContent: 'center',
+                  alignSelf: 'center'
                 }}
                 color={COLORS.primaryColor}
                 size="16"

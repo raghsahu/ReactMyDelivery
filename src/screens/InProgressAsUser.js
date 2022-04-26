@@ -129,9 +129,8 @@ function InProgressAsUser(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(selectedAdId ,otp);
+    const result = await check_code(selectedAdId ,otp, '3');
     setLoading(false);
-   // console.log('check_codedeeeee ', result)
     if (result.status == true) {
       Toast.show(result.error);
        TxnCodeModalVisibility();

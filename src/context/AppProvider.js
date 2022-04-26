@@ -224,10 +224,11 @@ export const AppProvider = props => {
     };
     return await request(webServices.rating, 'post', params);
   };
-  const check_code = async (acpt_ad_id, acpt_code) => {
+  const check_code = async (acpt_ad_id, acpt_code, acpt_type) => {
     let params = {
       acpt_ad_id : acpt_ad_id,
       acpt_code: acpt_code,
+      acpt_type: acpt_type,
 
     };
     return await request(webServices.check_code, 'post', params);
