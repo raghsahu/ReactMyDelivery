@@ -21,6 +21,7 @@ import AddProductsItemList from './AddProductItemSummary';
 import FilterItem from './FilterItem';
 import DeliveryManSummaryProductsItemList from './DeliveryManSummaryProductsItemList';
 import InProgressItemList from './InProgressItemList';
+import DeleteModal from './DeleteModal';
 
 export {
   Text,
@@ -46,4 +47,5 @@ export {
   FilterItem,
   DeliveryManSummaryProductsItemList,
   InProgressItemList,
+  DeleteModal,
 };

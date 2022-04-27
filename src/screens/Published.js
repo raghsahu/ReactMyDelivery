@@ -18,12 +18,9 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {
-  Button,
-  Header,
-  Text,
-  Input,
   PublishedItemList,
   ProgressView,
+  DeleteModal,
 } from '../components';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
@@ -98,57 +95,15 @@ function Published(props) {
         />
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isDeleteModalVisible}
-        presentationStyle="overFullScreen"
-        onDismiss={isDeleteModalVisible}>
-        <View style={styles.viewWrapper}>
-          <View style={styles.modalView1}>
-            <Text
-              style={{alignSelf: 'center', marginTop: 15, marginHorizontal: 10}}
-              size="20"
-              weight="500"
-              align="left"
-              color={COLORS.black}>
-              {'Are you sure to delete this announcement'}
-            </Text>
-
-            <View
-              style={{
-                marginHorizontal: DIMENSION.marginHorizontal,
-                marginTop: 20,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                // position: 'absolute',
-              }}>
-              <Button
-                style={[
-                  {
-                    width: 90,
-                    height: 41,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                  },
-                ]}
-                title={'Yes'}
-                onPress={() => {
-                  getDeleteAd();
-                }}
-              />
-
-              <Button
-                style={[{width: 90, height: 41, justifyContent: 'center'}]}
-                title={'No'}
-                onPress={() => {
-                  deleteModalVisibility();
-                }}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <DeleteModal
+          isDeleteModalVisible={isDeleteModalVisible}
+          getDeleteAd={() => {
+            getDeleteAd();
+          }}
+          deleteModalVisibility={() => {
+            deleteModalVisibility();
+          }}
+        />
     </View>
   );
 }

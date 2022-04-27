@@ -35,12 +35,12 @@ const NotificationItemList = props => {
   };
 
   return (
-    // <TouchableOpacity
-    //   style={{
-    //     paddingVertical: 10,
-    //
-    //   }}
-    //   onPress={() => props.onPress()}>
+    <TouchableOpacity
+      style={{
+        //paddingVertical: 10,
+    
+      }}
+      onPress={() => props.onPress()}>
     <View
       style={{
         flexDirection: 'row',
@@ -88,7 +88,7 @@ const NotificationItemList = props => {
         </Text>
       </View>
     </View>
-    // </TouchableOpacity>
+    </TouchableOpacity>
   );
 };
 

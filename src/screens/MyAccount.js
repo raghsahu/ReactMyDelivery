@@ -94,6 +94,7 @@ function MyAccount(props) {
         onPublishedAdsDetails={(item) => {
           props.navigation.navigate('PublishedAdsDetails', {
             ProdData: item,
+            type: 'Published'
           });
         }}
       />;

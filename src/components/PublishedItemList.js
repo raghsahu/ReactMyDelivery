@@ -194,6 +194,7 @@ const PublishedItemList = props => {
             }}>
             <View
               style={{
+                flex: 1,
                 flexDirection: 'row',
                 marginLeft: 5,
               }}>
@@ -216,6 +217,7 @@ const PublishedItemList = props => {
               style={{
                 flexDirection: 'row',
                 marginLeft: 5,
+                flex: 1,
               }}>
               <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
                 {getTranslation('deliveryman_commission') + ' :'}
@@ -224,6 +226,8 @@ const PublishedItemList = props => {
               <Text
                 style={{
                   marginLeft: 10,
+                  justifyContent: 'center',
+                  alignSelf: 'center'
                 }}
                 color={COLORS.primaryColor}
                 size="16"

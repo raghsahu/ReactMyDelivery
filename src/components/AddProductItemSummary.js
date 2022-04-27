@@ -31,10 +31,7 @@ const AddProductsItemList = props => {
           //margin: 5,
         }
       }>
-      {/* <Image
-        style={styles.image}
-        source={item.prod_img ? {uri: item.prod_img} : IMAGES.product_placeholder}
-      /> */}
+        
       <PagerView style={styles.image} initialPage={0}>
         {JSON.parse(item.prod_img).map(x => {
          // console.log(x);

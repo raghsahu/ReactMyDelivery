@@ -47,7 +47,7 @@ function SummaryTransaction(props) {
   const [user_x, setUser_X] = useState([]);
   const [user_y, setUser_Y] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
-  const { imageBaseUrl, putDateTimeChangeRequest, check_code , user} = useContext(APPContext);
+  const { imageBaseUrl, putDateTimeChangeRequest, check_code, user } = useContext(APPContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
   const [isDateModalVisible, setDateModalVisible] = useState(false);
@@ -72,52 +72,55 @@ function SummaryTransaction(props) {
 
   }, []);
 
-  const getNodeId = (ad_id , user1 , user2) => {
-      return ad_id + '_'+ user1 + '_'+ user2
+  const getNodeId = (ad_id, user1, user2) => {
+    return ad_id + '_' + user1 + '_' + user2
   };
 
-  const checkChatRoom = (headerTitle) => {
+  const checkChatRoom = (headerTitle,  receiverId, fcmKey) => {
     console.log('finalNode ', getNodeId(item.ad_id, user_x.user_id, user_y.user_id))
 
-    if(getNodeId(item.ad_id, user_x.user_id, user_y.user_id)){
-    //*********get all thread***** */
-    const unsubscribe = firestore()
-      .collection('MESSAGES')
-      .onSnapshot(querySnapshot => {
-        const threads = querySnapshot.docs.map(documentSnapshot => {
-          return {
-            _id: documentSnapshot.id,
-            name: '',
-            ...documentSnapshot.data()
-          }
-        })
+    if (getNodeId(item.ad_id, user_x.user_id, user_y.user_id)) {
+      //*********get all thread***** */
+      const unsubscribe = firestore()
+        .collection('MESSAGES')
+        .onSnapshot(querySnapshot => {
+          const threads = querySnapshot.docs.map(documentSnapshot => {
+            return {
+              _id: documentSnapshot.id,
+              name: '',
+              ...documentSnapshot.data()
+            }
+          })
 
-        if(threads.length > 0){
-          const threadId = findLinkByName(threads, getNodeId(item.ad_id, user_x.user_id, user_y.user_id));
-          if (threadId) {
-            props.navigation.navigate('ChatScreen', {
-                        headerTitle: headerTitle,
-                        chatRoomId: threadId,
-                        finalNodeId: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
-                        
-                      })
+          if (threads.length > 0) {
+            const threadId = findLinkByName(threads, getNodeId(item.ad_id, user_x.user_id, user_y.user_id));
+            if (threadId) {
+              props.navigation.navigate('ChatScreen', {
+                headerTitle: headerTitle,
+                chatRoomId: threadId,
+                finalNodeId: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
+                ad_id: item.ad_id,
+                recieverId: receiverId,
+                fcmKey: fcmKey,
+                prodName: products[0].prod_name,
+              })
+            } else {
+              NewThreadCreate(headerTitle,  receiverId, fcmKey);
+            }
           } else {
-            NewThreadCreate(headerTitle);
+            NewThreadCreate(headerTitle,  receiverId, fcmKey);
           }
-        }else {
-          NewThreadCreate(headerTitle);
-        }
-        
-      })
-    return () => unsubscribe()
 
-  }else{
-    console.log('finalNodeNot found ')
-  }
+        })
+      return () => unsubscribe()
+
+    } else {
+      console.log('finalNodeNot found ')
+    }
 
   };
 
-  const NewThreadCreate = (headerTitle) => {
+  const NewThreadCreate = (headerTitle,  receiverId, fcmKey) => {
     //// create new thread using firebase & firestore
     firestore()
       .collection('MESSAGES')
@@ -131,15 +134,18 @@ function SummaryTransaction(props) {
           createdAt: new Date().getTime(),
           system: true
         })
-        if(docRef.id){
+        if (docRef.id) {
           props.navigation.navigate('ChatScreen', {
             headerTitle: headerTitle,
             chatRoomId: docRef.id,
             finalNodeId: getNodeId(item.ad_id, user_x.user_id, user_y.user_id),
-           
+            ad_id: item.ad_id,
+            recieverId: receiverId,
+            fcmKey: fcmKey,
+            prodName: products[0].prod_name,
           })
         }
-    
+
       })
   };
 
@@ -491,7 +497,7 @@ function SummaryTransaction(props) {
             data={products}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
-              return <DeliveryManSummaryProductsItemList
+              return <ProductsItemList
                 item={item} />;
             }}
           />
@@ -765,62 +771,62 @@ function SummaryTransaction(props) {
             </View>
           ) : null}
 
-         
+
           {status == 'completed' ? (
-            subTabIndex ===1 && user_y.rating_status == '0' ?
-            <Button
-              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
-              title={'Rating'}
-              // type={1}
-              onPress={() => {
+            subTabIndex === 1 && user_y.rating_status == '0' ?
+              <Button
+                style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                title={'Rating'}
+                // type={1}
+                onPress={() => {
 
-                if (status === 'completed' && subTabIndex === 1) {
+                  if (status === 'completed' && subTabIndex === 1) {
 
-                  props.navigation.navigate('RatingReview', {
-                    userName: user_y.user_f_name + ' ' + user_y.user_l_name,
-                  });
-                } else {
-                  props.navigation.navigate('RatingReview', {
-                    userName: user_x.user_f_name + ' ' + user_x.user_l_name,
-                  });
+                    props.navigation.navigate('RatingReview', {
+                      userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                    });
+                  } else {
+                    props.navigation.navigate('RatingReview', {
+                      userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                    });
 
-                }
+                  }
 
-              }}
-            />
-            :
-            subTabIndex ===2 && user_x.rating_status == '0' ?
-            <Button
-              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
-              title={'Rating'}
-              // type={1}
-              onPress={() => {
+                }}
+              />
+              :
+              subTabIndex === 2 && user_x.rating_status == '0' ?
+                <Button
+                  style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                  title={'Rating'}
+                  // type={1}
+                  onPress={() => {
 
-                if (status === 'completed' && subTabIndex === 1) {
+                    if (status === 'completed' && subTabIndex === 1) {
 
-                  props.navigation.navigate('RatingReview', {
-                    userName: user_y.user_f_name + ' ' + user_y.user_l_name,
-                  });
-                } else {
-                  props.navigation.navigate('RatingReview', {
-                    userName: user_x.user_f_name + ' ' + user_x.user_l_name,
-                  });
+                      props.navigation.navigate('RatingReview', {
+                        userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                      });
+                    } else {
+                      props.navigation.navigate('RatingReview', {
+                        userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                      });
 
-                }
+                    }
 
-              }}
-            />
-            :
-            <Button
-              style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
-              title={'Evaluation Done'}
-              // type={1}
-              onPress={() => {
-                  //evalution done
-                  props.navigation.goBack();
+                  }}
+                />
+                :
+                <Button
+                  style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                  title={'Evaluation Done'}
+                  // type={1}
+                  onPress={() => {
+                    //evalution done
+                    props.navigation.goBack();
 
-              }}
-            />
+                  }}
+                />
           ) : (
             <View
               style={{
@@ -881,16 +887,24 @@ function SummaryTransaction(props) {
                 type={1}
                 onPress={() => {
                   let headerTitle = ''
-                  {
-                    status === 'inProgress' && subTabIndex === 1 ?
-                      headerTitle = user_y.user_f_name + ' ' + user_y.user_l_name
-                      :
-                      status != 'completed' ?
-                        headerTitle = user_x.user_f_name + ' ' + user_x.user_l_name
-                        :
-                        ''
+                  let receiverID = ''
+                  let fcmKey = ''
+                  if (status === 'inProgress' && subTabIndex === 1) {
+                    headerTitle = user_y.user_f_name + ' ' + user_y.user_l_name;
+                    receiverID = user_y.user_id;
+                    fcmKey = user_y.user_fcm_key;
+
+                  } else if (status != 'completed') {
+                    headerTitle = user_x.user_f_name + ' ' + user_x.user_l_name;
+                    receiverID = user_x.user_id;
+                    fcmKey = user_x.user_fcm_key;
+                  } else {
+                    headerTitle = '';
+
                   }
-                  checkChatRoom(headerTitle);
+
+                  checkChatRoom(headerTitle, receiverID, fcmKey);
+
                 }}
               />
             </View>

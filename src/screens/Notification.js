@@ -32,7 +32,7 @@ import Toast from 'react-native-simple-toast';
 
 function Notification(props) {
   const {getTranslation} = useContext(LocalizationContext);
-  const {getNotifications, user} = useContext(APPContext);
+  const {getNotifications, user, getProducts} = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [notificationData, setNotifications] = useState([]);
 
@@ -46,6 +46,20 @@ function Notification(props) {
     setLoading(false);
     if (result.status == true) {
       setNotifications(result.data);
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+  const getAdsData = async (ad_id) => {
+    setLoading(true);
+    const result = await getProducts(ad_id);
+    setLoading(false);
+    if (result.status == true) {
+      props.navigation.navigate('PublishedAdsDetails', {
+        ProdData: result.data[0],
+        type: 'Notification'
+      });
     } else {
       Toast.show(result.error);
     }
@@ -73,7 +87,18 @@ function Notification(props) {
           data={notificationData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
-            return <NotificationItemList item={item} />;
+            return <NotificationItemList 
+            item={item} 
+            onPress={() => {
+             if(item.notn_type == '5'){
+              //  props.navigation.navigate('PublishedAdsDetails', {
+              //    ad_id: item.ad_id,
+              //    notn_id: item.notn_id,
+              //  })
+              getAdsData(item.ad_id)
+             }
+            }}
+            />;
           }}
         />
       </SafeAreaView>

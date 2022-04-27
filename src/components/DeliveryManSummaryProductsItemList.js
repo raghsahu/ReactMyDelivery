@@ -189,13 +189,14 @@ const DeliveryManSummaryProductsItemList = props => {
                 flexDirection: 'row',
                 marginTop: 5,
               }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
+              <Text style={{flex:0.5,}} color={COLORS.black} size="16" weight="600">
                 {getTranslation('additional_info')}
               </Text>
 
               <Text
                 style={{
                   marginLeft: 10,
+                  flex:1,
                 }}
                 color={COLORS.darkGray}
                 size="16"

@@ -20,17 +20,18 @@ import { Button, Header, Text, Input, BottomBackground } from '../components';
 const { height, width } = Dimensions.get('screen');
 import { GiftedChat } from 'react-native-gifted-chat'
 import firestore from '@react-native-firebase/firestore'
+import moment from 'moment'; // date format
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 
 function ChatScreen(props) {
-  const { headerTitle, chatRoomId ,finalNodeId} = props.route.params;
+  const { headerTitle, chatRoomId ,finalNodeId, ad_id, recieverId,fcmKey, prodName } = props.route.params;
   const [messages, setMessages] = useState([]);
-  const {user} = useContext(APPContext);
+  const {user, sendNotification} = useContext(APPContext);
 
   useEffect(() => {
-    console.log('use_efffeeee '+ chatRoomId + ' '+ finalNodeId)
+    //console.log('use_efffeeee '+ chatRoomId + ' '+ finalNodeId)
     const unsubscribeListener = firestore()
       .collection('MESSAGES')
       .doc(chatRoomId)
@@ -78,9 +79,20 @@ function ChatScreen(props) {
           _id: user.user_id,
           displayName: user.user_f_name + ' ' + user.user_l_name
         }
+      }).then(docRef => {
+        sendChatNotification(text);
       })
+  }
 
+  const sendChatNotification = async (text) => {
+    const noti_create_date = new Date(moment(new Date()).format('YYYY-MM-DD'));
+    const result = await sendNotification(Date.now(), '111', noti_create_date, ad_id, user.user_f_name, user.user_l_name, prodName, '', user.user_id, recieverId, text, finalNodeId, fcmKey);
+    if (result.status == true) {
+    
 
+    } else {
+      //Toast.show(result.error);
+    }
   }
 
   return (

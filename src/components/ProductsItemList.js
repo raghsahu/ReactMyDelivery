@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Dimensions,
@@ -6,16 +6,31 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import {Text, Button} from '../components';
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { Text, Button } from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import PagerView from 'react-native-pager-view';
 
 const ProductsItemList = props => {
-  const {getTranslation} = useContext(LocalizationContext);
-  //const item = props.item;
+  const { getTranslation } = useContext(LocalizationContext);
+  const { imageBaseUrl } = useContext(APPContext);
+  const item = props.item;
+
+  const setImages = prodImg => {
+    var ImageList = [];
+    var imageArray = prodImg.split(',');
+
+    //console.log('imgArray '+ imageArray )
+    for(var i =0; i<imageArray.length; i++){
+      ImageList.push(imageArray[i]);
+    }
+    
+    return ImageList
+  };
 
   return (
     <View
@@ -24,26 +39,36 @@ const ProductsItemList = props => {
           //margin: 5,
         }
       }>
-      <Image
-        style={{
-          width: 300,
-          height: 300,
-          borderRadius: 24,
-          marginHorizontal: 5,
-          justifyContent: 'center',
-          alignSelf: 'center',
-        }}
-        source={IMAGES.product_placeholder}
-      />
+      {/* <Image
+        style={styles.image}
+        source={setImages(item.prod_img)
+          ? {uri: imageBaseUrl + setImages(item.prod_img)}
+          : IMAGES.product_placeholder}
+      /> */}
 
-      <View style={[styles.inputView, {marginTop: 20}]}>
+      <PagerView style={styles.image} initialPage={0}>
+        {setImages(item.prod_img).map(x => {
+          // console.log(x);
+          return (
+            <View >
+              <Image
+                style={styles.image}
+                source={{ uri: imageBaseUrl + x }}
+              />
+            </View>
+          )
+        })}
+
+      </PagerView>
+
+      <View style={[styles.inputView, { marginTop: 20 }]}>
         <Text
           // style={[styles.inputView]}
           size="20"
           weight="500"
           align="left"
           color={COLORS.textColor}>
-          {'souris'}
+          {item.prod_name}
         </Text>
 
         <View
@@ -62,7 +87,7 @@ const ProductsItemList = props => {
             color={'#35CCC1'}
             size="16"
             weight="500">
-            {'www.com'}
+            {item.prod_web_link}
           </Text>
         </View>
 
@@ -82,7 +107,7 @@ const ProductsItemList = props => {
             color={COLORS.darkGray}
             size="16"
             weight="500">
-            {''}
+            {item.prod_place_purchase}
           </Text>
         </View>
 
@@ -102,7 +127,7 @@ const ProductsItemList = props => {
             color={COLORS.primaryColor}
             size="16"
             weight="500">
-            {'€ 2.00 x 1 = € 2.00'}
+            {'€ ' + item.prod_price + ' * ' + item.prod_qnty + ' = € ' + parseFloat(item.prod_price_total).toFixed(2)}
           </Text>
         </View>
 
@@ -111,18 +136,19 @@ const ProductsItemList = props => {
             flexDirection: 'row',
             marginTop: 5,
           }}>
-          <Text style={{}} color={COLORS.black} size="16" weight="600">
+          <Text style={{ flex: 0.5, }} color={COLORS.black} size="16" weight="600">
             {getTranslation('additional_info')}
           </Text>
 
           <Text
             style={{
               marginLeft: 10,
+              flex: 1,
             }}
             color={COLORS.darkGray}
             size="16"
             weight="500">
-            {''}
+            {item.prod_info}
           </Text>
         </View>
       </View>
@@ -144,6 +170,16 @@ const styles = StyleSheet.create({
   },
   inputView: {
     marginHorizontal: 30,
+  },
+  image: {
+    width: 300,
+    height: 300,
+    borderRadius: 24,
+    marginTop: 20,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
   },
 });
 

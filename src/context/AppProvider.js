@@ -37,6 +37,7 @@ export const AppProvider = props => {
     del_ads: baseURL + 'del/ads_by_status',
     rating: baseURL + 'madd/rating',
     check_code: baseURL + 'fields/check_code',
+    sendNotification: baseURL + 'send_notification',
   };
 
   const getLogin = async (email, pw) => {
@@ -234,6 +235,34 @@ export const AppProvider = props => {
     return await request(webServices.check_code, 'post', params);
   };
 
+  const sendNotification = async (notn_id, notn_type, notn_create_date, ad_id,user_f_name, user_l_name , prod_name, senderIMG,senderID, receiverID,massage,nodeID, user_fcm_key) => {
+    let params = {
+      notn_id : notn_id,
+      notn_type: notn_type,
+      notn_create_date: notn_create_date,
+      ad_id: ad_id,
+      user_f_name: user_f_name,
+      user_l_name: user_l_name,
+      prod_name: prod_name,
+      //senderIMG: senderIMG,
+      senderID: senderID,
+      receiverID: receiverID,
+      massage: massage,
+      nodeID: nodeID,
+      user_fcm_key: user_fcm_key,
+
+    };
+    return await request(webServices.sendNotification, 'post', params);
+  };
+
+  const getProducts = async (ad_id) => {
+    let params = {
+      ad_id : ad_id,
+
+    };
+    return await request(webServices.getProductFilter, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
@@ -401,6 +430,8 @@ export const AppProvider = props => {
         del_ads,
         putRating,
         check_code,
+        sendNotification,
+        getProducts,
       }}>
       {props.children}
     </APPContext.Provider>
