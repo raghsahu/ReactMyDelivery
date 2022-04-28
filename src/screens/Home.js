@@ -19,6 +19,7 @@ import { Button, Header, Text, Input, BottomBackground } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import { requestOneTimePayment } from 'react-native-paypal';
+import { Buffer } from "buffer";
 
 function Home(props) {
   const { getTranslation } = useContext(LocalizationContext);
@@ -26,42 +27,100 @@ function Home(props) {
 
   useEffect(() => { }, []);
 
-  const oneTimePayment = () => 
-    {
-      // const axios = require('axios');
+  const oneTimePayment = () => {
+    fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Language': 'en_US',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from('Aa7XIxm00s_oSNn9SAGKi1igvnzQxCrt3n0jIYMRnn7Ht2WL3vifepOgiv_aDra7vEXNXrn98s06Kazq:ELPGalRO8xjyzARHxFoYFF7-YzPLthTwviwMl6B7LvLseHjglPdNiCImqmU05ZiuGfFApM08hyKwGqGc').toString('base64')
+      },
+      body: 'grant_type=client_credentials'
+    }).then(response => response.json())
+      .then(async (data) => {
+        console.log('AccessToken '+data.access_token)
+        makePayment(data.access_token);
 
-      // (async () => {
-      //   try {
-      //     const { data: { access_token } } = await axios({
-      //       url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
-      //       method: 'post',
-      //       headers: {
-      //         Accept: 'application/json',
-      //         'Accept-Language': 'en_US',
-      //         'content-type': 'application/x-www-form-urlencoded',
-      //       },
-      //       auth: {
-      //         username: 'Aa7XIxm00s_oSNn9SAGKi1igvnzQxCrt3n0jIYMRnn7Ht2WL3vifepOgiv_aDra7vEXNXrn98s06Kazq',
-      //         password: 'ELPGalRO8xjyzARHxFoYFF7-YzPLthTwviwMl6B7LvLseHjglPdNiCImqmU05ZiuGfFApM08hyKwGqGc',
-      //       },
-      //       params: {
-      //         grant_type: 'client_credentials',
-      //       },
-      //     });
-      
-      //     console.log('access_token: ', access_token);
-      //   } catch (e) {
-      //     console.error(e);
-      //   }
-      // })();
-    }
+      }).catch(function (error) {
+        let edata = error.message;
+        console.log('Error:', edata)
+    })
+  }
 
-  
-  // requestOneTimePayment('Aa_Nr3jhlflL2vPjcLk85rgNnkk1jhcJKn6xUF1DkBHm6nPCNGqk82-AakrVdKEuN8JQuhFqVQjhCOGC', {amount: '5'})
-  //   // .then(setSuccess)
-  //   // .then(() => setError2a(''))
-  //   // .catch((err) => setError2a(err.message)
-  //   ;
+  const makePayment = async (accessToken) => {
+// For one time payments
+    // const {
+    //   nonce,
+    //   payerId,
+    //   email,
+    //   firstName,
+    //   lastName,
+    //   phone
+    // } = await requestOneTimePayment(
+    //   accessToken,
+    //   {
+    //     amount: '5', // required
+    //     // any PayPal supported currency (see here: https://developer.paypal.com/docs/integration/direct/rest/currency-codes/#paypal-account-payments)
+    //     currency: 'EUR',
+    //     // any PayPal supported locale (see here: https://braintree.github.io/braintree_ios/Classes/BTPayPalRequest.html#/c:objc(cs)BTPayPalRequest(py)localeCode)
+    //     localeCode: 'en_GB', 
+    //     shippingAddressRequired: false,
+    //     userAction: 'commit', // display 'Pay Now' on the PayPal review page
+    //     // one of 'authorize', 'sale', 'order'. defaults to 'authorize'. see details here: https://developer.paypal.com/docs/api/payments/v1/#payment-create-request-body
+    //     intent: 'authorize', 
+    //   }
+    // );
+
+    //************************** */
+    const dataDetail = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "paypal"
+      },
+      "transactions": [{
+          "amount": {
+              "total": '10',
+              "currency": "EUR",
+              "details": {
+                  "subtotal": '10',
+                  "tax": "0",
+                  "shipping": "0",
+                  "handling_fee": "0",
+                  "shipping_discount": "0",
+                  "insurance": "0"
+              }
+          }
+      }],
+      "redirect_urls": {
+          "return_url": "https://example.com",
+          "cancel_url": "https://example.com"
+      }
+ }
+
+    let createRequest = {
+      method: 'POST', 
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+(accessToken)
+      },
+      body:JSON.stringify(dataDetail)
+     }
+        console.log('Request body string',createRequest.body);
+        console.log('Request body (formatted)', JSON.stringify( JSON.parse(createRequest.body) ,null,4) );
+        fetch ('https://api.sandbox.paypal.com/v1/payments/payment',createRequest
+      )
+        .then(function(response) {
+            console.log('Response object', response);
+            return response.json()
+        })
+        .then(async(data) => {
+            console.log('Response data',data);
+            console.log('Response data (formatted)', JSON.stringify(data,null,4) );
+        }).catch(err => {
+            console.log({ ...err })
+        })
+  }
 
 
 
@@ -167,7 +226,8 @@ function Home(props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  oneTimePayment();
+                  //oneTimePayment();
+                  // console.log(Buffer.from('Hello World!').toString('base64'));
                 }}>
                 <View style={{}}>
                   <Image

@@ -10,6 +10,7 @@ import {
   Modal,
   Dimensions,
   TextInput,
+  BackHandler,
 } from 'react-native';
 //ASSETS
 import { COLORS, IMAGES, DIMENSION } from '../assets';
@@ -67,6 +68,24 @@ function MyAccount(props) {
   useEffect(() => {
     tabIndex ? setIndex(tabIndex) : setIndex(1);
   }, []);
+
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+
+  const backAction = () => {
+    props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'BottomBar' }],
+      }),
+    );
+  };
 
   const deleteAccountModalVisibility = () => {
     setModalVisible(!isModalVisible);
@@ -201,6 +220,11 @@ function MyAccount(props) {
             onRating={(item) => {
               props.navigation.navigate('RatingReview', {
                 userName: item.user_y[0].user_f_name + ' ' + item.user_y[0].user_l_name,
+                rate_ad_id: item.ad_id,
+                onReturn: item => {
+                  console.log('log_item ' + item);
+                 // setRatingStatus(true);
+                },
               });
             }}
           />
@@ -246,6 +270,11 @@ function MyAccount(props) {
             onRating={(item) => {
               props.navigation.navigate('RatingReview', {
                 userName:  item.user_x[0].user_f_name + ' ' + item.user_x[0].user_l_name,
+                rate_ad_id: item.ad_id,
+                onReturn: item => {
+                  console.log('log_item ' + item);
+                 // setRatingStatus(true);
+                },
               });
             }}
           />

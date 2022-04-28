@@ -159,16 +159,16 @@ function InProgressAsUser(props) {
                 item={item}
                 tabStatus={props.tabStatus}
                 subTabIndex={props.subTabIndex}
-                onSummary={() => {
+                onSummary={(item) => {
                 props.onSummary(item);
               }}
-              onRating={() => {
+              onRating={(item) => {
                 props.onRating(item);
               }}
               onComplaint={() => {
                 props.onComplaint();
               }}
-              onCodeExchange={() => {
+              onCodeExchange={(item) => {
                 setSelectedAdId(item.ad_id)
                 TxnCodeModalVisibility();
               }}

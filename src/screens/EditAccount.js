@@ -573,7 +573,7 @@ function EditAccount(props) {
             />
 
             <Input
-              style={[{flex: 1, paddingLeft: 10}]}
+              style={[{flex: 1, paddingLeft: 10, marginRight: 20}]}
               placeholder={getTranslation('mobile_no')}
               value={mobile}
               maxLength={10}
@@ -583,7 +583,7 @@ function EditAccount(props) {
               }}
             />
 
-            <Button
+            {/* <Button
               style={[
                 {
                   width: 60,
@@ -597,7 +597,7 @@ function EditAccount(props) {
               onPress={() => {
                 // props.navigation.navigate('EmailOtp')
               }}
-            />
+            /> */}
           </View>
 
           <Input

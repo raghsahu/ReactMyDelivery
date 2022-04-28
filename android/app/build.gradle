@@ -237,6 +237,7 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:18.0.0"
 
     implementation "com.braintreepayments.api:braintree:3.14.1"
+    implementation "com.braintreepayments.api:data-collector:3.14.1"
       implementation project(':react-native-paypal')
 }
 

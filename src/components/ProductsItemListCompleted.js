@@ -96,7 +96,7 @@ const ProductsItemListCompleted = props => {
 
           <Text
             style={{
-              marginLeft: 10,
+              marginLeft: 5,
             }}
             color={COLORS.darkGray}
             size="16"

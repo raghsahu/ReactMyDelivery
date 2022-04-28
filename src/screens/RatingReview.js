@@ -29,12 +29,17 @@ import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
 
 function RatingReview(props) {
-  const { userName } = props.route.params;
+  const { userName , rate_ad_id} = props.route.params;
   const [ratingForUser, setRatingForUser] = useState(0);
   const { getTranslation } = useContext(LocalizationContext);
   const [commentForUser, setCommentForUser] = useState('');
   const { putRating, user } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setRatingForUser(0)
+
+  }, []);
 
   const onSelect = rating => {
     setRatingForUser(rating);
@@ -68,13 +73,20 @@ function RatingReview(props) {
     setLoading(true);
     const result = await putRating(
       user.user_id,
-      commentForUser,
       ratingForUser,
+      commentForUser,
+      props.route.params.rate_ad_id,
     );
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
-      props.navigation.goBack();
+      setRatingForUser(0)
+      setCommentForUser('')
+      // props.route.params.onReturn('RatingDone');
+      //       props.navigation.goBack();
+            props.navigation.navigate('MyAccount', {
+              tabIndex: 4,
+            });
 
     } else {
       Toast.show(result.error);

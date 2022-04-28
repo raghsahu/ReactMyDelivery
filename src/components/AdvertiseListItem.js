@@ -43,7 +43,7 @@ const AdvertiseListItem = props => {
               {getTranslation('application_rate')}
             </Text>
             <Text style={{}} color={COLORS.textColor} size="8" weight="400">
-              {getTranslation('number_evaluation') + ' '+ (item.user_rating ? ''+item.user_rating : '0')}
+              {getTranslation('number_evaluation') + ' '+ (item.user_rating ? ''+parseFloat(item.user_rating).toFixed(2) : '0')}
             </Text>
           </View>
           <View style={styles.ratingView}>

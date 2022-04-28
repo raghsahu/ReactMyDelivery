@@ -412,7 +412,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {item.ad_delv_pick_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
+              {item.ad_delv_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
             </Text>
           </View>
 

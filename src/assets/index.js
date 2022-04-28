@@ -70,6 +70,7 @@ export const COLORS = {
   lightTextColor: '#626161',
   lightGray: '#F0F0F0',
   darkGray: '#828282',
+  Darkgray: '#828282',
   lightWhite: '#f6f6f6',
   blue: '#485B96',
   homeBg: '#E5E5E5',

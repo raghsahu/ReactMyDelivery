@@ -38,6 +38,8 @@ export const AppProvider = props => {
     rating: baseURL + 'madd/rating',
     check_code: baseURL + 'fields/check_code',
     sendNotification: baseURL + 'send_notification',
+    sendSuggession: baseURL + 'madd/suggession',
+    getSuggession: baseURL + 'fields/suggession',
   };
 
   const getLogin = async (email, pw) => {
@@ -216,11 +218,12 @@ export const AppProvider = props => {
     return await request(webServices.del_ads, 'post', params);
   };
 
-  const putRating = async (rate_user_id, rate_rating, rate_comment) => {
+  const putRating = async (rate_user_id, rate_rating, rate_comment, rate_ad_id) => {
     let params = {
       rate_user_id : rate_user_id,
       rate_rating: rate_rating,
-      rate_comment: rate_comment
+      rate_comment: rate_comment,
+      rate_ad_id: rate_ad_id
 
     };
     return await request(webServices.rating, 'post', params);
@@ -261,6 +264,16 @@ export const AppProvider = props => {
 
     };
     return await request(webServices.getProductFilter, 'post', params);
+  };
+
+  
+  const SendSuggession = async (sugsn_user_id, sugsn_type, sugsn_message) => {
+    let params = {
+      sugsn_user_id : sugsn_user_id,
+      sugsn_type: sugsn_type,
+      sugsn_message: sugsn_message,
+    };
+    return await request(webServices.sendSuggession, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -432,6 +445,7 @@ export const AppProvider = props => {
         check_code,
         sendNotification,
         getProducts,
+        SendSuggession,
       }}>
       {props.children}
     </APPContext.Provider>

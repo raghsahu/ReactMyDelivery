@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { View, Dimensions, Image, TouchableOpacity, StyleSheet } from 'react-native';
 const { height, width } = Dimensions.get('screen');
 //ASSETS
 import { COLORS, IMAGES } from '../assets';
@@ -28,7 +28,7 @@ const InProgressItemList = props => {
   return (
     <TouchableOpacity
       onPress={() => {
-        props.onSummary();
+        props.onSummary(item);
       }}
     >
       <View style={{}}>
@@ -151,18 +151,10 @@ const InProgressItemList = props => {
             null
             }
             {props.tabStatus === 'completed' ?
-              props.subTabIndex ===1 && item.user_y[0].rating_status == '0' ?
+              props.subTabIndex ===1 && item.user_x[0].rating_status == '0' ?
               <Button
                 style={[
-                  {
-                    width: 93,
-                    height: 29,
-                    marginTop: 5,
-                    backgroundColor: COLORS.primaryColor,
-                    borderRadius: 0,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                  },
+                  styles.rating
                 ]}
                 title={getTranslation('rating')}
                 onPress={() => {
@@ -171,9 +163,9 @@ const InProgressItemList = props => {
               />
               :
               
-              props.subTabIndex ===2 && item.user_x[0].rating_status == '0' ?
+              props.subTabIndex ===2 && item.user_y[0].rating_status == '0' ?
               <Button
-                style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                style={[styles.rating]}
                 title={'Rating'}
                 // type={1}
                 onPress={() => {
@@ -184,13 +176,11 @@ const InProgressItemList = props => {
               />
               :
               <Button
-                style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                style={[styles.rating, { width: 130, backgroundColor: COLORS.darkGray}]}
                 title={'Evaluation Done'}
-                // type={1}
+                type={2}
                 onPress={() => {
-                    //evalution done
-                    //props.navigation.goBa
-  
+                    //evalution done  
                 }}
               />
               :
@@ -287,7 +277,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.ad_cmsn_delivery}
+                {parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>
@@ -301,5 +291,17 @@ const InProgressItemList = props => {
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+rating: {
+    width: 93,
+    height: 29,
+    marginTop: 5,
+    backgroundColor: COLORS.primaryColor,
+    borderRadius: 0,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default InProgressItemList;

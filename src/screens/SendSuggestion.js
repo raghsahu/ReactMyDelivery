@@ -16,16 +16,37 @@ import {
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
-import { Button, Header, Text, Input, BottomBackground } from '../components';
+import { Header,ProgressView } from '../components';
 const { height, width } = Dimensions.get('screen');
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
+import Toast from 'react-native-simple-toast';
 
 function SendSuggestion(props) {
   const { headerTitle} = props.route.params;
-  const {user} = useContext(APPContext);
+  const[message, setMessage] = useState('');
+  const {user, SendSuggession} = useContext(APPContext);
+  const [isLoading, setLoading] = useState(false);
 
+  const sendMessages = async () => {
+    if(!message){
+      Toast.show('Please enter message')
+    }else{
+      setLoading(true);
+      // sugsn_type
+      // * 1 - Suggestion, 2 - Complaint
+      const result = await SendSuggession(user.user_id, '1', message);
+      setLoading(false);
+      if (result.status == true) {
+        setMessage('')
+        //setNotifications(result.data);
+      } else {
+        Toast.show(result.error);
+      }
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -57,14 +78,14 @@ function SendSuggestion(props) {
           autoCorrect={false}
           //onContentSizeChange={e => setHeight(e.nativeEvent.contentSize.height)}
           onChangeText={text => {
-            //setMessage(text);
+            setMessage(text);
           }}
         />
         </View>
 
         <TouchableOpacity
           onPress={() => {
-            //sendMessages(message);
+            sendMessages();
           }}>
           <View
             style={{
@@ -90,6 +111,7 @@ function SendSuggestion(props) {
           </View>
         </TouchableOpacity>
       </View> 
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

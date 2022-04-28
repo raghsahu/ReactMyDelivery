@@ -596,7 +596,7 @@ function AdSummaryDetails(props) {
                   weight="500"
                   align="left"
                   color={COLORS.black}>
-                  {item.user_rating}
+                  {parseFloat(item.user_rating).toFixed(2)}
                 </Text>
                 <Rating
                   type="custom"

@@ -42,7 +42,7 @@ function Notification(props) {
 
   const getAllNotifications = async () => {
     setLoading(true);
-    const result = await getNotifications('1');
+    const result = await getNotifications(user.user_id);
     setLoading(false);
     if (result.status == true) {
       setNotifications(result.data);

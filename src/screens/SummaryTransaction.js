@@ -11,6 +11,7 @@ import {
   Modal,
   Dimensions,
   FlatList,
+  BackHandler
 } from 'react-native';
 
 //ASSETS
@@ -59,18 +60,42 @@ function SummaryTransaction(props) {
   const [dateSelected, setDateSelected] = useState(false);
   const [otp, setOtp] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [isRating, setRatingStatus] = useState(false);
 
   var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
   var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
 
   useEffect(() => {
+    setItem({});
+    setItemProducts([])
+    setUser_X([])
+    setUser_Y([])
+
+    //**************** */
     const item = props.route.params.summaryData;
     setItem(item);
     setItemProducts(item.products)
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
 
+    console.log('ad_iddd ', item.ad_id)
+
+  }, [props]);
+
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
   }, []);
+
+  const backAction = () => {
+    props.navigation.navigate('MyAccount', {
+      tabIndex: 3,
+    });
+  };
 
   const getNodeId = (ad_id, user1, user2) => {
     return ad_id + '_' + user1 + '_' + user2
@@ -223,6 +248,21 @@ function SummaryTransaction(props) {
     }
   };
 
+  const getProductPrice = () => {
+    var totalPrice = 0;
+      for (let i = 0; i < products.length; i++) {
+        totalPrice =
+          totalPrice + (products[i].prod_price * products[i].prod_qnty);
+      }
+      //setTotalPrice(totalPrice);
+      return parseFloat(totalPrice).toFixed(2)
+    };
+  
+    const checkDecimal = (amount) => {
+      return parseFloat(amount).toFixed(2);
+    }
+  
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -354,7 +394,7 @@ function SummaryTransaction(props) {
                           weight="500"
                           align="left"
                           color={COLORS.black}>
-                          {user_y.user_rating}
+                          {parseFloat(user_y.user_rating).toFixed(2)}
                         </Text>
                         <Rating
                           type="custom"
@@ -446,7 +486,7 @@ function SummaryTransaction(props) {
                             weight="500"
                             align="left"
                             color={COLORS.black}>
-                            {user_x.user_rating}
+                            {parseFloat(user_x.user_rating).toFixed(2)}
                           </Text>
                           <Rating
                             type="custom"
@@ -519,7 +559,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ ' + item.ad_cmsn_price}
+                {'€ ' + parseFloat(item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -539,7 +579,7 @@ function SummaryTransaction(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'€ ' + item.ad_cmsn_delivery}
+                {'€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
             <View
@@ -736,11 +776,12 @@ function SummaryTransaction(props) {
                 <Text
                   style={{
                     marginLeft: 10,
+                    flex: 1,
                   }}
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {'**** by *****'}
+                  {item.ad_delv_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
                   {/* 2020-04-02 12:05 by John Ben */}
                 </Text>
               </View>
@@ -760,12 +801,13 @@ function SummaryTransaction(props) {
                 <Text
                   style={{
                     marginLeft: 10,
+                    flex: 1,
                   }}
                   color={COLORS.darkGray}
                   size="16"
                   weight="500">
                   {/* {'€600 + €32,4 + €8,1 = €638'} */}
-                  {'€*** + €*** + €** = €****'}
+                  {'€'+ getProductPrice() + ' + €'+  parseFloat(item.ad_cmsn_delivery).toFixed(2)  + ' + €' + checkDecimal(item.ad_cmsn_price * 0.20) + ' = €'+ parseFloat(item.ad_pay_amount).toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -773,7 +815,7 @@ function SummaryTransaction(props) {
 
 
           {status == 'completed' ? (
-            subTabIndex === 1 && user_y.rating_status == '0' ?
+            subTabIndex === 1 && user_x.rating_status == '0' ?
               <Button
                 style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
                 title={'Rating'}
@@ -784,10 +826,20 @@ function SummaryTransaction(props) {
 
                     props.navigation.navigate('RatingReview', {
                       userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                      rate_ad_id: item.ad_id,
+                      onReturn: item => {
+                        console.log('log_item ' + item);
+                        setRatingStatus(true);
+                      },
                     });
                   } else {
                     props.navigation.navigate('RatingReview', {
                       userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                      rate_ad_id: item.ad_id,
+                      onReturn: item => {
+                        console.log('log_item ' + item);
+                        setRatingStatus(true);
+                      },
                     });
 
                   }
@@ -795,7 +847,7 @@ function SummaryTransaction(props) {
                 }}
               />
               :
-              subTabIndex === 2 && user_x.rating_status == '0' ?
+              subTabIndex === 2 && user_y.rating_status == '0' ?
                 <Button
                   style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
                   title={'Rating'}
@@ -806,10 +858,20 @@ function SummaryTransaction(props) {
 
                       props.navigation.navigate('RatingReview', {
                         userName: user_y.user_f_name + ' ' + user_y.user_l_name,
+                        rate_ad_id: item.ad_id,
+                        onReturn: item => {
+                          console.log('log_item ' + item);
+                          setRatingStatus(true);
+                        },
                       });
                     } else {
                       props.navigation.navigate('RatingReview', {
                         userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                        rate_ad_id: item.ad_id,
+                        onReturn: item => {
+                          console.log('log_item ' + item);
+                          setRatingStatus(true);
+                        },
                       });
 
                     }
@@ -817,16 +879,18 @@ function SummaryTransaction(props) {
                   }}
                 />
                 :
+               
                 <Button
-                  style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
+                  style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
                   title={'Evaluation Done'}
-                  // type={1}
+                  type={2}
                   onPress={() => {
                     //evalution done
                     props.navigation.goBack();
 
                   }}
                 />
+            
           ) : (
             <View
               style={{
