@@ -91,11 +91,9 @@ function Notification(props) {
             item={item} 
             onPress={() => {
              if(item.notn_type == '5'){
-              //  props.navigation.navigate('PublishedAdsDetails', {
-              //    ad_id: item.ad_id,
-              //    notn_id: item.notn_id,
-              //  })
               getAdsData(item.ad_id)
+             }else if(item.notn_type == '1'){
+               props.navigation.navigate('AdModificationProposal')
              }
             }}
             />;

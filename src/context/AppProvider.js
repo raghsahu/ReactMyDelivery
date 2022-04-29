@@ -146,9 +146,10 @@ export const AppProvider = props => {
     return await request(webServices.addProduct, 'post', params);
   };
 
-  const change_request = async (product_data, ad_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
+  const change_request = async (loggedin_user_id, product_data, ad_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
     ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change) => {
     let params = {
+      loggedin_user_id: loggedin_user_id,
       product_data: product_data,
       ad_id: ad_id,
       ad_cmsn_price: ad_cmsn_price,
@@ -274,6 +275,13 @@ export const AppProvider = props => {
       sugsn_message: sugsn_message,
     };
     return await request(webServices.sendSuggession, 'post', params);
+  };
+
+  const getSuggession = async (sugsn_user_id) => {
+    let params = {
+      sugsn_user_id : sugsn_user_id,
+    };
+    return await request(webServices.getSuggession, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -446,6 +454,7 @@ export const AppProvider = props => {
         sendNotification,
         getProducts,
         SendSuggession,
+        getSuggession,
       }}>
       {props.children}
     </APPContext.Provider>

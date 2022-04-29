@@ -26,6 +26,7 @@ import AdSummaryDetails from './AdSummaryDetails';
 import AdModificationProposal from './AdModificationProposal';
 import GooglePlacesInput from './GooglePlacesInput';
 import PublishedAdsDetails from './PublishedAdsDetails';
+import SendComplain from './SendComplain';
 
 export {
   Splash,
@@ -56,5 +57,5 @@ export {
   GooglePlacesInput,
   PublishedAdsDetails,
   ChatScreen,
-  
+  SendComplain,
 };

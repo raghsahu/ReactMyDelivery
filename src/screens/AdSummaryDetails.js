@@ -518,6 +518,7 @@ function AdSummaryDetails(props) {
     setNewTotalToPay(totalToPay.toFixed(2));
 
       const result = await change_request(
+        user.user_id,
         JSON.stringify(temp),
         item.ad_id,
         newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price,

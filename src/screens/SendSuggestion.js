@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
+  FlatList,
   TouchableOpacity,
   Dimensions,
   TextInput,
@@ -16,23 +16,56 @@ import {
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
-import { Header,ProgressView } from '../components';
+import { Header, ProgressView, SuggestionItemList } from '../components';
 const { height, width } = Dimensions.get('screen');
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 
-function SendSuggestion(props) {
-  const { headerTitle} = props.route.params;
-  const[message, setMessage] = useState('');
-  const {user, SendSuggession} = useContext(APPContext);
+function SendSuggession(props) {
+  const { headerTitle } = props.route.params;
+  const [message, setMessage] = useState('');
+  const [allSuggestion, setSuggestion] = useState([]);
+  const { user, SendSuggession, getSuggession } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
 
+  const flatListRef = useRef(null)
+  const onViewRef = useRef((viewableItems) => {
+  })
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 })
+
+
+  useEffect(() => {
+    getAllSuggestion();
+  }, []);
+
+  useEffect(() => {
+    if (flatListRef.current && allSuggestion.length > 0) {
+      flatListRef.current.scrollToIndex({ index: allSuggestion ? allSuggestion.length - 1 : 0 }) // Scroll to bottom
+    }
+  }, [allSuggestion]);
+
+  const getAllSuggestion = async () => {
+    const result = await getSuggession(user.user_id);
+    setLoading(false);
+    if (result.status == true) {
+      let suggessionList=[];
+      for(var i=0; i< result.data.length; i++){
+        if(result.data[i].sugsn_type == '1'){
+          suggessionList.push(result.data[i]);
+        }
+      }
+      setSuggestion(suggessionList);
+    } else {
+      Toast.show(result.error);
+    }
+  }
+
   const sendMessages = async () => {
-    if(!message){
+    if (!message) {
       Toast.show('Please enter message')
-    }else{
+    } else {
       setLoading(true);
       // sugsn_type
       // * 1 - Suggestion, 2 - Complaint
@@ -40,7 +73,7 @@ function SendSuggestion(props) {
       setLoading(false);
       if (result.status == true) {
         setMessage('')
-        //setNotifications(result.data);
+        getAllSuggestion();
       } else {
         Toast.show(result.error);
       }
@@ -55,32 +88,48 @@ function SendSuggestion(props) {
         backgroundColor={COLORS.primaryColor}
       />
 
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 0.9 }} >
         <Header
           title={headerTitle}
           onBack={() => {
             props.navigation.goBack();
           }}
         />
-      </SafeAreaView>
-   
 
-      <View style={styles.inputView}>
-     
-         <View style={{borderColor: COLORS.gray, borderWidth: 1, borderRadius: 24, marginEnd: 5, backgroundColor: COLORS.lightGray,}}>
-         <TextInput
-          style={[styles.input]}
-          //placeholderTextColor={COLORS.placeHolderTextColor}
-          placeholder="Type a message"
-          multiline={true}
-          border={{borderColor: COLORS.gray, borderWidth: 1}}
-          autoCapitalize="none"
-          autoCorrect={false}
-          //onContentSizeChange={e => setHeight(e.nativeEvent.contentSize.height)}
-          onChangeText={text => {
-            setMessage(text);
+        <FlatList
+          ref={flatListRef} // add ref
+          getItemLayout={(data, index) => (
+            { length: width / 6 - 13, offset: (width / 6 - 13) * index, index }
+          )}
+          onViewableItemsChanged={onViewRef.current}
+          viewabilityConfig={viewConfigRef.current}
+          showsVerticalScrollIndicator={false}
+          data={allSuggestion}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return <SuggestionItemList
+              item={item}
+            />;
           }}
         />
+      </SafeAreaView>
+
+      <View style={[styles.inputView, {}]}>
+        <View style={{ borderColor: COLORS.gray, borderWidth: 1, borderRadius: 24, marginEnd: 5, backgroundColor: COLORS.lightGray, }}>
+          <TextInput
+            style={[styles.input]}
+            //placeholderTextColor={COLORS.placeHolderTextColor}
+            placeholder="Type a message"
+            multiline={true}
+            border={{ borderColor: COLORS.gray, borderWidth: 1 }}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={message}
+            //onContentSizeChange={e => setHeight(e.nativeEvent.contentSize.height)}
+            onChangeText={text => {
+              setMessage(text);
+            }}
+          />
         </View>
 
         <TouchableOpacity
@@ -110,7 +159,7 @@ function SendSuggestion(props) {
             />
           </View>
         </TouchableOpacity>
-      </View> 
+      </View>
       {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
@@ -124,7 +173,7 @@ const styles = StyleSheet.create({
   inputView: {
     position: 'absolute',
     bottom: 0,
-    marginBottom: 20,
+    marginBottom: 5,
     width: width,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -145,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SendSuggestion;
+export default SendSuggession;

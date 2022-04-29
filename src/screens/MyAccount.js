@@ -242,7 +242,7 @@ function MyAccount(props) {
               });
             }}
             onComplaint={() => {
-              props.navigation.navigate('SendSuggestion', {
+              props.navigation.navigate('SendComplain', {
                 headerTitle: 'Complain',
               });
             }}
@@ -292,7 +292,7 @@ function MyAccount(props) {
               });
             }}
             onComplaint={() =>{
-              props.navigation.navigate('SendSuggestion', {
+              props.navigation.navigate('SendComplain', {
                 headerTitle: 'Complain',
               });
             }}
@@ -312,7 +312,7 @@ function MyAccount(props) {
         //       // });
         //     }}
         //     onRating={() => {
-        //       props.navigation.navigate('RatingReview');
+        //      
         //     }}
         //   />
         // );
@@ -323,7 +323,7 @@ function MyAccount(props) {
         //     subTabIndex={index1}
         //     tabStatus={tabStatus}
         //   // onSummary={() => {
-        //   //   props.navigation.navigate('SummaryTransaction');
+        //   //   
         //   // }}
         //   />
         // );
@@ -590,7 +590,7 @@ function MyAccount(props) {
               <TouchableOpacity
                 style={{ flex: 1 }}
                 onPress={() => {
-                  props.navigation.navigate('SendSuggestion', {
+                  props.navigation.navigate('SendComplain', {
                     headerTitle: 'Send Complaint',
                   });
                 }}>

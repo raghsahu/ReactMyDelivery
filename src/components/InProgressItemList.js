@@ -158,7 +158,7 @@ const InProgressItemList = props => {
                 ]}
                 title={getTranslation('rating')}
                 onPress={() => {
-                  props.onRating();
+                  props.onRating(item);
                 }}
               />
               :
@@ -170,7 +170,7 @@ const InProgressItemList = props => {
                 // type={1}
                 onPress={() => {
   
-                  props.onRating();
+                  props.onRating(item);
   
                 }}
               />

@@ -27,9 +27,7 @@ const NotificationItemList = props => {
   const {changeDateFormat} = useContext(CommonUtilsContext);
 
   const setImages = prodImg => {
-    var imageJSONString = JSON.parse(prodImg);
-    var imageUrl = imageJSONString.result.images;
-    var imageArray = imageUrl.split(',');
+    var imageArray = prodImg.split(',');
     //console.log('image '+ imageArray)
     return imageArray ? imageArray[0] : '';
   };
@@ -63,7 +61,6 @@ const NotificationItemList = props => {
           margin: 5,
           //resizeMode: 'contain'
         }}
-        //source={IMAGES.product_placeholder}
         source={
           setImages(item.prod_img)
             ? {uri: imageBaseUrl + setImages(item.prod_img)}
