@@ -29,7 +29,6 @@
     "@shankarmorwal/rn-viewpager": "^1.3.1",
     "@twotalltotems/react-native-otp-input": "^1.3.11",
     "axios": "^0.26.1",
-    "buffer": "^6.0.3",
     "i18n-js": "^3.8.0",
     "install": "^0.13.0",
     "lodash": "^4.17.21",

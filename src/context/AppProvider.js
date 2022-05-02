@@ -4,6 +4,8 @@ import React, {createContext, useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
+import PayPal from 'react-native-paypal-wrapper';
+import Toast from 'react-native-simple-toast';
 
 export const APPContext = createContext();
 
@@ -13,6 +15,8 @@ export const AppProvider = props => {
 
   // mydelivery.sairoses.com
   const googleApiKey = 'AIzaSyATKEYAS_f81eZDlSscXARKanQd-rMYBBI';
+  //const paypalClientId = 'ATl0Dqkds4_r6fr-FJf5Fh5gskgjUguhiiWI4TMbDPT3JRoEufwUdrLtj-f-7Xw4n4du5Jruvvpez-xm'; // other testing purpose
+  const paypalClientId = 'Aa_Nr3jhlflL2vPjcLk85rgNnkk1jhcJKn6xUF1DkBHm6nPCNGqk82-AakrVdKEuN8JQuhFqVQjhCOGC'; //sandbox client credential
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
   const imageBaseUrl = 'http://mydelivery.prometteur.in/backend/application/webroot/';
 
@@ -41,6 +45,24 @@ export const AppProvider = props => {
     sendSuggession: baseURL + 'madd/suggession',
     getSuggession: baseURL + 'fields/suggession',
   };
+
+  const oneTimePayment = async (amount) => {
+    // 3 env available: NO_NETWORK, SANDBOX, PRODUCTION
+      PayPal.initialize(PayPal.NO_NETWORK, paypalClientId);
+      const result=   PayPal.pay({
+          price: amount,
+          currency: 'EUR',
+          description: 'Product Ads Payment',
+        })
+        // .then(confirm => {
+        //   console.log("PaymentResponse: ", confirm)
+        //   return confirm ;
+        // }).catch(error => {
+        //     Toast.show(error)
+        //     console.log("PaymentError: ",error)
+        // });
+        return result;
+    }
 
   const getLogin = async (email, pw) => {
     let params = {
@@ -363,7 +385,6 @@ export const AppProvider = props => {
         let result = {
           status: true,
           data: data.result,
-          //subscription: data && data.subscription ? data.subscription : null,
           error: data.msg,
         };
         return result;
@@ -427,6 +448,7 @@ export const AppProvider = props => {
       value={{
         imageBaseUrl,
         webServices,
+        oneTimePayment,
         getError,
         setUser,
         user,

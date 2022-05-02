@@ -33,8 +33,6 @@ import {
   PublishedAdsDetails,
   SendComplain,
 } from './src/screens';
-//TABBAR
-import {TabBar} from './src/components';
 //PACKAGES
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -200,6 +198,7 @@ const App = () => {
       message: data.message, // remoteMessage.data.message, // (required),
       channelId: remoteMessage.channelId,
       //bigPictureUrl: data.image,
+      smallIcon: IMAGES.logo_with_shadow
     });
   };
 

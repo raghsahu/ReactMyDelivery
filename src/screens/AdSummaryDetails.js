@@ -51,7 +51,7 @@ function AdSummaryDetails(props) {
   const [dbProducts, setItemDbProducts] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender, validURL } = useContext(CommonUtilsContext);
-  const { getAdAccept, user, webServices, change_request } = useContext(APPContext);
+  const { getAdAccept, user, webServices, change_request, oneTimePayment } = useContext(APPContext);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
@@ -350,7 +350,19 @@ function AdSummaryDetails(props) {
     }
   };
 
-  const onNext = async () => {
+  const paypalPayment = async () => {
+    const result = await oneTimePayment(isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice);
+    console.log('paypalResult: ', result);
+    if(result && result.response.state == 'approved'){
+      Toast.show('Payment success')
+      onNext(JSON.stringify(result));
+    }else{
+      Toast.show('Payment error')
+    }
+  
+  }
+
+  const onNext = async (paypalPayment) => {
     setLoading(true);
     const result = await getAdAccept(
       user.user_id,
@@ -358,9 +370,9 @@ function AdSummaryDetails(props) {
       selectDate,
       selectTime,
       '3', //ad accept type == 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
-      '0', //0-pending,1-success,2-cancel,3-return
+      '1', //0-pending,1-success,2-cancel,3-return
       isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice,
-      'No payment'
+      paypalPayment,
     );
     setLoading(false);
     if (result.status == true) {
@@ -536,8 +548,6 @@ function AdSummaryDetails(props) {
       setLoading(false);
       if (result.status == true) {
         Toast.show(result.error);
-       // onNext();
-
         setNewGlobalCommission('');
         proposalToModificationOfAd();
         onDiscard();
@@ -1147,7 +1157,7 @@ function AdSummaryDetails(props) {
                   if(isProposalToModificationOfAd){
                     sendRequestForEdit();
                   }else{
-                    onNext();
+                    paypalPayment();
                   }
                 }
               }}

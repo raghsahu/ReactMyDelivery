@@ -2,12 +2,8 @@ import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
-  Image,
   StatusBar,
-  ImageBackground,
-  TouchableOpacity,
   FlatList,
   Modal,
   Dimensions,
@@ -18,10 +14,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {
-  Button,
   Header,
-  Text,
-  Input,
   NotificationItemList,
   BottomBackground,
   ProgressView,
@@ -90,11 +83,13 @@ function Notification(props) {
             return <NotificationItemList 
             item={item} 
             onPress={() => {
-             if(item.notn_type == '5'){
+             if(item.notn_type == '5'){//for accept ads by delivery man
               getAdsData(item.ad_id)
-             }else if(item.notn_type == '1'){
+             }else if(item.notn_type == '1'){//for change request
                props.navigation.navigate('AdModificationProposal')
-             }
+             }else if(item.notn_type == '9'){//for date time change request
+              //props.navigation.navigate('AdModificationProposal')
+            }
             }}
             />;
           }}

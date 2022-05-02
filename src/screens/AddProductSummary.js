@@ -46,7 +46,7 @@ function AddProductSummary(props) {
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const { getTranslation } = useContext(LocalizationContext);
-  const { user, webServices, getError, add_Product } = useContext(APPContext);
+  const { user, webServices, getError, add_Product, oneTimePayment } = useContext(APPContext);
   const{getAdGender} = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
 
@@ -66,7 +66,7 @@ function AddProductSummary(props) {
         setTotalPrice(totalPrice.toFixed(2));
         const totalToPay =
           totalPrice + parseInt(CommissionData.globalCommission);
-        setTotalToPay(totalToPay.toFixed(2));
+        setTotalToPay(parseFloat(totalToPay).toFixed(2));
       });
     });
   }, []);
@@ -83,8 +83,21 @@ function AddProductSummary(props) {
     return parseFloat(amount).toFixed(2);
   }
 
+  
+  const paypalPayment = async () => {
+    const result = await oneTimePayment(totalToPayPrice);
+    console.log('paypalResult: ', result);
+    if(result && result.response.state == 'approved'){
+      Toast.show('Payment success')
+      onNext(JSON.stringify(result));
+    }else{
+      Toast.show('Payment error')
+    }
+  
+  }
+
   var tempImages = [];
-  const onNext = () => {
+  const onNext = (paymentResponse) => {
     setLoading(true);
     for (let i = 0; i < productListItems.length; i++) {
       const formData = new FormData();
@@ -98,11 +111,11 @@ function AddProductSummary(props) {
         });
       });
 
-      requestMultipart(webServices.upload_imgs, 'post', formData);
+      requestMultipart(webServices.upload_imgs, 'post', formData, paymentResponse);
     }
   };
 
-  const requestMultipart = (url, method, params) => {
+  const requestMultipart = (url, method, params, paymentResponse) => {
     try {
       console.log('===================');
       console.log('URL: ', url);
@@ -126,7 +139,7 @@ function AddProductSummary(props) {
           if (data && data.status == 1) {
             tempImages.push(data);
             if (tempImages.length == productListItems.length) {
-              uploadProductAllData();
+              uploadProductAllData(paymentResponse);
             }
           } else {
             setLoading(false);
@@ -140,7 +153,7 @@ function AddProductSummary(props) {
     }
   };
 
-  const uploadProductAllData = async () => {
+  const uploadProductAllData = async (paymentResponse) => {
     try {
       var temp = [];
       for (let i = 0; i < productListItems.length; i++) {
@@ -170,9 +183,9 @@ function AddProductSummary(props) {
         CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
         CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
         '0',
-        '0',
+        '1',//1= payment success, 0=no paymnet
         totalToPayPrice,
-        'offline payment',
+        paymentResponse,
         CommissionData.ad_lat,
         CommissionData.ad_lon,
       );
@@ -594,7 +607,8 @@ function AddProductSummary(props) {
                 title={getTranslation('ok')}
                 onPress={() => {
                   logoutModalVisibility();
-                  onNext();
+                  //onNext();
+                  paypalPayment();
                 }}
               />
             </View>

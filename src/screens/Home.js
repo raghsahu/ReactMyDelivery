@@ -18,26 +18,12 @@ import { Button, Header, Text, Input, BottomBackground } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import { Buffer } from "buffer";
-import PayPal from 'react-native-paypal-wrapper';
 
 function Home(props) {
   const { getTranslation } = useContext(LocalizationContext);
-  const { user } = useContext(APPContext);
+  const { user} = useContext(APPContext);
 
   useEffect(() => { }, []);
-
-  const oneTimePayment = () => {
-  // 3 env available: NO_NETWORK, SANDBOX, PRODUCTION
-      PayPal.initialize(PayPal.NO_NETWORK, "ATl0Dqkds4_r6fr-FJf5Fh5gskgjUguhiiWI4TMbDPT3JRoEufwUdrLtj-f-7Xw4n4du5Jruvvpez-xm");
-      PayPal.pay({
-        price: '10.00',
-        currency: 'EUR',
-        description: 'Product Ads Payment',
-      }).then(confirm => console.log("PaymentResponse: ", confirm))
-        .catch(error => console.log("PaymentError: ",error));
-  
-  }
 
   return (
     <View style={styles.container}>
@@ -55,9 +41,8 @@ function Home(props) {
           }}></View>
 
         <Header
-          title={
-            getTranslation('hello') + ', ' + user.user_f_name + ' ' + user.user_l_name
-          }
+          title=
+          {getTranslation('hello') + ', ' + user.user_f_name + ' ' + user.user_l_name}
           onNotification={() => {
             props.navigation.navigate('Notification');
           }}
@@ -68,7 +53,7 @@ function Home(props) {
           showsVerticalScrollIndicator={false}>
           <View style={{ flex: 1 }}>
             <Text
-              style={{ marginTop: 20 }}
+              style={{ marginTop: 20, }}
               size="22"
               weight="500"
               align="center"
@@ -138,7 +123,7 @@ function Home(props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  //oneTimePayment();
+                  
                 }}>
                 <View style={{}}>
                   <Image
