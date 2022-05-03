@@ -6,9 +6,6 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  TouchableOpacity,
-  ImageBackground,
-  Modal,
   Dimensions,
 } from 'react-native';
 
@@ -16,11 +13,64 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import {Button, Text, Input, Header, BottomBackground} from '../components';
-
-const {height, width} = Dimensions.get('screen');
+import {Button, Text, ProgressView, Header} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
+import Toast from 'react-native-simple-toast';
+import { APPContext } from '../context/AppProvider';
+const { height, width } = Dimensions.get('screen');
 
 function ProposalChangedDate(props) {
+  const {ProdData, notn_id} = props.route.params;
+  const [item, setItem] = useState({});
+  const [products, setItemProducts] = useState([]);
+  const [user_y, setUser_Y] = useState({});
+  const [date_change_history, setDate_change_history] = useState({});
+  const {user, notiAcceptRefuseRequest, imageBaseUrl} = useContext(APPContext);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
+  const [isLoading, setLoading] = useState(false);
+  const [prodTotalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    const item = props.route.params.ProdData;
+    setItem(item);
+    setItemProducts(ProdData.products[0])
+    setUser_Y(item.user_y[0])
+
+    //console.log('prooooo ', JSON.stringify(products))
+    if(item.date_change_history.length > 0){
+      setDate_change_history(JSON.parse(item.date_change_history[item.date_change_history.length -1 ].notn_data))
+    }
+    var totalPrice = 0;
+    for (let i = 0; i < item.products.length; i++) {
+      totalPrice = totalPrice + item.products[i].prod_price_total
+    }
+    setTotalPrice(parseFloat(totalPrice));
+
+  }, [props]);
+
+  const setImages = prodImg => {
+   // console.log('imaggggg '+ prodImg)
+    var imageArray = prodImg.split(',');
+    return imageArray ? imageArray[0] : '' 
+
+  };
+
+  const acceptRefuseRequest = async (notn_acept_rejct) => {
+    setLoading(true);
+    const result = await notiAcceptRefuseRequest(notn_id ,notn_acept_rejct);
+    setLoading(false);
+    if (result.status == true) {
+      Toast.show('Success')
+     props.navigation.goBack();
+    } else {
+      Toast.show(result.error);
+    }
+
+  }
+
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -35,7 +85,7 @@ function ProposalChangedDate(props) {
             props.navigation.goBack();
           }}
         />
-        <BottomBackground></BottomBackground>
+    
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
@@ -74,13 +124,12 @@ function ProposalChangedDate(props) {
                 height: 97,
                 margin: 5,
                 borderRadius: 97 / 2,
-                resizeMode: 'contain',
               }}
-              source={IMAGES.circle_placeholder}
+              source={user_y.user_img ? { uri: imageBaseUrl + user_y.user_img } : IMAGES.circle_placeholder}
             />
 
             <Text color={COLORS.black} size="18" weight="500">
-              {'Omar Bentchikou'}
+            {user_y.user_f_name + ' ' + user_y.user_l_name}
             </Text>
           </View>
 
@@ -103,7 +152,7 @@ function ProposalChangedDate(props) {
               color={COLORS.darkGray}
               size="16"
               weight="500">
-              {'2022-01-15 12:15'}
+              {item.ad_delivery_limit}
             </Text>
           </View>
 
@@ -126,7 +175,7 @@ function ProposalChangedDate(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'2022-01-15 12:15'}
+              {date_change_history.change_date + ' '+ date_change_history.change_time}
             </Text>
           </View>
 
@@ -163,7 +212,10 @@ function ProposalChangedDate(props) {
                 margin: 5,
                 //resizeMode: 'contain',
               }}
-              source={IMAGES.product_placeholder}
+              source=
+              {setImages(ProdData.products[0].prod_img)
+                ? {uri: imageBaseUrl + setImages(ProdData.products[0].prod_img)}
+                : IMAGES.product_placeholder}
             />
 
             <View
@@ -173,7 +225,7 @@ function ProposalChangedDate(props) {
                 justifyContent: 'center',
               }}>
               <Text color={COLORS.black} size="16" weight="500">
-                {'souris'}
+                {products.prod_name}
               </Text>
 
               <View
@@ -192,7 +244,7 @@ function ProposalChangedDate(props) {
                   color={'#35CCC1'}
                   size="16"
                   weight="500">
-                  {'hp.com'}
+                  {products.prod_web_link}
                 </Text>
               </View>
             </View>
@@ -215,7 +267,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                 {item.ad_accept_limit}
               </Text>
             </View>
 
@@ -235,7 +287,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                 {item.ad_delivery_limit}
               </Text>
             </View>
 
@@ -256,7 +308,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'Constantine Constantine Algerie'}
+               {item.ad_delv_addr}
               </Text>
             </View>
 
@@ -277,7 +329,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {'$10'}
+                {parseFloat(prodTotalPrice).toFixed(2)}
               </Text>
             </View>
 
@@ -297,7 +349,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.Darkgray}
                 size="16"
                 weight="500">
-                {'Both'}
+                 {getAdGender(item.ad_gender)}
               </Text>
             </View>
           </View>
@@ -315,7 +367,7 @@ function ProposalChangedDate(props) {
               style={[{width: 156}]}
               title={'Refuse'} //or Change Delivery Date (according to condition)
               onPress={() => {
-                props.navigation.goBack();
+                acceptRefuseRequest('2')
               }}
             />
 
@@ -323,12 +375,13 @@ function ProposalChangedDate(props) {
               style={[{width: 156}]}
               title={'Accept'}
               onPress={() => {
-                props.navigation.goBack();
+                acceptRefuseRequest('1')
               }}
             />
           </View>
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }

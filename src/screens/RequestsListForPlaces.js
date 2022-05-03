@@ -75,7 +75,7 @@ function RequestsListForPlaces(props) {
       maxPrice ? maxPrice : '10000000',
       '1',
       '10000000',
-      minCommission ? minCommission : '1',
+      minCommission ? minCommission : '0',
       getCurrentDate(),
       lat,
       lng,

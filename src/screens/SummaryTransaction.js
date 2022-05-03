@@ -219,6 +219,7 @@ function SummaryTransaction(props) {
   const onNext = async () => {
     setLoading(true);
     const result = await putDateTimeChangeRequest(
+      user.user_id,
       item.ad_id,
       selectDate,
       selectTime,

@@ -38,7 +38,7 @@ function PublishedAdsDetails(props) {
   const [item, setItem] = useState({});
   const [products, setItemProducts] = useState([]);
   const [user_y, setUser_Y] = useState([]);
-  const {user, del_ads} = useContext(APPContext);
+  const {user, del_ads, imageBaseUrl} = useContext(APPContext);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
@@ -182,7 +182,7 @@ function PublishedAdsDetails(props) {
                         weight="500"
                         align="left"
                         color={COLORS.black}>
-                        {user_y.user_rating}
+                        {parseFloat(user_y.user_rating).toFixed(2)}
                       </Text>
                       <Rating
                         type="custom"

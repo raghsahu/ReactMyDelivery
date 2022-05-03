@@ -44,6 +44,7 @@ export const AppProvider = props => {
     sendNotification: baseURL + 'send_notification',
     sendSuggession: baseURL + 'madd/suggession',
     getSuggession: baseURL + 'fields/suggession',
+    acceptNoti: baseURL + 'madd/notifications',
   };
 
   const oneTimePayment = async (amount) => {
@@ -213,6 +214,7 @@ export const AppProvider = props => {
 
   const getAdAccept = async (user_id, ad_id,selectDate, selectTime, ad_accept_type, acpt_pay_status,acpt_pay_amount,acpt_pay_info ) => {
     let params = {
+      loggedin_user_id: user_id,
       acpt_user_id: user_id,
       acpt_ad_id: ad_id,
       acpt_date: selectDate,
@@ -224,8 +226,9 @@ export const AppProvider = props => {
     };
     return await request(webServices.ad_accept, 'post', params);
   };
-  const putDateTimeChangeRequest = async (ad_id,selectDate, selectTime ) => {
+  const putDateTimeChangeRequest = async (loggedin_user_id, ad_id,selectDate, selectTime ) => {
     let params = {
+      loggedin_user_id: loggedin_user_id,
       ad_id: ad_id,
       change_date: selectDate,
       change_time: selectTime,
@@ -304,6 +307,14 @@ export const AppProvider = props => {
       sugsn_user_id : sugsn_user_id,
     };
     return await request(webServices.getSuggession, 'post', params);
+  };
+
+  const notiAcceptRefuseRequest = async (notn_id, notn_acept_rejct) => {
+    let params = {
+      notn_id : notn_id,
+      notn_acept_rejct : notn_acept_rejct,
+    };
+    return await request(webServices.acceptNoti, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -477,6 +488,7 @@ export const AppProvider = props => {
         getProducts,
         SendSuggession,
         getSuggession,
+        notiAcceptRefuseRequest,
       }}>
       {props.children}
     </APPContext.Provider>

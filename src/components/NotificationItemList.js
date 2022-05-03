@@ -38,7 +38,7 @@ const NotificationItemList = props => {
         //paddingVertical: 10,
     
       }}
-      onPress={() => props.onPress()}>
+      onPress={() => props.onPress(item)}>
     <View
       style={{
         flexDirection: 'row',
