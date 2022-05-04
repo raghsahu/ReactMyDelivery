@@ -32,8 +32,8 @@ import Toast from 'react-native-simple-toast';
 
 
 function AddProductCommision(props) {
-  const [globalCommission, setGlobalCommission] = useState();
-  const [deliveryCommission, setDeliveryCommission] = useState('1');
+  const [globalCommission, setGlobalCommission] = useState('');
+  const [deliveryCommission, setDeliveryCommission] = useState('');
   const [placeOfDelivery, setPlaceOfDelivery] = useState('');
   const [gender, setSelectedGender] = useState(null);
   const [selectDate, setSelectDate] = useState('');
@@ -51,6 +51,10 @@ function AddProductCommision(props) {
   const [dateSelected, setDateSelected] = useState(false);
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
+
+  useEffect(() => {
+    getCommissionPrice();
+  }, [globalCommission]);
 
   const onSelect = item => {
     if (gender && gender.key === item.key) {
@@ -79,9 +83,9 @@ function AddProductCommision(props) {
         }
       } else {
         if (secondTime === 'true') {
-          setSelectTime1(moment(selectedDate).format('HH:mm:ss'));
+          setSelectTime1(moment(selectedDate).format('HH:mm'));
         } else {
-          setSelectTime(moment(selectedDate).format('HH:mm:ss'));
+          setSelectTime(moment(selectedDate).format('HH:mm'));
         }
         
       }
@@ -110,7 +114,7 @@ function AddProductCommision(props) {
     } else {
       const CommissionData = {
         globalCommission: parseFloat(globalCommission).toFixed(2),
-        ad_cmsn_delivery: getCommissionPrice(),
+        ad_cmsn_delivery: deliveryCommission,
         placeOfDelivery: placeOfDelivery,
         gender: gender.key,
         acceptanceDay: selectDate,
@@ -144,18 +148,12 @@ function AddProductCommision(props) {
   const getCommissionPrice = () => {
     if (globalCommission) {
       var totalCommission = globalCommission * 0.80  //80% of global commission
-
-      const validated = totalCommission.toString().match(/^(\d*\.{0,1}\d{0,2}$)/) //after decimal accept only 2 digits
-      if (validated) {
-        return ''+parseFloat(totalCommission).toFixed(2);
-       // setDeliveryCommission(totalCommission)
-      }else{
-        return '1';
-       // setDeliveryCommission('1')
-      }
-     // setDeliveryCommission(totalCommission.toString())
+        //return ''+parseFloat(totalCommission).toFixed(2);
+        setDeliveryCommission(''+parseFloat(totalCommission).toFixed(2))
+      
+    }else{
+      setDeliveryCommission('')
     }
-    return '1'
   }
 
   return (
@@ -188,6 +186,7 @@ function AddProductCommision(props) {
             keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
             onChangeText={text => {
               setGlobalCommission(text);
+              getCommissionPrice();
             }}
           />
 
@@ -197,7 +196,7 @@ function AddProductCommision(props) {
             weight="400"
             align="left"
             color={COLORS.textColor}>
-            {getTranslation('deliveryman_commission') + ' : '+ getCommissionPrice()}
+            {getTranslation('deliveryman_commission') + ' : '+ deliveryCommission}
           </Text>
 
           <View

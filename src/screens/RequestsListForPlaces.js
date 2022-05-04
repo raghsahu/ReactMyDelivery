@@ -46,7 +46,6 @@ function RequestsListForPlaces(props) {
   const [minCommission, setMinimumCommission] = useState('');
   const [requestItem, setRequestItem] = useState([]);
 
-
   useEffect(() => {
     setOptionFilter(filterList);
     getRequestList();
@@ -83,7 +82,19 @@ function RequestsListForPlaces(props) {
     setLoading(false);
     if (result.status == true) {
       //Toast.show(result.error);
-      setRequestItem(result.data);
+     // setRequestItem(result.data);
+      var dateA = new Date(moment(requestItem.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
+      var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+      let todos = [...requestItem]; 
+      if(result.data.length > 0){
+        for (let i = 0; i < result.data.length; i++) {
+          if (dateB <= dateA) {
+            todos.push(result.data[i])
+          }
+        }
+        setRequestItem(todos);
+      }
+      
     } else {
       Toast.show(result.error);
       setRequestItem([]);

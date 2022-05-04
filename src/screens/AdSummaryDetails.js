@@ -346,7 +346,7 @@ function AdSummaryDetails(props) {
       setDate(currentDate);
       setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
     } else {
-      setSelectTime(moment(selectedDate).format('HH:mm:ss'));
+      setSelectTime(moment(selectedDate).format('HH:mm'));
     }
   };
 

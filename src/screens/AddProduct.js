@@ -164,7 +164,7 @@ function AddProduct(props) {
     }
   }
 
-  const onNext = () => {
+  const onNext = (thatsAllStatus) => {
     if (prodCount < 5) {
       if (!productName) {
         Toast.show('Please enter product name');
@@ -213,6 +213,9 @@ function AddProduct(props) {
                 //get all saved product count
                 getSavedProductCount()
 
+                if(thatsAllStatus){
+                  moveToNext();
+                }
                 //*** */
               }
             },
@@ -225,6 +228,14 @@ function AddProduct(props) {
   };
 
   const onNextAddCommission = () => {
+    if (productName!='' || webLink!='' || priceOfProduct!='' || quantity!='' || prodImg!='') {
+      onNext(true);
+    }else{
+     moveToNext();
+    }
+  };
+
+  const moveToNext = () =>{
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         if (results.rows.length > 0) {
@@ -234,8 +245,7 @@ function AddProduct(props) {
         }
       });
     });
-  };
-
+  }
   const onDiscard = () => {
     db.transaction(tx => {
       tx.executeSql(
@@ -454,7 +464,7 @@ function AddProduct(props) {
               style={[{ width: 130 }]}
               title={getTranslation('add_product')}
               onPress={() => {
-                onNext();
+                onNext(false);
               }}
             />
 

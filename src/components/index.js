@@ -23,6 +23,7 @@ import DeliveryManSummaryProductsItemList from './DeliveryManSummaryProductsItem
 import InProgressItemList from './InProgressItemList';
 import DeleteModal from './DeleteModal';
 import SuggestionItemList from './SuggestionItemList';
+import ModificationProductList from './ModificationProductList';
 
 export {
   Text,
@@ -50,4 +51,5 @@ export {
   InProgressItemList,
   DeleteModal,
   SuggestionItemList,
+  ModificationProductList,
 };

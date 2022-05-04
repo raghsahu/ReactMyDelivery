@@ -35,7 +35,7 @@ function Login(props) {
   const [pwSecureText, setPwSecureText] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const {getTranslation, saveUserLoginData} = useContext(LocalizationContext);
-  const {getLogin, setUser} = useContext(APPContext);
+  const {getLogin, setUser, fcmToken} = useContext(APPContext);
 
   const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -57,7 +57,7 @@ function Login(props) {
 
   const LoginApi = async isMobile => {
     setLoading(true);
-    const result = await getLogin(email, password);
+    const result = await getLogin(email, password, fcmToken);
     setLoading(false);
     if (result.status == true) {
       // if(result.data[0].user_mob_verify == '0'){

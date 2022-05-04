@@ -18,16 +18,20 @@ import {COLORS} from '../assets';
 const Button = props => {
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
+      activeOpacity={0.4}
       {...props}
       style={
+        [styles.container, {height: props.height ? props.height : 48},
         props.type == 1
           ? [styles.border, props.style]
           : [styles.shadow, props.style]
-      }
+        ]}
+      onPress={() => {
+        props.onPress()
+      }}
       >
-      <View
-        style={[styles.container, {height: props.height ? props.height : 48}]}>
+      {/* <View
+        style={[styles.container, {height: props.height ? props.height : 48}]}> */}
         <View style={{flexDirection: 'row'}}>
           {props.left && (
             <Image
@@ -65,7 +69,7 @@ const Button = props => {
             />
           )}
         </View>
-      </View>
+      {/* </View> */}
     </TouchableOpacity>
   );
 };

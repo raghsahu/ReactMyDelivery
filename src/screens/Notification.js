@@ -102,7 +102,11 @@ function Notification(props) {
                       8- Y delivered to X
                       9- Y change the date*/
                 if (item.notn_type == '1') {//for change request
-                  props.navigation.navigate('AdModificationProposal')
+                  props.navigation.navigate('AdModificationProposal', {
+                    ads_id: item.ad_id,
+                    notn_id: item.notn_id,
+                  })
+                  //getNewOldAllData(item.ad_id)
                 } else if (item.notn_type == '2') {
 
                 } else if (item.notn_type == '3') {//for date time change request accepted

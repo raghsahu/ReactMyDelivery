@@ -1,43 +1,77 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Image,
+  FlatList,
   StatusBar,
-  TouchableOpacity,
-  ImageBackground,
-  Modal,
   Dimensions,
   TextInput,
 } from 'react-native';
 
 //ASSETS
-import {COLORS, IMAGES, DIMENSION} from '../assets';
+import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
 import {
   Button,
   Text,
-  Input,
   Header,
-  BottomBackground,
-  RadioButtons,
-  CheckBox,
+  ProgressView,
+  ModificationProductList,
+  ProductsItemList,
 } from '../components';
-import {Rating} from 'react-native-ratings';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import { CommonUtilsContext } from '../context/CommonUtils';
+import Toast from 'react-native-simple-toast';
 
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 
 function AdModificationProposal(props) {
-  const [name, setName] = useState('');
-  const [day, setDay] = useState('');
-  const [hour, setHour] = useState('');
-  const [reasonToChange, setReasonToChange] = useState('');
-  const {getTranslation} = useContext(LocalizationContext);
+  const { ads_id, notn_id } = props.route.params;
+  const [itemData, setItemData] = useState({});
+  const [oldProducts, setOldProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
+  const [oldSummaryDetails, setOldSummaryDetails] = useState({});
+  const [newSummaryDetails, setNewSummaryDetails] = useState({});
+  const { getTranslation } = useContext(LocalizationContext);
+  const { user, getNewOldProductData } = useContext(APPContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getAllProductData();
+  }, []);
+
+  const getAllProductData = async () => {
+    setLoading(true);
+    const result = await getNewOldProductData(ads_id);
+    setLoading(false);
+    if (result.status == true) {
+      //console.log('modification_ads ',JSON.stringify(result))
+      setItemData(result.data)
+      setOldProducts(result.data.old[0].products);
+      setNewProducts(result.data.new[0].product_data);
+      setOldSummaryDetails(result.data.old[0]);
+      setNewSummaryDetails(result.data.new[0]);
+
+    } else {
+      Toast.show(result.error);
+    }
+  };
+
+  const getNewTotalPrice = () => {
+    var totalPrice = 0;
+    for (let i = 0; i < newProducts.length; i++) {
+      totalPrice =
+        totalPrice + (newProducts[i].prod_price * newProducts[i].prod_qnty);
+    }
+    const totalToPay = parseInt(totalPrice) + parseInt(newSummaryDetails.ad_cmsn_price);
+    return parseFloat(totalToPay).toFixed(2);
+  }
 
   return (
     <View style={styles.container}>
@@ -54,7 +88,7 @@ function AdModificationProposal(props) {
           style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Text
-            style={[styles.inputView, {marginTop: 10}]}
+            style={[styles.inputView, { marginTop: 10 }]}
             size="20"
             weight="600"
             align="left"
@@ -62,177 +96,37 @@ function AdModificationProposal(props) {
             {getTranslation('your_announcement')}
           </Text>
 
-          <Text
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={oldProducts}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return <ModificationProductList
+                item={item}
+              />;
+            }}
+          />
+          {/* <Text
             style={[styles.inputView, {marginTop: 10}]}
             size="18"
             weight="600"
             align="left"
             color={COLORS.textColor}>
             {'Product 1'}
-          </Text>
+          </Text> */}
 
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              marginTop: 10,
-              borderRadius: 35,
-              marginHorizontal: 5,
-              justifyContent: 'center',
-              alignSelf: 'center',
-            }}
-            source={IMAGES.product_placeholder}
-          />
-
-          <View style={[styles.inputView, {marginTop: 20}]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <Text
-                size="20"
-                weight="500"
-                align="left"
-                color={COLORS.textColor}>
-                {'souris'}
-              </Text>
-
-              <Text
-                style={[styles.rightButtons, {width: 150}]}
-                size="16"
-                weight="500"
-                align="center"
-                color={COLORS.textColor5}>
-                {getTranslation('photo_changed')}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('web_link') + ' :'}
-                </Text>
-
-                <Text
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  color={'#35CCC1'}
-                  size="16"
-                  weight="500">
-                  {'hp.com'}
-                </Text>
-              </View>
-
-              <Text
-                style={[styles.rightButtons, {width: 97}]}
-                size="16"
-                weight="500"
-                align="center"
-                color={COLORS.textColor5}>
-                {getTranslation('changed')}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('place_to_buy')}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <Text style={{}} color={COLORS.black} size="16" weight="600">
-                  {getTranslation('price') + ' :'}
-                </Text>
-
-                <Text
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  color={COLORS.primaryColor}
-                  size="16"
-                  weight="500">
-                  {'€ 6.00 x 1 = € 6.00'}
-                </Text>
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 5,
-              }}>
-              <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {getTranslation('additional_info')}
-              </Text>
-
-              <Text
-                style={{
-                  marginLeft: 10,
-                }}
-                color={COLORS.darkGray}
-                size="16"
-                weight="500">
-                {''}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: COLORS.borderColor2,
-              height: 2,
-              marginTop: 10,
-            }}></View>
-
-          <View style={[styles.inputView, {marginTop: 20, marginBottom: 20}]}>
-            <Text
+          <View style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}>
+            {/* <Text
               style={[
                 styles.rightButtons,
-                {position: 'absolute', alignSelf: 'flex-end'},
+                { position: 'absolute', alignSelf: 'flex-end' },
               ]}
               color={COLORS.textColor5}
               size="16"
               weight="500"
-              onPress={() => {}}>
+              onPress={() => { }}>
               {getTranslation('changed')}
-            </Text>
+            </Text> */}
 
             <View
               style={{
@@ -250,7 +144,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ 2.00'}
+                {'€ ' + parseFloat(oldSummaryDetails.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -270,7 +164,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'€ 1.00'}
+               {'€ ' + parseFloat(oldSummaryDetails.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
             <View
@@ -289,7 +183,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'Both'}
+               {getAdGender(oldSummaryDetails.ad_gender)}
               </Text>
             </View>
 
@@ -309,7 +203,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-15 12:00'}
+                   {oldSummaryDetails.ad_accept_limit}
               </Text>
             </View>
 
@@ -329,7 +223,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {'2022-01-22    12:00'}
+                   {oldSummaryDetails.ad_delivery_limit}
               </Text>
             </View>
 
@@ -353,7 +247,7 @@ function AdModificationProposal(props) {
                   color={COLORS.textColor4}
                   size="16"
                   weight="500">
-                  {'Constantine Constantine,'}
+                  {oldSummaryDetails.ad_delv_addr}
                 </Text>
               </View>
             </View>
@@ -365,6 +259,26 @@ function AdModificationProposal(props) {
               height: 2,
               marginTop: 10,
             }}></View>
+
+          <Text
+            style={[styles.inputView, { marginTop: 10 }]}
+            size="20"
+            weight="600"
+            align="left"
+            color={COLORS.primaryColor}>
+            {'Changes of the Delivery man'}
+          </Text>
+
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={newProducts}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return <ProductsItemList
+                item={item}
+              />;
+            }}
+          />
 
           <View
             style={{
@@ -383,7 +297,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ 2.00'}
+              {'€ ' + parseFloat(newSummaryDetails.ad_cmsn_price).toFixed(2)}
             </Text>
           </View>
 
@@ -404,19 +318,20 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ 1.00'}
+            {'€ ' + parseFloat(newSummaryDetails.ad_cmsn_delivery).toFixed(2)}
             </Text>
           </View>
 
           <TextInput
             style={[styles.inputView, styles.comment]}
+            editable={false}
             placeholder={getTranslation('why_this_change')}
             multiline={true}
-            //value={''}
+            value={newSummaryDetails.ad_why_this_change}
           />
 
           <Text
-            style={[styles.inputView, {marginTop: 10}]}
+            style={[styles.inputView, { marginTop: 10 }]}
             size="20"
             weight="500"
             align="left"
@@ -441,7 +356,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'2022-01-19'}
+              {''}
             </Text>
           </View>
 
@@ -463,7 +378,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'12:01'}
+              {''}
             </Text>
           </View>
 
@@ -475,7 +390,7 @@ function AdModificationProposal(props) {
 
           <View
             style={{
-              flexDirection: 'row',
+              //flexDirection: 'row',
               marginHorizontal: 20,
               marginTop: 20,
             }}>
@@ -485,12 +400,13 @@ function AdModificationProposal(props) {
 
             <Text
               style={{
-                marginLeft: 10,
+               // marginLeft: 10,
+                flex: 1,
               }}
               color={COLORS.primaryColor}
               size="22"
               weight="600">
-              {'€ 6.00'}
+              {'€ ' + getNewTotalPrice() + ' - € '+ parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2) + ' = ' + parseFloat(getNewTotalPrice() - parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2))}
             </Text>
           </View>
 
@@ -514,11 +430,11 @@ function AdModificationProposal(props) {
                 },
               ]}
               title={getTranslation('refuse')}
-              onPress={() => {}}
+              onPress={() => { }}
             />
 
             <Button
-              style={[{width: 156}]}
+              style={[{ width: 156 }]}
               title={getTranslation('accept')}
               onPress={() => {
                 // props.navigation.navigate('SummaryTransaction', {
@@ -529,6 +445,7 @@ function AdModificationProposal(props) {
           </View>
         </ScrollView>
       </SafeAreaView>
+      {isLoading ? <ProgressView></ProgressView> : null}
     </View>
   );
 }
@@ -554,7 +471,7 @@ const styles = StyleSheet.create({
     top: '35%',
     margin: 20,
     elevation: 5,
-    transform: [{translateX: -(width * 0.4)}, {translateY: -90}],
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
     // height: 250,
     // width: width * 0.85,
     backgroundColor: '#fff',

@@ -21,6 +21,15 @@ const AdvertiseListItem = props => {
   const {imageBaseUrl} = useContext(APPContext);
   const item = props.item;
 
+  const setImages = prodImg => {
+    var imageArray = ''
+    if(prodImg){
+       imageArray = prodImg.split(',');
+    }
+    
+    return imageArray ? imageArray[0]: '' 
+  };
+  
   return (
     <TouchableOpacity
       style={[
@@ -64,10 +73,12 @@ const AdvertiseListItem = props => {
         <View style={styles.imageView}>
           <Image style={styles.image} 
           source={
-              item.user_img
-                ? {uri: imageBaseUrl + item.user_img}
-                : IMAGES.circle_placeholder
-            } />
+            props.item.hasOwnProperty('products') ?
+            setImages(props.item.products[0].prod_img)
+            ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
+            : IMAGES.circle_placeholder : IMAGES.circle_placeholder
+          } 
+            />
 
           <View
             style={{

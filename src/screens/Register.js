@@ -40,8 +40,8 @@ import { APPContext } from '../context/AppProvider';
 //PACKAGES
 import { CommonActions } from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
-import CountryPicker from 'rn-country-picker';
-import RNCountry from 'react-native-countries';
+import CountryPicker from 'react-native-country-picker-modal'
+
 import { CommonUtilsContext } from '../context/CommonUtils';
 
 const options = [
@@ -59,6 +59,14 @@ const optionsWomen = [
 ];
 
 function Register(props) {
+  const [countryCode, setCountryNameCode] = useState('IN')
+  const [withCountryNameButton, setWithCountryNameButton] = useState(false)
+  const [withFlag, setWithFlag] = useState(true)
+  const [withEmoji, setWithEmoji] = useState(true)
+  const [withFilter, setWithFilter] = useState(true)
+  const [withAlphaFilter, setWithAlphaFilter] = useState(true)
+  const [withCallingCode, setWithCallingCode] = useState(true)
+
   const [firstName, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
@@ -84,26 +92,21 @@ function Register(props) {
   const actionSheetRef = useRef();
   const [images, setImages] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const [mCountryCode, setCountryCode] = useState('213');
-  const [mCountryName, setCountryName] = useState();
-  const [mSelectedCountryName, setSelectedCountryName] = useState('Select your country');
-
+  const [mCountryCode, setCountryCallingCode] = useState('');
+  const [mSelectedCountryName, setSelectedCountryName] = useState('');
+  const [showCountry, setShowCountry] = useState(false);
   const { webServices, getError, fcmToken } = useContext(APPContext);
   const { checkSpecialChar, getUserCurrentLocation, lat, lng } = useContext(CommonUtilsContext);
+
+  const onSelect = (country) => {
+    setSelectedCountryName(country.name)
+    setCountryCallingCode(country.callingCode[0])
+    showCountryPicker();
+  }
 
   useEffect(() => {
     getUserCurrentLocation();
   }, []);
-
-  useEffect(() => {
-    let countryNames = RNCountry.getCountryNamesWithCodes;
-    countryNames.sort((a, b) => a.name.localeCompare(b.name));
-    setCountryName(countryNames);
-  }, []);
-
-  const _selectedValue = index => {
-    setCountryCode(index);
-  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -121,7 +124,11 @@ function Register(props) {
     showMode('date');
   };
 
-  const onSelect = item => {
+  const showCountryPicker = () => {
+    setShowCountry(!showCountry);
+  };
+
+  const onSelectRadioButton = item => {
     if (selectedOption && selectedOption.key === item.key) {
       setSelectedOption(null);
     } else {
@@ -157,31 +164,31 @@ function Register(props) {
 
   const onPressLibrary = async type => {
     //  var result = null;
-      if (type == 1) {
-       // result = await launchCamera();
-        actionSheetRef.current?.setModalVisible(false);
-        ImagePicker.openCamera({
-          width: 300,
-          height: 300,
-          cropping: true,
-        }).then(image => { 
-           //do something with the image
-           setImages(image.path);
-           console.log('crop_image ', image);
-        })
-  
-      } else {
-        var result = await launchImageLibrary();
-        actionSheetRef.current?.setModalVisible(false);
-        console.log(result);
-        if (result && result.assets.length > 0) {
-          let uri = result.assets[0].uri;
-          // let items = [...images];
-          //items.push(uri);
-          setImages(uri);
-        }
+    if (type == 1) {
+      // result = await launchCamera();
+      actionSheetRef.current?.setModalVisible(false);
+      ImagePicker.openCamera({
+        width: 300,
+        height: 300,
+        cropping: true,
+      }).then(image => {
+        //do something with the image
+        setImages(image.path);
+        console.log('crop_image ', image);
+      })
+
+    } else {
+      var result = await launchImageLibrary();
+      actionSheetRef.current?.setModalVisible(false);
+      console.log(result);
+      if (result && result.assets.length > 0) {
+        let uri = result.assets[0].uri;
+        // let items = [...images];
+        //items.push(uri);
+        setImages(uri);
       }
-    };
+    }
+  };
 
   const requestExternalStoreageRead = async () => {
     try {
@@ -220,6 +227,8 @@ function Register(props) {
       Toast.show('Please enter email');
     } else if (reg.test(email) === false) {
       Toast.show('Please enter valid email');
+    }else if (!mCountryCode) {
+      Toast.show('Please select country calling code');
     } else if (!mobile) {
       Toast.show('Please enter mobile number');
     }
@@ -230,9 +239,9 @@ function Register(props) {
       Toast.show('Please enter address');
     } else if (!city) {
       Toast.show('Please enter city');
-    } else if (mSelectedCountryName == "Select your country") {
+    } else if (!mSelectedCountryName) {
       Toast.show('Please select country');
-    }else if (!selectedLanguage) {
+    } else if (!selectedLanguage) {
       Toast.show('Please select language');
     } else if (!password) {
       Toast.show('Please enter password');
@@ -294,6 +303,7 @@ function Register(props) {
     formData.append('user_dob', user_dob);
     formData.append('user_email', user_email);
     formData.append('user_mb_no', user_mb_no);
+    formData.append('user_mb_code', mCountryCode);
     formData.append('user_addr', user_addr);
     formData.append('user_city', user_city);
     formData.append('user_country', user_country);
@@ -488,14 +498,14 @@ function Register(props) {
             ]}>
             <RadioButtons
               selectedOption={selectedOption}
-              onSelect={onSelect}
+              onSelect={onSelectRadioButton}
               options={options}
             />
 
             <RadioButtons
               style={[{ marginLeft: 70 }]}
               selectedOption={selectedOption}
-              onSelect={onSelect}
+              onSelect={onSelectRadioButton}
               options={optionsWomen}
             />
           </View>
@@ -532,7 +542,41 @@ function Register(props) {
               },
             ]}>
 
-            <CountryPicker
+          <TouchableOpacity
+            onPress={showCountryPicker}
+            style={[
+              {
+                backgroundColor: COLORS.lightGray,
+                height: 48,
+                borderRadius: 24,
+                width: 100,
+              },
+            ]}>
+
+            <Input
+              placeholder={'country'}
+              editable={false}
+              value={mCountryCode ? '+ '+ mCountryCode : ''}
+         
+            />
+          </TouchableOpacity>
+          {showCountry ?
+                <CountryPicker
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                  visible
+                />
+                : null }
+
+            {/* <CountryPicker
               //style={[{width: 100}]}
               disable={false}
               animationType={'slide'}
@@ -550,24 +594,7 @@ function Register(props) {
               //searchButtonImage={require('./res/ic_search.png')}
               countryCode={mCountryCode}
               selectedValue={_selectedValue}
-            />
-
-            {/* <TouchableOpacity 
-      onPress={() => {
-        showCountryCodePicker();
-      }}
-      style={[{flex: 1}]}>
-          <Input
-             // style={[{flex: 1}]}
-              placeholder={'Country'}
-              editable={false}
-              value={mCountryCode}
-              //keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
-              onChangeText={text => {
-               // setMobile(text);
-              }}
-            />
-            </TouchableOpacity> */}
+            /> */}
 
             <Input
               style={[{ flex: 1, marginLeft: 15 }]}
@@ -596,7 +623,8 @@ function Register(props) {
               setCity(text);
             }}
           />
-          <View
+          <TouchableOpacity
+            onPress={showCountryPicker}
             style={[
               styles.inputView,
               styles.inputContainer,
@@ -606,33 +634,36 @@ function Register(props) {
                 borderRadius: 24,
               },
             ]}>
-            {mCountryName ? (
-              <Picker
-                selectedValue={mSelectedCountryName}
-                onValueChange={(itemValue, itemIndex) => {
-                  if (itemValue != '0') {
-                    setSelectedCountryName(itemValue)
-                  }
 
-                }} >
-                <Picker.Item
-                  // color={COLORS.gray}
-                  key={'0'}
-                  label={'Select your country'}
-                  value={'0'}
-                />
-                {mCountryName.map(val => {
-                  return (
-                    <Picker.Item
-                      key={'country-item-' + val.code}
-                      label={val.name}
-                      value={val.name}
-                    />
-                  );
-                })}
-              </Picker>
-            ) : null}
-          </View>
+            <Input
+              placeholder={'Select your country'}
+              editable={false}
+              value={mSelectedCountryName}
+              isLeft={IMAGES.location}
+              onChangeText={text => {
+                //setCity(text);
+              }}
+            />
+
+          </TouchableOpacity>
+
+          {showCountry ?
+            <CountryPicker
+              {...{
+                countryCode,
+                withFilter,
+                withFlag,
+                withCountryNameButton,
+                withAlphaFilter,
+                withCallingCode,
+                withEmoji,
+                onSelect,
+              }}
+              visible
+            />
+
+            : null}
+
 
           <DropdownPicker
             //placeholder={'English'}

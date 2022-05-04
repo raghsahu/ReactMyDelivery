@@ -3,7 +3,6 @@ import {
   View,
   Dimensions,
   Image,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 const {height, width} = Dimensions.get('screen');
@@ -13,9 +12,8 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
-import PagerView from 'react-native-pager-view';
 
-const DeliveryManSummaryProductsItemList = props => {
+const ModificationProductList = props => {
   const {getTranslation} = useContext(LocalizationContext);
   const {imageBaseUrl} = useContext(APPContext);
   const item = props.item;
@@ -23,15 +21,6 @@ const DeliveryManSummaryProductsItemList = props => {
   const setImages = prodImg => {
     var imageArray = prodImg.split(',');
     return imageArray ? imageArray[0]: '' 
-  };
-
-  const isValidHttpUrl = prodImg => {
-    if (prodImg.includes('file:')) { 
-      // Found world
-      return true
-    }
-      return false
-
   };
 
   return (
@@ -43,27 +32,13 @@ const DeliveryManSummaryProductsItemList = props => {
       }>
      <Image
           style={styles.image}
-            source={props.isProposalToModificationOfAd ? {uri: isValidHttpUrl(setImages(item.prod_img)) ? setImages(item.prod_img) : imageBaseUrl+ setImages(item.prod_img) } : 
+            source={
               setImages(item.prod_img)
                 ? {uri: imageBaseUrl + setImages(item.prod_img)}
                 : IMAGES.product_placeholder
             }
           />
-          {/* <PagerView style={styles.image} initialPage={0}>
-            {setImages(item.prod_img).map(x => {
-            // console.log(x);
-              return (
-                <View >
-                  <Image
-                    style={styles.image}
-                    source={{uri: x}}
-                  />
-                </View>
-              )
-            })}
-      
-          </PagerView> */}
-
+  
           <View style={[styles.inputView, { marginTop: 20 }]}>
             <Text
               // style={[styles.inputView]}
@@ -79,7 +54,7 @@ const DeliveryManSummaryProductsItemList = props => {
                 size="16"
                 weight="500"
                 align="left"
-                color={COLORS.white}
+                color={COLORS.textColor5}
                 onPress={() => {
                   props.photosModalVisibleModalVisibility(item.prod_id);
                 }}>
@@ -114,7 +89,7 @@ const DeliveryManSummaryProductsItemList = props => {
               {props.isProposalToModificationOfAd && (
                 <Text
                   style={styles.rightButtons}
-                  color={COLORS.white}
+                  color={COLORS.textColor5}
                   size="16"
                   weight="500"
                   onPress={() => {
@@ -172,7 +147,7 @@ const DeliveryManSummaryProductsItemList = props => {
               {props.isProposalToModificationOfAd && (
                 <Text
                   style={[styles.rightButtons]}
-                  color={COLORS.white}
+                  color={COLORS.textColor5}
                   size="16"
                   weight="500"
                   onPress={() => {
@@ -238,11 +213,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 2,
     paddingHorizontal: 10,
-    backgroundColor: COLORS.primaryColor,
+    backgroundColor: '#C4C2C3',
   },
   text_right:{
     marginLeft: 10,
   },
 });
 
-export default DeliveryManSummaryProductsItemList;
+export default ModificationProductList;

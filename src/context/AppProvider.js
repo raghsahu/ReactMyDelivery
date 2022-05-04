@@ -45,6 +45,7 @@ export const AppProvider = props => {
     sendSuggession: baseURL + 'madd/suggession',
     getSuggession: baseURL + 'fields/suggession',
     acceptNoti: baseURL + 'madd/notifications',
+    new_old_parms: baseURL + 'fields/new_old_parms',
   };
 
   const oneTimePayment = async (amount) => {
@@ -65,10 +66,11 @@ export const AppProvider = props => {
         return result;
     }
 
-  const getLogin = async (email, pw) => {
+  const getLogin = async (email, pw, user_fcm_key) => {
     let params = {
       user_name: email,
       user_password: pw,
+      user_fcm_key, user_fcm_key,
     };
 
     return await request(webServices.login, 'post', params);
@@ -317,6 +319,13 @@ export const AppProvider = props => {
     return await request(webServices.acceptNoti, 'post', params);
   };
 
+  const getNewOldProductData = async (ads_id) => {
+    let params = {
+      ad_id : ads_id,
+    };
+    return await request(webServices.new_old_parms, 'post', params);
+  };
+
   const request = async (url, method, params) => {
     try {
       console.log('===================');
@@ -489,6 +498,7 @@ export const AppProvider = props => {
         SendSuggession,
         getSuggession,
         notiAcceptRefuseRequest,
+        getNewOldProductData,
       }}>
       {props.children}
     </APPContext.Provider>

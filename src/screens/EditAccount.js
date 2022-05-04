@@ -31,8 +31,7 @@ import moment from 'moment'; // date format
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {PermissionsAndroid} from 'react-native';
 import {Picker} from '@react-native-picker/picker'; //for dropdown
-import RNCountry from 'react-native-countries';
-import CountryPicker from 'rn-country-picker';
+import CountryPicker from 'react-native-country-picker-modal';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionSheet from 'react-native-actions-sheet';
@@ -56,6 +55,15 @@ const optionsWomen = [
 ];
 
 function EditAccount(props) {
+  const [countryCode, setCountryNameCode] = useState('IN')
+  const [withCountryNameButton, setWithCountryNameButton] = useState(false)
+  const [withFlag, setWithFlag] = useState(true)
+  const [withEmoji, setWithEmoji] = useState(true)
+  const [withFilter, setWithFilter] = useState(true)
+  const [withAlphaFilter, setWithAlphaFilter] = useState(true)
+  const [withCallingCode, setWithCallingCode] = useState(true)
+  const [showCountry, setShowCountry] = useState(false);
+
   const [firstName, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
@@ -67,8 +75,6 @@ function EditAccount(props) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [gender, setGender] = useState(null);
-  const [isSelected, setSelection] = useState(false);
-  const [isCalendarVisible, setCalendarVisibility] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -90,13 +96,17 @@ function EditAccount(props) {
   const [serverImage, setServerImage] = useState('');
   const [captureImage, setCaptureImages] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [mCountryCode, setCountryCode] = useState();
-  const [mCountryName, setCountryName] = useState();
-  const [mSelectedCountryName, setSelectedCountryName] = useState('Select your country');
-  const [userDetails, setUserDetails] = useState({});
-  const {user, setUser, imageBaseUrl, webServices, getError, fcmToken} =
+  const [mCountryCode, setCountryCallingCode] = useState('');
+  const [mSelectedCountryName, setSelectedCountryName] = useState('');
+  const {user, setUser, imageBaseUrl, webServices, fcmToken} =
     useContext(APPContext);
   const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
+
+    const onSelect = (country) => {
+    setSelectedCountryName(country.name)
+    setCountryCallingCode(country.callingCode[0])
+    showCountryPicker();
+  }
 
   useEffect(() => {
     getUserCurrentLocation();
@@ -115,7 +125,7 @@ function EditAccount(props) {
     setGender(user.user_gender == '1' ? options[0] : optionsWomen[0]);
     setSelectedCountryName(user.user_country);
     setSelectedLanguageKey(user.user_language);
-    setCountryCode(user.user_mb_code ? user.user_mb_code : '213')
+    setCountryCallingCode(user.user_mb_code ? user.user_mb_code : '')
     if (user.user_language == '1') {
       setSelectedLanguage('en');
     } else if (user.user_language == '2') {
@@ -125,15 +135,6 @@ function EditAccount(props) {
     }
   }, []);
 
-  useEffect(() => {
-    let countryNames = RNCountry.getCountryNamesWithCodes;
-    countryNames.sort((a, b) => a.name.localeCompare(b.name));
-    setCountryName(countryNames);
-  }, []);
-
-  const _selectedValue = index => {
-    setCountryCode(index);
-  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -151,7 +152,11 @@ function EditAccount(props) {
     showMode('date');
   };
 
-  const onSelect = item => {
+  const showCountryPicker = () => {
+    setShowCountry(!showCountry);
+  };
+
+  const onSelectRadioButton = item => {
     if (gender && gender.key === item.key) {
       setGender(null);
     } else {
@@ -336,6 +341,7 @@ function EditAccount(props) {
     formData.append('user_dob', user_dob);
     formData.append('user_email', user_email);
     formData.append('user_mb_no', user_mb_no);
+    formData.append('user_mb_code', mCountryCode);
     formData.append('user_addr', user_addr);
     formData.append('user_city', user_city);
     formData.append('user_country', user_country);
@@ -361,7 +367,7 @@ function EditAccount(props) {
 
     formData.append('user_fcm_key', user_fcm_key);
 
-    return await requestMultipart(webServices.userUpdate, 'post', formData);
+    return requestMultipart(webServices.userUpdate, 'post', formData);
   };
 
   const requestMultipart = (url, method, params) => {
@@ -497,7 +503,7 @@ function EditAccount(props) {
             }}
           />
 
-          <Input
+          {/* <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
@@ -505,7 +511,7 @@ function EditAccount(props) {
             onChangeText={text => {
               setUserName(text);
             }}
-          />
+          /> */}
 
           <View
             style={[
@@ -524,14 +530,14 @@ function EditAccount(props) {
             ]}>
             <RadioButtons
               selectedOption={gender}
-              onSelect={onSelect}
+              onSelect={onSelectRadioButton}
               options={options}
             />
 
             <RadioButtons
               style={[{marginLeft: 70}]}
               selectedOption={gender}
-              onSelect={onSelect}
+              onSelect={onSelectRadioButton}
               options={optionsWomen}
             />
           </View>
@@ -548,56 +554,60 @@ function EditAccount(props) {
 
           <View
             style={[
-              // styles.inputView,
+              styles.inputView,
               styles.inputContainer,
-              {flexDirection: 'row', flex: 1},
+              {
+                flexDirection: 'row',
+                flex: 1,
+                backgroundColor: COLORS.lightGray,
+                borderRadius: 24,
+              },
             ]}>
-            <CountryPicker
-              //style={[{width: 100}]}
-              disable={false}
-              animationType={'slide'}
-              containerStyle={styles.pickerStyle}
-              pickerTitleStyle={styles.pickerTitleStyle}
-              // dropDownImage={require('./res/ic_drop_down.png')}
-              selectedCountryTextStyle={styles.selectedCountryTextStyle}
-              countryNameTextStyle={styles.countryNameTextStyle}
-              pickerTitle={'Country Code'}
-              searchBarPlaceHolder={'Search...'}
-              hideCountryFlag={false}
-              hideCountryCode={false}
-              searchBarStyle={styles.searchBarStyle}
-              // backButtonImage={require('./res/ic_back_black.png')}
-              //searchButtonImage={require('./res/ic_search.png')}
-              countryCode={mCountryCode}
-              selectedValue={_selectedValue}
-            />
+
+          <TouchableOpacity
+            onPress={showCountryPicker}
+            style={[
+              {
+                backgroundColor: COLORS.lightGray,
+                height: 48,
+                borderRadius: 24,
+                width: 100,
+              },
+            ]}>
 
             <Input
-              style={[{flex: 1, paddingLeft: 10, marginRight: 20}]}
+              placeholder={'country'}
+              editable={false}
+              value={mCountryCode ? '+ '+ mCountryCode : ''}
+         
+            />
+          </TouchableOpacity>
+          {showCountry ?
+                <CountryPicker
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                  visible
+                />
+                : null }
+
+            <Input
+              style={[{ flex: 1, marginLeft: 15 }]}
               placeholder={getTranslation('mobile_no')}
-              value={mobile}
               maxLength={10}
+              value={mobile}
               keyboardType={Platform.OS == 'Android' ? 'numeric' : 'number-pad'}
               onChangeText={text => {
                 setMobile(text);
               }}
             />
-
-            {/* <Button
-              style={[
-                {
-                  width: 60,
-                  height: 40,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  marginRight: 5,
-                },
-              ]}
-              title={getTranslation('update')}
-              onPress={() => {
-                // props.navigation.navigate('EmailOtp')
-              }}
-            /> */}
           </View>
 
           <Input
@@ -618,8 +628,8 @@ function EditAccount(props) {
               setCity(text);
             }}
           />
-
-          <View
+        <TouchableOpacity
+            onPress={showCountryPicker}
             style={[
               styles.inputView,
               styles.inputContainer,
@@ -629,30 +639,35 @@ function EditAccount(props) {
                 borderRadius: 24,
               },
             ]}>
-            {mCountryName ? (
-              <Picker
-                selectedValue={mSelectedCountryName}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedCountryName(itemValue)
-                }>
-                   <Picker.Item
-                  // color={COLORS.gray}
-                  key={'0'}
-                  label={'Select your country'}
-                  value={'0'}
-                />
-                {mCountryName.map(val => {
-                  return (
-                    <Picker.Item
-                      key={'country-item-' + val.code}
-                      label={val.name}
-                      value={val.name}
-                    />
-                  );
-                })}
-              </Picker>
-            ) : null}
-          </View>
+
+            <Input
+              placeholder={'Select your country'}
+              editable={false}
+              value={mSelectedCountryName}
+              isLeft={IMAGES.location}
+              onChangeText={text => {
+                //setCity(text);
+              }}
+            />
+
+          </TouchableOpacity>
+
+          {showCountry ?
+            <CountryPicker
+              {...{
+                countryCode,
+                withFilter,
+                withFlag,
+                withCountryNameButton,
+                withAlphaFilter,
+                withCallingCode,
+                withEmoji,
+                onSelect,
+              }}
+              visible
+            />
+
+            : null}
 
           <DropdownPicker
             //placeholder={'English'}

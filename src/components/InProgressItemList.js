@@ -18,12 +18,14 @@ const InProgressItemList = props => {
   var dateA = new Date(moment(props.item.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
   var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
 
-  useEffect(() => {
-    if (props.item.hasOwnProperty('products')) {
-      setProducts(props.item.products[0])
+  const setImages = prodImg => {
+    var imageArray = ''
+    if(prodImg){
+       imageArray = prodImg.split(',');
     }
-
-  }, []);
+    
+    return imageArray ? imageArray[0]: '' 
+  };
 
   return (
     <TouchableOpacity
@@ -54,9 +56,10 @@ const InProgressItemList = props => {
                 margin: 5,
               }}
               source={
-                item.user_img
-                  ? { uri: imageBaseUrl + item.user_img }
-                  : IMAGES.circle_placeholder
+                props.item.hasOwnProperty('products') ?
+                setImages(props.item.products[0].prod_img)
+                ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
+                : IMAGES.circle_placeholder : IMAGES.circle_placeholder
               }
             />
 
