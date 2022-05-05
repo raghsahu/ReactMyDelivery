@@ -38,7 +38,7 @@ function AdModificationProposal(props) {
   const [oldSummaryDetails, setOldSummaryDetails] = useState({});
   const [newSummaryDetails, setNewSummaryDetails] = useState({});
   const { getTranslation } = useContext(LocalizationContext);
-  const { user, getNewOldProductData } = useContext(APPContext);
+  const { user, getNewOldProductData, notiAcceptRefuseRequest, notiDeleted, oneTimePayment} = useContext(APPContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
 
@@ -71,6 +71,48 @@ function AdModificationProposal(props) {
     }
     const totalToPay = parseInt(totalPrice) + parseInt(newSummaryDetails.ad_cmsn_price);
     return parseFloat(totalToPay).toFixed(2);
+  }
+
+  const getDifferenceToPay = () => {
+  const diffPay =  parseFloat(getNewTotalPrice() - parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2));
+  return parseFloat(diffPay).toFixed(2);
+  }
+
+  const paypalPayment = async () => {
+    const result = await oneTimePayment(getDifferenceToPay());
+    //console.log('paypalResult: ', result);
+    if(result && result.response.state == 'approved'){
+      Toast.show('Payment success')
+      acceptRefuseRequest('1');
+    }else{
+      Toast.show('Payment error')
+    }
+  }
+
+  const acceptRefuseRequest = async (notn_acept_rejct) => {
+    setLoading(true);
+    const result = await notiAcceptRefuseRequest(notn_id ,notn_acept_rejct);
+    setLoading(false);
+    if (result.status == true) {
+      Toast.show('Success')
+     deleteCurrentNotification();
+    } else {
+      Toast.show(result.error);
+    }
+  }
+
+  const deleteCurrentNotification = async () => {
+    //setLoading(true);
+    const result = await notiDeleted(notn_id);
+    //setLoading(false);
+    if (result.status == true) {
+      //Toast.show('Success')
+     props.navigation.goBack();
+     
+    } else {
+      //Toast.show(result.error);
+    }
+
   }
 
   return (
@@ -406,7 +448,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="22"
               weight="600">
-              {'€ ' + getNewTotalPrice() + ' - € '+ parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2) + ' = ' + parseFloat(getNewTotalPrice() - parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2))}
+              {'€ ' + getNewTotalPrice() + ' - € '+ parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2) + ' = ' + getDifferenceToPay()}
             </Text>
           </View>
 
@@ -430,16 +472,20 @@ function AdModificationProposal(props) {
                 },
               ]}
               title={getTranslation('refuse')}
-              onPress={() => { }}
+              onPress={() => { 
+                acceptRefuseRequest('2')
+              }}
             />
 
             <Button
               style={[{ width: 156 }]}
               title={getTranslation('accept')}
               onPress={() => {
-                // props.navigation.navigate('SummaryTransaction', {
-                //   status: '',
-                // });
+                if(getDifferenceToPay() > 0){
+                  paypalPayment();
+                }else{
+                  acceptRefuseRequest('1')
+                }
               }}
             />
           </View>

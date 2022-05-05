@@ -277,7 +277,7 @@ function AdSummaryDetails(props) {
      //   return '1';
      // }
     }else{
-      return '1'
+      return '0'
     }
   
   }
@@ -350,12 +350,18 @@ function AdSummaryDetails(props) {
     }
   };
 
+  let paymentResult = '';  
   const paypalPayment = async () => {
     const result = await oneTimePayment(isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice);
-    console.log('paypalResult: ', result);
+    //console.log('paypalResult: ', result);
     if(result && result.response.state == 'approved'){
       Toast.show('Payment success')
+      paymentResult= JSON.stringify(result);
+      if(isProposalToModificationOfAd){
+        sendRequestForEdit();
+      }else{
       onNext(JSON.stringify(result));
+      }
     }else{
       Toast.show('Payment error')
     }
@@ -376,7 +382,7 @@ function AdSummaryDetails(props) {
     );
     setLoading(false);
     if (result.status == true) {
-      Toast.show(result.error);
+      Toast.show('Accepted');
       props.navigation.navigate('SummaryTransaction', {
         status: 'deliveryAccepted',
         summaryData: result.data[0],
@@ -527,7 +533,7 @@ function AdSummaryDetails(props) {
       totalPrice = totalPrice + (dbProducts[i].prod_price * dbProducts[i].prod_qnty);
     }
     const totalToPay = totalPrice + parseInt(newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price);
-    setNewTotalToPay(totalToPay.toFixed(2));
+    setNewTotalToPay(parseFloat(totalToPay).toFixed(2));
 
       const result = await change_request(
         user.user_id,
@@ -547,11 +553,13 @@ function AdSummaryDetails(props) {
       );
       setLoading(false);
       if (result.status == true) {
-        Toast.show(result.error);
+        Toast.show('Change request sent');
         setNewGlobalCommission('');
-        proposalToModificationOfAd();
+        //proposalToModificationOfAd();
         onDiscard();
         setChangedItem(false)
+
+        onNext(paymentResult);
 
       } else {
         Toast.show(result.error);
@@ -759,7 +767,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {item.ad_accept_limit}
+                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -779,7 +787,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {item.ad_delivery_limit}
+                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -843,10 +851,14 @@ function AdSummaryDetails(props) {
                   style={[{ width: 156, backgroundColor: COLORS.homeBg }]}
                   title={getTranslation('to_propose')}
                   onPress={() => {
+                    if (!isSelected) {
+                      Toast.show('Please select Contract terms');
+                    } else {
                     proposalToModificationOfAd();
                     //save all data to local db for changes,
                     onDiscard();
-                     setAllOldDataInLocalDb(); 
+                    setAllOldDataInLocalDb(); 
+                    }
                   }}
                 />
 
@@ -921,19 +933,17 @@ function AdSummaryDetails(props) {
                       Toast.show('Please enter why this change')
                     }else if(!changedItem){
                       Toast.show('Please change any fields')
-                    }                   
-                    else{
+                    }else{
                          //*******after edit total to pay price********* */
                         var totalPrice = 0;
                         for (let i = 0; i < dbProducts.length; i++) {
                           totalPrice = totalPrice + (dbProducts[i].prod_price * dbProducts[i].prod_qnty);
                         }
                         const totalToPay = totalPrice + parseInt(newGlobalCommission ? newGlobalCommission : item.ad_cmsn_price);
-                        setNewTotalToPay(totalToPay);
+                        setNewTotalToPay(parseFloat(totalToPay).toFixed(2));
 
-                        sendRequestForEdit();
-                      //PaymentDialogModalVisibility();
-                      
+                        PaymentDialogModalVisibility();
+                        //sendRequestForEdit();
                     }
                   
                   }}
@@ -1154,11 +1164,11 @@ function AdSummaryDetails(props) {
                   Toast.show('Please enter time');
                 } else {
                   PaymentDialogModalVisibility();
-                  if(isProposalToModificationOfAd){
-                    sendRequestForEdit();
-                  }else{
+                  // if(isProposalToModificationOfAd){
+                  //   sendRequestForEdit();
+                  // }else{
                     paypalPayment();
-                  }
+                 // }
                 }
               }}
             />

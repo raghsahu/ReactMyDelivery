@@ -160,7 +160,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {item.ad_accept_limit}
+              {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
             </Text>
           </View>
 
@@ -181,7 +181,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {item.ad_delivery_limit}
+              {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
             </Text>
           </View>
 

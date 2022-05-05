@@ -19,6 +19,7 @@ import { CommonUtilsContext } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
 const { height, width } = Dimensions.get('screen');
+import moment from 'moment'; // date format
 
 function ProposalChangedDate(props) {
   const {ProdData, notn_id} = props.route.params;
@@ -26,7 +27,7 @@ function ProposalChangedDate(props) {
   const [products, setItemProducts] = useState([]);
   const [user_y, setUser_Y] = useState({});
   const [date_change_history, setDate_change_history] = useState({});
-  const {user, notiAcceptRefuseRequest, imageBaseUrl} = useContext(APPContext);
+  const {user, notiAcceptRefuseRequest, imageBaseUrl, notiDeleted} = useContext(APPContext);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
@@ -63,9 +64,22 @@ function ProposalChangedDate(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show('Success')
-     props.navigation.goBack();
+      deleteCurrentNotification();
     } else {
       Toast.show(result.error);
+    }
+  }
+
+  const deleteCurrentNotification = async () => {
+    //setLoading(true);
+    const result = await notiDeleted(notn_id);
+    //setLoading(false);
+    if (result.status == true) {
+      //Toast.show('Success')
+     props.navigation.goBack();
+     
+    } else {
+      //Toast.show(result.error);
     }
 
   }
@@ -152,7 +166,7 @@ function ProposalChangedDate(props) {
               color={COLORS.darkGray}
               size="16"
               weight="500">
-              {item.ad_delivery_limit}
+              {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
             </Text>
           </View>
 
@@ -287,7 +301,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                 {item.ad_delivery_limit}
+                 {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 

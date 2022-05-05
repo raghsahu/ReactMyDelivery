@@ -86,7 +86,7 @@ function ChatScreen(props) {
 
   const sendChatNotification = async (text) => {
     const noti_create_date = new Date(moment(new Date()).format('YYYY-MM-DD'));
-    const result = await sendNotification(Date.now(), '111', noti_create_date, ad_id, user.user_f_name, user.user_l_name, prodName, '', user.user_id, recieverId, text, finalNodeId, fcmKey);
+    const result = await sendNotification(Date.now(), '111', noti_create_date, ad_id, user.user_f_name, user.user_l_name, prodName, chatRoomId, user.user_id, recieverId, text, finalNodeId, fcmKey);
     if (result.status == true) {
     
 

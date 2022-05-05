@@ -72,7 +72,7 @@ function RequestsListForPlaces(props) {
     setLoading(true);
     const result = await getFilterProduct(
       maxPrice ? maxPrice : '10000000',
-      '1',
+      '0',
       '10000000',
       minCommission ? minCommission : '0',
       getCurrentDate(),

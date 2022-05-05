@@ -34,11 +34,12 @@ import {
   SendComplain,
 } from './src/screens';
 //PACKAGES
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import messaging from '@react-native-firebase/messaging';
 import {
   LocalizationProvider,
   LocalizationContext,
@@ -67,8 +68,104 @@ function HomeStackScreen() {
   );
 }
 
-const BottomBar = () => {
-  const {getTranslation} = useContext(LocalizationContext);
+const BottomBar = (props) => {
+  useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage,
+      );
+      props.navigation.navigate('Notification');
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log('Notification caused app to open from quit state:', remoteMessage,);
+          // {"collapseKey": "com.mydelivery", "data": {"ad_id": "112", "massage": "Yuyyyy", "nodeID": "112_74_74", "notn_create_date": "2022-05-05T00:00:00.000Z", "notn_id": "1651750311805", "notn_type": "111", "prod_name": "oooo", "receiverID": "74", "senderID": "74", "title": "Notification", "user_f_name": "priya", "user_fcm_key": "coZEvUQZSXqtPGeI_5czJa:APA91bGcr6J_wsyldIxR4H81exk3qIfkPQIzJlivRCR6OLYYwUBkjuFchO-eUfngkIl9CPhRXJ9temVG69Sy_PoDzc6agZVaij5vOTisfgtdZz1eGjAC_Xgkqsd2Xd1hMvpgrTWS_fxY", "user_l_name": "more"}, 
+          // "from": "397368923340", "messageId": "0:1651755353067427%1403102d1403102d", "notification": {"android": {}, "body": "4444", "title": "3333"}, "sentTime": 1651755353052, "ttl": 2419200}
+          //setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+          
+          if (remoteMessage.hasOwnProperty("data") && remoteMessage.data) {
+            let notificationData = remoteMessage.data;
+            if(notificationData.notn_type == '111'){
+              props.navigation.navigate('BottomBar')
+              // props.navigation.navigate('ChatScreen', {
+              //   headerTitle: notificationData.user_f_name +' '+ notificationData.user_l_name,
+              //   chatRoomId: notificationData.senderIMG,
+              //   finalNodeId: notificationData.nodeID,
+              //   ad_id: notificationData.ad_id,
+              //   recieverId: notificationData.receiverID,
+              //   fcmKey: notificationData.user_fcm_key,
+              //   prodName: notificationData.prod_name,
+              // })
+            }else{
+              props.navigation.navigate('Notification')
+              //setInitialRoute('Notification')
+            }
+          }else{
+            props.navigation.navigate('Notification')
+            s//etInitialRoute('Notification')
+          }
+        } 
+      });
+  }, []);
+
+  useEffect(() => {
+    PushNotification.configure({
+    //   // (optional) Called when Token is generated (iOS and Android)
+      onRegister: function (token) {
+        //console.log('TOKEN:', token);
+      },
+
+      // (required) Called when a remote or local notification is opened or received
+      onNotification: function (notification) {
+        console.log('NOTIFICATION:', notification);
+        // process the notification here
+        const clicked = notification.userInteraction;
+        if (clicked) {
+          if (notification.hasOwnProperty("data") && notification.data) {
+            let notificationData = notification.data;
+            if(notificationData.notn_type == '111'){
+              props.navigation.navigate('ChatScreen', {
+                headerTitle: notificationData.user_f_name +' '+ notificationData.user_l_name,
+                chatRoomId: notificationData.senderIMG,
+                finalNodeId: notificationData.nodeID,
+                ad_id: notificationData.ad_id,
+                recieverId: notificationData.receiverID,
+                fcmKey: notificationData.user_fcm_key,
+                prodName: notificationData.prod_name,
+              })
+            }else{
+              props.navigation.navigate('Notification')
+            }
+          }else{
+            props.navigation.navigate('Notification')
+          }
+        } else {
+          showNotification(notification);
+        }        
+        // required on iOS only
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+
+      },
+      // Android only
+      senderID: '397368923340',
+      // iOS only
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+      popInitialNotification: true,
+      requestPermissions: true,
+    });
+
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -122,87 +219,59 @@ const BottomBar = () => {
   );
 };
 
+const showNotification = (remoteMessage) => {
+  PushNotification.createChannel(
+    {
+      channelId: remoteMessage.channelId, // (required)
+      channelName: `Custom channel - Counter: ${remoteMessage.channelId}`, // (required)
+      channelDescription: `A custom channel to categories your custom notifications. Updated at: ${Date.now()}`, // (optional) default: undefined.
+      soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+      importance: 4, // (optional) default: 4. Int value of the Android notification importance
+      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+    },
+    (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+  );
+
+  let data;
+ // console.log("data_message " + remoteMessage.hasOwnProperty("data"));
+  if (remoteMessage.hasOwnProperty("data") && remoteMessage.data) {
+    let notification = remoteMessage.data;
+    data = {
+      message: notification.massage ? notification.massage : remoteMessage.message,
+      title: notification.user_f_name ? notification.user_f_name + ' '+ notification.user_l_name : remoteMessage.title,
+      //image: notification.noti_image_url ? notification.noti_image_url : remoteMessage.notification.image,
+    };
+    // console.log("admin_data_noti" + data);
+  } else {
+    data = remoteMessage;
+  }
+
+  PushNotification.localNotification({
+    /* Android Only Properties */
+    // id: "0", // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+    vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+    priority: "high", // (optional) set notification priority, default: high
+    importance: 4, // (optional) set notification importance, default: high
+    /* iOS and Android properties */
+    title: data.title, // (optional)
+    message: data.message, // remoteMessage.data.message, // (required),
+    channelId: remoteMessage.channelId,
+    //bigPictureUrl: data.image,
+    smallIcon: IMAGES.logo_with_shadow,
+    data: JSON.stringify(remoteMessage.data),
+  });
+};
+
 const App = () => {
- 
+  //const navigation = useNavigation();
+  const [initialRoute, setInitialRoute] = useState('Splash');
+
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     LogBox.ignoreLogs([
       "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
     ]);
   }, []);
-
-  useEffect(() => {
-    PushNotification.configure({
-      // (optional) Called when Token is generated (iOS and Android)
-      onRegister: function (token) {
-        //console.log('TOKEN:', token);
-      },
-
-      // (required) Called when a remote or local notification is opened or received
-      onNotification: function (notification) {
-        console.log('NOTIFICATION:', notification);
-
-        // process the notification here
-        showNotification(notification);
-        // required on iOS only
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      // Android only
-      senderID: '397368923340',
-      // iOS only
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      popInitialNotification: true,
-      requestPermissions: true,
-    });
-
-  }, []);
-
-  const showNotification = (remoteMessage) => {
-    PushNotification.createChannel(
-      {
-        channelId: remoteMessage.channelId, // (required)
-        channelName: `Custom channel - Counter: ${remoteMessage.channelId}`, // (required)
-        channelDescription: `A custom channel to categories your custom notifications. Updated at: ${Date.now()}`, // (optional) default: undefined.
-        soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-        importance: 4, // (optional) default: 4. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-      },
-      (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-    );
-
-    let data;
-   // console.log("data_message " + remoteMessage.hasOwnProperty("data"));
-    if (remoteMessage.hasOwnProperty("data") && remoteMessage.data) {
-      let notification = remoteMessage.data;
-      data = {
-        message: notification.noti_body ? notification.noti_body : remoteMessage.message,
-        title: notification.noti_title ? notification.noti_title : remoteMessage.title,
-        //image: notification.noti_image_url ? notification.noti_image_url : remoteMessage.notification.image,
-      };
-      // console.log("admin_data_noti" + data);
-    } else {
-      data = remoteMessage;
-    }
-
-    PushNotification.localNotification({
-      /* Android Only Properties */
-      // id: "0", // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
-      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-      priority: "high", // (optional) set notification priority, default: high
-      importance: 4, // (optional) set notification importance, default: high
-      /* iOS and Android properties */
-      title: data.title, // (optional)
-      message: data.message, // remoteMessage.data.message, // (required),
-      channelId: remoteMessage.channelId,
-      //bigPictureUrl: data.image,
-      smallIcon: IMAGES.logo_with_shadow
-    });
-  };
-
 
   return (
     <CommonUtils>
@@ -213,7 +282,7 @@ const App = () => {
               screenOptions={{
                 headerShown: false,
               }}
-              initialRouteName={'Splash'}>
+              initialRouteName={initialRoute}>
               <Screen name="BottomBar" component={BottomBar} />
               <Screen name="Splash" component={Splash} />
               <Screen name="Login" component={Login} />

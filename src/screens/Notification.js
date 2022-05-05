@@ -31,6 +31,11 @@ function Notification(props) {
 
   useEffect(() => {
     getAllNotifications();
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      getAllNotifications();
+    });
+
+    return willFocusSubscription;
   }, []);
 
   const getAllNotifications = async () => {
@@ -90,17 +95,17 @@ function Notification(props) {
             return <NotificationItemList
               item={item}
               onPress={(item) => {
-                    /** Notifictions type
-                      0- Nothing,
-                      1- Y deliveryman change parameter ,
-                      2- Z Accept ad ,
-                      3- X Accept ad,
-                      4- Y recovers the item from Z,
-                      5- Y accepts the ads notify the X & Z
-                      6- X send proposal to Z
-                      7- Z send proposal to X
-                      8- Y delivered to X
-                      9- Y change the date*/
+                /** Notifictions type
+                  0- Nothing,
+                  1- Y deliveryman change parameter ,
+                  2- Z Accept ad ,
+                  3- X Accept ad,
+                  4- Y recovers the item from Z,
+                  5- Y accepts the ads notify the X & Z
+                  6- X send proposal to Z
+                  7- Z send proposal to X
+                  8- Y delivered to X
+                  9- Y change the date*/
                 if (item.notn_type == '1') {//for change request
                   props.navigation.navigate('AdModificationProposal', {
                     ads_id: item.ad_id,
@@ -110,7 +115,7 @@ function Notification(props) {
                 } else if (item.notn_type == '2') {
 
                 } else if (item.notn_type == '3') {//for date time change request accepted
-                  Toast.show('You are accepted change request')
+                  Toast.show('You have already taken action on this product')
                 } else if (item.notn_type == '4') {
 
                 } else if (item.notn_type == '5') {//for accept ads by delivery man

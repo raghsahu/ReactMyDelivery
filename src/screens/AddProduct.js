@@ -35,7 +35,7 @@ function AddProduct(props) {
   const [productName, setProductName] = useState('');
   const [webLink, setWebLinkName] = useState('');
   const [placeToBuy, setPlaceToBuy] = useState('');
-  const [priceOfProduct, setPriceOfProduct] = useState();
+  const [priceOfProduct, setPriceOfProduct] = useState('');
   const [quantity, setQuantity] = useState('');
   const [totalPrice, setTotalPrice] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
@@ -66,25 +66,6 @@ function AddProduct(props) {
   useEffect(() => {
     getSavedProductCount()
   }, []);
-
-  function handleBackButtonClick() {
-    Alert.alert(
-      'Success',
-      'Are you sure want to discard all products',
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            onDiscard();
-            props.navigation.goBack();
-          },
-        },
-      ],
-      { cancelable: true },
-    );
-    return true;
-  }
-
 
   const getSavedProductCount = () => {
     db.transaction(tx => {
@@ -228,10 +209,10 @@ function AddProduct(props) {
   };
 
   const onNextAddCommission = () => {
-    if (productName!='' || webLink!='' || priceOfProduct!='' || quantity!='' || prodImg!='') {
-      onNext(true);
+    if (!productName && !webLink && !priceOfProduct  && !quantity && prodImg.length == 0) {
+      moveToNext();
     }else{
-     moveToNext();
+      onNext(true);
     }
   };
 

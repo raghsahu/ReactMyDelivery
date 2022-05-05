@@ -13,14 +13,18 @@ import {name as appName} from './app.json';
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function (token) {
-    console.log('TOKEN:', token);
+    //console.log('TOKEN:', token);
   },
 
   // (required) Called when a remote is received or opened, or local notification is opened
   onNotification: function (notification) {
-    console.log('NOTIFICATION:', notification);
+    console.log('NOTIFICATION123:', notification);
 
     // process the notification
+    const clicked = notification.userInteraction;
+    if (clicked) {
+     // console.log('bg_notiiiii ')
+    }
     // (required) Called when a remote is received or opened, or local notification is opened
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   },
@@ -63,15 +67,18 @@ PushNotification.configure({
 
 // // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
-    showNotification(remoteMessage)
+   // console.log('Message handled in the background!', remoteMessage);
+    //responce=== {"collapseKey": "com.mydelivery", "data": {}, "from": "397368923340", "messageId": "0:1651753738919248%1403102d1403102d",
+    // "notification": {"android": {}, "body": "eeee", "title": "rrrrr"}, "sentTime": 1651753738891, "ttl": 2419200}
+    //showNotification(remoteMessage)
   });
 
   const showNotification = (remoteMessage) => {
+    console.log('Message handled in the background!', remoteMessage);
     PushNotification.createChannel(
       {
-        channelId: remoteMessage.channelId, // (required)
-        channelName: `Custom channel - Counter: ${remoteMessage.channelId}`, // (required)
+        channelId: Date.now(), // (required)
+        channelName: `Custom channel - Counter: ${Date.now()}`, // (required)
         channelDescription: `A custom channel to categories your custom notifications. Updated at: ${Date.now()}`, // (optional) default: undefined.
         soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
         importance: 4, // (optional) default: 4. Int value of the Android notification importance
@@ -85,13 +92,13 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     if (remoteMessage.hasOwnProperty("data") && remoteMessage.data) {
       let notification = remoteMessage.data;
       data = {
-        message: notification.noti_body ? notification.noti_body : remoteMessage.message,
-        title: notification.noti_title ? notification.noti_title : remoteMessage.title,
+        message: notification.massage ? notification.massage : remoteMessage.message,
+        title: notification.user_f_name ? notification.user_f_name + ' '+ notification.user_l_name : remoteMessage.title,
         //image: notification.noti_image_url ? notification.noti_image_url : remoteMessage.notification.image,
       };
       // console.log("admin_data_noti" + data);
     } else {
-      data = remoteMessage;
+      data = remoteMessage.notification;
     }
 
     PushNotification.localNotification({
@@ -102,9 +109,10 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
       importance: 4, // (optional) set notification importance, default: high
       /* iOS and Android properties */
       title: data.title, // (optional)
-      message: data.message, // remoteMessage.data.message, // (required),
-      channelId: remoteMessage.channelId,
+      message: data.body, // remoteMessage.data.message, // (required),
+      channelId: Date.now(),
       //bigPictureUrl: data.image,
+      data: JSON.stringify(remoteMessage.data),
     });
   };
 

@@ -23,7 +23,7 @@ import {
   Input,
   Header,
   BottomBackground,
-  RadioButtons,
+  OpenInfoModal,
   CheckBox,
   AddProductsItemList,
   ProgressView,
@@ -45,9 +45,10 @@ function AddProductSummary(props) {
 
   const [isSelected, setSelection] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [isOpenInfoModal, setOpenInfoModal] = useState(false);
   const { getTranslation } = useContext(LocalizationContext);
   const { user, webServices, getError, add_Product, oneTimePayment } = useContext(APPContext);
-  const{getAdGender} = useContext(CommonUtilsContext);
+  const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -75,6 +76,10 @@ function AddProductSummary(props) {
     setLogoutModalVisible(!isLogoutModalVisible);
   };
 
+  const openInfoModal = () => {
+    setOpenInfoModal(!isOpenInfoModal);
+  };
+
   const setCheck = checkStatus => {
     setSelection(checkStatus);
   };
@@ -83,17 +88,17 @@ function AddProductSummary(props) {
     return parseFloat(amount).toFixed(2);
   }
 
-  
+
   const paypalPayment = async () => {
     const result = await oneTimePayment(totalToPayPrice);
-    console.log('paypalResult: ', result);
-    if(result && result.response.state == 'approved'){
+    //console.log('paypalResult: ', result);
+    if (result && result.response.state == 'approved') {
       Toast.show('Payment success')
       onNext(JSON.stringify(result));
-    }else{
+    } else {
       Toast.show('Payment error')
     }
-  
+
   }
 
   var tempImages = [];
@@ -469,14 +474,19 @@ function AddProductSummary(props) {
             </Text>
           </View>
 
-          {/* <Text
-            style={{marginRight: 20, marginTop: 10}}
-            color={COLORS.primaryColor}
-            size="16"
-            weight="500"
-            align={'right'}>
-            {getTranslation('info')}
-          </Text> */}
+          <TouchableOpacity
+            style={{ marginRight: 20, marginTop: 10 }}
+            onPress={() => {
+              openInfoModal();
+            }}>
+            <Text
+              color={COLORS.primaryColor}
+              size="16"
+              weight="500"
+              align={'right'}>
+              {getTranslation('info')}
+            </Text>
+          </TouchableOpacity>
 
           <View
             style={[
@@ -521,6 +531,14 @@ function AddProductSummary(props) {
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
+
+      <OpenInfoModal
+          isOpenInfoModal={isOpenInfoModal}
+          openInfoModal={() => {
+            openInfoModal();
+          }}
+        />
+
       <Modal
         animationType="slide"
         transparent

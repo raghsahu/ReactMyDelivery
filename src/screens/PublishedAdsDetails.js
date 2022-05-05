@@ -23,6 +23,7 @@ import {
   ProductsItemList,
   ProgressView,
   DeleteModal,
+  OpenInfoModal,
 } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
@@ -38,12 +39,13 @@ function PublishedAdsDetails(props) {
   const [item, setItem] = useState({});
   const [products, setItemProducts] = useState([]);
   const [user_y, setUser_Y] = useState([]);
-  const {user, del_ads, imageBaseUrl} = useContext(APPContext);
+  const { user, del_ads, imageBaseUrl } = useContext(APPContext);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
   const [prodTotalPrice, setTotalPrice] = useState(0);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isOpenInfoModal, setOpenInfoModal] = useState(false);
 
   var dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
   var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
@@ -64,6 +66,9 @@ function PublishedAdsDetails(props) {
 
   }, []);
 
+  const openInfoModal = () => {
+    setOpenInfoModal(!isOpenInfoModal);
+  };
 
   const checkDecimal = (amount) => {
     return parseFloat(amount).toFixed(2);
@@ -80,7 +85,7 @@ function PublishedAdsDetails(props) {
     if (result.status == true) {
       Toast.show(result.error)
       deleteModalVisibility();
-     props.navigation.goBack();
+      props.navigation.goBack();
     } else {
       Toast.show(result.error);
     }
@@ -354,7 +359,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {item.ad_accept_limit}
+                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -374,7 +379,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {item.ad_delivery_limit}
+                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -518,28 +523,44 @@ function PublishedAdsDetails(props) {
             </Text>
           </View>
 
-          <Text
+          <TouchableOpacity
             style={{ marginRight: 20, marginTop: 10 }}
-            color={COLORS.primaryColor}
-            size="16"
-            weight="500"
-            align={'right'}>
-            {''}
-          </Text>
+            onPress={() => {
+              openInfoModal();
+            }}>
+            <Text
+              color={COLORS.primaryColor}
+              size="16"
+              weight="500"
+              align={'right'}>
+              {getTranslation('info')}
+            </Text>
+          </TouchableOpacity>
+
+          <View
+            style={{ height: 10 }}>
+          </View>
 
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
 
-        <DeleteModal
-          isDeleteModalVisible={isDeleteModalVisible}
-          getDeleteAd={() => {
-            getDeleteAd();
-          }}
-          deleteModalVisibility={() => {
-            deleteModalVisibility();
-          }}
-        />
+      <DeleteModal
+        isDeleteModalVisible={isDeleteModalVisible}
+        getDeleteAd={() => {
+          getDeleteAd();
+        }}
+        deleteModalVisibility={() => {
+          deleteModalVisibility();
+        }}
+      />
+
+      <OpenInfoModal
+        isOpenInfoModal={isOpenInfoModal}
+        openInfoModal={() => {
+          openInfoModal();
+        }}
+      />
 
     </View>
   );

@@ -25,6 +25,7 @@ const {height, width} = Dimensions.get('screen');
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { CommonUtilsContext } from '../context/CommonUtils';
 import { CommonActions } from '@react-navigation/native';
+import moment from 'moment'; // date format
 
 function ExchangeSuccessSummary(props) {
   const [item, setItem] = useState({});
@@ -261,7 +262,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {item.ad_accept_limit}
+                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -281,7 +282,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {item.ad_delivery_limit}
+                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 

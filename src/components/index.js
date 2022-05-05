@@ -24,6 +24,7 @@ import InProgressItemList from './InProgressItemList';
 import DeleteModal from './DeleteModal';
 import SuggestionItemList from './SuggestionItemList';
 import ModificationProductList from './ModificationProductList';
+import OpenInfoModal from './OpenInfoModal';
 
 export {
   Text,
@@ -52,4 +53,5 @@ export {
   DeleteModal,
   SuggestionItemList,
   ModificationProductList,
+  OpenInfoModal,
 };

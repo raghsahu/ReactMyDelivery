@@ -46,6 +46,7 @@ export const AppProvider = props => {
     getSuggession: baseURL + 'fields/suggession',
     acceptNoti: baseURL + 'madd/notifications',
     new_old_parms: baseURL + 'fields/new_old_parms',
+    del_notification: baseURL + 'del/notifications',
   };
 
   const oneTimePayment = async (amount) => {
@@ -275,7 +276,7 @@ export const AppProvider = props => {
       user_f_name: user_f_name,
       user_l_name: user_l_name,
       prod_name: prod_name,
-      //senderIMG: senderIMG,
+      senderIMG: senderIMG, // I have sent firestore Doc Id
       senderID: senderID,
       receiverID: receiverID,
       massage: massage,
@@ -324,6 +325,13 @@ export const AppProvider = props => {
       ad_id : ads_id,
     };
     return await request(webServices.new_old_parms, 'post', params);
+  };
+
+  const notiDeleted = async (noti_id) => {
+    let params = {
+      delete_id : noti_id,
+    };
+    return await request(webServices.del_notification, 'post', params);
   };
 
   const request = async (url, method, params) => {
@@ -499,6 +507,7 @@ export const AppProvider = props => {
         getSuggession,
         notiAcceptRefuseRequest,
         getNewOldProductData,
+        notiDeleted,
       }}>
       {props.children}
     </APPContext.Provider>

@@ -619,7 +619,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {item.ad_accept_limit}
+                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -639,7 +639,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {item.ad_delivery_limit}
+                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
