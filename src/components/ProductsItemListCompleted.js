@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {
   View,
   Dimensions,
-  Image,
+  Linking,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -12,6 +12,7 @@ import {COLORS, IMAGES} from '../assets';
 //COMMON COMPONENT
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
+import { validateURL } from '../context/CommonUtils';
 
 const ProductsItemListCompleted = props => {
   const {getTranslation} = useContext(LocalizationContext);
@@ -40,7 +41,10 @@ const ProductsItemListCompleted = props => {
             }}
             color={'#35CCC1'}
             size="16"
-            weight="500">
+            weight="500"
+            onPress={() => {
+              Linking.openURL(validateURL(item.prod_web_link));
+            }}>
             {item.prod_web_link}
           </Text>
         </View>
@@ -97,6 +101,7 @@ const ProductsItemListCompleted = props => {
           <Text
             style={{
               marginLeft: 5,
+              //flex:1
             }}
             color={COLORS.darkGray}
             size="16"

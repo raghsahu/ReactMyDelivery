@@ -91,24 +91,25 @@ const BottomBar = (props) => {
           
           if (remoteMessage.hasOwnProperty("data") && remoteMessage.data) {
             let notificationData = remoteMessage.data;
+            console.log('notificationData', notificationData);
             if(notificationData.notn_type == '111'){
-              props.navigation.navigate('BottomBar')
-              // props.navigation.navigate('ChatScreen', {
-              //   headerTitle: notificationData.user_f_name +' '+ notificationData.user_l_name,
-              //   chatRoomId: notificationData.senderIMG,
-              //   finalNodeId: notificationData.nodeID,
-              //   ad_id: notificationData.ad_id,
-              //   recieverId: notificationData.receiverID,
-              //   fcmKey: notificationData.user_fcm_key,
-              //   prodName: notificationData.prod_name,
-              // })
+              //props.navigation.navigate('BottomBar')
+              props.navigation.navigate('ChatScreen', {
+                headerTitle: notificationData.user_f_name +' '+ notificationData.user_l_name,
+                chatRoomId: notificationData.senderIMG,
+                finalNodeId: notificationData.nodeID,
+                ad_id: notificationData.ad_id,
+                recieverId: notificationData.receiverID,
+                fcmKey: notificationData.user_fcm_key,
+                prodName: notificationData.prod_name,
+              })
             }else{
               props.navigation.navigate('Notification')
               //setInitialRoute('Notification')
             }
           }else{
             props.navigation.navigate('Notification')
-            s//etInitialRoute('Notification')
+            //setInitialRoute('Notification')
           }
         } 
       });

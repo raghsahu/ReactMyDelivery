@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { View, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { View, Dimensions, Image, Linking } from 'react-native';
 const { height, width } = Dimensions.get('screen');
 //ASSETS
 import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
 import { Text, Button } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
+import { validateURL } from '../context/CommonUtils';
 
 const IncompleteItemList = props => {
   const { getTranslation } = useContext(LocalizationContext);
@@ -45,7 +46,10 @@ const IncompleteItemList = props => {
           {item.product_name}
         </Text>
 
-        <Text color={COLORS.black} size="14" weight="500">
+        <Text color={COLORS.black} size="14" weight="500"
+         onPress={() => {
+          Linking.openURL(validateURL(item.web_link));
+        }}>
           {getTranslation('web_link') + ' : ' + item.web_link}
         </Text>
         <Text color={COLORS.black} size="14" weight="500">

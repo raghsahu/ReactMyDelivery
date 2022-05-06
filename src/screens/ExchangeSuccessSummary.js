@@ -381,7 +381,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.acpt_time}
+                 {moment(item.acpt_date +' '+ item.acpt_time).format('HH:mm')}
               </Text>
             </View>
           </View>
@@ -413,7 +413,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {item.ad_delv_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
+              {moment(item.ad_delv_time).format('YYYY-MM-DD HH:mm')}
             </Text>
           </View>
 
@@ -421,8 +421,8 @@ function ExchangeSuccessSummary(props) {
             style={[
               styles.inputView,
               {
-                flexDirection: 'row',
-                marginTop: 15,
+                //flexDirection: 'row',
+                marginTop: 5,
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
@@ -431,7 +431,7 @@ function ExchangeSuccessSummary(props) {
 
             <Text
               style={{
-                marginLeft: 10,
+                //marginLeft: 10,
                 flex: 1,
               }}
               color={COLORS.darkGray}

@@ -18,7 +18,7 @@ PushNotification.configure({
 
   // (required) Called when a remote is received or opened, or local notification is opened
   onNotification: function (notification) {
-    console.log('NOTIFICATION123:', notification);
+    //console.log('NOTIFICATION123:', notification);
 
     // process the notification
     const clicked = notification.userInteraction;
@@ -32,7 +32,7 @@ PushNotification.configure({
   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
   onAction: function (notification) {
     console.log('ACTION:', notification.action);
-    console.log('NOTIFICATION:', notification);
+    //console.log('NOTIFICATION:', notification);
     // process the action
   },
 

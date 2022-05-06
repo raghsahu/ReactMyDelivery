@@ -39,6 +39,7 @@ import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'DescribeProduct.db' });
 
 function MyAccount(props) {
+  const scrollRef = useRef();
   const { tabIndex } = props.route.params ? props.route.params : 1;
   const { getTranslation, clearAllData } = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -67,7 +68,10 @@ function MyAccount(props) {
 
   useEffect(() => {
     tabIndex ? setIndex(tabIndex) : setIndex(1);
-  }, []);
+    //if(tabIndex === 3 || tabIndex === 4){
+      onPressTouch(true);
+   // }
+  }, [props]);
 
   useEffect(() =>{
     function handleBackButton() {
@@ -77,6 +81,17 @@ function MyAccount(props) {
   const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
   return () => backHandler.remove();
   }, []);
+
+  const onPressTouch = (scrollEnd) => {
+    if(scrollEnd){
+      scrollRef.current?.scrollToEnd();
+    }else{
+      scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+    }
+  }
 
   const backAction = () => {
     props.navigation.dispatch(
@@ -456,9 +471,8 @@ function MyAccount(props) {
               color={COLORS.white}>
               {user ? user.user_f_name +
                 ' ' +
-                user.user_l_name +
-                '               ' +
-                user.user_name : ''}
+                user.user_l_name 
+                 : ''}
             </Text>
 
             <Text
@@ -639,6 +653,7 @@ function MyAccount(props) {
             </View>
 
             <ScrollView
+              ref={index == 4 || index == 3 ? scrollRef.current?.scrollToEnd() : scrollRef}
               showsHorizontalScrollIndicator={false}
               horizontal={true}>
               <View
@@ -672,7 +687,10 @@ function MyAccount(props) {
                       borderRadius: 20,
                     },
                   ]}
-                  onPress={() => setIndex(2)}>
+                  onPress={() =>{
+                    onPressTouch(false);
+                    setIndex(2)
+                  }}>
                   <Text
                     size="16"
                     weight="500"
@@ -691,7 +709,10 @@ function MyAccount(props) {
                       borderRadius: 20,
                     },
                   ]}
-                  onPress={() => setIndex(3)}>
+                  onPress={() => {
+                    setIndex(3)
+                    onPressTouch(true);
+                  }}>
                   <Text
                     size="16"
                     weight="500"
@@ -710,7 +731,8 @@ function MyAccount(props) {
                       borderRadius: 20,
                     },
                   ]}
-                  onPress={() => setIndex(4)}>
+                  onPress={() => {setIndex(4)
+                    onPressTouch(true);}}>
                   <Text
                     size="16"
                     weight="500"

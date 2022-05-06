@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import moment from 'moment'; // date format
 import Geolocation from '@react-native-community/geolocation';
 
@@ -41,6 +41,17 @@ export const filterList = [
   },
 ];
 
+export const validateURL = link => {
+  if (link.indexOf("http://") == 0 || link.indexOf("https://") == 0) {
+    // console.log("The link has http or https.");
+    return link
+  }
+  else {
+    //console.log("The link doesn't have http or https.");
+    return "http://" + link
+  }
+}
+
 export const CommonUtilsContext = createContext();
 
 export const CommonUtils = props => {
@@ -64,11 +75,11 @@ export const CommonUtils = props => {
   ];
 
   const getAdGender = genderKey => {
-    if(genderKey == '1'){
+    if (genderKey == '1') {
       return 'Man';
-    }else if(genderKey == '2'){
+    } else if (genderKey == '2') {
       return 'Women';
-    }else if(genderKey == '3'){
+    } else if (genderKey == '3') {
       return 'Both';
     }
 
@@ -89,12 +100,12 @@ export const CommonUtils = props => {
   };
 
   function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
   }
 
@@ -109,7 +120,7 @@ export const CommonUtils = props => {
 
     Geolocation.getCurrentPosition(
       info => {
-        const {coords} = info;
+        const { coords } = info;
         latitude = coords.latitude;
         longitude = coords.longitude;
         setLat(latitude);

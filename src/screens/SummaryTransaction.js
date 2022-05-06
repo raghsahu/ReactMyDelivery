@@ -36,6 +36,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { Rating } from 'react-native-ratings';
 import Toast from 'react-native-simple-toast';
 import firestore from '@react-native-firebase/firestore'
+import Clipboard from '@react-native-community/clipboard';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
@@ -82,26 +83,33 @@ function SummaryTransaction(props) {
 
   }, [props]);
 
-  useEffect(() =>{
+  useEffect(() => {
     function handleBackButton() {
       backAction();
       return true;
-  }
-  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-  return () => backHandler.remove();
+    }
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => backHandler.remove();
   }, []);
 
   const backAction = () => {
-    props.navigation.navigate('MyAccount', {
-      tabIndex: 3,
-    });
+    if(status == 'completed'){
+      props.navigation.navigate('MyAccount', {
+        tabIndex: 4,
+      });
+    }else{
+      props.navigation.navigate('MyAccount', {
+        tabIndex: 3,
+      });
+    }
+  
   };
 
   const getNodeId = (ad_id, user1, user2) => {
     return ad_id + '_' + user1 + '_' + user2
   };
 
-  const checkChatRoom = (headerTitle,  receiverId, fcmKey) => {
+  const checkChatRoom = (headerTitle, receiverId, fcmKey) => {
     console.log('finalNode ', getNodeId(item.ad_id, user_x.user_id, user_y.user_id))
 
     if (getNodeId(item.ad_id, user_x.user_id, user_y.user_id)) {
@@ -130,10 +138,10 @@ function SummaryTransaction(props) {
                 prodName: products[0].prod_name,
               })
             } else {
-              NewThreadCreate(headerTitle,  receiverId, fcmKey);
+              NewThreadCreate(headerTitle, receiverId, fcmKey);
             }
           } else {
-            NewThreadCreate(headerTitle,  receiverId, fcmKey);
+            NewThreadCreate(headerTitle, receiverId, fcmKey);
           }
 
         })
@@ -145,7 +153,7 @@ function SummaryTransaction(props) {
 
   };
 
-  const NewThreadCreate = (headerTitle,  receiverId, fcmKey) => {
+  const NewThreadCreate = (headerTitle, receiverId, fcmKey) => {
     //// create new thread using firebase & firestore
     firestore()
       .collection('MESSAGES')
@@ -251,18 +259,18 @@ function SummaryTransaction(props) {
 
   const getProductPrice = () => {
     var totalPrice = 0;
-      for (let i = 0; i < products.length; i++) {
-        totalPrice =
-          totalPrice + (products[i].prod_price * products[i].prod_qnty);
-      }
-      //setTotalPrice(totalPrice);
-      return parseFloat(totalPrice).toFixed(2)
-    };
-  
-    const checkDecimal = (amount) => {
-      return parseFloat(amount).toFixed(2);
+    for (let i = 0; i < products.length; i++) {
+      totalPrice =
+        totalPrice + (products[i].prod_price * products[i].prod_qnty);
     }
-  
+    //setTotalPrice(totalPrice);
+    return parseFloat(totalPrice).toFixed(2)
+  };
+
+  const checkDecimal = (amount) => {
+    return parseFloat(amount).toFixed(2);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -276,9 +284,15 @@ function SummaryTransaction(props) {
           title={getTranslation('summary_of_txn')}
           onBack={() => {
             //  props.navigation.goBack();
-            props.navigation.navigate('MyAccount', {
-              tabIndex: 3,
-            });
+            if(status == 'completed'){
+              props.navigation.navigate('MyAccount', {
+                tabIndex: 4,
+              });
+            }else{
+              props.navigation.navigate('MyAccount', {
+                tabIndex: 3,
+              });
+            }
           }}
         />
         <BottomBackground></BottomBackground>
@@ -286,53 +300,59 @@ function SummaryTransaction(props) {
           style={styles.container}
           showsVerticalScrollIndicator={false}>
           <View>
-            {/* {status === 'completed' ? null
-             :  */}
-            <View>
-              <Text
-                style={[styles.inputView, { marginTop: 20 }]}
-                size="18"
-                weight="500"
-                align="left"
-                color={COLORS.textColor}>
-                {getTranslation('txn_code')}
-              </Text>
-
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  marginTop: 20,
-                  width: '85%',
-                  height: 80,
-                  shadowColor: 'black',
-                  shadowOpacity: 0.26,
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowRadius: 10,
-                  elevation: 3,
-                  borderRadius: 12,
-                  backgroundColor: 'white',
-                  flex: 1,
-                }}>
+            {status != 'completed' && subTabIndex != 1 ?
+              <View>
                 <Text
-                  style={[
-                    {
-                      width: 154,
-                      padding: 20,
-                      alignSelf: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#FEC107',
-                    },
-                  ]}
+                  style={[styles.inputView, { marginTop: 20 }]}
                   size="18"
                   weight="500"
-                  align="center"
-                  color={COLORS.black}>
-                  {item.acpt_code}
+                  align="left"
+                  color={COLORS.textColor}>
+                  {getTranslation('txn_code')}
                 </Text>
+
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    marginTop: 20,
+                    width: '85%',
+                    height: 80,
+                    shadowColor: 'black',
+                    shadowOpacity: 0.26,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowRadius: 10,
+                    elevation: 3,
+                    borderRadius: 12,
+                    backgroundColor: 'white',
+                    flex: 1,
+                  }}>
+                  <TouchableOpacity onPress={() => {
+                    Clipboard.setString(item.acpt_code)
+                    Toast.show('Copied')
+                    }}>
+                    <Text
+                      style={[
+                        {
+                          width: 154,
+                          padding: 20,
+                          alignSelf: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#FEC107',
+                        },
+                      ]}
+                      size="18"
+                      weight="500"
+                      align="center"
+                      color={COLORS.black}>
+                      {item.acpt_code}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-            {/* } */}
+              :
+              null
+            }
 
             {status === 'inProgress' && subTabIndex === 1 ?
               <View>
@@ -748,7 +768,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.acpt_time}
+                {moment(item.acpt_date + ' ' + item.acpt_time).format('HH:mm')}
               </Text>
             </View>
           </View>
@@ -782,8 +802,7 @@ function SummaryTransaction(props) {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {item.ad_delv_time +' by '+ user_y.user_f_name + ' ' + user_y.user_l_name}
-                  {/* 2020-04-02 12:05 by John Ben */}
+                  {moment(item.ad_delv_time).format('YYYY-MM-DD HH:mm')}
                 </Text>
               </View>
 
@@ -791,8 +810,8 @@ function SummaryTransaction(props) {
                 style={[
                   styles.inputView,
                   {
-                    flexDirection: 'row',
-                    marginTop: 15,
+                    // flexDirection: 'row',
+                    marginTop: 5,
                   },
                 ]}>
                 <Text style={{}} color={COLORS.black} size="16" weight="600">
@@ -801,14 +820,14 @@ function SummaryTransaction(props) {
 
                 <Text
                   style={{
-                    marginLeft: 10,
+                    //marginLeft: 10,
                     flex: 1,
                   }}
                   color={COLORS.darkGray}
                   size="16"
                   weight="500">
                   {/* {'€600 + €32,4 + €8,1 = €638'} */}
-                  {'€'+ getProductPrice() + ' + €'+  parseFloat(item.ad_cmsn_delivery).toFixed(2)  + ' + €' + checkDecimal(item.ad_cmsn_price * 0.20) + ' = €'+ parseFloat(item.ad_pay_amount).toFixed(2)}
+                  {'€' + getProductPrice() + ' + €' + parseFloat(item.ad_cmsn_delivery).toFixed(2) + ' + €' + checkDecimal(item.ad_cmsn_price * 0.20) + ' = €' + parseFloat(item.ad_pay_amount).toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -880,18 +899,18 @@ function SummaryTransaction(props) {
                   }}
                 />
                 :
-               
-                <Button
-                  style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
-                  title={'Evaluation Done'}
-                  type={2}
-                  onPress={() => {
-                    //evalution done
-                    props.navigation.goBack();
 
-                  }}
-                />
-            
+            <Button
+              style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
+              title={'Evaluation Done'}
+              type={2}
+              onPress={() => {
+                //evalution done 
+               // props.navigation.goBack();
+
+              }}
+            />
+
           ) : (
             <View
               style={{
@@ -916,11 +935,11 @@ function SummaryTransaction(props) {
                   <Button
                     style={[
                       {
-                        width: 133,
-                        height: 36,
-                        marginTop: 5,
+                        width: 160,
+                        //height: 36,
+                        //marginTop: 5,
                         backgroundColor: COLORS.primaryColor,
-                        borderRadius: 133 / 2,
+                        borderRadius: 160 / 2,
                         alignSelf: 'center',
                         justifyContent: 'center',
                       },

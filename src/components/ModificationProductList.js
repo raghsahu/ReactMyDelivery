@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   StyleSheet,
+  Linking,
 } from 'react-native';
 const {height, width} = Dimensions.get('screen');
 //ASSETS
@@ -12,6 +13,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {Text, Button} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
+import { validateURL } from '../context/CommonUtils';
 
 const ModificationProductList = props => {
   const {getTranslation} = useContext(LocalizationContext);
@@ -82,7 +84,10 @@ const ModificationProductList = props => {
                   }}
                   color={'#35CCC1'}
                   size="16"
-                  weight="500">
+                  weight="500"
+                  onPress={() => {
+                    Linking.openURL(validateURL(item.prod_web_link));
+                  }}>
                    {item.prod_web_link}
                 </Text>
               </View>

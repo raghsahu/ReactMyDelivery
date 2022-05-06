@@ -8,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
@@ -108,6 +109,15 @@ function EditAccount(props) {
     showCountryPicker();
   }
 
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+
   useEffect(() => {
     getUserCurrentLocation();
   }, []);
@@ -135,6 +145,9 @@ function EditAccount(props) {
     }
   }, []);
 
+  const backAction = () => {
+   props.navigation.goBack();
+  };
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -418,7 +431,7 @@ function EditAccount(props) {
         <Header
           title={getTranslation('edit_account_details')}
           onBack={() => {
-            props.navigation.goBack();
+            backAction();
           }}
         />
         <ScrollView

@@ -247,7 +247,7 @@ export const AppProvider = props => {
     return await request(webServices.del_ads, 'post', params);
   };
 
-  const putRating = async (rate_user_id, rate_rating, rate_comment, rate_ad_id) => {
+  const putRating = async (rate_user_id, rate_rating, rate_comment, rate_ad_id, ratingForApp, commentForApp) => {
     let params = {
       rate_user_id : rate_user_id,
       rate_rating: rate_rating,

@@ -33,6 +33,8 @@ function RatingReview(props) {
   const [ratingForUser, setRatingForUser] = useState(0);
   const { getTranslation } = useContext(LocalizationContext);
   const [commentForUser, setCommentForUser] = useState('');
+  const [ratingForApp, setRatingForApp] = useState(0);
+  const [commentForApp, setCommentForApp] = useState('');
   const { putRating, user } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
 
@@ -43,7 +45,10 @@ function RatingReview(props) {
 
   const onSelect = rating => {
     setRatingForUser(rating);
-    // console.log('user_nnnnn ', userName)
+  };
+
+  const onSelectRateApp = rating => {
+    setRatingForApp(rating);
   };
 
   const shareApp = async () => {
@@ -76,12 +81,16 @@ function RatingReview(props) {
       ratingForUser,
       commentForUser,
       props.route.params.rate_ad_id,
+      ratingForApp,
+      commentForApp,
     );
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
       setRatingForUser(0)
       setCommentForUser('')
+      setCommentForApp('')
+      setRatingForApp(0)
       // props.route.params.onReturn('RatingDone');
       //       props.navigation.goBack();
             props.navigation.navigate('MyAccount', {
@@ -125,7 +134,7 @@ function RatingReview(props) {
             ratingBackgroundColor="#DBDBDB"
             ratingCount={5}
             imageSize={45}
-            // onFinishRating={this.ratingCompleted}
+            onFinishRating={onSelectRateApp}
             style={{ marginTop: 1, paddingVertical: 1 }}
           />
 
@@ -133,7 +142,9 @@ function RatingReview(props) {
             style={[styles.inputView, styles.comment]}
             placeholder={getTranslation('leave_comment')}
             multiline={true}
-          //value={''}
+            onChangeText={text => {
+              setCommentForApp(text);
+            }}
           />
 
           <View
@@ -222,10 +233,14 @@ function RatingReview(props) {
             style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}
             title={getTranslation('submit')}
             onPress={() => {
-              if (!commentForUser) {
+              if (!commentForApp) {
+                Toast.show('Please enter comment for App')
+              } else if (ratingForApp == 0) {
+                Toast.show('Please enter rating for App')
+              }else if (!commentForUser) {
                 Toast.show('Please enter comment for user rate')
               } else if (ratingForUser == 0) {
-                Toast.show('Please enter rating')
+                Toast.show('Please enter rating for user')
               } else {
                 onNext();
               }

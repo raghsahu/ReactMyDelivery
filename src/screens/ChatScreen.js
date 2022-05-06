@@ -2,21 +2,17 @@ import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
-  Image,
   StatusBar,
-  ImageBackground,
-  TouchableOpacity,
   Dimensions,
-  TextInput,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
-import { Button, Header, Text, Input, BottomBackground } from '../components';
+import { Header, } from '../components';
 const { height, width } = Dimensions.get('screen');
 import { GiftedChat } from 'react-native-gifted-chat'
 import firestore from '@react-native-firebase/firestore'
@@ -64,6 +60,19 @@ function ChatScreen(props) {
     return () => unsubscribeListener()
   }, [props])
 
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+  
+  const backAction = () => {
+    props.navigation.goBack();
+   };
+
   async function handleSend(newMessage = []) {
     const text = newMessage[0].text
     setMessages(GiftedChat.append(messages, newMessage))
@@ -106,7 +115,7 @@ function ChatScreen(props) {
         <Header
           title={headerTitle}
           onBack={() => {
-            props.navigation.goBack();
+            backAction();
           }}
         />
       </SafeAreaView>

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
@@ -45,6 +46,20 @@ function SendSuggession(props) {
       flatListRef.current.scrollToIndex({ index: allSuggestion ? allSuggestion.length - 1 : 0 }) // Scroll to bottom
     }
   }, [allSuggestion]);
+
+  
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+  
+  const backAction = () => {
+    props.navigation.goBack();
+   };
 
   const getAllSuggestion = async () => {
     const result = await getSuggession(user.user_id);
@@ -92,7 +107,7 @@ function SendSuggession(props) {
         <Header
           title={headerTitle}
           onBack={() => {
-            props.navigation.goBack();
+            backAction();
           }}
         />
 

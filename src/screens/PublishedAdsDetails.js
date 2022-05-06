@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
@@ -58,13 +59,26 @@ function PublishedAdsDetails(props) {
 
     var totalPrice = 0;
     for (let i = 0; i < item.products.length; i++) {
-      totalPrice = totalPrice + item.products[i].prod_price_total
+      totalPrice = totalPrice + parseInt(item.products[i].prod_price_total)
     }
     setTotalPrice(parseFloat(totalPrice));
     //const totalToPay = parseInt(totalPrice) + parseInt(item.ad_cmsn_price);
     // setTotalToPay(totalToPay.toFixed(2));
 
   }, []);
+
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+  
+  const backAction = () => {
+    props.navigation.goBack();
+   };
 
   const openInfoModal = () => {
     setOpenInfoModal(!isOpenInfoModal);
@@ -102,7 +116,7 @@ function PublishedAdsDetails(props) {
         <Header
           title={type == 'Notification' ? 'Ads Accepted' : getTranslation('summary')}
           onBack={() => {
-            props.navigation.goBack();
+            backAction();
           }}
         />
 

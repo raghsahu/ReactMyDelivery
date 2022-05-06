@@ -30,7 +30,9 @@ import Toast from 'react-native-simple-toast';
 import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'DescribeProduct.db' });
 
+
 function AddProduct(props) {
+  const scrollRef = useRef();
   const actionSheetRef = useRef();
   const [productName, setProductName] = useState('');
   const [webLink, setWebLinkName] = useState('');
@@ -66,6 +68,13 @@ function AddProduct(props) {
   useEffect(() => {
     getSavedProductCount()
   }, []);
+
+  const onPressTouch = () => {
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  }
 
   const getSavedProductCount = () => {
     db.transaction(tx => {
@@ -194,8 +203,10 @@ function AddProduct(props) {
                 //get all saved product count
                 getSavedProductCount()
 
-                if(thatsAllStatus){
+                if (thatsAllStatus) {
                   moveToNext();
+                } else {
+                  onPressTouch();
                 }
                 //*** */
               }
@@ -209,14 +220,14 @@ function AddProduct(props) {
   };
 
   const onNextAddCommission = () => {
-    if (!productName && !webLink && !priceOfProduct  && !quantity && prodImg.length == 0) {
+    if (!productName && !webLink && !priceOfProduct && !quantity && prodImg.length == 0) {
       moveToNext();
-    }else{
+    } else {
       onNext(true);
     }
   };
 
-  const moveToNext = () =>{
+  const moveToNext = () => {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         if (results.rows.length > 0) {
@@ -247,8 +258,10 @@ function AddProduct(props) {
     });
   };
 
+
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}>
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={COLORS.primaryColor}
@@ -262,6 +275,7 @@ function AddProduct(props) {
           }}
         />
         <ScrollView
+          ref={scrollRef}
           showsVerticalScrollIndicator={false}>
           <Text
             style={[styles.inputView, { marginTop: 20, alignSelf: 'center' }]}
@@ -441,13 +455,20 @@ function AddProduct(props) {
                 justifyContent: 'space-between',
               },
             ]}>
-            <Button
-              style={[{ width: 130 }]}
-              title={getTranslation('add_product')}
-              onPress={() => {
-                onNext(false);
-              }}
-            />
+
+            {prodCount == 5 ?
+              <View
+                style={[{ width: 130 }]}>
+              </View>
+              :
+              <Button
+                style={[{ width: 130 }]}
+                title={getTranslation('add_product')}
+                onPress={() => {
+                  onNext(false);
+                }}
+              />
+            }
 
             <Button
               style={[{ width: 130 }]}
@@ -460,6 +481,7 @@ function AddProduct(props) {
           <View style={{ marginBottom: 30 }}></View>
         </ScrollView>
       </SafeAreaView>
+
       <ActionSheet ref={actionSheetRef}>
         <View style={[styles.bottomView, {}]}>
           <View style={[styles.bottomViewItem, {}]}>

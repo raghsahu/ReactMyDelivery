@@ -3,7 +3,7 @@ import {
   View,
   Dimensions,
   Image,
-  ScrollView,
+  Linking,
   StyleSheet,
 } from 'react-native';
 const { height, width } = Dimensions.get('screen');
@@ -12,6 +12,7 @@ import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
 import { Text, Button } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
+import { validateURL } from '../context/CommonUtils';
 import PagerView from 'react-native-pager-view';
 
 const AddProductsItemList = props => {
@@ -66,7 +67,11 @@ const AddProductsItemList = props => {
             style={styles.text_right}
             color={'#35CCC1'}
             size="16"
-            weight="500">
+            weight="500"
+            onPress={() => {
+              Linking.openURL(validateURL(item.web_link));
+            }}
+            >
             {item.web_link}
           </Text>
         </View>
