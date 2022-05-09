@@ -231,6 +231,8 @@ dependencies {
         implementation jscFlavor
     }
     //other dependency
+    implementation 'com.android.support:multidex:2.0.1'
+    
     implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation project(':react-native-push-notification')

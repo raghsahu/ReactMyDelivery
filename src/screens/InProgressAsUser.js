@@ -2,12 +2,9 @@ import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
-  TouchableOpacity,
   FlatList,
   Modal,
   Dimensions,
@@ -22,13 +19,12 @@ import {
   Text,
   InProgressItemList,
   ProgressView,
-  ProductsItemList,
+  Input,
 } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 function InProgressAsUser(props) {
   const [isLoading, setLoading] = useState(false);
@@ -207,7 +203,7 @@ function InProgressAsUser(props) {
               {getTranslation('pls_confirm_txn')}
             </Text>
 
-            <OTPInputView
+            {/* <OTPInputView
               style={[{ height: 32, marginTop: 24 }]}
               pinCount={10}
               autoFocusOnLoad={false}
@@ -221,6 +217,14 @@ function InProgressAsUser(props) {
                 //console.log(`Code is ${code}, you are good to go!`)
                 setOtp(code);
             })}
+            /> */}
+
+            <Input
+              style={[styles.inputView, styles.inputContainer]}
+              placeholder={'Please enter Transaction code'}
+              onChangeText={text => {
+                setOtp(text);
+              }}
             />
 
             <View

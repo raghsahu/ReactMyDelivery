@@ -252,6 +252,8 @@ export const AppProvider = props => {
       rate_user_id : rate_user_id,
       rate_rating: rate_rating,
       rate_comment: rate_comment,
+      app_rating: ratingForApp,
+      app_comment: commentForApp,
       rate_ad_id: rate_ad_id
 
     };
@@ -328,8 +330,10 @@ export const AppProvider = props => {
   };
 
   const notiDeleted = async (noti_id) => {
+    //let deleted_id = '[' + noti_id + ']'
     let params = {
-      delete_id : noti_id,
+      //delete_id : noti_id, // noti inactive 
+      delete : noti_id
     };
     return await request(webServices.del_notification, 'post', params);
   };

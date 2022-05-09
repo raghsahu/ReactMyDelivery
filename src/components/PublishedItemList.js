@@ -209,7 +209,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                  {parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+                  {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -232,7 +232,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+                {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>

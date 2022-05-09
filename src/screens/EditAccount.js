@@ -14,6 +14,7 @@ import {
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {LocalizationContext} from '../context/LocalizationProvider';
+import { CommonActions } from '@react-navigation/native';
 
 //COMMON COMPONENT
 import {
@@ -410,7 +411,14 @@ function EditAccount(props) {
             onSelectLanguage();
             setUser(data.result[0]);
             saveUserLoginData(data.result[0]);
-            props.navigation.goBack();
+
+            props.navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Splash' }],
+              }),
+            );
+            //props.navigation.goBack();
           } else {
             Toast.show(data.msg);
           }

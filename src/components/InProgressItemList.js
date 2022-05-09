@@ -15,8 +15,11 @@ const InProgressItemList = props => {
   const [products, setProducts] = useState({});
   const item = props.item;
 
-  var dateA = new Date(moment(props.item.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  // var dateA = new Date(moment(props.item.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+  // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+
+  const dateA = new Date(moment(props.item.ad_delivery_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   const setImages = prodImg => {
     var imageArray = ''
@@ -147,7 +150,7 @@ const InProgressItemList = props => {
               ]}
               title={getTranslation('txn_code')}
               onPress={() => {
-                props.onCodeExchange();
+                props.onCodeExchange(item);
               }}
             />
             :
@@ -257,7 +260,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+                {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -280,7 +283,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+                {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>

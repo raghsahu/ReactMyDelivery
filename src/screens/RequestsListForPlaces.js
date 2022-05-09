@@ -82,13 +82,17 @@ function RequestsListForPlaces(props) {
     setLoading(false);
     if (result.status == true) {
       //Toast.show(result.error);
-     // setRequestItem(result.data);
-      var dateA = new Date(moment(requestItem.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
-      var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
-      let todos = [...requestItem]; 
+
+      // var dateA = new Date(moment(requestItem.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
+      // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+     
+      const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
+      //console.log('dateA', new Date(moment(result.data[i].ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString())
+      let todos = []; 
       if(result.data.length > 0){
         for (let i = 0; i < result.data.length; i++) {
-          if (dateB <= dateA) {
+          const dateA = new Date(moment(result.data[i].ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+          if (dateB < dateA) {
             todos.push(result.data[i])
           }
         }
@@ -108,6 +112,40 @@ function RequestsListForPlaces(props) {
      ? setMaximumPrice(text)
      : setMinimumCommission(text);
     }
+  }
+
+  const filterByPrice = () =>{
+    requestItem.sort((a, b) => {
+      var priceA = a.ad_pay_amount - a.ad_cmsn_price;
+      var priceB = b.ad_pay_amount - b.ad_cmsn_price;
+      if (isFilter) {
+        if (parseInt(priceA) > parseInt(priceB)) {
+          return -1 // return -1 here for DESC order
+        }
+      } else {
+        if (parseInt(priceB) > parseInt(priceA)) {
+          return -1 // return -1 here for ASC order
+        }
+      }
+      return 1 // return 1 here for DESC Order
+    });
+  }
+
+  const filterByCommission = () => {
+    requestItem.sort((a, b) => {
+      var priceA = a.ad_cmsn_delivery;
+      var priceB = b.ad_cmsn_delivery;
+      if (isFilter) {
+        if (parseInt(priceA) > parseInt(priceB)) {
+          return -1 // return -1 here for DESC order
+        }
+      } else {
+        if (parseInt(priceB) > parseInt(priceA)) {
+          return -1 // return -1 here for ASC order
+        }
+      }
+      return 1 // return 1 here for DESC Order
+    });
   }
 
   return (
@@ -144,37 +182,10 @@ function RequestsListForPlaces(props) {
               style={[styles.inputView, { alignSelf: 'center' }]}
               onPress={() => {
                 setIsFilter(!isFilter);
-                if (filterKey == '4') {
-                  requestItem.sort((a, b) => {
-                    var priceA = a.products[0].prod_price;
-                    var priceB = b.products[0].prod_price;
-                    if (isFilter) {
-                      if (parseInt(priceA) > parseInt(priceB)) {
-                        return -1 // return -1 here for DESC order
-                      }
-                    } else {
-                      if (parseInt(priceB) > parseInt(priceA)) {
-                        return -1 // return -1 here for ASC order
-                      }
-                    }
-                    return 1 // return 1 here for DESC Order
-                  });
-
-                } else if(filterKey == '6'){
-                  requestItem.sort((a, b) => {
-                    var priceA = a.ad_cmsn_delivery;
-                    var priceB = b.ad_cmsn_delivery;
-                    if (isFilter) {
-                      if (parseInt(priceA) > parseInt(priceB)) {
-                        return -1 // return -1 here for DESC order
-                      }
-                    } else {
-                      if (parseInt(priceB) > parseInt(priceA)) {
-                        return -1 // return -1 here for ASC order
-                      }
-                    }
-                    return 1 // return 1 here for DESC Order
-                  });
+                if(filterKey == '6'){
+                 filterByCommission();
+                }else {
+                 filterByPrice();
                 }
               }}>
               <ImageBackground
@@ -209,6 +220,7 @@ function RequestsListForPlaces(props) {
                     item={item}
                     onFilter={id => {
                       setFilterKey(id);
+                      
                       const data = [...optionsFilter];
                       for (let i = 0; i < data.length; i++) {
                         if (i === index) {
@@ -218,6 +230,10 @@ function RequestsListForPlaces(props) {
                         }
                       }
                       setOptionFilter(data);
+
+                      if(!data[index].selected){
+                        setFilterKey(null);
+                      }
 
                       if (id == '1') {
                         // setMaximumPrice('10000');
@@ -279,8 +295,9 @@ function RequestsListForPlaces(props) {
                         });
 
                       } else if (id == '4' && data[index].selected) {
-                        // // setMaximumPrice('');
-                        //logoutModalVisibility();
+                        setMinimumCommission('')
+                        setIsFilter(!isFilter)
+                        filterByPrice();
 
                       } else if (id == '5') {
                         // setMaximumPrice('10000');
@@ -302,8 +319,9 @@ function RequestsListForPlaces(props) {
                           return 1 // return 1 here for DESC Order
                         });
                       } else if (id == '6' && data[index].selected) {
-                        // // setMinimumCommission('1');
-                        //logoutModalVisibility();
+                        setMaximumPrice('')
+                        setIsFilter(!isFilter)
+                        filterByCommission();
                       }
                     }}
                   />
@@ -321,7 +339,7 @@ function RequestsListForPlaces(props) {
               <TouchableOpacity
                 style={[styles.inputView, {
                   alignSelf: 'flex-start',
-                   marginLeft: 60,
+                   marginLeft: 70,
                   }]}
                 onPress={() => {
                   logoutModalVisibility();
@@ -341,10 +359,10 @@ function RequestsListForPlaces(props) {
                <TouchableOpacity
                style={[styles.inputView, {
                  alignSelf: 'flex-start',
-                  marginLeft: 60,
+                  marginLeft: 70,
                  }]}
                onPress={() => {
-                 //setIsFilter(!isFilter);
+               
                }}>
 
                <Image
@@ -361,7 +379,7 @@ function RequestsListForPlaces(props) {
 
             {filterKey == '6' ? 
               <TouchableOpacity
-                style={[styles.inputView, { alignSelf: 'flex-end', marginRight: 60 ,
+                style={[styles.inputView, { alignSelf: 'flex-end', marginRight: 70 ,
               }]}
                 onPress={() => {
                   logoutModalVisibility();
@@ -381,10 +399,10 @@ function RequestsListForPlaces(props) {
               : 
               <TouchableOpacity
               style={[styles.inputView, {
-                alignSelf: 'flex-end', marginRight: 60 
+                alignSelf: 'flex-end', marginRight: 70 
                 }]}
               onPress={() => {
-                //setIsFilter(!isFilter);
+                
               }}>
 
               <Image
@@ -403,8 +421,6 @@ function RequestsListForPlaces(props) {
 
             <View style={{ height: 5, backgroundColor: '#414141' }}></View>
           </View>
-
-
 
           <View
             style={{
@@ -433,6 +449,7 @@ function RequestsListForPlaces(props) {
               </Text>
             </TouchableOpacity>
           </View>
+
           <FlatList
             showsVerticalScrollIndicator={false}
             data={requestItem}

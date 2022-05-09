@@ -8,6 +8,7 @@ import {
   StatusBar,
   Dimensions,
   FlatList,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
@@ -43,6 +44,22 @@ function ExchangeSuccessSummary(props) {
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
   }, []);
+
+  useEffect(() => {
+    function handleBackButton() {
+      backAction();
+      return true;
+    }
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => backHandler.remove();
+  }, []);
+
+  const backAction = () => {
+      props.navigation.navigate('MyAccount', {
+        tabIndex: 4,
+      });
+    
+  };
 
   const getProductPrice = () => {
   var totalPrice = 0;
@@ -156,6 +173,11 @@ function ExchangeSuccessSummary(props) {
             onPress={() => {
               props.navigation.navigate('RatingReview', {
                 userName: item.user_y[0].user_f_name + ' ' + item.user_y[0].user_l_name,
+                rate_ad_id: item.ad_id,
+                onReturn: item => {
+                  console.log('log_item ' + item);
+                 // setRatingStatus(true);
+                },
               });
             }}
           />
@@ -451,12 +473,13 @@ function ExchangeSuccessSummary(props) {
             <Button
               title={'Done'}
               onPress={() => {
-                props.navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: 'BottomBar' }],
-                  }),
-                );
+                backAction();
+                // props.navigation.dispatch(
+                //   CommonActions.reset({
+                //     index: 0,
+                //     routes: [{ name: 'BottomBar' }],
+                //   }),
+                // );
               }}
             />
           </View>

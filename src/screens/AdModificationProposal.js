@@ -27,6 +27,7 @@ import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import { CommonUtilsContext } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
+import moment from 'moment'; // date format
 
 const { height, width } = Dimensions.get('screen');
 
@@ -245,7 +246,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                   {oldSummaryDetails.ad_accept_limit}
+                   {moment(oldSummaryDetails.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -265,7 +266,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                   {oldSummaryDetails.ad_delivery_limit}
+                   {moment(oldSummaryDetails.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -364,13 +365,15 @@ function AdModificationProposal(props) {
             </Text>
           </View>
 
-          <TextInput
+          <Text
             style={[styles.inputView, styles.comment]}
-            editable={false}
-            placeholder={getTranslation('why_this_change')}
-            multiline={true}
-            value={newSummaryDetails.ad_why_this_change}
-          />
+            size="16"
+            weight="500"
+            align="left"
+            color={COLORS.black}>
+              {newSummaryDetails.ad_why_this_change}
+            {/* {'djjddj jdjdkd djkdjdj wkwowio wopwowop owowwo lslsasl djfhfh fhhfhfdksdkdk ksksskaaao uu aaajja aakka pppa oaoaoa aoaoaoa oaoaoa juausus jkajhdh dhjdhdhd dhjdhjd d dhdhd dhueiueie euueie euieeuieu euieueue iueueiuie euiueeud iueduieuei uideui '} */}
+            </Text>
 
           <Text
             style={[styles.inputView, { marginTop: 10 }]}
@@ -398,7 +401,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {''}
+              {newSummaryDetails.acpt_date}
             </Text>
           </View>
 
@@ -420,7 +423,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {''}
+              {moment(newSummaryDetails.acpt_date +' ' + newSummaryDetails.acpt_time).format('HH:mm')}
             </Text>
           </View>
 
@@ -534,7 +537,7 @@ const styles = StyleSheet.create({
   },
   comment: {
     textAlignVertical: 'top',
-    paddingHorizontal: 10,
+    padding: 5,
     marginTop: 20,
     height: 120,
     backgroundColor: COLORS.lightGray,

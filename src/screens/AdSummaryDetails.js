@@ -352,8 +352,8 @@ function AdSummaryDetails(props) {
 
   let paymentResult = '';  
   const paypalPayment = async () => {
-    const result = await oneTimePayment(isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice);
-    //console.log('paypalResult: ', result);
+    const result = await oneTimePayment(isProposalToModificationOfAd ? (newGlobalCommission ? parseFloat(newGlobalCommission).toFixed(2) : parseFloat(item.ad_cmsn_price).toFixed(2)) : parseFloat(item.ad_cmsn_price).toFixed(2));
+    //delivery man pay only global commission price
     if(result && result.response.state == 'approved'){
       Toast.show('Payment success')
       paymentResult= JSON.stringify(result);
@@ -585,7 +585,7 @@ function AdSummaryDetails(props) {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          {!isProposalToModificationOfAd && (
+          {/* {!isProposalToModificationOfAd && (
             <View
               style={[
                 styles.inputView,
@@ -637,7 +637,7 @@ function AdSummaryDetails(props) {
                 </Text>
               </View>
             </View>
-          )}
+          )} */}
 
           <Text
             style={[styles.inputView, { marginTop: 20 }]}
@@ -1094,7 +1094,7 @@ function AdSummaryDetails(props) {
               weight="500"
               align="center"
               color={COLORS.primaryColor}>
-              {isProposalToModificationOfAd ? (newTotalToPayPrice ? '€ '+newTotalToPayPrice : ' € '+ totalToPayPrice) : ' € '+ totalToPayPrice }
+              {isProposalToModificationOfAd ? (newGlobalCommission ? '€ '+ parseFloat(newGlobalCommission).toFixed(2) : ' € '+ parseFloat(item.ad_cmsn_price).toFixed(2)) : ' € '+ parseFloat(item.ad_cmsn_price).toFixed(2) }
             </Text>
 
             <Text
@@ -1652,7 +1652,13 @@ function AdSummaryDetails(props) {
           </View>
         </View>
       </Modal>
-      {show && <DateTimePick value={date} mode={mode} onChange={onChange} minimumDate={new Date()} />}
+      {show && <DateTimePick 
+      value={date} 
+      mode={mode} 
+      onChange={onChange}
+      minimumDate={new Date()}
+      maximumDate={new Date(moment(item.ad_delivery_limit).format('YYYY-MM-DD'))}
+       />}
     </View>
   );
 }

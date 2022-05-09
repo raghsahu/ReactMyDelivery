@@ -54,16 +54,7 @@ function MyAccount(props) {
   const [productListItems, setProductListItems] = useState([]);
 
   useEffect(() => {
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
-        var temp = [];
-
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push(results.rows.item(i));
-        }
-        setProductListItems(temp);
-      });
-    });
+   getDbAllProducts();
   }, []);
 
   useEffect(() => {
@@ -81,6 +72,19 @@ function MyAccount(props) {
   const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
   return () => backHandler.remove();
   }, []);
+
+  const getDbAllProducts = () =>{
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        var temp = [];
+
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        setProductListItems(temp);
+      });
+    });
+  }
 
   const onPressTouch = (scrollEnd) => {
     if(scrollEnd){
@@ -668,7 +672,10 @@ function MyAccount(props) {
                       borderRadius: 20,
                     },
                   ]}
-                  onPress={() => setIndex(1)}>
+                  onPress={() => {
+                    getDbAllProducts();
+                    setIndex(1);
+                  } }>
                   <Text
                     size="16"
                     weight="500"

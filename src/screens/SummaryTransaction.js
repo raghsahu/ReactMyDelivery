@@ -24,7 +24,6 @@ import {
   Input,
   Header,
   BottomBackground,
-  DeliveryManSummaryProductsItemList,
   ProductsItemList,
   DateTimePick,
   ProgressView,
@@ -63,8 +62,10 @@ function SummaryTransaction(props) {
   const [isLoading, setLoading] = useState(false);
   const [isRating, setRatingStatus] = useState(false);
 
-  var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  // var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+  // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  const dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   useEffect(() => {
     setItem({});
@@ -93,16 +94,16 @@ function SummaryTransaction(props) {
   }, []);
 
   const backAction = () => {
-    if(status == 'completed'){
+    if (status == 'completed') {
       props.navigation.navigate('MyAccount', {
         tabIndex: 4,
       });
-    }else{
+    } else {
       props.navigation.navigate('MyAccount', {
         tabIndex: 3,
       });
     }
-  
+
   };
 
   const getNodeId = (ad_id, user1, user2) => {
@@ -284,11 +285,11 @@ function SummaryTransaction(props) {
           title={getTranslation('summary_of_txn')}
           onBack={() => {
             //  props.navigation.goBack();
-            if(status == 'completed'){
+            if (status == 'completed') {
               props.navigation.navigate('MyAccount', {
                 tabIndex: 4,
               });
-            }else{
+            } else {
               props.navigation.navigate('MyAccount', {
                 tabIndex: 3,
               });
@@ -330,11 +331,11 @@ function SummaryTransaction(props) {
                   <TouchableOpacity onPress={() => {
                     Clipboard.setString(item.acpt_code)
                     Toast.show('Copied')
-                    }}>
+                  }}>
                     <Text
                       style={[
                         {
-                          width: 154,
+                          width: 194,
                           padding: 20,
                           alignSelf: 'center',
                           justifyContent: 'center',
@@ -900,16 +901,16 @@ function SummaryTransaction(props) {
                 />
                 :
 
-            <Button
-              style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
-              title={'Evaluation Done'}
-              type={2}
-              onPress={() => {
-                //evalution done 
-               // props.navigation.goBack();
+                <Button
+                  style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
+                  title={'Evaluation Done'}
+                  type={2}
+                  onPress={() => {
+                    //evalution done 
+                    // props.navigation.goBack();
 
-              }}
-            />
+                  }}
+                />
 
           ) : (
             <View
@@ -953,7 +954,7 @@ function SummaryTransaction(props) {
                   null
               }
 
-              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB <= dateA) ? (
+              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB > dateA) ? (
                 <Button
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
@@ -1026,7 +1027,7 @@ function SummaryTransaction(props) {
               {getTranslation('pls_confirm_txn')}
             </Text>
 
-            <OTPInputView
+            {/* <OTPInputView
               style={[{ height: 32, marginTop: 24 }]}
               pinCount={10}
               autoFocusOnLoad={false}
@@ -1040,6 +1041,14 @@ function SummaryTransaction(props) {
                 //console.log(`Code is ${code}, you are good to go!`)
                 setOtp(code);
               })}
+            /> */}
+            <Input
+              style={[styles.inputView, styles.inputContainer]}
+              placeholder={'Please enter Transaction code'}
+              onChangeText={text => {
+                setOtp(text);
+              }}
+
             />
 
             <View

@@ -166,7 +166,7 @@ const AdvertiseListItem = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ '+ parseFloat(item.products[0].prod_price).toFixed(2)}
+              {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
             </Text>
           </View>
 
