@@ -14,8 +14,10 @@ const PublishedItemList = props => {
   const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
-  var dateA = new Date(moment(props.item.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
-  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  //var dateA = new Date(moment(props.item.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
+ // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  const dateA = new Date(moment(props.item.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   return (
     <TouchableOpacity
@@ -120,7 +122,7 @@ const PublishedItemList = props => {
                 ]}
                 title={getTranslation('expired')}
                 type={2}
-              //onPress={() => {props.onModify()}}
+                onPress={() => {}}
               />
               :
               null}

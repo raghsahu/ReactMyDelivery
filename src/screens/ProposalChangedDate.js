@@ -94,7 +94,7 @@ function ProposalChangedDate(props) {
 
       <SafeAreaView style={styles.container}>
         <Header
-          title={'Proposal Changing Date & Time'}
+          title={getTranslation('proposal_changing_date_time')}
           onBack={() => {
             props.navigation.goBack();
           }}
@@ -112,7 +112,7 @@ function ProposalChangedDate(props) {
             weight="600"
             align="center"
             color={COLORS.textColor}>
-            {'Proposal to change the Delivery Date & Time'}
+            {getTranslation('proposal_change_delivery_date_time')}
           </Text>
 
           <View
@@ -156,7 +156,7 @@ function ProposalChangedDate(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Old Delivery Date : '}
+              {getTranslation('old_delivery_date')}
             </Text>
 
             <Text
@@ -179,7 +179,7 @@ function ProposalChangedDate(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'New Delivery Date :'}
+              {getTranslation('new_delivery_date')}
             </Text>
 
             <Text
@@ -271,7 +271,7 @@ function ProposalChangedDate(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -291,7 +291,7 @@ function ProposalChangedDate(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -311,7 +311,7 @@ function ProposalChangedDate(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place of Delivery :'}
+                {getTranslation('place_of_delivery') +' :'}
               </Text>
 
               <Text
@@ -332,7 +332,7 @@ function ProposalChangedDate(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Price : '}
+                {getTranslation('price') +' : '}
               </Text>
 
               <Text
@@ -353,7 +353,7 @@ function ProposalChangedDate(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by') +' :'}
               </Text>
 
               <Text
@@ -379,7 +379,7 @@ function ProposalChangedDate(props) {
             }}>
             <Button
               style={[{width: 156}]}
-              title={'Refuse'} //or Change Delivery Date (according to condition)
+              title={getTranslation('refuse')} //or Change Delivery Date (according to condition)
               onPress={() => {
                 acceptRefuseRequest('2')
               }}
@@ -387,7 +387,7 @@ function ProposalChangedDate(props) {
 
             <Button
               style={[{width: 156}]}
-              title={'Accept'}
+              title={getTranslation('accept')}
               onPress={() => {
                 acceptRefuseRequest('1')
               }}

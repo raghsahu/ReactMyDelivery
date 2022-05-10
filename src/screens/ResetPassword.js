@@ -41,15 +41,15 @@ function ResetPassword(props) {
   }, []);
   const onNext = () => {
     if (!otp) {
-      Toast.show('Please enter Otp');
+      Toast.show(getTranslation('pls_enter_otp'));
     } else if (!password) {
-      Toast.show('Please enter password');
+      Toast.show(getTranslation('pls_enter_pw'));
     } else if (!password) {
-      Toast.show('Please enter confirm password');
+      Toast.show(getTranslation('pls_enter_confirm_pw'));
     } else if (password != confirmPassword) {
-      Toast.show('password & confirm password not match');
+      Toast.show(getTranslation('password_not_match'));
     } else if (otp != otpResponse.otp) {
-      Toast.show('Otp did not match');
+      Toast.show(getTranslation('otp_not_match'));
     } else {
       resetPassword();
     }
@@ -59,7 +59,7 @@ function ResetPassword(props) {
     setLoading(true);
     const result = await reset_password(otpResponse.user_id, otp, password);
     setLoading(false);
-    console.log('EmailMobileOtpResult', result);
+   // console.log('EmailMobileOtpResult', result);
     if (result.status == true) {
       Toast.show(result.error);
       props.navigation.dispatch(

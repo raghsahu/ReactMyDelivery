@@ -80,7 +80,7 @@ function SummaryTransaction(props) {
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
 
-    console.log('ad_iddd ', item.ad_id)
+    //console.log('ad_iddd ', item.ad_id)
 
   }, [props]);
 
@@ -363,7 +363,7 @@ function SummaryTransaction(props) {
                   weight="500"
                   align="left"
                   color={COLORS.textColor}>
-                  {'Deliveryman Details'}
+                  {getTranslation('deliveryman_details')}
                 </Text>
 
                 <View
@@ -455,7 +455,7 @@ function SummaryTransaction(props) {
                     weight="500"
                     align="left"
                     color={COLORS.textColor}>
-                    {'User Details'}
+                    {getTranslation('user_details')}
                   </Text>
 
                   <View
@@ -839,7 +839,7 @@ function SummaryTransaction(props) {
             subTabIndex === 1 && user_x.rating_status == '0' ?
               <Button
                 style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
-                title={'Rating'}
+                title={getTranslation('rating')}
                 // type={1}
                 onPress={() => {
 
@@ -871,7 +871,7 @@ function SummaryTransaction(props) {
               subTabIndex === 2 && user_y.rating_status == '0' ?
                 <Button
                   style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
-                  title={'Rating'}
+                  title={getTranslation('rating')}
                   // type={1}
                   onPress={() => {
 
@@ -903,7 +903,7 @@ function SummaryTransaction(props) {
 
                 <Button
                   style={[styles.inputView, { marginTop: 30, marginBottom: 30, backgroundColor: COLORS.darkGray }]}
-                  title={'Evaluation Done'}
+                  title={getTranslation('evaluation_done')}
                   type={2}
                   onPress={() => {
                     //evalution done 
@@ -925,7 +925,7 @@ function SummaryTransaction(props) {
               {status == 'inProgress' && dateB > dateA ?
                 <Button
                   style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
-                  title={'Complaint'} //or Change Delivery Date (according to condition)
+                  title={getTranslation('complaint')} //or Change Delivery Date (according to condition)
                   onPress={() => {
                     // props.navigation.navigate('SendSuggestion', {
                     //   headerTitle: 'Complain',
@@ -959,7 +959,7 @@ function SummaryTransaction(props) {
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
                   ]}
-                  title={'Change Delivery Date'} //or Change Delivery Date (according to condition)
+                  title={getTranslation('cahnge_delivery_date')} 
                   onPress={() => {
                     ChangeDateModalVisibility();
                   }}
@@ -1044,7 +1044,7 @@ function SummaryTransaction(props) {
             /> */}
             <Input
               style={[styles.inputView, styles.inputContainer]}
-              placeholder={'Please enter Transaction code'}
+              placeholder={getTranslation('pls_enter_txn_code')}
               onChangeText={text => {
                 setOtp(text);
               }}
@@ -1076,9 +1076,9 @@ function SummaryTransaction(props) {
                 title={getTranslation('confirm')}
                 onPress={() => {
                   if (!otp) {
-                    Toast.show('Please enter 10 digit txn code')
+                    Toast.show(getTranslation('pls_enter_10_digit_code'))
                   } else if (otp.length != 10) {
-                    Toast.show('Please enter 10 digit txn code')
+                    Toast.show(getTranslation('pls_enter_10_digit_code'))
                   }
                   else {
                     checkCodeApi();
@@ -1119,7 +1119,7 @@ function SummaryTransaction(props) {
               weight="500"
               align="center"
               color={COLORS.black}>
-              {'Proposal changing \n delivery date and time'}
+              {getTranslation('proposal_changing_delivery_date_time')}
             </Text>
 
             <TouchableOpacity

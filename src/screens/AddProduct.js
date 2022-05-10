@@ -119,7 +119,7 @@ function AddProduct(props) {
         // console.log('prodImguri ', uri)
       }
     }
-    console.log('prodImggggg ', prodImg.length)
+    //console.log('prodImggggg ', prodImg.length)
   };
 
   const requestExternalStoreageRead = async () => {
@@ -157,17 +157,17 @@ function AddProduct(props) {
   const onNext = (thatsAllStatus) => {
     if (prodCount < 5) {
       if (!productName) {
-        Toast.show('Please enter product name');
+        Toast.show(getTranslation('pls_enter_product_name'));
       } else if (!webLink) {
-        Toast.show('Please enter web link');
+        Toast.show(getTranslation('pls_entger_web_link'));
       } else if (!validURL(webLink)) {
-        Toast.show('Please enter valid web link');
+        Toast.show(getTranslation('pls_enter_valid_web_link'));
       } else if (!priceOfProduct) {
-        Toast.show('Please enter price of product');
+        Toast.show(getTranslation('enter_price_of_product'));
       } else if (!quantity) {
-        Toast.show('Please enter quantity');
+        Toast.show(getTranslation('enter_quantity'));
       } else if (prodImg.length < 1) {
-        Toast.show('Please capture product image');
+        Toast.show(getTranslation('pls_capture_product_image'));
       } else {
         // var commaSepImage = prodImg.join(","); 
         // console.log('commaSep ', commaSepImage)
@@ -188,7 +188,7 @@ function AddProduct(props) {
             (tx, results) => {
               console.log('Results', results.rowsAffected);
               if (results.rowsAffected > 0) {
-                Toast.show('Product added');
+                //Toast.show('Product added');
                 setProductName('');
                 setWebLinkName('');
                 setPlaceToBuy('');
@@ -215,7 +215,7 @@ function AddProduct(props) {
         });
       }
     } else {
-      Toast.show('You can add max 5 products')
+      Toast.show(getTranslation('add_max_five_produict'))
     }
   };
 
@@ -233,7 +233,7 @@ function AddProduct(props) {
         if (results.rows.length > 0) {
           props.navigation.navigate('AddProductCommision');
         } else {
-          Toast.show('Please add product');
+          Toast.show(getTranslation('pls_add_product'));
         }
       });
     });
@@ -304,7 +304,7 @@ function AddProduct(props) {
             }}
             onPress={() => {
               if (prodImg.length == 3) {
-                Toast.show('you can upload maximum 3 photos')
+                Toast.show(getTranslation('upload_max_thredd_photos'))
               } else {
                 onPressUpload()
               }
@@ -512,7 +512,7 @@ function AddProduct(props) {
                   size="16"
                   weight="500"
                   color={COLORS.textColor}>
-                  {'Camera'}
+                  {getTranslation('camera')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -551,7 +551,7 @@ function AddProduct(props) {
                   size="16"
                   weight="500"
                   color={COLORS.textColor}>
-                  {'Photo library'}
+                  {getTranslation('photo_library')}
                 </Text>
               </View>
             </TouchableOpacity>

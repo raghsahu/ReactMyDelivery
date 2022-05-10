@@ -44,7 +44,7 @@ function Splash(props) {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
       setFcmToken(fcmToken);
-      console.log('fcm_token '+fcmToken);
+     // console.log('fcm_token '+fcmToken);
     } 
    }
 

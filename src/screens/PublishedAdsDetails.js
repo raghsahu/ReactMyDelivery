@@ -48,8 +48,10 @@ function PublishedAdsDetails(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOpenInfoModal, setOpenInfoModal] = useState(false);
 
-  var dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
-  var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  // var dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
+  // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
+  const dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   useEffect(() => {
     const item = props.route.params.ProdData;
@@ -114,7 +116,7 @@ function PublishedAdsDetails(props) {
       <BottomBackground></BottomBackground>
       <SafeAreaView style={styles.container}>
         <Header
-          title={type == 'Notification' ? 'Ads Accepted' : getTranslation('summary')}
+          title={type == getTranslation('notification') ? 'Ads Accepted' : getTranslation('summary')}
           onBack={() => {
             backAction();
           }}
@@ -148,7 +150,7 @@ function PublishedAdsDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.textColor}>
-                {'Deliveryman Details'}
+                {getTranslation('deliveryman_details')}
               </Text>
 
               <View
@@ -236,7 +238,7 @@ function PublishedAdsDetails(props) {
                       marginTop: 5,
                     }}>
                     <Text style={{}} color={COLORS.black} size="16" weight="500">
-                      {'Day & Time Recovery : '}
+                      {getTranslation('date_time_recovery') +' : '}
                     </Text>
 
                     <Text
@@ -257,7 +259,7 @@ function PublishedAdsDetails(props) {
                       marginTop: 5,
                     }}>
                     <Text style={{}} color={COLORS.black} size="16" weight="500">
-                      {'Day & Time Delivery : '}
+                      {getTranslation('day_time_delivery') +' : '}
                     </Text>
 
                     <Text
@@ -301,7 +303,7 @@ function PublishedAdsDetails(props) {
                   ]}
                   title={getTranslation('expired')}
                   type={2}
-                //onPress={() => {props.onModify()}}
+                onPress={() => {}}
                 />
                 :
                 null}

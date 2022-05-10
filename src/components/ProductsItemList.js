@@ -121,7 +121,7 @@ const ProductsItemList = props => {
             marginTop: 5,
           }}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Price :'}
+            {getTranslation('price') +' :'}
           </Text>
 
           <Text

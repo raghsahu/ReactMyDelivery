@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   Share,
-  Platform,
+  BackHandler,
 } from 'react-native';
 
 //ASSETS
@@ -40,8 +40,20 @@ function RatingReview(props) {
 
   useEffect(() => {
     setRatingForUser(0)
-
   }, []);
+
+  useEffect(() =>{
+    function handleBackButton() {
+      backAction();
+      return true;
+  }
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+  return () => backHandler.remove();
+  }, []);
+
+  const backAction = () => {
+    props.navigation.goBack();
+   };
 
   const onSelect = rating => {
     setRatingForUser(rating);
@@ -113,7 +125,7 @@ function RatingReview(props) {
         <Header
           title={getTranslation('review_rating')}
           onBack={() => {
-            props.navigation.goBack();
+            backAction();
           }}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -163,7 +175,7 @@ function RatingReview(props) {
             weight="500"
             align="center"
             color={COLORS.black}>
-            {'Please rate ' + props.route.params.userName}
+            {getTranslation('pls_rate') + ' ' + props.route.params.userName}
           </Text>
 
           <Rating
@@ -234,13 +246,13 @@ function RatingReview(props) {
             title={getTranslation('submit')}
             onPress={() => {
               if (!commentForApp) {
-                Toast.show('Please enter comment for App')
+                Toast.show(getTranslation('pls_enter_comment_for_app'))
               } else if (ratingForApp == 0) {
-                Toast.show('Please enter rating for App')
+                Toast.show(getTranslation('pls_enter_rating_app'))
               }else if (!commentForUser) {
-                Toast.show('Please enter comment for user rate')
+                Toast.show(getTranslation('pls_enter_comment_for_user_rate'))
               } else if (ratingForUser == 0) {
-                Toast.show('Please enter rating for user')
+                Toast.show(getTranslation('pls_enter_rating_for_user'))
               } else {
                 onNext();
               }

@@ -2,14 +2,9 @@ import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
-  Image,
   StatusBar,
-  ImageBackground,
-  TouchableOpacity,
   FlatList,
-  Modal,
   Dimensions,
 } from 'react-native';
 

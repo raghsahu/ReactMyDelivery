@@ -2,11 +2,8 @@ import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS

@@ -218,7 +218,7 @@ function EditAccount(props) {
          setImages(image.path);
          setCaptureImages(true);
 
-         console.log('crop_image ', images);
+         //console.log('crop_image ', images);
       })
 
     } else {
@@ -255,19 +255,19 @@ function EditAccount(props) {
   const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!firstName) {
-      Toast.show('Please enter first name');
+      Toast.show(getTranslation('enter_first_name'));
     } else if (!lastName) {
-      Toast.show('Please enter last name');
+      Toast.show(getTranslation('enter_last_name'));
     } else if (!userName) {
-      Toast.show('Please enter user name');
+      Toast.show(getTranslation('enter_user_name'));
     } else if (userName.trim().length < 3) {
-      Toast.show('User name must be minimum 3 character');
+      Toast.show(getTranslation('user_name_must_3_character'));
     } else if (checkSpecialChar(userName)) {
-      Toast.show('Special character & number not allowed in username');
+      Toast.show(getTranslation('special_char_num_not_allowed'));
     } else if (!gender) {
-      Toast.show('Please select gender');
+      Toast.show(getTranslation('pls_selectg_gender'));
     } else if (!selectDate) {
-      Toast.show('Please enter date of birth');
+      Toast.show(getTranslation('enter_dob'));
     }
     // else if (!email) {
     //   Toast.show('Please enter email');
@@ -275,26 +275,28 @@ function EditAccount(props) {
     //   Toast.show('Please enter valid email');
     // }
     else if (!mobile) {
-      Toast.show('Please enter mobile number');
-    } else if (mobile.trim().length != 10) {
-      Toast.show('Please enter 10 digit mobile number');
-    } else if (!address) {
-      Toast.show('Please enter address');
+      Toast.show(getTranslation('enter_mobile_no'));
+    }
+    //  else if (mobile.trim().length != 10) {
+    //   Toast.show(getTranslation('enter_10_digit_mob'));
+    // } 
+    else if (!address) {
+      Toast.show(getTranslation('enter_address'));
     } else if (!city) {
-      Toast.show('Please enter city');
-    }else if (mSelectedCountryName == "Select your country") {
-      Toast.show('Please select country');
+      Toast.show(getTranslation('enter_city'));
+    }else if (!mSelectedCountryName) {
+      Toast.show(getTranslation('pls_select_country'));
     } else if (!selectedLanguage) {
-      Toast.show('Please select language');
+      Toast.show(getTranslation('select_language'));
     } else if (oldPassword) {
       if (oldPassword != user.user_password) {
-        Toast.show('Old password not match');
+        Toast.show(getTranslation('old_password_not_match'));
       } else if (!password) {
-        Toast.show('Please enter password');
+        Toast.show(getTranslation('pls_enter_pw'));
       } else if (!confirmPassword) {
-        Toast.show('Please enter confirm password');
+        Toast.show(getTranslation('pls_enter_confirm_pw'));
       } else if (password != confirmPassword) {
-        Toast.show('password & confirm password not match');
+        Toast.show(getTranslation('password_not_match'));
       } else {
         UpdateUser();
       }
@@ -662,7 +664,7 @@ function EditAccount(props) {
             ]}>
 
             <Input
-              placeholder={'Select your country'}
+              placeholder={getTranslation('select_your_country')}
               editable={false}
               value={mSelectedCountryName}
               isLeft={IMAGES.location}
@@ -787,7 +789,7 @@ function EditAccount(props) {
                   weight="500"
                   //align="center"
                   color={COLORS.textColor}>
-                  {'Camera'}
+                  {getTranslation('camera')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -827,7 +829,7 @@ function EditAccount(props) {
                   weight="500"
                   //align="center"
                   color={COLORS.textColor}>
-                  {'Photo library'}
+                  {getTranslation('photo_library')}
                 </Text>
               </View>
             </TouchableOpacity>

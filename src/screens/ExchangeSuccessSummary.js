@@ -104,7 +104,7 @@ function ExchangeSuccessSummary(props) {
             weight="600"
             align="center"
             color={COLORS.black}>
-            {'Exchange Completed Successfully'}
+            {getTranslation('exchage_complete_success')}
           </Text>
 
           <View
@@ -137,7 +137,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.black}
               size="18"
               weight="500">
-              {'is credited to the account of '+ user_y.user_f_name + ' ' + user_y.user_l_name}
+              {getTranslation('is_credit_amount') +' '+ user_y.user_f_name + ' ' + user_y.user_l_name}
             </Text>
           </View>
 
@@ -147,7 +147,7 @@ function ExchangeSuccessSummary(props) {
             weight="600"
             align="center"
             color={COLORS.black}>
-            {'Thank you! for having used'}
+            {getTranslation('thankyou_for_used')}
           </Text>
 
           <Text
@@ -168,7 +168,7 @@ function ExchangeSuccessSummary(props) {
               alignSelf: 'center',
               width: 240,
             }}
-            title={'Comment & Rating'}
+            title={getTranslation('comment_rating')}
             type={1}
             onPress={() => {
               props.navigation.navigate('RatingReview', {
@@ -195,7 +195,7 @@ function ExchangeSuccessSummary(props) {
             weight="500"
             align="left"
             color={COLORS.textColor}>
-            {'Summary of transaction'}
+            {getTranslation('summary_transaction')}
           </Text>
 
           <FlatList
@@ -215,7 +215,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Global Commission :'}
+                {getTranslation('global_commission') +' :'}
               </Text>
 
               <Text
@@ -235,7 +235,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman Commission:'}
+                {getTranslation('deliveryman_commission') +' :'}
               </Text>
 
               <Text
@@ -254,7 +254,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Ad Seen By :'}
+                {getTranslation('ad_seen_by')}
               </Text>
 
               <Text
@@ -274,7 +274,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Acceptance Limit : '}
+                {getTranslation('acceptance_limit')}
               </Text>
 
               <Text
@@ -294,7 +294,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Limit:'}
+                {getTranslation('delivery_limit')}
               </Text>
 
               <Text
@@ -314,7 +314,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Place of Delivery :'}
+                {getTranslation('place_of_delivery') +' :'}
               </Text>
 
               <Text
@@ -344,7 +344,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="18" weight="500">
-                {'Delivery Details'}
+                {getTranslation('delivery_details')}
               </Text>
             </View>
 
@@ -354,7 +354,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Deliveryman:'}
+                {getTranslation('delivery_man')+ ' :'}
               </Text>
 
               <Text
@@ -373,7 +373,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Date :'}
+                {getTranslation('delivery_date')}
               </Text>
 
               <Text
@@ -393,7 +393,7 @@ function ExchangeSuccessSummary(props) {
                 marginTop: 5,
               }}>
               <Text style={{}} color={COLORS.black} size="16" weight="600">
-                {'Delivery Time: '}
+                {getTranslation('delivery_time')}
               </Text>
 
               <Text
@@ -424,7 +424,7 @@ function ExchangeSuccessSummary(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Delivered on:'}
+              {getTranslation('delivered_on')}
             </Text>
 
             <Text
@@ -448,7 +448,7 @@ function ExchangeSuccessSummary(props) {
               },
             ]}>
             <Text style={{}} color={COLORS.black} size="16" weight="600">
-              {'Total to Pay :'}
+              {getTranslation('total_to_pay')}
             </Text>
 
             <Text
@@ -471,7 +471,7 @@ function ExchangeSuccessSummary(props) {
               justifyContent: 'center',
             }}>
             <Button
-              title={'Done'}
+              title={getTranslation('done')}
               onPress={() => {
                 backAction();
                 // props.navigation.dispatch(

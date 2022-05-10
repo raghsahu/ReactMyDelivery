@@ -64,7 +64,11 @@ export const AppProvider = props => {
         //     Toast.show(error)
         //     console.log("PaymentError: ",error)
         // });
+        
         return result;
+        //result=== {"client": {"environment": "mock", "paypal_sdk_version": "2.15.1", "platform": "Android", "product_name": "PayPal-Android-SDK"}, 
+        // "response": {"create_time": "2014-07-18T18:46:55Z", "id": "PAY-18X32451H0459092JKO7KFUI", "intent": "sale", "state": "approved"},
+        //  "response_type": "payment"}
     }
 
   const getLogin = async (email, pw, user_fcm_key) => {

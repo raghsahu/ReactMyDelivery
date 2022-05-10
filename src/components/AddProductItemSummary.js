@@ -94,7 +94,7 @@ const AddProductsItemList = props => {
         <View
           style={styles.singleRow}>
           <Text style={{}} color={COLORS.black} size="16" weight="600">
-            {'Price :'}
+            {getTranslation('price') +' :'}
           </Text>
 
           <Text

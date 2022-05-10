@@ -69,6 +69,7 @@ function HomeStackScreen() {
 }
 
 const BottomBar = (props) => {
+  const { getTranslation } = useContext(LocalizationContext);
   useEffect(() => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
     messaging().onNotificationOpenedApp(remoteMessage => {
@@ -189,7 +190,7 @@ const BottomBar = (props) => {
         name="HomeStackScreen"
         component={HomeStackScreen}
         options={{
-          title: 'Home',
+          title: getTranslation('home'),
           tabBarIcon: ({size, focused, color}) => {
             return (
               <Image
@@ -204,7 +205,7 @@ const BottomBar = (props) => {
         name="MyAccount"
         component={MyAccount}
         options={{
-          title: 'My Account',
+          title: getTranslation('my_account'),
           tabBarStyle: {display: 'none'},
           tabBarIcon: ({size, focused, color}) => {
             return (

@@ -221,7 +221,7 @@ function InProgressAsUser(props) {
 
             <Input
               style={[styles.inputView, styles.inputContainer]}
-              placeholder={'Please enter Transaction code'}
+              placeholder={getTranslation('pls_enter_txn_code')}
               onChangeText={text => {
                 setOtp(text);
               }}
@@ -252,9 +252,9 @@ function InProgressAsUser(props) {
                 title={getTranslation('confirm')}
                 onPress={() => {
                   if(!otp){
-                    Toast.show('Please enter 10 digit txn code')
+                    Toast.show(getTranslation('pls_enter_10_digit_code'))
                   }else if(otp.length!=10){
-                    Toast.show('Please enter 10 digit txn code')
+                    Toast.show(getTranslation('pls_enter_10_digit_code'))
                   }
                   else{
                      checkCodeApi(); 

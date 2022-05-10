@@ -436,7 +436,7 @@ function RequestsListForPlaces(props) {
               weight="500"
               align="center"
               color={COLORS.textColor2}>
-              {'Advertise List'}
+              {getTranslation('advertise_list')}
             </Text>
             <TouchableOpacity style={[styles.inputView, { alignSelf: 'center' }]}>
               <Text
@@ -445,7 +445,7 @@ function RequestsListForPlaces(props) {
                 weight="500"
                 align="center"
                 color={COLORS.textColor2}>
-                {'Total: ' + requestItem.length}
+                {getTranslation('total') +': ' + requestItem.length}
               </Text>
             </TouchableOpacity>
           </View>
@@ -492,7 +492,7 @@ function RequestsListForPlaces(props) {
               weight="500"
               align="left"
               color={COLORS.white}>
-              {'Filter'}
+              {getTranslation('filter')}
             </Text>
 
             <TouchableOpacity
@@ -545,7 +545,7 @@ function RequestsListForPlaces(props) {
               title={'Ok'}
               onPress={() => {
                 if (filterKey == '4' ? !maxPrice : !minCommission) {
-                  Toast.show('Please enter amount');
+                  Toast.show(getTranslation('pls_enter_amount'));
                 } else {
                   getRequestList();
                   logoutModalVisibility();

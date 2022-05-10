@@ -93,10 +93,10 @@ function AddProductSummary(props) {
     const result = await oneTimePayment(totalToPayPrice);
     //console.log('paypalResult: ', result);
     if (result && result.response.state == 'approved') {
-      Toast.show('Payment success')
+      Toast.show(getTranslation('payment_success'))
       onNext(JSON.stringify(result));
     } else {
-      Toast.show('Payment error')
+      Toast.show(getTranslation('payment_error'))
     }
 
   }
@@ -154,7 +154,7 @@ function AddProductSummary(props) {
     } catch (e) {
       console.log(e);
       setLoading(false);
-      Toast.show('Something went wrong');
+      Toast.show(getTranslation('something_went_wrong'));
     }
   };
 
@@ -207,7 +207,7 @@ function AddProductSummary(props) {
     } catch (e) {
       console.log(e);
       setLoading(false);
-      Toast.show('Something went wrong');
+      Toast.show(getTranslation('something_went_wrong'));
     }
   };
 
@@ -215,7 +215,7 @@ function AddProductSummary(props) {
     db.transaction(tx => {
       tx.executeSql('DELETE FROM table_product', (tx, results) => {
         try {
-          console.log('ResultsDelete', results.rowsAffected);
+          //console.log('ResultsDelete', results.rowsAffected);
 
           if (results.rowsAffected > 0) {
           }
@@ -524,7 +524,7 @@ function AddProductSummary(props) {
               if (isSelected) {
                 logoutModalVisibility();
               } else {
-                Toast.show('Please select Contact Terms');
+                Toast.show(getTranslation('pls_select_contact_terms'));
               }
             }}
           />

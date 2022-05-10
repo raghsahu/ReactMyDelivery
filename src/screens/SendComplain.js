@@ -29,6 +29,7 @@ function SendComplain(props) {
     const [message, setMessage] = useState('');
     const [allSuggestion, setSuggestion] = useState([]);
     const { user, SendSuggession, getSuggession } = useContext(APPContext);
+    const { getTranslation } = useContext(LocalizationContext);
     const [isLoading, setLoading] = useState(false);
 
     const flatListRef = useRef(null)
@@ -79,7 +80,7 @@ function SendComplain(props) {
 
     const sendMessages = async () => {
         if (!message) {
-            Toast.show('Please enter message')
+            Toast.show(getTranslation('pls_enter_message'))
         } else {
             setLoading(true);
             // sugsn_type
@@ -134,7 +135,7 @@ function SendComplain(props) {
                     <TextInput
                         style={[styles.input]}
                         //placeholderTextColor={COLORS.placeHolderTextColor}
-                        placeholder="Type a message"
+                        placeholder= {getTranslation('type_a_message')}
                         multiline={true}
                         border={{ borderColor: COLORS.gray, borderWidth: 1 }}
                         autoCapitalize="none"

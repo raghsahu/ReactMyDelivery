@@ -18,6 +18,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 //COMMON COMPONENT
 import {Button, Header, Text, Input, IncompleteItemList} from '../components';
+import {LocalizationContext} from '../context/LocalizationProvider';
 import {openDatabase} from 'react-native-sqlite-storage';
 var db = openDatabase({name: 'DescribeProduct.db'});
 
@@ -25,7 +26,7 @@ function Incomplete(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [productListItems, setProductListItems] = useState([]);
   const [deleteProductId, setDeleteProductId] = useState('');
-  const [isLoading, setLoading] = useState(false);
+  const {getTranslation} = useContext(LocalizationContext);
 
   useEffect(() => {
     if (props.data) {
@@ -112,7 +113,7 @@ function Incomplete(props) {
               weight="500"
               align="left"
               color={COLORS.black}>
-              {'Are you sure to delete this ad'}
+              {getTranslation('are_you_sure_delete_ad')}
             </Text>
 
             <View

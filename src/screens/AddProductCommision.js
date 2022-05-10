@@ -98,19 +98,19 @@ function AddProductCommision(props) {
 
   const onNext = () => {
     if (!globalCommission) {
-      Toast.show('Please enter global commission');
+      Toast.show(getTranslation('pls_enter_global_commission'));
     } else if (!placeOfDelivery) {
-      Toast.show('Please enter place of delivery');
+      Toast.show(getTranslation('enter_place_of_delivery'));
     } else if (!gender) {
-      Toast.show('Please select gender');
+      Toast.show(getTranslation('enter_gender'));
     } else if (!selectDate) {
-      Toast.show('Please enter ad acceptance limit day');
+      Toast.show(getTranslation('enter_ad_acceptance_limit_day'));
     } else if (!selectDate1) {
-      Toast.show('Please enter limit delivery day');
+      Toast.show(getTranslation('enter_ad_limit_delivery_day'));
     } else if (!selectTime) {
-      Toast.show('Please enter ad acceptance limit time');
+      Toast.show(getTranslation('enter_ad_acceptance_time'));
     } else if (!selectTime1) {
-      Toast.show('Please enter limit delivery time');
+      Toast.show(getTranslation('enter_delivery_limit_time'));
     } else {
       const CommissionData = {
         globalCommission: parseFloat(globalCommission).toFixed(2),
@@ -128,14 +128,14 @@ function AddProductCommision(props) {
       props.navigation.navigate('AddProductSummary', {
         CommissionData: CommissionData,
       });
-      console.log('summary_gender ' + CommissionData.gender);
+      //console.log('summary_gender ' + CommissionData.gender);
     }
   };
 
   const onGooglePlace = () => {
     props.navigation.navigate('GooglePlacesInput', {
       onReturn: item => {
-        console.log('log_item ' + JSON.stringify(item));
+        //console.log('log_item ' + JSON.stringify(item));
         setPlaceOfDelivery(item.address);
         // setCity(item.city);
         // setCountry(item.country);
@@ -154,6 +154,12 @@ function AddProductCommision(props) {
     }else{
       setDeliveryCommission('')
     }
+  }
+
+  function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
   }
 
   return (
@@ -398,14 +404,6 @@ function AddProductCommision(props) {
       )}
     </View>
   );
-
-
-  function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
-
 }
 
 const styles = StyleSheet.create({

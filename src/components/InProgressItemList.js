@@ -172,18 +172,16 @@ const InProgressItemList = props => {
               props.subTabIndex ===2 && item.user_y[0].rating_status == '0' ?
               <Button
                 style={[styles.rating]}
-                title={'Rating'}
+                title={getTranslation('rating')}
                 // type={1}
                 onPress={() => {
-  
                   props.onRating(item);
-  
                 }}
               />
               :
               <Button
                 style={[styles.rating, { width: 130, backgroundColor: COLORS.darkGray}]}
-                title={'Evaluation Done'}
+                title={getTranslation('evaluation_done')}
                 type={2}
                 onPress={() => {
                     //evalution done  

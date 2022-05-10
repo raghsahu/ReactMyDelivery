@@ -71,9 +71,9 @@ function EmailOtp(props) {
   const onNext = async () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!otp) {
-      Toast.show('Please enter otp');
+      Toast.show(getTranslation('pls_enter_otp'));
     } else if (otp != serverOtp) {
-      Toast.show('Otp did not match');
+      Toast.show(getTranslation('otp_not_match'));
     } else {
       setLoading(true);
       const result = await verification_update(Email, otp, null);

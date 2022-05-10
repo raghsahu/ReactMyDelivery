@@ -205,7 +205,7 @@ function AdSummaryDetails(props) {
               photosModalVisibleModalVisibility();
               getAllSavedProducts();
               setChangedItem(true)
-            }else{Toast.show('Error update');}
+            }else{Toast.show('Something went wrong');}
           }catch(ex){
              console.log(ex)
           }
@@ -225,7 +225,7 @@ function AdSummaryDetails(props) {
               webLinkModalVisibleModalVisibility();
               getAllSavedProducts();
               setChangedItem(true)
-            }else{Toast.show('Error update');}
+            }else{Toast.show('Something went wrong');}
           }catch(ex){
              console.log(ex)
           }
@@ -248,7 +248,7 @@ function AdSummaryDetails(props) {
               setNewPrice('');
               setNewTotalPrice('');
               setChangedItem(true)
-            }else{Toast.show('Error update');}
+            }else{Toast.show('Something went wrong');}
           }catch(ex){
              console.log(ex)
           }
@@ -285,7 +285,7 @@ function AdSummaryDetails(props) {
   const onGooglePlace = () => {
     props.navigation.navigate('GooglePlacesInput', {
       onReturn: item => {
-        console.log('log_item ' + JSON.stringify(item));
+      //  console.log('log_item ' + JSON.stringify(item));
         setNewPlaceOfDelivery(item.address);
         // setCity(item.city);
         // setCountry(item.country);
@@ -553,7 +553,7 @@ function AdSummaryDetails(props) {
       );
       setLoading(false);
       if (result.status == true) {
-        Toast.show('Change request sent');
+        Toast.show(getTranslation('change_request_sent'));
         setNewGlobalCommission('');
         //proposalToModificationOfAd();
         onDiscard();
@@ -930,9 +930,9 @@ function AdSummaryDetails(props) {
                   title={getTranslation('to_propose')}
                   onPress={() => {
                     if(!whyThisChange){
-                      Toast.show('Please enter why this change')
+                      Toast.show(getTranslation('pls_enter_why_changes'))
                     }else if(!changedItem){
-                      Toast.show('Please change any fields')
+                      Toast.show(getTranslation('pls_enter_any_fields'))
                     }else{
                          //*******after edit total to pay price********* */
                         var totalPrice = 0;
@@ -986,7 +986,7 @@ function AdSummaryDetails(props) {
                   size="16"
                   weight="500"
                   color={COLORS.textColor}>
-                  {'Camera'}
+                  {getTranslation('camera')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1025,7 +1025,7 @@ function AdSummaryDetails(props) {
                   size="16"
                   weight="500"
                   color={COLORS.textColor}>
-                  {'Photo library'}
+                  {getTranslation('photo_library')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -1103,7 +1103,7 @@ function AdSummaryDetails(props) {
               weight="400"
               align="center"
               color={COLORS.black}>
-              {'Sum blocked until the end \nof the transaction'}
+              {getTranslation('some_block_until_the_txn')}
             </Text>
 
             <Text
@@ -1112,7 +1112,7 @@ function AdSummaryDetails(props) {
               weight="400"
               align="center"
               color={COLORS.black}>
-              {'Expected delivery'}
+              {getTranslation('expected_delivery')}
             </Text>
 
             <TouchableOpacity
@@ -1138,7 +1138,7 @@ function AdSummaryDetails(props) {
               }}
               style={{ marginVertical: 10, marginHorizontal: 10 }}>
               <Input
-                placeholder={'Hour'}
+                placeholder={getTranslation('hour')}
                 isLeft={IMAGES.time}
                 value={selectTime}
                 editable={false}
@@ -1159,9 +1159,9 @@ function AdSummaryDetails(props) {
               title={'Ok'}
               onPress={() => {
                 if (!selectDate) {
-                  Toast.show('Please enter day');
+                  Toast.show(getTranslation('pls_enter_day'));
                 } else if (!selectTime) {
-                  Toast.show('Please enter time');
+                  Toast.show(getTranslation('pls_enter_time'));
                 } else {
                   PaymentDialogModalVisibility();
                   // if(isProposalToModificationOfAd){
@@ -1198,7 +1198,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Place of Delivery (New)'}
+                {getTranslation('place_of_delivery_new')}
               </Text>
            <TouchableOpacity
                 onPress={() => {
@@ -1233,7 +1233,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[styles.modalCancelButton]}
-                title={'Cancel'} //or Change Delivery Date (according to condition)
+                title={getTranslation('cancel')} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
                 }}
@@ -1241,7 +1241,7 @@ function AdSummaryDetails(props) {
 
               <Button
                 style={[styles.modalConfirmButton]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   placeOfDeliveryModalVisibleModalVisibility();
                 }}
@@ -1273,11 +1273,11 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Web Link (New)'}
+                {getTranslation('web_link_new')}
               </Text>
               <Input
                 style={{ marginTop: 30, marginBottom: 50, marginHorizontal: 10 }}
-                placeholder={'Enter web link'}
+                placeholder={getTranslation('enter_web_link')}
                 isLeft={IMAGES.weblink}
                 onChangeText={text => {
                   setNewWebLink(text);
@@ -1297,7 +1297,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[styles.modalCancelButton]}
-                title={'Cancel'} //or Change Delivery Date (according to condition)
+                title={getTranslation('cancel')} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   setNewWebLink('')
                   webLinkModalVisibleModalVisibility();
@@ -1306,12 +1306,12 @@ function AdSummaryDetails(props) {
 
               <Button
                 style={[styles.modalConfirmButton]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   if (!newWebLink) {
-                    Toast.show('Please enter web link');
+                    Toast.show(getTranslation('pls_entger_web_link'));
                   }else if (!validURL(newWebLink)) {
-                    Toast.show('Please enter valid web link');
+                    Toast.show(getTranslation('pls_enter_valid_web_link'));
                   }else{
                     updateWebLinkInModifyDb();
                   }
@@ -1345,7 +1345,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Photos (New)'}
+                {getTranslation('photos_new')}
               </Text>
               <TouchableOpacity
                onPress={onPressUpload}
@@ -1371,7 +1371,7 @@ function AdSummaryDetails(props) {
                   weight="500"
                   align="left"
                   color={'#787878'}>
-                  {'Upload Photos'}
+                  {getTranslation('upload_photos')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -1388,7 +1388,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[styles.modalCancelButton]}
-                title={'Cancel'} //or Change Delivery Date (according to condition)
+                title={getTranslation('cancel')} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   setProdImg('')
                   photosModalVisibleModalVisibility();
@@ -1396,10 +1396,10 @@ function AdSummaryDetails(props) {
               />
               <Button
                 style={[styles.modalConfirmButton]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   if(!prodImg){
-                    Toast.show('Please capture image')
+                    Toast.show(getTranslation('pls_capture_image'))
                   }else{
                     updateImageInModifyDb();
                   }
@@ -1433,7 +1433,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Price - Quantity (New)'}
+                {getTranslation('price_qunatity')}
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ width: '50%' }}>
@@ -1443,7 +1443,7 @@ function AdSummaryDetails(props) {
                     weight="500"
                     align="left"
                     color={COLORS.black}>
-                    {'Enter price in €'}
+                    {getTranslation('enter_price_in') + ' €'}
                   </Text>
                   <Input
                     style={{ marginTop: 7, marginHorizontal: 10 }}
@@ -1466,7 +1466,7 @@ function AdSummaryDetails(props) {
                     weight="500"
                     align="left"
                     color={COLORS.black}>
-                    {'Quantity'}
+                    {getTranslation('quantity')}
                   </Text>
                   <Input
                     style={{ marginTop: 7, marginEnd: 10 }}
@@ -1489,7 +1489,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.primaryColor}>
-                {'Total Price'}
+                {getTranslation('total_price')}
               </Text>
               <Text
                 style={{
@@ -1521,7 +1521,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[styles.modalCancelButton]}
-                title={'Cancel'} //or Change Delivery Date (according to condition)
+                title={getTranslation('cancel')} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   setNewPrice(''); 
                   setNewQunatity('');
@@ -1531,12 +1531,12 @@ function AdSummaryDetails(props) {
               />
               <Button
                 style={[styles.modalConfirmButton]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   if (!newPrice) {
-                    Toast.show('Please enter price of product');
+                    Toast.show(getTranslation('enter_price_of_product'));
                   } else if (!newQuantity) {
-                    Toast.show('Please enter quantity');
+                    Toast.show(getTranslation('enter_quantity'));
                   }else{
                     updatePriceInModifyDb();
                   }
@@ -1570,7 +1570,7 @@ function AdSummaryDetails(props) {
                 weight="500"
                 align="left"
                 color={COLORS.black}>
-                {'Commission (New)'}
+                {getTranslation('commission_new')}
               </Text>
               <View>
                 <Text
@@ -1579,7 +1579,7 @@ function AdSummaryDetails(props) {
                   weight="500"
                   align="center"
                   color={COLORS.black}>
-                  {'Enter Global Commission in €'}
+                  {getTranslation('enter_global_commission') +' €'}
                 </Text>
                 <Input
                   style={{ marginTop: 7, marginHorizontal: 10 }}
@@ -1604,7 +1604,7 @@ function AdSummaryDetails(props) {
                   weight="500"
                   align="left"
                   color={COLORS.black}>
-                  {'Your commission:'}
+                  {getTranslation('your_commission')}
                 </Text>
                 <Text
                   style={{ paddingHorizontal: 10 }}
@@ -1629,7 +1629,7 @@ function AdSummaryDetails(props) {
                 type={1}
                 titleColor={COLORS.primaryColor}
                 style={[styles.modalCancelButton]}
-                title={'Cancel'} //or Change Delivery Date (according to condition)
+                title={getTranslation('cancel')} //or Change Delivery Date (according to condition)
                 onPress={() => {
                   setNewGlobalCommission('');
                   commissionModalVisibleModalVisibility();
@@ -1637,10 +1637,10 @@ function AdSummaryDetails(props) {
               />
               <Button
                 style={[styles.modalConfirmButton]}
-                title={'Confirm'}
+                title={getTranslation('confirm')}
                 onPress={() => {
                   if(!newGlobalCommission){
-                    Toast.show('Please enter global commission')
+                    Toast.show(getTranslation('pls_enter_global_commission'))
                   }else{
                         setChangedItem(true)
                         commissionModalVisibleModalVisibility();

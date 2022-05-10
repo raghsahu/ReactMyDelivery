@@ -26,7 +26,7 @@ const DeliveryManSummaryProductsItemList = props => {
     return imageArray ? imageArray[0] : ''
   };
 
-  const isValidHttpUrl = prodImg => {
+  const isValidHttpUrl = prodImg => {// local capture image url
     if (prodImg.includes('file:')) {
       // Found world
       return true

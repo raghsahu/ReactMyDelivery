@@ -40,13 +40,13 @@ function Login(props) {
   const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!email) {
-      Toast.show('Please enter email or mobile');
+      Toast.show(getTranslation('pls_enter_email_mobile'));
     } else if (!password) {
-      Toast.show('Please enter password');
+      Toast.show(getTranslation('pls_enter_pw'));
     } else if (isNaN(email)) {
       //if input is not a number then here
       if (reg.test(email) === false) {
-        Toast.show('Please enter valid email');
+        Toast.show(getTranslation('pls_enter_valid_email'));
       } else {
         LoginApi();
       }

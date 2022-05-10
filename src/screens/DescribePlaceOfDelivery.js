@@ -132,7 +132,7 @@ function DescribePlaceOfDelivery(props) {
             title={getTranslation('show_list')}
             onPress={() => {
               if (!address) {
-                Toast.show('Please select address');
+                Toast.show(getTranslation('pls_select_address'));
               } else {
                 props.navigation.navigate('RequestsListForPlaces', {
                   lat: lat,

@@ -362,9 +362,9 @@ function MyAccount(props) {
 
   const onDeleteAccount = async () => {
     if (!inputCaptcha) {
-      Toast.show('Please enter verification code');
+      Toast.show(getTranslation('pls_enter_verification_code'));
     } else if (captcha != inputCaptcha) {
-      Toast.show('verification code did not match');
+      Toast.show(getTranslation('verification_code_did_not_match'));
     } else {
       setLoading(true);
       const result = await delUser(user.user_id);

@@ -1,13 +1,15 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity, StyleSheet, Modal, Dimensions} from 'react-native';
+import React, {useContext} from 'react';
+import {View, StyleSheet, Modal, Dimensions} from 'react-native';
 import moment from 'moment'; // date format
 //COMMON COMPONENT
 import {Text, Button} from '../components';
+import { LocalizationContext } from '../context/LocalizationProvider';
 //ASSETS
 import {COLORS, DIMENSION} from '../assets';
 const {height, width} = Dimensions.get('screen');
 
 export default function DeleteModal(props) {
+  const { getTranslation } = useContext(LocalizationContext);
 
   return (
     // <View style={styles.container}>
@@ -25,7 +27,7 @@ export default function DeleteModal(props) {
           weight="500"
           align="left"
           color={COLORS.black}>
-          {'Are you sure to delete this announcement'}
+          {getTranslation('are_you_sure_delete_announcement')}
         </Text>
 
         <View

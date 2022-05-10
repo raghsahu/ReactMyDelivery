@@ -83,10 +83,10 @@ function AdModificationProposal(props) {
     const result = await oneTimePayment(getDifferenceToPay());
     //console.log('paypalResult: ', result);
     if(result && result.response.state == 'approved'){
-      Toast.show('Payment success')
+      Toast.show(getTranslation('payment_success'))
       acceptRefuseRequest('1');
     }else{
-      Toast.show('Payment error')
+      Toast.show(getTranslation('payment_error'))
     }
   }
 
@@ -95,7 +95,7 @@ function AdModificationProposal(props) {
     const result = await notiAcceptRefuseRequest(notn_id ,notn_acept_rejct);
     setLoading(false);
     if (result.status == true) {
-      Toast.show('Success')
+      Toast.show(getTranslation('success'))
      deleteCurrentNotification();
     } else {
       Toast.show(result.error);
@@ -309,7 +309,7 @@ function AdModificationProposal(props) {
             weight="600"
             align="left"
             color={COLORS.primaryColor}>
-            {'Changes of the Delivery man'}
+            {getTranslation('changes_of_delivery_man')}
           </Text>
 
           <FlatList

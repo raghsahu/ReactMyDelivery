@@ -33,11 +33,11 @@ function ForgotPassword(props) {
   const onNext = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!email_mobile) {
-      Toast.show('Please enter email or mobile');
+      Toast.show(getTranslation('pls_enter_email_mobile'));
     } else if (isNaN(email_mobile)) {
       //if input is not a number then here
       if (reg.test(email_mobile) === false) {
-        Toast.show('Please enter valid email');
+        Toast.show(getTranslation('pls_enter_valid_email'));
       } else {
         getOtp(false);
       }
