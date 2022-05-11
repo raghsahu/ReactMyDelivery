@@ -7,7 +7,6 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-  ImageBackground,
   Modal,
   Dimensions,
   FlatList,
@@ -20,7 +19,6 @@ import { COLORS, IMAGES, DIMENSION } from '../assets';
 import {
   Button,
   Text,
-  Input,
   Header,
   BottomBackground,
   OpenInfoModal,
@@ -91,7 +89,6 @@ function AddProductSummary(props) {
 
   const paypalPayment = async () => {
     const result = await oneTimePayment(totalToPayPrice);
-    //console.log('paypalResult: ', result);
     if (result && result.response.state == 'approved') {
       Toast.show(getTranslation('payment_success'))
       onNext(JSON.stringify(result));
@@ -106,7 +103,6 @@ function AddProductSummary(props) {
     setLoading(true);
     for (let i = 0; i < productListItems.length; i++) {
       const formData = new FormData();
-      // console.log('prod_imgffff: ', JSON.parse(productListItems[i].prod_img));
       let jsonObject = JSON.parse(productListItems[i].prod_img);
       jsonObject.forEach((item, j) => {
         formData.append("prod_img[]", {
@@ -215,8 +211,6 @@ function AddProductSummary(props) {
     db.transaction(tx => {
       tx.executeSql('DELETE FROM table_product', (tx, results) => {
         try {
-          //console.log('ResultsDelete', results.rowsAffected);
-
           if (results.rowsAffected > 0) {
           }
         } catch (ex) {
@@ -625,7 +619,6 @@ function AddProductSummary(props) {
                 title={getTranslation('ok')}
                 onPress={() => {
                   logoutModalVisibility();
-                  //onNext();
                   paypalPayment();
                 }}
               />

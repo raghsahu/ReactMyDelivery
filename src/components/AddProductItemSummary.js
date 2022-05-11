@@ -45,7 +45,6 @@ const AddProductsItemList = props => {
             </View>
           )
         })}
-  
       </PagerView>
 
       <View style={[styles.inputView, { marginTop: 20 }]}>

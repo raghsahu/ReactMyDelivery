@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StatusBar,
   FlatList,
-  Modal,
   Dimensions,
 } from 'react-native';
 

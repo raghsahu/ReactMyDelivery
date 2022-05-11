@@ -26,24 +26,31 @@ const DeliveryManSummaryProductsItemList = props => {
     return imageArray ? imageArray[0] : ''
   };
 
-  const isValidHttpUrl = prodImg => {// local capture image url
+  const isLocalUrl = prodImg => {// local capture image url
     if (prodImg.includes('file:')) {
       // Found world
       return true
     }
     return false
-
   };
+
+  const isJsonFile = jsonStr => {
+    try {
+      JSON.parse(jsonStr);
+      return true
+    } catch (e) {
+      //console.log('invalid json'); 
+      return false
+    }
+  }
 
   const setImagesList = prodImg => {
     var ImageList = [];
     var imageArray = prodImg.split(',');
-
     //console.log('imgArray '+ imageArray )
     for (var i = 0; i < imageArray.length; i++) {
       ImageList.push(imageArray[i]);
     }
-
     return ImageList
   };
 
@@ -54,21 +61,23 @@ const DeliveryManSummaryProductsItemList = props => {
           //margin: 5,
         }
       }>
-      {props.isProposalToModificationOfAd ?
 
-        <Image
-          style={styles.image}
-          source={props.isProposalToModificationOfAd ? { uri: isValidHttpUrl(setImages(item.prod_img)) ? setImages(item.prod_img) : imageBaseUrl + setImages(item.prod_img) } :
-            setImages(item.prod_img)
-              ? { uri: imageBaseUrl + setImages(item.prod_img) }
-              : IMAGES.product_placeholder
-          }
-        />
+      {isJsonFile(item.prod_img) ?
+        <PagerView style={styles.image} initialPage={0}>
+          {JSON.parse(item.prod_img).map(x => {
+            return (
+              <View >
+                <Image
+                  style={styles.image}
+                  source={{ uri: x }}
+                />
+              </View>
+            )
+          })}
+        </PagerView>
         :
-
         <PagerView style={styles.image} initialPage={0}>
           {setImagesList(item.prod_img).map(x => {
-            // console.log(x);
             return (
               <View >
                 <Image
@@ -78,10 +87,10 @@ const DeliveryManSummaryProductsItemList = props => {
               </View>
             )
           })}
-
         </PagerView>
 
       }
+
 
       <View style={[styles.inputView, { marginTop: 20 }]}>
         <Text

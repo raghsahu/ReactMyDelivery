@@ -48,8 +48,6 @@ function PublishedAdsDetails(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOpenInfoModal, setOpenInfoModal] = useState(false);
 
-  // var dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
-  // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
   const dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
@@ -64,8 +62,6 @@ function PublishedAdsDetails(props) {
       totalPrice = totalPrice + parseInt(item.products[i].prod_price_total)
     }
     setTotalPrice(parseFloat(totalPrice));
-    //const totalToPay = parseInt(totalPrice) + parseInt(item.ad_cmsn_price);
-    // setTotalToPay(totalToPay.toFixed(2));
 
   }, []);
 

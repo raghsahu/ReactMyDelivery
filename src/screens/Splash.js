@@ -2,18 +2,12 @@ import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Image,
   StatusBar,
   ImageBackground,
 } from 'react-native';
 
 //ASSETS
 import {COLORS, IMAGES} from '../assets';
-
-//COMMON COMPONENT
-import {Button, Header, Text, Input} from '../components';
 
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';

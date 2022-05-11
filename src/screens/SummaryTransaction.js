@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-  ImageBackground,
   Modal,
   Dimensions,
   FlatList,
@@ -62,8 +61,6 @@ function SummaryTransaction(props) {
   const [isLoading, setLoading] = useState(false);
   const [isRating, setRatingStatus] = useState(false);
 
-  // var dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-  // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
   const dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
@@ -79,8 +76,6 @@ function SummaryTransaction(props) {
     setItemProducts(item.products)
     setUser_X(item.user_x[0])
     setUser_Y(item.user_y[0])
-
-    //console.log('ad_iddd ', item.ad_id)
 
   }, [props]);
 

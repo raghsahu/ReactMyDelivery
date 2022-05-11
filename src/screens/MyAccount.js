@@ -499,7 +499,7 @@ function MyAccount(props) {
 
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: 10,
                 marginTop: 10,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -514,7 +514,7 @@ function MyAccount(props) {
                   style={{
                     height: 41,
                     backgroundColor: COLORS.gray,
-                    width: 110,
+                    width: 120,
                     borderRadius: 32,
                     borderColor: COLORS.red,
                     borderWidth: 0.3,
@@ -578,7 +578,7 @@ function MyAccount(props) {
                 style={{ flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendSuggestion', {
-                    headerTitle: 'Send Suggestion',
+                    headerTitle: getTranslation('send_suggession'),
                   });
                 }}>
                 <LinearGradient
@@ -609,7 +609,7 @@ function MyAccount(props) {
                 style={{ flex: 1 }}
                 onPress={() => {
                   props.navigation.navigate('SendComplain', {
-                    headerTitle: 'Send Complaint',
+                    headerTitle: getTranslation('send_complain'),
                   });
                 }}>
                 <LinearGradient

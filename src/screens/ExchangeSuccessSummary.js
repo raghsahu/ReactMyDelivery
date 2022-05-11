@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -25,7 +25,6 @@ import {
 const {height, width} = Dimensions.get('screen');
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { CommonUtilsContext } from '../context/CommonUtils';
-import { CommonActions } from '@react-navigation/native';
 import moment from 'moment'; // date format
 
 function ExchangeSuccessSummary(props) {
@@ -35,7 +34,6 @@ function ExchangeSuccessSummary(props) {
   const [user_y, setUser_Y] = useState([]);
   const { getTranslation } = useContext(LocalizationContext);
   const { getAdGender } = useContext(CommonUtilsContext);
-  const [prodTotalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const item = props.route.params.summaryData[0];

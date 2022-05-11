@@ -1,12 +1,9 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS
@@ -16,7 +13,6 @@ import Toast from 'react-native-simple-toast';
 //COMMON COMPONENT
 import {
   Button,
-  Header,
   Text,
   Input,
   BottomBackground,
@@ -51,7 +47,6 @@ function ForgotPassword(props) {
     const result = await mForgot(email_mobile, isMobile);
     setLoading(false);
     if (result.status == true) {
-      // Toast.show(result.error);
       props.navigation.navigate('ResetPassword', {
         otpResponse: result.data,
       });
@@ -73,7 +68,6 @@ function ForgotPassword(props) {
           style={{
             height: 258,
             width: 259,
-            // marginTop: 99,
             alignSelf: 'center',
             justifyContent: 'center',
           }}

@@ -268,7 +268,9 @@
     "user_details": "User Details",
     "evaluation_done": "Evaluation Done",
     "cahnge_delivery_date": "Change Delivery Date",
-    "proposal_changing_delivery_date_time": "Proposal changing \n delivery date and time"
+    "proposal_changing_delivery_date_time": "Proposal changing \n delivery date and time",
+    "send_suggession": "Send Suggestion",
+    "send_complain": "Send Complaint"
    
 
 

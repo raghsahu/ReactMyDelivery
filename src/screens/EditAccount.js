@@ -22,7 +22,6 @@ import {
   Text,
   Input,
   RadioButtons,
-  CheckBox,
   DropdownPicker,
   DateTimePick,
   Header,
@@ -32,10 +31,8 @@ import {
 import moment from 'moment'; // date format
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {PermissionsAndroid} from 'react-native';
-import {Picker} from '@react-native-picker/picker'; //for dropdown
 import CountryPicker from 'react-native-country-picker-modal';
 import Toast from 'react-native-simple-toast';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionSheet from 'react-native-actions-sheet';
 import {APPContext} from '../context/AppProvider';
 import {CommonUtilsContext} from '../context/CommonUtils';

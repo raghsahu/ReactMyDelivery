@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
   Image,
   StatusBar,

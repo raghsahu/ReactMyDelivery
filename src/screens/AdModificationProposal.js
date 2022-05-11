@@ -7,7 +7,6 @@ import {
   FlatList,
   StatusBar,
   Dimensions,
-  TextInput,
 } from 'react-native';
 
 //ASSETS
@@ -39,7 +38,7 @@ function AdModificationProposal(props) {
   const [oldSummaryDetails, setOldSummaryDetails] = useState({});
   const [newSummaryDetails, setNewSummaryDetails] = useState({});
   const { getTranslation } = useContext(LocalizationContext);
-  const { user, getNewOldProductData, notiAcceptRefuseRequest, notiDeleted, oneTimePayment} = useContext(APPContext);
+  const { user, getNewOldProductData, notiAcceptRefuseRequest, notiDeleted, oneTimePayment } = useContext(APPContext);
   const { getAdGender } = useContext(CommonUtilsContext);
   const [isLoading, setLoading] = useState(false);
 
@@ -52,7 +51,6 @@ function AdModificationProposal(props) {
     const result = await getNewOldProductData(ads_id);
     setLoading(false);
     if (result.status == true) {
-      //console.log('modification_ads ',JSON.stringify(result))
       setItemData(result.data)
       setOldProducts(result.data.old[0].products);
       setNewProducts(result.data.new[0].product_data);
@@ -75,28 +73,27 @@ function AdModificationProposal(props) {
   }
 
   const getDifferenceToPay = () => {
-  const diffPay =  parseFloat(getNewTotalPrice() - parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2));
-  return parseFloat(diffPay).toFixed(2);
+    const diffPay = parseFloat(getNewTotalPrice() - parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2));
+    return parseFloat(diffPay).toFixed(2);
   }
 
   const paypalPayment = async () => {
     const result = await oneTimePayment(getDifferenceToPay());
-    //console.log('paypalResult: ', result);
-    if(result && result.response.state == 'approved'){
+    if (result && result.response.state == 'approved') {
       Toast.show(getTranslation('payment_success'))
       acceptRefuseRequest('1');
-    }else{
+    } else {
       Toast.show(getTranslation('payment_error'))
     }
   }
 
   const acceptRefuseRequest = async (notn_acept_rejct) => {
     setLoading(true);
-    const result = await notiAcceptRefuseRequest(notn_id ,notn_acept_rejct);
+    const result = await notiAcceptRefuseRequest(notn_id, notn_acept_rejct);
     setLoading(false);
     if (result.status == true) {
       Toast.show(getTranslation('success'))
-     deleteCurrentNotification();
+      deleteCurrentNotification();
     } else {
       Toast.show(result.error);
     }
@@ -108,8 +105,8 @@ function AdModificationProposal(props) {
     //setLoading(false);
     if (result.status == true) {
       //Toast.show('Success')
-     props.navigation.goBack();
-     
+      props.navigation.goBack();
+
     } else {
       //Toast.show(result.error);
     }
@@ -159,18 +156,6 @@ function AdModificationProposal(props) {
           </Text> */}
 
           <View style={[styles.inputView, { marginTop: 20, marginBottom: 20 }]}>
-            {/* <Text
-              style={[
-                styles.rightButtons,
-                { position: 'absolute', alignSelf: 'flex-end' },
-              ]}
-              color={COLORS.textColor5}
-              size="16"
-              weight="500"
-              onPress={() => { }}>
-              {getTranslation('changed')}
-            </Text> */}
-
             <View
               style={{
                 flexDirection: 'row',
@@ -207,7 +192,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-               {'€ ' + parseFloat(oldSummaryDetails.ad_cmsn_delivery).toFixed(2)}
+                {'€ ' + parseFloat(oldSummaryDetails.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
             <View
@@ -226,7 +211,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-               {getAdGender(oldSummaryDetails.ad_gender)}
+                {getAdGender(oldSummaryDetails.ad_gender)}
               </Text>
             </View>
 
@@ -246,7 +231,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                   {moment(oldSummaryDetails.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+                {moment(oldSummaryDetails.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -266,7 +251,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                   {moment(oldSummaryDetails.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+                {moment(oldSummaryDetails.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -361,7 +346,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-            {'€ ' + parseFloat(newSummaryDetails.ad_cmsn_delivery).toFixed(2)}
+              {'€ ' + parseFloat(newSummaryDetails.ad_cmsn_delivery).toFixed(2)}
             </Text>
           </View>
 
@@ -371,9 +356,8 @@ function AdModificationProposal(props) {
             weight="500"
             align="left"
             color={COLORS.black}>
-              {newSummaryDetails.ad_why_this_change}
-            {/* {'djjddj jdjdkd djkdjdj wkwowio wopwowop owowwo lslsasl djfhfh fhhfhfdksdkdk ksksskaaao uu aaajja aakka pppa oaoaoa aoaoaoa oaoaoa juausus jkajhdh dhjdhdhd dhjdhjd d dhdhd dhueiueie euueie euieeuieu euieueue iueueiuie euiueeud iueduieuei uideui '} */}
-            </Text>
+            {newSummaryDetails.ad_why_this_change}
+          </Text>
 
           <Text
             style={[styles.inputView, { marginTop: 10 }]}
@@ -423,7 +407,7 @@ function AdModificationProposal(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {moment(newSummaryDetails.acpt_date +' ' + newSummaryDetails.acpt_time).format('HH:mm')}
+              {moment(newSummaryDetails.acpt_date + ' ' + newSummaryDetails.acpt_time).format('HH:mm')}
             </Text>
           </View>
 
@@ -445,13 +429,13 @@ function AdModificationProposal(props) {
 
             <Text
               style={{
-               // marginLeft: 10,
+                // marginLeft: 10,
                 flex: 1,
               }}
               color={COLORS.primaryColor}
               size="22"
               weight="600">
-              {'€ ' + getNewTotalPrice() + ' - € '+ parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2) + ' = ' + getDifferenceToPay()}
+              {'€ ' + getNewTotalPrice() + ' - € ' + parseFloat(oldSummaryDetails.ad_pay_amount).toFixed(2) + ' = ' + getDifferenceToPay()}
             </Text>
           </View>
 
@@ -475,7 +459,7 @@ function AdModificationProposal(props) {
                 },
               ]}
               title={getTranslation('refuse')}
-              onPress={() => { 
+              onPress={() => {
                 acceptRefuseRequest('2')
               }}
             />
@@ -484,9 +468,9 @@ function AdModificationProposal(props) {
               style={[{ width: 156 }]}
               title={getTranslation('accept')}
               onPress={() => {
-                if(getDifferenceToPay() > 0){
+                if (getDifferenceToPay() > 0) {
                   paypalPayment();
-                }else{
+                } else {
                   acceptRefuseRequest('1')
                 }
               }}

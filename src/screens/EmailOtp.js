@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
   TouchableOpacity,
 } from 'react-native';
 
@@ -19,7 +18,6 @@ import {APPContext} from '../context/AppProvider';
 //COMMON COMPONENT
 import {
   Button,
-  Header,
   Text,
   Input,
   BottomBackground,

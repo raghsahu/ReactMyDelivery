@@ -9,8 +9,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
-  Alert,
-  BackHandler,
   FlatList,
 } from 'react-native';
 
@@ -18,7 +16,6 @@ import {
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import { PermissionsAndroid } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 
 //COMMON COMPONENT
@@ -29,7 +26,6 @@ import { CommonUtilsContext } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'DescribeProduct.db' });
-
 
 function AddProduct(props) {
   const scrollRef = useRef();
@@ -91,9 +87,7 @@ function AddProduct(props) {
   };
 
   const onPressLibrary = async type => {
-    // var result = null;
     if (type == 1) {
-      // result = await launchCamera();
       actionSheetRef.current?.setModalVisible(false);
       ImagePicker.openCamera({
         width: 300,
@@ -105,7 +99,6 @@ function AddProduct(props) {
         let items = [...prodImg];
         items.push(uri);
         setProdImg(items);
-        // console.log('crop_image ', image);
       })
     } else {
       var result = await launchImageLibrary();
@@ -116,26 +109,7 @@ function AddProduct(props) {
         let items = [...prodImg];
         items.push(uri);
         setProdImg(items);
-        // console.log('prodImguri ', uri)
       }
-    }
-    //console.log('prodImggggg ', prodImg.length)
-  };
-
-  const requestExternalStoreageRead = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: 'My Delivery ...',
-          message: 'App needs access to external storage',
-        },
-      );
-
-      return granted == PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      //Handle this error
-      return false;
     }
   };
 
@@ -169,9 +143,6 @@ function AddProduct(props) {
       } else if (prodImg.length < 1) {
         Toast.show(getTranslation('pls_capture_product_image'));
       } else {
-        // var commaSepImage = prodImg.join(","); 
-        // console.log('commaSep ', commaSepImage)
-
         db.transaction(function (tx) {
           tx.executeSql(
             'INSERT INTO table_product (product_name, web_link, place_to_buy, price_of_product, quantity, total_price, additional_info, prod_img) VALUES (?,?,?,?,?,?,?,?)',
@@ -208,7 +179,6 @@ function AddProduct(props) {
                 } else {
                   onPressTouch();
                 }
-                //*** */
               }
             },
           );
@@ -238,6 +208,7 @@ function AddProduct(props) {
       });
     });
   }
+  
   const onDiscard = () => {
     db.transaction(tx => {
       tx.executeSql(
@@ -310,7 +281,6 @@ function AddProduct(props) {
               }
             }}>
             <ImageBackground
-              // source={prodImg ? {uri: prodImg} : IMAGES.rectangle_gray_border}
               source={IMAGES.rectangle_gray_border}
               style={{
                 height: 100,

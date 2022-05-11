@@ -4,10 +4,8 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Image,
   StatusBar,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS
@@ -37,7 +35,6 @@ function DescribePlaceOfDelivery(props) {
   const onGooglePlace = () => {
     props.navigation.navigate('GooglePlacesInput', {
       onReturn: item => {
-        //console.log('log_item ' + JSON.stringify(item));
         setAddress(item.address);
         setCity(item.city);
         setCountry(item.country);

@@ -47,7 +47,7 @@ export default function DeleteModal(props) {
                 justifyContent: 'center',
               },
             ]}
-            title={'Yes'}
+            title={getTranslation('yes')}
             onPress={() => {
               props.getDeleteAd();
             }}
@@ -55,7 +55,7 @@ export default function DeleteModal(props) {
 
           <Button
             style={[{width: 90, height: 41, justifyContent: 'center'}]}
-            title={'No'}
+            title={getTranslation('no')}
             onPress={() => {
               props.deleteModalVisibility();
             }}

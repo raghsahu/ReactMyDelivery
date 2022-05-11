@@ -82,10 +82,6 @@ function RequestsListForPlaces(props) {
     setLoading(false);
     if (result.status == true) {
       //Toast.show(result.error);
-
-      // var dateA = new Date(moment(requestItem.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
-      // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
-     
       const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
       //console.log('dateA', new Date(moment(result.data[i].ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString())
       let todos = []; 

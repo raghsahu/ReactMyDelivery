@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS
@@ -59,7 +58,6 @@ function ResetPassword(props) {
     setLoading(true);
     const result = await reset_password(otpResponse.user_id, otp, password);
     setLoading(false);
-   // console.log('EmailMobileOtpResult', result);
     if (result.status == true) {
       Toast.show(result.error);
       props.navigation.dispatch(

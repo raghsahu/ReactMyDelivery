@@ -268,7 +268,9 @@
     "user_details": "Détails de l'utilisateur",
     "evaluation_done": "Évaluation effectuée",
     "cahnge_delivery_date": "Modifier la date de livraison",
-    "proposal_changing_delivery_date_time": "Proposition modifiant la date et l'heure de livraison"
+    "proposal_changing_delivery_date_time": "Proposition modifiant la date et l'heure de livraison",
+    "send_suggession": "Envoyer une suggestion",
+    "send_complain": "Envoyer une plainte"
 
 
 }

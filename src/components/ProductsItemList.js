@@ -29,7 +29,6 @@ const ProductsItemList = props => {
     for(var i =0; i<imageArray.length; i++){
       ImageList.push(imageArray[i]);
     }
-    
     return ImageList
   };
 
@@ -40,13 +39,7 @@ const ProductsItemList = props => {
           //margin: 5,
         }
       }>
-      {/* <Image
-        style={styles.image}
-        source={setImages(item.prod_img)
-          ? {uri: imageBaseUrl + setImages(item.prod_img)}
-          : IMAGES.product_placeholder}
-      /> */}
-
+   
       <PagerView style={styles.image} initialPage={0}>
         {setImages(item.prod_img).map(x => {
           // console.log(x);
@@ -59,7 +52,6 @@ const ProductsItemList = props => {
             </View>
           )
         })}
-
       </PagerView>
 
       <View style={[styles.inputView, { marginTop: 20 }]}>

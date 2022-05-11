@@ -4,10 +4,8 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Image,
   StatusBar,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS
@@ -69,9 +67,7 @@ function AddProductCommision(props) {
   }
 
   const onChange = (event, selectedDate) => {
-   // console.log('selected_time '+ selectedDate)
     setShow(Platform.OS === 'ios');
-
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
@@ -124,18 +120,15 @@ function AddProductCommision(props) {
         ad_lat: lat,
         ad_lon: lng,
       };
-
       props.navigation.navigate('AddProductSummary', {
         CommissionData: CommissionData,
       });
-      //console.log('summary_gender ' + CommissionData.gender);
     }
   };
 
   const onGooglePlace = () => {
     props.navigation.navigate('GooglePlacesInput', {
       onReturn: item => {
-        //console.log('log_item ' + JSON.stringify(item));
         setPlaceOfDelivery(item.address);
         // setCity(item.city);
         // setCountry(item.country);
@@ -148,9 +141,7 @@ function AddProductCommision(props) {
   const getCommissionPrice = () => {
     if (globalCommission) {
       var totalCommission = globalCommission * 0.80  //80% of global commission
-        //return ''+parseFloat(totalCommission).toFixed(2);
         setDeliveryCommission(''+parseFloat(totalCommission).toFixed(2))
-      
     }else{
       setDeliveryCommission('')
     }
@@ -230,13 +221,9 @@ function AddProductCommision(props) {
             style={[styles.inputView, styles.inputContainer]}
             >
           <Input
-           // style={[styles.inputView, styles.inputContainer]}
            editable={false}
            value={placeOfDelivery}
             placeholder={getTranslation('place_of_delivery')}
-            // onChangeText={text => {
-            //   setPlaceOfDelivery(text);
-            // }}
           />
           </TouchableOpacity>
 
@@ -385,7 +372,6 @@ function AddProductCommision(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('continue')}
             onPress={() => {
-              // props.navigation.navigate('AddProductSummary');
               onNext();
             }}
           />
@@ -421,7 +407,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignSelf: 'center',
     backgroundColor: COLORS.lightGray,
-    //padding: 10,
     width: 120,
     borderRadius: 20,
   },

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext,} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
-import { Button, Header, Text, Input, BottomBackground } from '../components';
+import {Header, Text, BottomBackground } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';

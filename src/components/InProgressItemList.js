@@ -26,7 +26,6 @@ const InProgressItemList = props => {
     if(prodImg){
        imageArray = prodImg.split(',');
     }
-    
     return imageArray ? imageArray[0]: '' 
   };
 

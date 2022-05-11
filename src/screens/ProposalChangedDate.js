@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState, useRef} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -39,7 +39,6 @@ function ProposalChangedDate(props) {
     setItemProducts(ProdData.products[0])
     setUser_Y(item.user_y[0])
 
-    //console.log('prooooo ', JSON.stringify(products))
     if(item.date_change_history.length > 0){
       setDate_change_history(JSON.parse(item.date_change_history[item.date_change_history.length -1 ].notn_data))
     }
@@ -52,7 +51,6 @@ function ProposalChangedDate(props) {
   }, [props]);
 
   const setImages = prodImg => {
-   // console.log('imaggggg '+ prodImg)
     var imageArray = prodImg.split(',');
     return imageArray ? imageArray[0] : '' 
 
@@ -81,9 +79,7 @@ function ProposalChangedDate(props) {
     } else {
       //Toast.show(result.error);
     }
-
   }
-
 
   return (
     <View style={styles.container}>
@@ -224,7 +220,6 @@ function ProposalChangedDate(props) {
                 width: 74,
                 height: 99,
                 margin: 5,
-                //resizeMode: 'contain',
               }}
               source=
               {setImages(ProdData.products[0].prod_img)

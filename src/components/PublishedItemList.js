@@ -19,6 +19,14 @@ const PublishedItemList = props => {
   const dateA = new Date(moment(props.item.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
+  const setImages = prodImg => {
+    var imageArray = ''
+    if(prodImg){
+       imageArray = prodImg.split(',');
+    }
+    return imageArray ? imageArray[0]: '' 
+  };
+  
   return (
     <TouchableOpacity
       onPress={() => {
@@ -49,9 +57,10 @@ const PublishedItemList = props => {
                 margin: 5,
               }}
               source={
-                item.user_img
-                  ? { uri: imageBaseUrl + item.user_img }
-                  : IMAGES.circle_placeholder
+                props.item.hasOwnProperty('products') ?
+                setImages(props.item.products[0].prod_img)
+                ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
+                : IMAGES.circle_placeholder : IMAGES.circle_placeholder
               }
             />
 

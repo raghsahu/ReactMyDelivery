@@ -6,8 +6,6 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
-  TouchableOpacity,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 
@@ -17,12 +15,10 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //COMMON COMPONENT
 import {
   Button,
-  Header,
   Text,
   Input,
   BottomBackground,

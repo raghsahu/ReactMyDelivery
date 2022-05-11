@@ -248,7 +248,6 @@
     "are_you_sure_delete_ad": "¿Estás seguro de eliminar este anuncio?",
     "pls_enter_txn_code": "Ingrese el código de transacción",
     "pls_enter_10_digit_code": "Ingrese el código TXN de 10 dígitos",
-
     "pls_enter_verification_code": "Ingrese el código de verificación",
     "verification_code_did_not_match": "El código de verificación no coincidía",
     "proposal_change_delivery_date_time": "Propuesta para cambiar la fecha y hora de entrega",
@@ -269,7 +268,9 @@
     "user_details": "Detalles de usuario",
     "evaluation_done": "Evaluación realizada",
     "cahnge_delivery_date": "Cambiar la fecha de entrega",
-    "proposal_changing_delivery_date_time": "Cambio de propuesta \n Fecha y hora de entrega"
+    "proposal_changing_delivery_date_time": "Cambio de propuesta \n Fecha y hora de entrega",
+    "send_suggession": "Enviar sugerencias",
+    "send_complain": "Enviar una queja"
 
 
 

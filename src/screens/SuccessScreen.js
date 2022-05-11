@@ -2,11 +2,8 @@ import React, {useEffect, useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
   Image,
   StatusBar,
-  ImageBackground,
 } from 'react-native';
 
 //ASSETS
@@ -18,9 +15,7 @@ import Toast from 'react-native-simple-toast';
 //COMMON COMPONENT
 import {
   Button,
-  Header,
   Text,
-  Input,
   BottomBackground,
   ProgressView,
 } from '../components';
@@ -28,7 +23,6 @@ import {CommonActions} from '@react-navigation/native';
 
 function SuccessScreen(props) {
   const {Mobile, Email} = props.route.params;
-  const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
   const {getTranslation, saveUserLoginData} = useContext(LocalizationContext);
   const {check_user, setUser} = useContext(APPContext);

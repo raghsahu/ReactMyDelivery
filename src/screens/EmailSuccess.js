@@ -1,4 +1,4 @@
-import React, {useEffect, useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 
 //COMMON COMPONENT
-import {Button, Header, Text, Input, BottomBackground} from '../components';
+import {Button, Text, BottomBackground} from '../components';
 import {LocalizationContext} from '../context/LocalizationProvider';
 
 function EmailSuccess(props) {
