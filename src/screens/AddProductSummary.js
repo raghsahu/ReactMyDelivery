@@ -30,7 +30,8 @@ import {
 import { LocalizationContext } from '../context/LocalizationProvider';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext, changeLocalToUTC } from '../context/CommonUtils';
+import moment from 'moment'; // date format
 const { height, width } = Dimensions.get('screen');
 import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'DescribeProduct.db' });
@@ -181,8 +182,8 @@ function AddProductSummary(props) {
         CommissionData.globalCommission * 0.80,
         CommissionData.placeOfDelivery,
         CommissionData.gender,
-        CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime,
-        CommissionData.limitDay + ' ' + CommissionData.deliveryTime,
+        changeLocalToUTC(CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime),
+        changeLocalToUTC(CommissionData.limitDay + ' ' + CommissionData.deliveryTime),
         '0',
         '1',//1= payment success, 0=no paymnet
         totalToPayPrice,
@@ -302,9 +303,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.acceptanceDay +
-                  ' ' +
-                  CommissionData.acceptanceTime}
+                  {moment(CommissionData.acceptanceDay + ' '+  CommissionData.acceptanceTime).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 
@@ -324,7 +323,7 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {CommissionData.limitDay + ' ' + CommissionData.deliveryTime}
+                {moment(CommissionData.limitDay + ' '+  CommissionData.deliveryTime).format('YYYY-MM-DD HH:mm')}
               </Text>
             </View>
 

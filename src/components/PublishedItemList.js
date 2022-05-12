@@ -7,6 +7,7 @@ import { COLORS, IMAGES } from '../assets';
 import { Text, Button } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
+import {changeUTCtoLocal} from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 const PublishedItemList = props => {
@@ -14,9 +15,7 @@ const PublishedItemList = props => {
   const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
-  //var dateA = new Date(moment(props.item.ad_accept_limit).format('YYYY-MM-DD')).valueOf();
- // var dateB = new Date(moment(new Date()).format('YYYY-MM-DD')).valueOf();
-  const dateA = new Date(moment(props.item.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateA = new Date(moment(changeUTCtoLocal(props.item.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   const setImages = prodImg => {
@@ -171,7 +170,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+              {changeUTCtoLocal(item.ad_accept_limit)}
             </Text>
           </View>
 
@@ -192,7 +191,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+              {changeUTCtoLocal(item.ad_delivery_limit)}
             </Text>
           </View>
 

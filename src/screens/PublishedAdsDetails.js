@@ -28,7 +28,7 @@ import {
 } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
 const { height, width } = Dimensions.get('screen');
@@ -48,7 +48,7 @@ function PublishedAdsDetails(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOpenInfoModal, setOpenInfoModal] = useState(false);
 
-  const dateA = new Date(moment(props.route.params.ProdData.ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateA = new Date(moment(changeUTCtoLocal(props.route.params.ProdData.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   useEffect(() => {
@@ -266,7 +266,7 @@ function PublishedAdsDetails(props) {
                       color={COLORS.textColor4}
                       size="16"
                       weight="500">
-                      {item.acpt_date + ' ' + item.acpt_time}
+                      {changeUTCtoLocal(item.acpt_date + ' ' + item.acpt_time)}
                     </Text>
                   </View>
 
@@ -371,7 +371,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -391,7 +391,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_delivery_limit)}
               </Text>
             </View>
 

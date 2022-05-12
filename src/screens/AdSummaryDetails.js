@@ -33,7 +33,7 @@ import moment from 'moment'; // date format
 const { height, width } = Dimensions.get('screen');
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal } from '../context/CommonUtils';
 import { APPContext } from '../context/AppProvider';
 //package
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -763,7 +763,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -783,7 +783,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_delivery_limit)}
               </Text>
             </View>
 
@@ -1699,7 +1699,7 @@ function AdSummaryDetails(props) {
         mode={mode}
         onChange={onChange}
         minimumDate={new Date()}
-        maximumDate={new Date(moment(item.ad_delivery_limit).format('YYYY-MM-DD'))}
+        maximumDate={new Date(moment(changeUTCtoLocal(item.ad_delivery_limit)).format('YYYY-MM-DD'))}
       />}
     </View>
   );

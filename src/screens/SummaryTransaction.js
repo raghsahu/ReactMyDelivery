@@ -38,7 +38,7 @@ import Clipboard from '@react-native-community/clipboard';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext, changeUTCtoLocal, changeUTCtoLocalTime } from '../context/CommonUtils';
 
 function SummaryTransaction(props) {
   const { status, subTabIndex } = props.route.params;
@@ -61,8 +61,8 @@ function SummaryTransaction(props) {
   const [isLoading, setLoading] = useState(false);
   const [isRating, setRatingStatus] = useState(false);
 
-  const dateA = new Date(moment(props.route.params.summaryData.ad_delivery_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
-  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
+  const dateA = new Date(moment(changeUTCtoLocal(props.route.params.summaryData.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0] + ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString();
 
   useEffect(() => {
     setItem({});
@@ -635,7 +635,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -655,7 +655,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_delivery_limit)}
               </Text>
             </View>
 
@@ -764,7 +764,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {moment(item.acpt_date + ' ' + item.acpt_time).format('HH:mm')}
+                {changeUTCtoLocalTime(item.acpt_date + ' ' + item.acpt_time)}
               </Text>
             </View>
           </View>
@@ -798,7 +798,7 @@ function SummaryTransaction(props) {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {moment(item.ad_delv_time).format('YYYY-MM-DD HH:mm')}
+                  {changeUTCtoLocal(item.ad_delv_time)}
                 </Text>
               </View>
 
@@ -949,17 +949,19 @@ function SummaryTransaction(props) {
                   null
               }
 
-              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB > dateA) ? (
+              {status == 'deliveryAccepted' || (status == 'inProgress' && subTabIndex === 2 && dateB <= dateA) ? (
                 <Button
                   style={[
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
                   ]}
-                  title={getTranslation('cahnge_delivery_date')} 
+                  title={getTranslation('cahnge_delivery_date')}
                   onPress={() => {
                     ChangeDateModalVisibility();
                   }}
                 />
-              ) : null}
+              ) :
+               null
+              }
 
               <Button
                 style={[{ width: 160 }]}

@@ -52,6 +52,30 @@ export const validateURL = link => {
   }
 }
 
+export const changeUTCtoLocal = date => {
+  var utcChangeFormatDate = moment(date).format('YYYY-MM-DDTHH:mm:ss.000');
+  var localDate = new Date(utcChangeFormatDate + 'Z');
+  return moment(localDate).format('YYYY-MM-DD HH:mm')
+}
+
+export const changeLocalToUTC = date => {
+  var utcChangeFormatDate = new Date(moment(date).format('YYYY/MM/DD HH:mm:ss'))
+  var utcTime =  moment.utc(utcChangeFormatDate).format('YYYY-MM-DD HH:mm')
+  return utcTime
+}
+
+export const changeLocalToUTCTime = date => {
+  var utcChangeFormatDate = new Date(moment(date).format('YYYY/MM/DD HH:mm:ss'))
+  var utcTime =  moment.utc(utcChangeFormatDate).format('HH:mm')
+  return utcTime
+}
+
+export const changeUTCtoLocalTime = date => {
+  var utcChangeFormatDate = moment(date).format('YYYY-MM-DDTHH:mm:ss.000');
+  var localDate = new Date(utcChangeFormatDate + 'Z');
+  return moment(localDate).format('HH:mm')
+}
+
 export const CommonUtilsContext = createContext();
 
 export const CommonUtils = props => {

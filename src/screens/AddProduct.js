@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: COLORS.sky,
     marginRight: 8,
-    marginTop: 20,
+    marginTop: 10,
   },
   uploadLice: {
     marginHorizontal: 40,

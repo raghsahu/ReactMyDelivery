@@ -24,7 +24,7 @@ import {
 
 const {height, width} = Dimensions.get('screen');
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal, changeUTCtoLocalTime } from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 function ExchangeSuccessSummary(props) {
@@ -282,7 +282,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -302,7 +302,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+                {changeUTCtoLocal(item.ad_delivery_limit)}
               </Text>
             </View>
 
@@ -401,7 +401,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                 {moment(item.acpt_date +' '+ item.acpt_time).format('HH:mm')}
+                 {changeUTCtoLocalTime(item.acpt_date +' '+ item.acpt_time)}
               </Text>
             </View>
           </View>
@@ -433,7 +433,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {moment(item.ad_delv_time).format('YYYY-MM-DD HH:mm')}
+              {changeUTCtoLocal(item.ad_delv_time)}
             </Text>
           </View>
 

@@ -34,7 +34,7 @@ import {
   SendComplain,
 } from './src/screens';
 //PACKAGES
-import {NavigationContainer, useNavigation } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import PushNotification from 'react-native-push-notification';
@@ -265,7 +265,6 @@ const showNotification = (remoteMessage) => {
 };
 
 const App = () => {
-  //const navigation = useNavigation();
   const [initialRoute, setInitialRoute] = useState('Splash');
 
   useEffect(() => {

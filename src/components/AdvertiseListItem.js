@@ -15,6 +15,7 @@ import {Rating} from 'react-native-ratings';
 //CONTEXT
 import {LocalizationContext} from '../context/LocalizationProvider';
 import {APPContext} from '../context/AppProvider';
+import {changeUTCtoLocal} from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 const AdvertiseListItem = props => {
@@ -126,7 +127,7 @@ const AdvertiseListItem = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {moment(item.ad_accept_limit).format('YYYY-MM-DD HH:mm')}
+            {changeUTCtoLocal(item.ad_accept_limit)}
           </Text>
         </View>
 
@@ -140,7 +141,7 @@ const AdvertiseListItem = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {moment(item.ad_delivery_limit).format('YYYY-MM-DD HH:mm')}
+            {changeUTCtoLocal(item.ad_delivery_limit)}
           </Text>
         </View>
 

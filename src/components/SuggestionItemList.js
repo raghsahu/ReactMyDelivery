@@ -6,7 +6,7 @@ import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
 import { Text, Button } from '../components';
 import { APPContext } from '../context/AppProvider';
-import { CommonUtilsContext } from '../context/CommonUtils';
+import { CommonUtilsContext, changeUTCtoLocal } from '../context/CommonUtils';
 
 
 const SuggestionItemList = props => {
@@ -35,7 +35,7 @@ const SuggestionItemList = props => {
                         {item.sugsn_message}
                     </Text>
                     <Text color={COLORS.darkGray} size="14" weight="500">
-                        {changeDateFormat(item.sugsn_create_date, 'yyyy-MM-DD hh:mm a')}
+                        {changeDateFormat(changeUTCtoLocal(item.sugsn_create_date) , 'yyyy-MM-DD hh:mm a')}
                     </Text>
                 </View>
             </View>

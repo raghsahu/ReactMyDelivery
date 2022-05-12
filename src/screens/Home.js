@@ -24,22 +24,9 @@ function Home(props) {
   const { getTranslation } = useContext(LocalizationContext);
   const { user} = useContext(APPContext);
 
-  // useEffect(() => {
-  //   var utcDate = '2022-05-10T12:05:23.830Z';  // ISO-8601 formatted date returned from server
-  //   var localDate = new Date(utcDate);
-  //   console.log('convertedTime '+ moment(localDate).format('YYYY-MM-DD HH:mm'))
-  //  }, []);
+  useEffect(() => {
 
-   function convertUTCDateToLocalDate(date) {
-    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
-
-    var offset = date.getTimezoneOffset() / 60;
-    var hours = date.getHours();
-
-    newDate.setHours(hours - offset);
-
-    return newDate;   
-}
+   }, []);
 
   return (
     <View style={styles.container}>

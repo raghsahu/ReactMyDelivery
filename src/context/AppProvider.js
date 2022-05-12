@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 import PayPal from 'react-native-paypal-wrapper';
 import Toast from 'react-native-simple-toast';
+import {changeLocalToUTCTime, changeLocalToUTC } from '../context/CommonUtils';
 
 export const APPContext = createContext();
 
@@ -225,7 +226,7 @@ export const AppProvider = props => {
       acpt_user_id: user_id,
       acpt_ad_id: ad_id,
       acpt_date: selectDate,
-      acpt_time: selectTime,
+      acpt_time: changeLocalToUTCTime(selectDate + ' ' + selectTime),
       acpt_pay_status: acpt_pay_status,
       acpt_pay_amount: acpt_pay_amount,
       acpt_pay_info: acpt_pay_info,
@@ -238,7 +239,7 @@ export const AppProvider = props => {
       loggedin_user_id: loggedin_user_id,
       ad_id: ad_id,
       change_date: selectDate,
-      change_time: selectTime,
+      change_time: changeLocalToUTCTime(selectDate + ' ' + selectTime),
     };
     return await request(webServices.change_date_time, 'post', params);
   };

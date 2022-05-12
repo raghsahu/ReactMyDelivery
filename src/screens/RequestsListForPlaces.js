@@ -28,7 +28,7 @@ import {
   FilterItem,
 } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext, filterList } from '../context/CommonUtils';
+import { CommonUtilsContext, filterList, changeUTCtoLocal } from '../context/CommonUtils';
 import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 const { height, width } = Dimensions.get('screen');
@@ -83,16 +83,17 @@ function RequestsListForPlaces(props) {
     if (result.status == true) {
       //Toast.show(result.error);
       const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
-      //console.log('dateA', new Date(moment(result.data[i].ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString())
       let todos = []; 
       if(result.data.length > 0){
         for (let i = 0; i < result.data.length; i++) {
-          const dateA = new Date(moment(result.data[i].ad_accept_limit, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+          const dateA = new Date(moment(changeUTCtoLocal(result.data[i].ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
           if (dateB < dateA) {
             todos.push(result.data[i])
           }
         }
         setRequestItem(todos);
+      }else{
+        setRequestItem([]);
       }
       
     } else {
@@ -300,8 +301,8 @@ function RequestsListForPlaces(props) {
                         // setMinimumCommission('1');
                         // getRequestList();
                         requestItem.sort((a, b) => {
-                          var dateA = new Date(moment(a.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
-                          var dateB = new Date(moment(b.ad_delivery_limit).format('YYYY-MM-DD')).valueOf();
+                          var dateA = new Date(moment(changeUTCtoLocal(a.ad_delivery_limit)).format('YYYY-MM-DD')).valueOf();
+                          var dateB = new Date(moment(changeUTCtoLocal(b.ad_delivery_limit)).format('YYYY-MM-DD')).valueOf();
                           if (data[index].selected) {
                             if (dateA > dateB) {
                               return -1; // return -1 here for DESC order
