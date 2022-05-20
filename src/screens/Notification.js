@@ -42,7 +42,8 @@ function Notification(props) {
     const result = await getNotifications(user.user_id);
     setLoading(false);
     if (result.status == true) {
-      setNotifications(result.data);
+      setNotifications(result.data.reverse());
+      
     } else {
       Toast.show(result.error);
     }
@@ -89,6 +90,7 @@ function Notification(props) {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={notificationData}
+          //inverted
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return <NotificationItemList

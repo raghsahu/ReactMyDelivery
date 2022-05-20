@@ -44,9 +44,9 @@ function ProposalChangedDate(props) {
     }
     var totalPrice = 0;
     for (let i = 0; i < item.products.length; i++) {
-      totalPrice = totalPrice + item.products[i].prod_price_total
+      totalPrice = totalPrice + parseInt(item.products[i].prod_price_total)
     }
-    setTotalPrice(parseFloat(totalPrice));
+    setTotalPrice(parseFloat(totalPrice) + parseFloat(item.ad_cmsn_price));
 
   }, [props]);
 

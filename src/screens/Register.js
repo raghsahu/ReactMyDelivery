@@ -219,7 +219,7 @@ function Register(props) {
       Toast.show(getTranslation('user_name_must_3_character'));
     } else if (checkSpecialChar(userName)) {
       Toast.show(getTranslation('special_char_num_not_allowed'));
-    } else if (!gender) {
+    } else if (!selectedOption) {
       Toast.show(getTranslation('pls_selectg_gender'));
     } else if (!selectDate) {
       Toast.show(getTranslation('enter_dob'));
