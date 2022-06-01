@@ -76,6 +76,18 @@ const Header = props => {
           />
         </TouchableOpacity>
       )}
+      {props.onNext && (
+        <TouchableOpacity
+          style={{justifyContent: 'center', marginEnd: 5}}
+          onPress={props.onNext}>
+          <Image
+            style={[styles.back, {transform: [{ rotate: '180deg'}]}]}
+            source={IMAGES.back}
+            resizeMode="contain"
+            tintColor={COLORS.white}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

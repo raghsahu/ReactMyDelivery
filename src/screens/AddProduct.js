@@ -39,6 +39,7 @@ function AddProduct(props) {
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [prodImg, setProdImg] = useState([]);
   const [prodCount, setProdCount] = useState(0);
+  const [showCurrentProduct, setShowCurrentProduct] = useState(0);
   const { getTranslation } = useContext(LocalizationContext);
   const { validURL } = useContext(CommonUtilsContext);
 
@@ -116,7 +117,7 @@ function AddProduct(props) {
   const getTotalPrice = () => {
     if (priceOfProduct && quantity) {
       var totalPriceForProduct = priceOfProduct * quantity
-      return '' + totalPriceForProduct.toFixed(2);
+      return parseFloat(totalPriceForProduct).toFixed(2);
     }
     return ''
   }
@@ -201,6 +202,7 @@ function AddProduct(props) {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         if (results.rows.length > 0) {
+          //if product length > 0
           props.navigation.navigate('AddProductCommision');
         } else {
           Toast.show(getTranslation('pls_add_product'));
@@ -244,6 +246,9 @@ function AddProduct(props) {
           onBack={() => {
             props.navigation.goBack();
           }}
+          // onNext={() => {
+            
+          // }}
         />
         <ScrollView
           ref={scrollRef}
@@ -426,7 +431,7 @@ function AddProduct(props) {
               },
             ]}>
 
-            {prodCount == 5 ?
+            {prodCount >= 4 ?
               <View
                 style={[{ width: 130 }]}>
               </View>

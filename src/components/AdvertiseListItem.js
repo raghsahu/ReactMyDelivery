@@ -117,7 +117,7 @@ const AdvertiseListItem = props => {
           </View>
         </View>
 
-        <View style={[styles.text_left]}>
+        <View style={[styles.text_left, {marginTop: 5}]}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('acceptance_limit')}
           </Text>
@@ -131,7 +131,7 @@ const AdvertiseListItem = props => {
           </Text>
         </View>
 
-        <View style={[styles.text_left]}>
+        <View style={[styles.text_left, {marginTop: 5}]}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('delivery_limit')}
           </Text>
@@ -154,16 +154,16 @@ const AdvertiseListItem = props => {
           }}>
           <View
             style={{
+              flex:1,
               flexDirection: 'row',
-              marginLeft: 5,
               alignItems: 'center',
             }}>
-            <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
+            <Text style={styles.text_left} color={COLORS.textColor2} size="16" weight="500">
               {getTranslation('price') + ' :'}
             </Text>
 
             <Text
-              style={styles.text_left}
+              style={styles.text_right}
               color={COLORS.primaryColor}
               size="16"
               weight="500">
@@ -173,8 +173,8 @@ const AdvertiseListItem = props => {
 
           <View
             style={{
+              flex:1,
               flexDirection: 'row',
-              marginLeft: 25,
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="500">
               {getTranslation('delivery_man_commission') + ' :'}
@@ -248,10 +248,10 @@ const styles = StyleSheet.create({
   text_left: {
     flexDirection: 'row',
     marginLeft: 5,
-    marginTop: 5,
+    //marginTop: 5,
   },
   text_right: {
-    marginLeft: 10,
+    marginLeft: 5,
   },
 });
 

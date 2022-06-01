@@ -33,7 +33,7 @@ import moment from 'moment'; // date format
 const { height, width } = Dimensions.get('screen');
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext,changeUTCtoLocal } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal,changeLocalToUTCTime } from '../context/CommonUtils';
 import { APPContext } from '../context/AppProvider';
 //package
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -366,7 +366,7 @@ function AdSummaryDetails(props) {
       user.user_id,
       item.ad_id,
       selectDate,
-      selectTime,
+      changeLocalToUTCTime(selectDate + ' '+ selectTime),
       '3', //ad accept type == 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
       '1', //0-pending,1-success,2-cancel,3-return
       isProposalToModificationOfAd ? (newTotalToPayPrice ? newTotalToPayPrice : totalToPayPrice) : totalToPayPrice,
@@ -1158,13 +1158,18 @@ function AdSummaryDetails(props) {
                   Toast.show(getTranslation('pls_enter_day'));
                 } else if (!selectTime) {
                   Toast.show(getTranslation('pls_enter_time'));
-                } else {
-                  PaymentDialogModalVisibility();
-                  // if(isProposalToModificationOfAd){
-                  //   sendRequestForEdit();
-                  // }else{
-                  paypalPayment();
-                  // }
+                } else if(!isProposalToModificationOfAd){
+                  const selectedDeliveryDate = new Date(moment(selectDate + ' '+ selectTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+                  const userDeliveryDate = new Date(moment(changeUTCtoLocal(item.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+                  if (selectedDeliveryDate > userDeliveryDate) {
+                    Toast.show("You can't select delivery limit exceed time")
+                  }else{
+                    PaymentDialogModalVisibility();
+                    paypalPayment();
+                  }
+                }else{
+                    PaymentDialogModalVisibility();
+                    paypalPayment();
                 }
               }}
             />
@@ -1699,7 +1704,7 @@ function AdSummaryDetails(props) {
         mode={mode}
         onChange={onChange}
         minimumDate={new Date()}
-        maximumDate={new Date(moment(changeUTCtoLocal(item.ad_delivery_limit)).format('YYYY-MM-DD'))}
+        maximumDate={!isProposalToModificationOfAd ? new Date(moment(changeUTCtoLocal(item.ad_delivery_limit)).format('YYYY-MM-DD')) : null}
       />}
     </View>
   );

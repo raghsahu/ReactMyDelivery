@@ -53,9 +53,11 @@ function AdModificationProposal(props) {
     if (result.status == true) {
       setItemData(result.data)
       setOldProducts(result.data.old[0].products);
-      setNewProducts(result.data.new[0].product_data);
       setOldSummaryDetails(result.data.old[0]);
       setNewSummaryDetails(result.data.new[0]);
+
+      setNewProducts(JSON.parse(result.data.new[0].product_data.toString()));
+      //console.log('ad_cmsn_price ', result.data.new[0].ad_cmsn_price)
 
     } else {
       Toast.show(result.error);
@@ -65,10 +67,9 @@ function AdModificationProposal(props) {
   const getNewTotalPrice = () => {
     var totalPrice = 0;
     for (let i = 0; i < newProducts.length; i++) {
-      totalPrice =
-        totalPrice + (newProducts[i].prod_price * newProducts[i].prod_qnty);
+      totalPrice = totalPrice + (newProducts[i].prod_price * newProducts[i].prod_qnty);
     }
-    const totalToPay = parseInt(totalPrice) + parseInt(newSummaryDetails.ad_cmsn_price);
+    const totalToPay = parseFloat(totalPrice) + parseFloat(newSummaryDetails.ad_cmsn_price);
     return parseFloat(totalToPay).toFixed(2);
   }
 
@@ -439,6 +440,7 @@ function AdModificationProposal(props) {
             </Text>
           </View>
 
+        {user.user_id != newSummaryDetails.loggedin_user_id ?       
           <View
             style={{
               marginHorizontal: 20,
@@ -476,6 +478,15 @@ function AdModificationProposal(props) {
               }}
             />
           </View>
+          : 
+          <View
+          style={{
+            marginTop: 30,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}></View>
+          }
+
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}

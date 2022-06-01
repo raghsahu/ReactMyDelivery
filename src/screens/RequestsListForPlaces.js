@@ -40,7 +40,7 @@ function RequestsListForPlaces(props) {
   const { user, getFilterProduct } = useContext(APPContext);
   const [isLoading, setLoading] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
-  const [filterKey, setFilterKey] = useState(false);
+  const [filterKey, setFilterKey] = useState('');
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
   const [maxPrice, setMaximumPrice] = useState('');
   const [minCommission, setMinimumCommission] = useState('');
@@ -48,12 +48,17 @@ function RequestsListForPlaces(props) {
 
   useEffect(() => {
     setOptionFilter(filterList);
-    getRequestList();
+    getRequestList(true);
+  }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getRequestList(false);
+    }, 1000 * 15);
+    return () => clearInterval(interval);
   }, []);
 
   const getCurrentDate = () => {
-
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear();
@@ -67,9 +72,9 @@ function RequestsListForPlaces(props) {
     setLogoutModalVisible(!isLogoutModalVisible);
   };
 
-  const getRequestList = async () => {
+  const getRequestList = async (loading) => {
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
-    setLoading(true);
+    setLoading(loading);
     const result = await getFilterProduct(
       maxPrice ? maxPrice : '10000000',
       '0',
@@ -87,7 +92,7 @@ function RequestsListForPlaces(props) {
       if(result.data.length > 0){
         for (let i = 0; i < result.data.length; i++) {
           const dateA = new Date(moment(changeUTCtoLocal(result.data[i].ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
-          if (dateB < dateA) {
+          if (dateB < dateA && user.user_id != result.data[i].ad_user_id && (user.user_gender == result.data[i].ad_gender || result.data[i].ad_gender == 3)) {
             todos.push(result.data[i])
           }
         }
@@ -145,6 +150,97 @@ function RequestsListForPlaces(props) {
     });
   }
 
+  const filterByPublicationDate =()=>{
+    requestItem.sort((a, b) => {
+      const dateA = new Date(`${a.ad_create_date}`).valueOf();
+      const dateB = new Date(`${b.ad_create_date}`).valueOf();
+      if (isFilter) {
+        if (dateA > dateB) {
+          return -1; // return -1 here for DESC order
+        }
+      } else {
+        if (dateB > dateA) {
+          return -1; // return -1 here for DESC order
+        }
+      }
+
+      return 1 // return 1 here for DESC Order
+    });
+  }
+
+  const filterByDurationOfAd = () =>{
+    requestItem.sort((a, b) => {
+      var dateA = a.duration_ad;
+      var dateB = b.duration_ad;
+      if (isFilter) {
+        if (parseInt(dateA) > parseInt(dateB)) {
+          return -1 // return -1 here for DESC order
+        }
+      } else {
+        if (parseInt(dateB) > parseInt(dateA)) {
+          return -1 // return -1 here for ASC order
+        }
+      }
+      return 1 // return 1 here for DESC Order
+    });
+  }
+
+  const filterByUserRating = () =>{
+    requestItem.sort((a, b) => {
+      const rating1 = a.user_rating;
+      const rating2 = b.user_rating;
+      if (isFilter) {
+        if (rating1 > rating2) {
+          return -1; // return -1 here for DESC order
+        }
+      }
+       else {
+        if (rating2 > rating1) {
+          return -1; // return -1 here for DESC order
+        }
+      }
+
+      return 1 // return 1 here for DESC Order
+    });
+  }
+
+  const filterByLimitDeliveryDate = () =>{
+    requestItem.sort((a, b) => {
+      const dateA = new Date(moment(changeUTCtoLocal(a.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+      const dateB = new Date(moment(changeUTCtoLocal(b.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+      if (isFilter) {
+        if (dateA > dateB) {
+          return -1; // return -1 here for DESC order
+        }
+      } else {
+        if (dateB > dateA) {
+          return -1; // return -1 here for ASC order
+        }
+      }
+
+      return 1 // return 1 here for DESC Order
+    });
+  }
+
+  const filterArrowUpDown = () =>{
+    setIsFilter(!isFilter);
+    if(filterKey == '1'){
+      filterByPublicationDate();
+     }else if(filterKey == '2'){
+      filterByDurationOfAd();
+     }else if(filterKey == '3'){
+      filterByUserRating();
+    }else if(filterKey == '4'){
+      filterByPrice();
+    }else if(filterKey == '5'){
+      filterByLimitDeliveryDate();
+    }else if(filterKey == '6'){
+      filterByCommission();
+    }else {
+      filterByPrice();
+     }          
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={COLORS.white} />
@@ -178,12 +274,7 @@ function RequestsListForPlaces(props) {
             <TouchableOpacity
               style={[styles.inputView, { alignSelf: 'center' }]}
               onPress={() => {
-                setIsFilter(!isFilter);
-                if(filterKey == '6'){
-                 filterByCommission();
-                }else {
-                 filterByPrice();
-                }
+                filterArrowUpDown();
               }}>
               <ImageBackground
                 source={IMAGES.rectangle_gray_border}
@@ -232,90 +323,28 @@ function RequestsListForPlaces(props) {
                         setFilterKey(null);
                       }
 
-                      if (id == '1') {
-                        // setMaximumPrice('10000');
-                        // setMinimumCommission('1');
-                        // getRequestList();
-                        requestItem.sort((a, b) => {
-                          const dateA = new Date(`${a.ad_create_date}`).valueOf();
-                          const dateB = new Date(`${b.ad_create_date}`).valueOf();
-                          if (data[index].selected) {
-                            if (dateA > dateB) {
-                              return -1; // return -1 here for DESC order
-                            }
-                          } else {
-                            if (dateB > dateA) {
-                              return -1; // return -1 here for DESC order
-                            }
-                          }
-
-                          return 1 // return 1 here for DESC Order
-                        });
+                      if (id == '1' ) {
+                       setIsFilter(!isFilter)
+                       filterByPublicationDate()
 
                       } else if (id == '2') {
-                        // setMaximumPrice('10000');
-                        // setMinimumCommission('1');
-                        // getRequestList();
-                        requestItem.sort((a, b) => {
-                          var dateA = a.duration_ad;
-                          var dateB = b.duration_ad;
-                          if (data[index].selected) {
-                            if (parseInt(dateA) > parseInt(dateB)) {
-                              return -1 // return -1 here for DESC order
-                            }
-                          } else {
-                            if (parseInt(dateB) > parseInt(dateA)) {
-                              return -1 // return -1 here for ASC order
-                            }
-                          }
-                          return 1 // return 1 here for DESC Order
-                        });
+                        setIsFilter(!isFilter)
+                        filterByDurationOfAd()
+                      
                       } else if (id == '3') {
-                        // setMaximumPrice('10000');
-                        // setMinimumCommission('1');
-                        // getRequestList();
-                        requestItem.sort((a, b) => {
-                          const rating1 = a.user_rating;
-                          const rating2 = b.user_rating;
-                          if (data[index].selected) {
-                            if (rating1 > rating2) {
-                              return -1; // return -1 here for DESC order
-                            }
-                          }
-                           else {
-                            if (rating2 > rating1) {
-                              return -1; // return -1 here for DESC order
-                            }
-                          }
+                        setIsFilter(!isFilter)
+                        filterByUserRating()
 
-                          return 1 // return 1 here for DESC Order
-                        });
-
-                      } else if (id == '4' && data[index].selected) {
+                      } else if (id == '4') {
                         setMinimumCommission('')
                         setIsFilter(!isFilter)
                         filterByPrice();
 
                       } else if (id == '5') {
-                        // setMaximumPrice('10000');
-                        // setMinimumCommission('1');
-                        // getRequestList();
-                        requestItem.sort((a, b) => {
-                          var dateA = new Date(moment(changeUTCtoLocal(a.ad_delivery_limit)).format('YYYY-MM-DD')).valueOf();
-                          var dateB = new Date(moment(changeUTCtoLocal(b.ad_delivery_limit)).format('YYYY-MM-DD')).valueOf();
-                          if (data[index].selected) {
-                            if (dateA > dateB) {
-                              return -1; // return -1 here for DESC order
-                            }
-                          } else {
-                            if (dateB > dateA) {
-                              return -1; // return -1 here for ASC order
-                            }
-                          }
-
-                          return 1 // return 1 here for DESC Order
-                        });
-                      } else if (id == '6' && data[index].selected) {
+                        // limit delivery
+                        setIsFilter(!isFilter)
+                       filterByLimitDeliveryDate();
+                      } else if (id == '6' ) {
                         setMaximumPrice('')
                         setIsFilter(!isFilter)
                         filterByCommission();
@@ -544,7 +573,7 @@ function RequestsListForPlaces(props) {
                 if (filterKey == '4' ? !maxPrice : !minCommission) {
                   Toast.show(getTranslation('pls_enter_amount'));
                 } else {
-                  getRequestList();
+                  getRequestList(true);
                   logoutModalVisibility();
                 }
               }}

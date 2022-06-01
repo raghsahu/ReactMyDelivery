@@ -255,6 +255,7 @@ export const AppProvider = props => {
   const putRating = async (rate_user_id, rate_rating, rate_comment, rate_ad_id, ratingForApp, commentForApp) => {
     let params = {
       rate_user_id : rate_user_id,
+      rate_create_by: rate_user_id,
       rate_rating: rate_rating,
       rate_comment: rate_comment,
       app_rating: ratingForApp,
@@ -264,8 +265,9 @@ export const AppProvider = props => {
     };
     return await request(webServices.rating, 'post', params);
   };
-  const check_code = async (acpt_ad_id, acpt_code, acpt_type) => {
+  const check_code = async (user_id, acpt_ad_id, acpt_code, acpt_type) => {
     let params = {
+      loggedin_user_id: user_id,
       acpt_ad_id : acpt_ad_id,
       acpt_code: acpt_code,
       acpt_type: acpt_type,

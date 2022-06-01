@@ -13,7 +13,6 @@ import moment from 'moment'; // date format
 const InProgressItemList = props => {
   const { getTranslation } = useContext(LocalizationContext);
   const { imageBaseUrl } = useContext(APPContext);
-  const [products, setProducts] = useState({});
   const item = props.item;
 
   const dateA = new Date(moment(changeUTCtoLocal(props.item.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
@@ -74,7 +73,8 @@ const InProgressItemList = props => {
                 color={COLORS.textColor2}
                 size="18"
                 weight="500">
-                {item.user_f_name + ' ' + item.user_l_name}
+                {/* {item.user_f_name + ' ' + item.user_l_name} */}
+                {props.item.hasOwnProperty('products') ? item.products[0].prod_name: item.user_f_name + ' ' + item.user_l_name}
               </Text>
 
               <View
@@ -154,7 +154,7 @@ const InProgressItemList = props => {
             null
             }
             {props.tabStatus === 'completed' ?
-              props.subTabIndex ===1 && item.user_x[0].rating_status == '0' ?
+              props.subTabIndex ===1 && item.user_y[0].rating_status == '0' ?
               <Button
                 style={[
                   styles.rating
@@ -166,7 +166,7 @@ const InProgressItemList = props => {
               />
               :
               
-              props.subTabIndex ===2 && item.user_y[0].rating_status == '0' ?
+              props.subTabIndex ===2 && item.user_x[0].rating_status == '0' ?
               <Button
                 style={[styles.rating]}
                 title={getTranslation('rating')}

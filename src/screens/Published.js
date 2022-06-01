@@ -31,11 +31,16 @@ function Published(props) {
   const [deletedAdId, setDeletedAdId] = useState('');
 
   useEffect(() => {
-    getPublishedProduct();
+    getPublishedProduct(true);
+
+    const interval = setInterval(() => {
+      getPublishedProduct(false);
+    }, 1000 * 15);
+    return () => clearInterval(interval);
   }, []);
 
-  const getPublishedProduct = async () => {
-    setLoading(true);
+  const getPublishedProduct = async (loading) => {
+    setLoading(loading);
     const result = await publishedProduct(user.user_id, '0');
     setLoading(false);
     if (result.status == true) {
@@ -51,7 +56,7 @@ function Published(props) {
     //setLoading(false);
     if (result.status == true) {
       deleteModalVisibility();
-      getPublishedProduct();
+      getPublishedProduct(true);
     } else {
       Toast.show(result.error);
     }

@@ -97,7 +97,11 @@ function PublishedAdsDetails(props) {
     if (result.status == true) {
       Toast.show(result.error)
       deleteModalVisibility();
-      props.navigation.goBack();
+      ///props.navigation.goBack();
+      props.navigation.navigate('MyAccount', {
+        tabIndex: 2,
+        subTabIndex: 1,
+      });
     } else {
       Toast.show(result.error);
     }
@@ -303,7 +307,7 @@ function PublishedAdsDetails(props) {
                 />
                 :
                 null}
-
+            {dateB > dateA ?
               <Button
                 style={[
                   {
@@ -321,6 +325,9 @@ function PublishedAdsDetails(props) {
                   deleteModalVisibility();
                 }}
               />
+              :
+            null}
+
             </View>
             : null}
 

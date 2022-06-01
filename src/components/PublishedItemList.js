@@ -74,7 +74,8 @@ const PublishedItemList = props => {
                 color={COLORS.textColor2}
                 size="18"
                 weight="500">
-                {item.user_f_name + ' ' + item.user_l_name}
+                {/* {item.user_f_name + ' ' + item.user_l_name} */}
+                {props.item.hasOwnProperty('products') ? item.products[0].prod_name: item.user_f_name + ' ' + item.user_l_name}
               </Text>
 
               <View
@@ -135,6 +136,7 @@ const PublishedItemList = props => {
               :
               null}
 
+        {dateB > dateA ?
             <Button
               style={[
                 {
@@ -152,6 +154,9 @@ const PublishedItemList = props => {
                 props.onDelete(item.ad_id);
               }}
             />
+            :
+            null}
+            
           </View>
 
           <View

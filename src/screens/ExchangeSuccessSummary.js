@@ -55,6 +55,7 @@ function ExchangeSuccessSummary(props) {
   const backAction = () => {
       props.navigation.navigate('MyAccount', {
         tabIndex: 4,
+        subTabIndex: 1,
       });
     
   };

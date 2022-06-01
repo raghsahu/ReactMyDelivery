@@ -41,6 +41,7 @@ var db = openDatabase({ name: 'DescribeProduct.db' });
 function MyAccount(props) {
   const scrollRef = useRef();
   const { tabIndex } = props.route.params ? props.route.params : 1;
+  const { subTabIndex } = props.route.params ? props.route.params : 1;
   const { getTranslation, clearAllData } = useContext(LocalizationContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -59,9 +60,8 @@ function MyAccount(props) {
 
   useEffect(() => {
     tabIndex ? setIndex(tabIndex) : setIndex(1);
-    //if(tabIndex === 3 || tabIndex === 4){
-      onPressTouch(true);
-   // }
+    subTabIndex ? setIndex1(subTabIndex) : setIndex1(1);
+    onPressTouch(true);
   }, [props]);
 
   useEffect(() =>{
@@ -78,9 +78,9 @@ function MyAccount(props) {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         var temp = [];
 
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push(results.rows.item(i));
-        }
+       // for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(0));
+        //}
         setProductListItems(temp);
       });
     });
@@ -120,9 +120,13 @@ function MyAccount(props) {
       //Return the FirstScreen as a child to set in Parent View
       return (
         <Incomplete
-          data={productListItems}
+          //data={productListItems}
           onModify={() => {
-            props.navigation.navigate('AddProductCommision');
+            //props.navigation.navigate('AddProductCommision');
+            props.navigation.navigate('AddProduct');
+          }}
+          onDelete={() => {
+            setProductListItems([])
           }}
         />
       );

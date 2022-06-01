@@ -86,19 +86,20 @@ function SummaryTransaction(props) {
     }
     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return () => backHandler.remove();
-  }, []);
+  }, [props]);
 
   const backAction = () => {
-    if (status == 'completed') {
+    if (props.route.params.status == 'completed') {
       props.navigation.navigate('MyAccount', {
         tabIndex: 4,
+        subTabIndex: props.route.params.subTabIndex,
       });
     } else {
       props.navigation.navigate('MyAccount', {
         tabIndex: 3,
+        subTabIndex: props.route.params.subTabIndex,
       });
     }
-
   };
 
   const getNodeId = (ad_id, user1, user2) => {
@@ -239,7 +240,7 @@ function SummaryTransaction(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(item.ad_id, otp, '3');
+    const result = await check_code(user.user_id, item.ad_id, otp, '3');
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
@@ -279,16 +280,7 @@ function SummaryTransaction(props) {
         <Header
           title={getTranslation('summary_of_txn')}
           onBack={() => {
-            //  props.navigation.goBack();
-            if (status == 'completed') {
-              props.navigation.navigate('MyAccount', {
-                tabIndex: 4,
-              });
-            } else {
-              props.navigation.navigate('MyAccount', {
-                tabIndex: 3,
-              });
-            }
+            backAction();
           }}
         />
         <BottomBackground></BottomBackground>
@@ -831,7 +823,7 @@ function SummaryTransaction(props) {
 
 
           {status == 'completed' ? (
-            subTabIndex === 1 && user_x.rating_status == '0' ?
+            subTabIndex === 1 && user_y.rating_status == '0' ?
               <Button
                 style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
                 title={getTranslation('rating')}
@@ -863,7 +855,7 @@ function SummaryTransaction(props) {
                 }}
               />
               :
-              subTabIndex === 2 && user_y.rating_status == '0' ?
+              subTabIndex === 2 && user_x.rating_status == '0' ?
                 <Button
                   style={[styles.inputView, { marginTop: 30, marginBottom: 30 }]}
                   title={getTranslation('rating')}
@@ -922,9 +914,9 @@ function SummaryTransaction(props) {
                   style={[{ width: 156, backgroundColor: COLORS.darkGray }]}
                   title={getTranslation('complaint')} //or Change Delivery Date (according to condition)
                   onPress={() => {
-                    // props.navigation.navigate('SendSuggestion', {
-                    //   headerTitle: 'Complain',
-                    // });
+                    props.navigation.navigate('SendComplain', {
+                      headerTitle: 'Complain',
+                    });
                   }}
                 /> :
                 subTabIndex === 1 ?
@@ -955,6 +947,7 @@ function SummaryTransaction(props) {
                     { width: 160, justifyContent: 'center', alignSelf: 'center' },
                   ]}
                   title={getTranslation('cahnge_delivery_date')}
+                  align={'center'}
                   onPress={() => {
                     ChangeDateModalVisibility();
                   }}
@@ -1182,8 +1175,7 @@ function SummaryTransaction(props) {
                     ChangeDateModalVisibility();
                     onNext();
                   }
-                  // props.navigation.navigate('ProposalChangedDate');
-                  // setEnableTxnCodeBtn(true);
+               
                 }}
               />
             </View>

@@ -63,9 +63,8 @@ function AddProductSummary(props) {
             results.rows.item(i).quantity;
         }
         setProductListItems(temp);
-        setTotalPrice(totalPrice.toFixed(2));
-        const totalToPay =
-          totalPrice + parseInt(CommissionData.globalCommission);
+        setTotalPrice(parseFloat(totalPrice).toFixed(2));
+        const totalToPay = parseFloat(totalPrice) + parseFloat(CommissionData.globalCommission);
         setTotalToPay(parseFloat(totalToPay).toFixed(2));
       });
     });
@@ -113,17 +112,18 @@ function AddProductSummary(props) {
         });
       });
 
-      requestMultipart(webServices.upload_imgs, 'post', formData, paymentResponse);
+      requestMultipart(webServices.upload_imgs, 'post', formData, paymentResponse, i);
     }
   };
 
-  const requestMultipart = (url, method, params, paymentResponse) => {
+  var indexCount =0;
+  const requestMultipart = (url, method, params, paymentResponse, i) => {
     try {
-      console.log('===================');
-      console.log('URL: ', url);
-      console.log('METHOD: ', method);
-      console.log('PARAMS: ', params);
-      console.log('===================');
+      // console.log('===================');
+      // console.log('URL: ', url);
+      // console.log('METHOD: ', method);
+      // console.log('PARAMS: ', params);
+      // console.log('===================');
 
       const options = {
         method: 'POST',
@@ -133,15 +133,18 @@ function AddProductSummary(props) {
           user_id: user ? user.user_id : '',
         },
       };
-      var response = fetch(url, options)
+       fetch(url, options)
         .then(response => {
           return response.json();
         })
         .then(data => {
           if (data && data.status == 1) {
-            tempImages.push(data);
-            if (tempImages.length == productListItems.length) {
+            tempImages.splice(i, 0, data);
+            indexCount++;
+           // tempImages.push(data);
+            if (indexCount == productListItems.length) {
               uploadProductAllData(paymentResponse);
+            // console.log('temmmmpImg ', JSON.stringify(tempImages))
             }
           } else {
             setLoading(false);
@@ -179,7 +182,7 @@ function AddProductSummary(props) {
         JSON.stringify(temp),
         user.user_id,
         CommissionData.globalCommission,
-        CommissionData.globalCommission * 0.80,
+        parseFloat(CommissionData.globalCommission * 0.80).toFixed(2),
         CommissionData.placeOfDelivery,
         CommissionData.gender,
         changeLocalToUTC(CommissionData.acceptanceDay + ' ' + CommissionData.acceptanceTime),
@@ -197,6 +200,7 @@ function AddProductSummary(props) {
         onDiscard();
         props.navigation.navigate('MyAccount', {
           tabIndex: 2,
+          subTabIndex: 1,
         });
       } else {
         Toast.show(result.error);

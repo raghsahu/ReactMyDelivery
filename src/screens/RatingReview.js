@@ -107,6 +107,7 @@ function RatingReview(props) {
       //       props.navigation.goBack();
             props.navigation.navigate('MyAccount', {
               tabIndex: 4,
+              subTabIndex: 1,
             });
 
     } else {

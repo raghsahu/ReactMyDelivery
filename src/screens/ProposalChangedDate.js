@@ -162,7 +162,7 @@ function ProposalChangedDate(props) {
               color={COLORS.darkGray}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.ad_delivery_limit)}
+              {changeUTCtoLocal(item.acpt_date + ' ' + item.acpt_time)}
             </Text>
           </View>
 
@@ -362,7 +362,7 @@ function ProposalChangedDate(props) {
               </Text>
             </View>
           </View>
-
+          {user.user_id == ProdData.ad_user_id ?            
           <View
             style={{
               marginHorizontal: 20,
@@ -388,6 +388,14 @@ function ProposalChangedDate(props) {
               }}
             />
           </View>
+           : 
+           <View
+           style={{
+             marginTop: 30,
+             flexDirection: 'row',
+             justifyContent: 'space-between',
+           }}></View>
+           }
         </ScrollView>
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}

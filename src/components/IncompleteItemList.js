@@ -27,7 +27,7 @@ const IncompleteItemList = props => {
           borderRadius: 35,
         }}
         source={
-          item.prod_img ? { uri: JSON.parse(item.prod_img)[0] } : IMAGES.product_placeholder
+          item ? { uri: JSON.parse(item.prod_img)[0] } : IMAGES.product_placeholder
         }
       />
 
@@ -43,23 +43,23 @@ const IncompleteItemList = props => {
           color={COLORS.primaryColor}
           size="18"
           weight="500">
-          {item.product_name}
+          {item ? item.product_name : ''}
         </Text>
 
         <Text color={COLORS.black} size="14" weight="500"
          onPress={() => {
-          Linking.openURL(validateURL(item.web_link));
+          Linking.openURL(validateURL(item ? item.web_link : ''));
         }}>
-          {getTranslation('web_link') + ' : ' + item.web_link}
+          {getTranslation('web_link') + ' : ' + item.web_link ? item.web_link : ''}
         </Text>
         <Text color={COLORS.black} size="14" weight="500">
-          {'Price : ' +
+          {item ? 'Price : ' +
             '€ ' +
             item.price_of_product +
             ' * ' +
             item.quantity +
             ' = € ' +
-            item.price_of_product * item.quantity}
+            item.price_of_product * item.quantity : ''}
         </Text>
 
         <View

@@ -80,6 +80,7 @@ const Label = props => {
       style={[{alignSelf: 'center'}]}
       size="16"
       weight="500"
+      align= {props.align ? props.align : 'center'}
       color={COLORS.white}>
       {props.title}
     </Text>

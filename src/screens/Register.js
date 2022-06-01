@@ -213,13 +213,15 @@ function Register(props) {
       Toast.show(getTranslation('enter_first_name'));
     } else if (!lastName) {
       Toast.show(getTranslation('enter_last_name'));
-    } else if (!userName) {
-      Toast.show(getTranslation('enter_user_name'));
-    } else if (userName.trim().length < 3) {
-      Toast.show(getTranslation('user_name_must_3_character'));
-    } else if (checkSpecialChar(userName)) {
-      Toast.show(getTranslation('special_char_num_not_allowed'));
-    } else if (!selectedOption) {
+    }
+    //  else if (!userName) {
+    //   Toast.show(getTranslation('enter_user_name'));
+    // } else if (userName.trim().length < 3) {
+    //   Toast.show(getTranslation('user_name_must_3_character'));
+    // } else if (checkSpecialChar(userName)) {
+    //   Toast.show(getTranslation('special_char_num_not_allowed'));
+    // }
+     else if (!selectedOption) {
       Toast.show(getTranslation('pls_selectg_gender'));
     } else if (!selectDate) {
       Toast.show(getTranslation('enter_dob'));
@@ -472,14 +474,14 @@ function Register(props) {
             }}
           />
 
-          <Input
+          {/* <Input
             style={[styles.inputView, styles.inputContainer]}
             placeholder={getTranslation('user_name')}
             isLeft={IMAGES.user}
             onChangeText={text => {
               setUserName(text);
             }}
-          />
+          /> */}
 
           <View
             style={[

@@ -25,41 +25,65 @@ function Incomplete(props) {
   const {getTranslation} = useContext(LocalizationContext);
 
   useEffect(() => {
-    if (props.data) {
-      setProductListItems(props.data);
-    } else {
-      db.transaction(tx => {
-        tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
-          var temp = [];
-
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push(results.rows.item(i));
-          }
-          setProductListItems(temp);
-        });
-      });
-    }
+    getAllDbProducts();
   }, []);
 
+  const getAllDbProducts = () =>{
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        var temp = [];
+        //console.log('productListItems222 ', results.rows.item.length)
+        if(results.rows.length > 0){
+        // for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(0));
+          // }
+        }
+        setProductListItems(temp);
+      });
+    });
+  }
+
   const onDeleteProduct = () => {
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'DELETE FROM table_product where product_id=?',
+    //     [deleteProductId],
+    //     (tx, results) => {
+    //       try {
+    //         // console.log('ResultsDelete', results.rowsAffected);
+    //         setProductListItems(
+    //           productListItems.filter(item => item.id === deleteProductId),
+    //         );
+    //         if (results.rowsAffected == 0) {
+    //         }
+    //       } catch (ex) {
+    //         console.log(ex);
+    //       }
+    //     },
+    //   );
+    // });
+
+    //***delete all table data */
     db.transaction(tx => {
       tx.executeSql(
-        'DELETE FROM table_product where product_id=?',
-        [deleteProductId],
+        'DELETE FROM table_product',
         (tx, results) => {
           try {
-            // console.log('ResultsDelete', results.rowsAffected);
-            setProductListItems(
-              productListItems.filter(item => item.id === deleteProductId),
-            );
-            if (results.rowsAffected == 0) {
-            }
+            getAllDbProducts()
+            console.log('ResultsDelete', results.rowsAffected);
+            //if (results.rowsAffected > 0) {
+              setProductListItems([])
+             // props.onDelete()
+            //}
           } catch (ex) {
-            console.log(ex);
+            console.log(ex)
           }
+
         },
       );
     });
+
+    setProductListItems([])
   };
 
   const deleteModalVisibility = id => {
@@ -75,24 +99,29 @@ function Incomplete(props) {
       />
 
       <SafeAreaView style={styles.container}>
+        {productListItems.length > 0 && productListItems!=null && productListItems!=undefined ?
         <FlatList
-          showsVerticalScrollIndicator={false}
-          data={productListItems}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <IncompleteItemList
-                item={item}
-                onDelete={() => {
-                  deleteModalVisibility(item.product_id);
-                }}
-                onModify={() => {
-                  props.onModify();
-                }}
-              />
-            );
-          }}
-        />
+        showsVerticalScrollIndicator={false}
+        data={productListItems}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item, index}) => {
+          return (
+            <IncompleteItemList
+              item={item}
+              onDelete={() => {
+                deleteModalVisibility(item.product_id);
+              }}
+              onModify={() => {
+                props.onModify();
+              }}
+            />
+          );
+        }}
+      />
+      :
+      null
+        }
+        
       </SafeAreaView>
 
       <Modal
