@@ -78,10 +78,11 @@ function MobileOtp(props) {
       setLoading(false);
       if (result.status == true) {
         // Toast.show(result.error);
-        props.navigation.navigate('SuccessScreen', {
-          Mobile: Mobile,
-          Email: Email,
-        });
+        // props.navigation.navigate('SuccessScreen', {
+        //   Mobile: Mobile,
+        //   Email: Email,
+        // });
+        props.navigation.goBack();
       } else {
         Toast.show(result.error);
       }

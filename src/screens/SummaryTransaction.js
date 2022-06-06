@@ -829,9 +829,6 @@ function SummaryTransaction(props) {
                 title={getTranslation('rating')}
                 // type={1}
                 onPress={() => {
-
-                  if (status === 'completed' && subTabIndex === 1) {
-
                     props.navigation.navigate('RatingReview', {
                       userName: user_y.user_f_name + ' ' + user_y.user_l_name,
                       rate_ad_id: item.ad_id,
@@ -840,18 +837,6 @@ function SummaryTransaction(props) {
                         setRatingStatus(true);
                       },
                     });
-                  } else {
-                    props.navigation.navigate('RatingReview', {
-                      userName: user_x.user_f_name + ' ' + user_x.user_l_name,
-                      rate_ad_id: item.ad_id,
-                      onReturn: item => {
-                        console.log('log_item ' + item);
-                        setRatingStatus(true);
-                      },
-                    });
-
-                  }
-
                 }}
               />
               :
@@ -861,29 +846,14 @@ function SummaryTransaction(props) {
                   title={getTranslation('rating')}
                   // type={1}
                   onPress={() => {
-
-                    if (status === 'completed' && subTabIndex === 1) {
-
-                      props.navigation.navigate('RatingReview', {
-                        userName: user_y.user_f_name + ' ' + user_y.user_l_name,
-                        rate_ad_id: item.ad_id,
-                        onReturn: item => {
-                          console.log('log_item ' + item);
-                          setRatingStatus(true);
-                        },
-                      });
-                    } else {
-                      props.navigation.navigate('RatingReview', {
-                        userName: user_x.user_f_name + ' ' + user_x.user_l_name,
-                        rate_ad_id: item.ad_id,
-                        onReturn: item => {
-                          console.log('log_item ' + item);
-                          setRatingStatus(true);
-                        },
-                      });
-
-                    }
-
+                    props.navigation.navigate('RatingReview', {
+                      userName: user_x.user_f_name + ' ' + user_x.user_l_name,
+                      rate_ad_id: item.ad_id,
+                      onReturn: item => {
+                        console.log('log_item ' + item);
+                        setRatingStatus(true);
+                      },
+                    });
                   }}
                 />
                 :

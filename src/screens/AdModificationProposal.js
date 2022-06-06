@@ -56,7 +56,7 @@ function AdModificationProposal(props) {
       setOldSummaryDetails(result.data.old[0]);
       setNewSummaryDetails(result.data.new[0]);
 
-      setNewProducts(JSON.parse(result.data.new[0].product_data.toString()));
+      setNewProducts(JSON.parse(result.data.new[0].product_data));
       //console.log('ad_cmsn_price ', result.data.new[0].ad_cmsn_price)
 
     } else {

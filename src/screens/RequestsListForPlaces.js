@@ -48,13 +48,16 @@ function RequestsListForPlaces(props) {
 
   useEffect(() => {
     setOptionFilter(filterList);
-    getRequestList(true);
   }, []);
+
+  useEffect(() => {
+    getRequestList(true);
+  }, [props]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       getRequestList(false);
-    }, 1000 * 15);
+    }, 1000 * 10);
     return () => clearInterval(interval);
   }, []);
 

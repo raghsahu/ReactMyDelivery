@@ -55,15 +55,17 @@ function PublishedAdsDetails(props) {
     const item = props.route.params.ProdData;
     setItem(item);
     setItemProducts(item.products)
-    setUser_Y(item.user_y[0])
-
+   
     var totalPrice = 0;
     for (let i = 0; i < item.products.length; i++) {
       totalPrice = totalPrice + parseInt(item.products[i].prod_price_total)
     }
     setTotalPrice(parseFloat(totalPrice));
 
-  }, []);
+    if(props.route.params.type == 'Notification'){
+      setUser_Y(item.user_y[0])
+    }
+  }, [props]);
 
   useEffect(() =>{
     function handleBackButton() {

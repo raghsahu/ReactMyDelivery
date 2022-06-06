@@ -28,7 +28,7 @@ import Toast from 'react-native-simple-toast';
 
 function InProgressAsUser(props) {
   const [isLoading, setLoading] = useState(false);
-  const { user, imageBaseUrl, publishedProduct , check_code} = useContext(APPContext);
+  const { user, imageBaseUrl, publishedProduct, check_code, completededMyItem, inProgressMyItem } = useContext(APPContext);
   const { getTranslation } = useContext(LocalizationContext);
   const [inProgressItem, setInProgressItem] = useState([]);
   const [isTxnCodeModalVisible, setTxnCodeModalVisible] = useState(false);
@@ -38,81 +38,150 @@ function InProgressAsUser(props) {
   useEffect(() => {
     if (props.tabStatus === 'inProgress') {
       getInProgressItemList('1,2,3,4,5');
-    }else{
-      getInProgressItemList('6');
+    } else {
+      getCompleteItemList('6');
     }
-  }, []);
+  }, [props]);
+
+  const getCompleteItemList = async (status) => {
+    setLoading(true);
+    var result = null;
+    if (props.subTabIndex === 1) {
+      result = await completededMyItem(user.user_id, 'user');
+    } else {
+      result = await completededMyItem(user.user_id, 'deliveryman');
+    }
+    setLoading(false);
+    if (result.status == true) {
+      if (result.data.length > 0) {
+
+        setInProgressItem([]);
+        if (props.subTabIndex === 1) {
+          setInProgressItem(result.data);
+
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_x.length != 0
+              &&
+              result.data[i].user_x[0].user_id == user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
+          }
+          setInProgressItem(todos);
+        } else if (props.subTabIndex === 2) {
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_y.length != 0
+              &&
+              result.data[i].user_y[0].user_id == user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
+          }
+          setInProgressItem(todos);
+
+        } else if (props.subTabIndex === 3) {
+
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_z.length != 0
+              &&
+              result.data[i].user_z[0].user_id == user.user_id
+              // &&
+              //result.data[i].user_id != user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
+          }
+          setInProgressItem(todos);
+
+        }
+
+      } else {
+        //Toast.show('No record found');
+      }
+    } else {
+      Toast.show(result.error);
+      setInProgressItem([]);
+    }
+  };
 
   const getInProgressItemList = async (status) => {
     setLoading(true);
-    const result = await publishedProduct(user.user_id, status);
+    var result = null;
+    if (props.subTabIndex === 1) {
+      result = await inProgressMyItem(user.user_id, 'user');
+    } else {
+      result = await inProgressMyItem(user.user_id, 'deliveryman');
+    }
     setLoading(false);
     if (result.status == true) {
-      if(result.data.length > 0){
+      if (result.data.length > 0) {
 
-      setInProgressItem([]);
-      if (props.subTabIndex === 1) {
-         setInProgressItem(result.data);
-        //old native code logic
-        //   for (Result adws : acceptedAdsList) {
-        //     if (adws.getUserX().size()!=0 &&
-        //             adws.getUserX().get(0) != null &&
-        //             adws.getUserX().get(0).getUserId().equals(Constants.userDetails.getUserId())
-        //             && !adws.getAdUserId().equals(Constants.userDetails.getUserId())) {
-        //         u_AcceptsList.add(adws);
+        setInProgressItem([]);
+        if (props.subTabIndex === 1) {
+          setInProgressItem(result.data);
+          //old native code logic
+          //   for (Result adws : acceptedAdsList) {
+          //     if (adws.getUserX().size()!=0 &&
+          //             adws.getUserX().get(0) != null &&
+          //             adws.getUserX().get(0).getUserId().equals(Constants.userDetails.getUserId())
+          //             && !adws.getAdUserId().equals(Constants.userDetails.getUserId())) {
+          //         u_AcceptsList.add(adws);
 
 
-        //     }
-        // }****************************
-    
-        let todos = [...inProgressItem]; 
-        for (let i = 0; i < result.data.length; i++) {
-          if (result.data[i].user_x.length != 0
-            &&
-            result.data[i].user_x[0].user_id == user.user_id
-          ) {
-            todos.push(result.data[i])
+          //     }
+          // }****************************
+
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_x.length != 0
+              &&
+              result.data[i].user_x[0].user_id == user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
           }
-        }
-        setInProgressItem(todos);
-      } else if (props.subTabIndex === 2) {
-        let todos = [...inProgressItem]; 
-        for (let i = 0; i < result.data.length; i++) {
-          if (result.data[i].user_y.length != 0
-            &&
-            result.data[i].user_y[0].user_id == user.user_id
-          ) {
-            todos.push(result.data[i])
+          setInProgressItem(todos);
+        } else if (props.subTabIndex === 2) {
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_y.length != 0
+              &&
+              result.data[i].user_y[0].user_id == user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
           }
-        }
-        setInProgressItem(todos);
+          setInProgressItem(todos);
 
-      } else if (props.subTabIndex === 3) {
-        // if (adws.getUserZ().size() != 0 &&
-        // adws.getUserZ().get(0) != null &&
-        // adws.getUserZ().get(0).getUserId().equals(Constants.userDetails.getUserId())
-        //   && !Constants.userDetails.getUserId().equals(adws.getAdUserId())) {
-        //       s_AcceptsList.add(adws);
-        //   }
+        } else if (props.subTabIndex === 3) {
+          // if (adws.getUserZ().size() != 0 &&
+          // adws.getUserZ().get(0) != null &&
+          // adws.getUserZ().get(0).getUserId().equals(Constants.userDetails.getUserId())
+          //   && !Constants.userDetails.getUserId().equals(adws.getAdUserId())) {
+          //       s_AcceptsList.add(adws);
+          //   }
 
-        let todos = [...inProgressItem]; 
-        for (let i = 0; i < result.data.length; i++) {
-          if (result.data[i].user_z.length != 0
-            &&
-            result.data[i].user_z[0].user_id == user.user_id
-           // &&
-            //result.data[i].user_id != user.user_id
-          ) {
-            todos.push(result.data[i])
+          let todos = [...inProgressItem];
+          for (let i = 0; i < result.data.length; i++) {
+            if (result.data[i].user_z.length != 0
+              &&
+              result.data[i].user_z[0].user_id == user.user_id
+              // &&
+              //result.data[i].user_id != user.user_id
+            ) {
+              todos.push(result.data[i])
+            }
           }
-        }
-        setInProgressItem(todos);
+          setInProgressItem(todos);
 
+        }
+
+      } else {
+        //Toast.show('No record found');
       }
-        
-    }else{
-      //Toast.show('No record found');
-    }
     } else {
       Toast.show(result.error);
       setInProgressItem([]);
@@ -125,12 +194,12 @@ function InProgressAsUser(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(selectedAdId ,otp, '3');
+    const result = await check_code(selectedAdId, otp, '3');
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);
-       TxnCodeModalVisibility();
-       props.onCodeExchange(result.data)
+      TxnCodeModalVisibility();
+      props.onCodeExchange(result.data)
     } else {
       Toast.show(result.error);
     }
@@ -156,25 +225,25 @@ function InProgressAsUser(props) {
                 tabStatus={props.tabStatus}
                 subTabIndex={props.subTabIndex}
                 onSummary={(item) => {
-                props.onSummary(item);
-              }}
-              onRating={(item) => {
-                props.onRating(item);
-              }}
-              onComplaint={() => {
-                props.onComplaint();
-              }}
-              onCodeExchange={(item) => {
-                setSelectedAdId(item.ad_id)
-                TxnCodeModalVisibility();
-              }}
+                  props.onSummary(item);
+                }}
+                onRating={(item) => {
+                  props.onRating(item);
+                }}
+                onComplaint={() => {
+                  props.onComplaint();
+                }}
+                onCodeExchange={(item) => {
+                  setSelectedAdId(item.ad_id)
+                  TxnCodeModalVisibility();
+                }}
               />
             );
           }}
         />
       </SafeAreaView>
       {isLoading ? <ProgressView></ProgressView> : null}
-   
+
       <Modal
         animationType="slide"
         transparent
@@ -251,15 +320,15 @@ function InProgressAsUser(props) {
                 style={[{ width: 100 }]}
                 title={getTranslation('confirm')}
                 onPress={() => {
-                  if(!otp){
+                  if (!otp) {
                     Toast.show(getTranslation('pls_enter_10_digit_code'))
-                  }else if(otp.length!=10){
+                  } else if (otp.length != 10) {
                     Toast.show(getTranslation('pls_enter_10_digit_code'))
                   }
-                  else{
-                     checkCodeApi(); 
+                  else {
+                    checkCodeApi();
                   }
-                 
+
                 }}
               />
             </View>
@@ -314,7 +383,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     //backgroundColor: COLORS.lightGray,
     color: COLORS.black,
-    
+
   },
   underlineStyleHighLighted: {
     borderColor: COLORS.primaryColor,

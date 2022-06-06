@@ -25,7 +25,7 @@ import Toast from 'react-native-simple-toast';
 function Published(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const {user, del_ads, publishedProduct} = useContext(APPContext);
+  const {user, del_ads, publishedProduct, publishedMyItem} = useContext(APPContext);
   const {getTranslation} = useContext(LocalizationContext);
   const [publishedItem, setPublishedItem] = useState([]);
   const [deletedAdId, setDeletedAdId] = useState('');
@@ -41,7 +41,7 @@ function Published(props) {
 
   const getPublishedProduct = async (loading) => {
     setLoading(loading);
-    const result = await publishedProduct(user.user_id, '0');
+    const result = await publishedMyItem(user.user_id, '0');
     setLoading(false);
     if (result.status == true) {
       setPublishedItem(result.data);

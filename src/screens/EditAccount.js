@@ -9,8 +9,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   BackHandler,
+  Modal,
+  Dimensions,
 } from 'react-native';
-
+const { height, width } = Dimensions.get('screen');
 //ASSETS
 import {COLORS, IMAGES, DIMENSION} from '../assets';
 import {LocalizationContext} from '../context/LocalizationProvider';
@@ -100,6 +102,7 @@ function EditAccount(props) {
   const {user, setUser, imageBaseUrl, webServices, fcmToken} =
     useContext(APPContext);
   const {checkSpecialChar, getUserCurrentLocation, lat, lng} = useContext(CommonUtilsContext);
+  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
     const onSelect = (country) => {
     setSelectedCountryName(country.name)
@@ -145,6 +148,10 @@ function EditAccount(props) {
 
   const backAction = () => {
    props.navigation.goBack();
+  };
+
+  const logoutModalVisibility = () => {
+    setLogoutModalVisible(!isLogoutModalVisible);
   };
 
   const onChange = (event, selectedDate) => {
@@ -232,24 +239,8 @@ function EditAccount(props) {
     }
   };
 
-  const requestExternalStoreageRead = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: 'My Delivery ...',
-          message: 'App needs access to external storage',
-        },
-      );
 
-      return granted == PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      //Handle this error
-      return false;
-    }
-  };
-
-  const onNext = () => {
+  const onNext = (mobile) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!firstName) {
       Toast.show(getTranslation('enter_first_name'));
@@ -295,14 +286,14 @@ function EditAccount(props) {
       } else if (password != confirmPassword) {
         Toast.show(getTranslation('password_not_match'));
       } else {
-        UpdateUser();
+        UpdateUser(mobile);
       }
     } else {
-      UpdateUser();
+      UpdateUser(mobile);
     }
   };
 
-  const UpdateUser = async () => {
+  const UpdateUser = async (mobile) => {
     setLoading(true);
     await userUpdate(
       user.user_id,
@@ -399,11 +390,13 @@ function EditAccount(props) {
           user_id: user ? user.user_id : '',
         },
       };
-      var response = fetch(url, options)
+       fetch(url, options)
         .then(response => {
+          //console.log('updateProfileJSON', response.json());
           return response.json();
         })
         .then(data => {
+         // console.log('updateProfileRes', JSON.stringify(data));
           setLoading(false);
           if (data && data.status == 1) {
             Toast.show(data.msg);
@@ -423,7 +416,7 @@ function EditAccount(props) {
           }
         });
     } catch (e) {
-      console.log(e);
+      //console.log('updateProfileError', e);
       Toast.show('Something went wrong');
     }
   };
@@ -749,7 +742,11 @@ function EditAccount(props) {
             style={[styles.inputView, {marginTop: 30, marginBottom: 30}]}
             title={getTranslation('save_changes')}
             onPress={() => {
-              onNext();
+              if(user.user_mb_no == mobile){
+                onNext(user.user_mb_no);
+              }else{
+                logoutModalVisibility();
+              }
             }}
           />
         </ScrollView>
@@ -834,6 +831,57 @@ function EditAccount(props) {
         </View>
       </ActionSheet>
 
+      <Modal
+        animationType="slide"
+        transparent
+        visible={isLogoutModalVisible}
+        presentationStyle="overFullScreen"
+        onDismiss={logoutModalVisibility}>
+        <View style={styles.viewWrapper}>
+          <View style={styles.modalView1}>
+            <Text
+              style={{ alignSelf: 'center', marginTop: 15, marginHorizontal: 10 }}
+              size="20"
+              weight="500"
+              align="left"
+              color={COLORS.black}>
+              {'Are you sure want to change mobile number also'}
+            </Text>
+
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginTop: 20,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+              }}>
+              <Button
+                style={[{ width: 104 }]}
+                title={getTranslation('yes')}
+                onPress={() => {
+                  logoutModalVisibility();
+                   onNext(mobile);
+                  // props.navigation.navigate('MobileOtp', {
+                  //   Mobile: mobile,
+                  // })
+                }}
+              />
+
+              <Button
+                style={[{ width: 104 }]}
+                title={getTranslation('no')}
+                onPress={() => {
+                  logoutModalVisibility();
+                  onNext(user.user_mb_no);
+                 
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {show && (
         <DateTimePick
           value={date}
@@ -906,6 +954,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginStart: 20,
+  },
+  viewWrapper: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  modalView1: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    elevation: 5,
+    transform: [{ translateX: -(width * 0.4) }, { translateY: -90 }],
+    height: 180,
+    width: width * 0.85,
+    backgroundColor: '#fff',
+    borderRadius: 7,
   },
 });
 

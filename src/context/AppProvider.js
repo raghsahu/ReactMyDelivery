@@ -35,6 +35,9 @@ export const AppProvider = props => {
     addProduct: baseURL + 'madd/product',
     upload_imgs: baseURL + 'upload_imgs',
     ads_by_status: baseURL + 'fields/ads_by_status',
+    published_ads: baseURL + 'fields/published_ads', 
+    completed_ads: baseURL + 'fields/completed_ads',
+    inprogress_ads: baseURL + 'fields/inprogress_ads',
     getProductFilter: baseURL + 'fields/product',
     ad_accept: baseURL + 'madd/ad_accept',
     change_date_time: baseURL + 'madd/change_date_time',
@@ -156,7 +159,7 @@ export const AppProvider = props => {
   };
 
   const add_Product = async (product_data, ad_user_id, ad_cmsn_price, ad_cmsn_delivery, placeOfDelivery, ad_gender, ad_accept_limit, ad_delivery_limit,
-    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_lat, ad_lon) => {
+    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_lat, ad_lon, ad_pay_datetime) => {
     let params = {
       product_data: product_data,
       ad_user_id: ad_user_id,
@@ -172,13 +175,14 @@ export const AppProvider = props => {
       ad_pay_info: ad_pay_info,
       ad_lat: ad_lat,
       ad_lon: ad_lon,
+      ad_pay_datetime: ad_pay_datetime,
     };
 
     return await request(webServices.addProduct, 'post', params);
   };
 
   const change_request = async (loggedin_user_id, product_data, ad_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
-    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change) => {
+    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change, selectDate, selectTime) => {
     let params = {
       loggedin_user_id: loggedin_user_id,
       product_data: product_data,
@@ -193,6 +197,8 @@ export const AppProvider = props => {
       ad_pay_amount: ad_pay_amount,
       ad_pay_info: ad_pay_info,
       ad_why_this_change: ad_why_this_change,
+      acpt_date: selectDate,
+      acpt_time: selectTime,
     };
 
     return await request(webServices.change_request, 'post', params);
@@ -204,6 +210,30 @@ export const AppProvider = props => {
       ad_status: ad_status,
     };
     return await request(webServices.ads_by_status, 'post', params);
+  };
+
+  const publishedMyItem = async (user_id, ad_status) => {
+    let params = {
+      ad_user_id: user_id,
+      //ad_status: ad_status,
+    };
+    return await request(webServices.published_ads, 'post', params);
+  };
+
+  const completededMyItem = async (user_id, type) => {
+    let params = {
+      ad_user_id: user_id,
+      type: type,
+    };
+    return await request(webServices.completed_ads, 'post', params);
+  };
+
+  const inProgressMyItem = async (user_id, type) => {
+    let params = {
+      ad_user_id: user_id,
+      type: type,
+    };
+    return await request(webServices.inprogress_ads, 'post', params);
   };
 
   const getFilterProduct = async ( max_price, min_price,max_cmsn,min_cmsn,last_delv_date,user_lat, user_lon ) => {
@@ -226,7 +256,7 @@ export const AppProvider = props => {
       acpt_user_id: user_id,
       acpt_ad_id: ad_id,
       acpt_date: selectDate,
-      acpt_time: changeLocalToUTCTime(selectDate + ' ' + selectTime),
+      acpt_time: selectTime,
       acpt_pay_status: acpt_pay_status,
       acpt_pay_amount: acpt_pay_amount,
       acpt_pay_info: acpt_pay_info,
@@ -234,6 +264,7 @@ export const AppProvider = props => {
     };
     return await request(webServices.ad_accept, 'post', params);
   };
+
   const putDateTimeChangeRequest = async (loggedin_user_id, ad_id,selectDate, selectTime ) => {
     let params = {
       loggedin_user_id: loggedin_user_id,
@@ -505,7 +536,10 @@ export const AppProvider = props => {
         getNotifications,
         add_Product,
         publishedProduct,
+        publishedMyItem,
         getFilterProduct,
+        completededMyItem,
+        inProgressMyItem,
         getAdAccept,
         putDateTimeChangeRequest,
         change_request,

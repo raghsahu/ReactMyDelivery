@@ -250,19 +250,19 @@ const InProgressItemList = props => {
 
               <Text
                 style={{
-                  marginLeft: 10,
+                  marginLeft: 5,
                 }}
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+                {'€'+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
             <View
               style={{
                 flexDirection: 'row',
-                marginLeft: 5,
+                marginLeft: 2,
                 flex: 1,
               }}>
               <Text style={{}} color={COLORS.textColor2} size="16" weight="600">
@@ -271,14 +271,15 @@ const InProgressItemList = props => {
 
               <Text
                 style={{
-                  marginLeft: 10,
+                  marginLeft: 5,
                   justifyContent: 'center',
-                  alignSelf: 'center'
+                  alignSelf: 'center',
+                  flex: 1,
                 }}
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+                {'€'+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>

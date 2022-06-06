@@ -76,7 +76,7 @@ const Header = props => {
           />
         </TouchableOpacity>
       )}
-      {props.onNext && (
+      {props.onNext && (props.index != props.prodCount) && props.index !=4 ? (
         <TouchableOpacity
           style={{justifyContent: 'center', marginEnd: 5}}
           onPress={props.onNext}>
@@ -87,7 +87,7 @@ const Header = props => {
             tintColor={COLORS.white}
           />
         </TouchableOpacity>
-      )}
+      ): null}
     </View>
   );
 };

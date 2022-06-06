@@ -193,6 +193,7 @@ function AddProductSummary(props) {
         paymentResponse,
         CommissionData.ad_lat,
         CommissionData.ad_lon,
+        moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       );
       setLoading(false);
       if (result.status == true) {

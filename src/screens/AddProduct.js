@@ -39,17 +39,28 @@ function AddProduct(props) {
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [prodImg, setProdImg] = useState([]);
   const [prodCount, setProdCount] = useState(0);
+  const [autoProductId, setAutoProductId] = useState(null)
   const [showCurrentProduct, setShowCurrentProduct] = useState(0);
   const { getTranslation } = useContext(LocalizationContext);
   const { validURL } = useContext(CommonUtilsContext);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    createTable();
+    getSavedProductCount(index);
+  }, []);
+
+  useEffect(() => {
+
+  }, []);
+
+  const createTable = () => {
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='table_product'",
         [],
         function (tx, res) {
-          console.log('item:', res.rows.length);
+          //console.log('item:', res.rows.length);
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS table_product', []);
             txn.executeSql(
@@ -60,11 +71,53 @@ function AddProduct(props) {
         },
       );
     });
-  }, []);
+  }
 
-  useEffect(() => {
-    getSavedProductCount()
-  }, []);
+  const getProductByPosition = (index, count) => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
+        //console.log('prodItemm ', index + ' '+ count)
+        if (index != (count ? count : prodCount)) {
+          for (let i = 0; i < results.rows.length; i++) {
+            if (i == index) {
+              setProductName(results.rows.item(i).product_name)
+              setWebLinkName(results.rows.item(i).web_link)
+              setPlaceToBuy(results.rows.item(i).place_to_buy)
+              setPriceOfProduct(results.rows.item(i).price_of_product)
+              setQuantity(results.rows.item(i).quantity)
+              setAdditionalInfo(results.rows.item(i).additional_info)
+              setAutoProductId(results.rows.item(i).product_id)
+
+              let items = [];
+              for (var j = 0; j < JSON.parse(results.rows.item(i).prod_img).length; j++) {
+                items.push(JSON.parse(results.rows.item(i).prod_img)[j])
+              }
+              setProdImg(items)
+            }
+          }
+        } else {
+          console.log('clearFields prodd ')
+          clearFields();
+        }
+
+      });
+    });
+  }
+
+  const clearFields = () => {
+    setProductName('');
+    setWebLinkName('');
+    setPlaceToBuy('');
+    setPriceOfProduct('');
+    setQuantity('');
+    setTotalPrice('');
+    setAdditionalInfo('');
+    prodImg.splice(0, prodImg.length);
+    prodImg.length = 0;
+    setProdImg(prodImg);
+    setProdImg([])
+    setAutoProductId(null)
+  }
 
   const onPressTouch = () => {
     scrollRef.current?.scrollTo({
@@ -73,14 +126,49 @@ function AddProduct(props) {
     });
   }
 
-  const getSavedProductCount = () => {
+  const getSavedProductCount = (index) => {
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM table_product', [], (tx, results) => {
         if (results.rows.length > 0) {
+          console.log('prod_countttt ', results.rows.length)
           setProdCount(results.rows.length)
+          getProductByPosition(index, results.rows.length);
         }
       });
     });
+  }
+
+  const modifyProduct = () => {
+    if (!productName) {
+      Toast.show(getTranslation('pls_enter_product_name'));
+    } else if (!webLink) {
+      Toast.show(getTranslation('pls_entger_web_link'));
+    } else if (!validURL(webLink)) {
+      Toast.show(getTranslation('pls_enter_valid_web_link'));
+    } else if (!priceOfProduct) {
+      Toast.show(getTranslation('enter_price_of_product'));
+    } else if (!quantity) {
+      Toast.show(getTranslation('enter_quantity'));
+    } else if (prodImg.length < 1) {
+      Toast.show(getTranslation('pls_capture_product_image'));
+    } else {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'UPDATE table_product set product_name=?, web_link=?, place_to_buy=?, price_of_product=?, quantity=?, total_price=?, additional_info=?, prod_img=? where product_id=?',
+          [productName, webLink, placeToBuy, parseFloat(priceOfProduct).toFixed(2), quantity, getTotalPrice(), additionalInfo, JSON.stringify(prodImg), autoProductId],
+          (tx, results) => {
+            try {
+              if (results.rowsAffected > 0) {
+                Toast.show('Modified');
+              } else { Toast.show('Something went wrong'); }
+            } catch (ex) {
+              console.log(ex)
+            }
+          }
+        );
+      });
+
+    }
   }
 
   const onPressUpload = () => {
@@ -160,33 +248,24 @@ function AddProduct(props) {
             (tx, results) => {
               console.log('Results', results.rowsAffected);
               if (results.rowsAffected > 0) {
-                //Toast.show('Product added');
-                setProductName('');
-                setWebLinkName('');
-                setPlaceToBuy('');
-                setPriceOfProduct('');
-                setQuantity('');
-                setTotalPrice('');
-                setAdditionalInfo('');
-                prodImg.splice(0, prodImg.length);
-                prodImg.length = 0;
-                setProdImg(prodImg);
-
-                //get all saved product count
-                getSavedProductCount()
-
+                clearFields();
+                
                 if (thatsAllStatus) {
                   moveToNext();
                 } else {
                   onPressTouch();
                 }
+                //get all saved product count
+                getSavedProductCount(index + 1)
+                setIndex(index + 1)
               }
             },
           );
         });
       }
     } else {
-      Toast.show(getTranslation('add_max_five_produict'))
+      moveToNext();
+      //Toast.show(getTranslation('add_max_five_produict'))
     }
   };
 
@@ -194,7 +273,12 @@ function AddProduct(props) {
     if (!productName && !webLink && !priceOfProduct && !quantity && prodImg.length == 0) {
       moveToNext();
     } else {
-      onNext(true);
+      if(autoProductId){
+        moveToNext();
+      }else{
+        onNext(true);
+      }
+   
     }
   };
 
@@ -210,7 +294,7 @@ function AddProduct(props) {
       });
     });
   }
-  
+
   const onDiscard = () => {
     db.transaction(tx => {
       tx.executeSql(
@@ -242,13 +326,24 @@ function AddProduct(props) {
       <BottomBackground></BottomBackground>
       <SafeAreaView>
         <Header
-          title={getTranslation('describe_products') + '      ' + (prodCount == 5 ? 5 : prodCount + 1) + '/5'}
+          title={getTranslation('describe_products') + '      ' + (index >= 4 ? 5 : index + 1) + '/5'}
+          index={index}
+          prodCount={prodCount}
           onBack={() => {
-            props.navigation.goBack();
+            if (index != 0) {
+              getProductByPosition(index - 1);
+              setIndex(index - 1)
+            } else {
+              props.navigation.goBack();
+            }
           }}
-          // onNext={() => {
-            
-          // }}
+          onNext={() => {
+            if (index != 4) {
+              getProductByPosition(index + 1);
+              setIndex(index + 1)
+            }
+          }}
+
         />
         <ScrollView
           ref={scrollRef}
@@ -431,10 +526,14 @@ function AddProduct(props) {
               },
             ]}>
 
-            {prodCount >= 4 ?
-              <View
-                style={[{ width: 130 }]}>
-              </View>
+            {index <= prodCount - 1 ?
+              <Button
+                style={[{ width: 130 }]}
+                title={'Modify'}
+                onPress={() => {
+                  modifyProduct()
+                }}
+              />
               :
               <Button
                 style={[{ width: 130 }]}

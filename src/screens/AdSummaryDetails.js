@@ -260,7 +260,7 @@ function AdSummaryDetails(props) {
   const getTotalPrice = () => {
     if (newPrice && newQuantity) {
       var totalPriceForProduct = newPrice * newQuantity
-      return '' + totalPriceForProduct.toFixed(2);
+      return parseFloat(totalPriceForProduct).toFixed(2);
       //setNewTotalPrice(totalPriceForProduct)
     }
     return ''
@@ -375,6 +375,8 @@ function AdSummaryDetails(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show('Accepted');
+     // props.navigation.goBack();
+    //  console.log('afterAccepted ', JSON.stringify(result.data[0]))
       props.navigation.navigate('SummaryTransaction', {
         status: 'deliveryAccepted',
         summaryData: result.data[0],
@@ -545,8 +547,10 @@ function AdSummaryDetails(props) {
         '0',
         '0',
         totalToPay,
-        'offline payment',
+        paymentResult,
         whyThisChange,
+        selectDate,
+        changeLocalToUTCTime(selectDate + ' '+ selectTime),
       );
       setLoading(false);
       if (result.status == true) {
@@ -556,7 +560,15 @@ function AdSummaryDetails(props) {
         onDiscard();
         setChangedItem(false)
 
-        onNext(paymentResult);
+        // props.navigation.dispatch(
+        //   CommonActions.reset({
+        //     index: 0,
+        //     routes: [{ name: 'BottomBar' }],
+        //   }),
+        // );
+       // onNext(paymentResult);
+      // console.log('changeRewqqqq ', JSON.stringify(result.data));
+       props.navigation.goBack();
 
       } else {
         Toast.show(result.error);
