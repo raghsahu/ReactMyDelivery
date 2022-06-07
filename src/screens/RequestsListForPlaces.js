@@ -28,7 +28,7 @@ import {
   FilterItem,
 } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext, filterList, changeUTCtoLocal } from '../context/CommonUtils';
+import { CommonUtilsContext, filterList, changeUTCtoLocal,changeMMMDateFormat } from '../context/CommonUtils';
 import { APPContext } from '../context/AppProvider';
 import Toast from 'react-native-simple-toast';
 const { height, width } = Dimensions.get('screen');
@@ -45,6 +45,7 @@ function RequestsListForPlaces(props) {
   const [maxPrice, setMaximumPrice] = useState('');
   const [minCommission, setMinimumCommission] = useState('');
   const [requestItem, setRequestItem] = useState([]);
+  const [isRefresh, setRefresh] = useState(false);
 
   useEffect(() => {
     setOptionFilter(filterList);
@@ -52,14 +53,12 @@ function RequestsListForPlaces(props) {
 
   useEffect(() => {
     getRequestList(true);
-  }, [props]);
 
-  useEffect(() => {
     const interval = setInterval(() => {
       getRequestList(false);
     }, 1000 * 10);
     return () => clearInterval(interval);
-  }, []);
+  }, [props, isRefresh]);
 
   const getCurrentDate = () => {
     var date = new Date().getDate();
@@ -76,9 +75,12 @@ function RequestsListForPlaces(props) {
   };
 
   const getRequestList = async (loading) => {
+    console.log('rrrrtt ', maxPrice)
     //ad type- purchase & delivery(0), recovery & delivery(1), both(2)
     setLoading(loading);
     const result = await getFilterProduct(
+      user.user_id,
+      user.user_gender,
       maxPrice ? maxPrice : '10000000',
       '0',
       '10000000',
@@ -93,13 +95,13 @@ function RequestsListForPlaces(props) {
       const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
       let todos = []; 
       if(result.data.length > 0){
-        for (let i = 0; i < result.data.length; i++) {
-          const dateA = new Date(moment(changeUTCtoLocal(result.data[i].ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
-          if (dateB < dateA && user.user_id != result.data[i].ad_user_id && (user.user_gender == result.data[i].ad_gender || result.data[i].ad_gender == 3)) {
-            todos.push(result.data[i])
-          }
-        }
-        setRequestItem(todos);
+        // for (let i = 0; i < result.data.length; i++) {
+        //   const dateA = new Date(moment(changeUTCtoLocal(result.data[i].ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+        //   if (dateB < dateA && user.user_id != result.data[i].ad_user_id && (user.user_gender == result.data[i].ad_gender || result.data[i].ad_gender == 3)) {
+        //     todos.push(result.data[i])
+        //   }
+        // }
+        setRequestItem(result.data);
       }else{
         setRequestItem([]);
       }
@@ -576,7 +578,8 @@ function RequestsListForPlaces(props) {
                 if (filterKey == '4' ? !maxPrice : !minCommission) {
                   Toast.show(getTranslation('pls_enter_amount'));
                 } else {
-                  getRequestList(true);
+                 // getRequestList(true);
+                  setRefresh(true)
                   logoutModalVisibility();
                 }
               }}

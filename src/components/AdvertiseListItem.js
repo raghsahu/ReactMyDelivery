@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Dimensions,
@@ -6,32 +6,42 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-const {height, width} = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 //ASSETS
-import {COLORS, IMAGES} from '../assets';
+import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import {Text, Button} from '../components';
-import {Rating} from 'react-native-ratings';
+import { Text, GroupImage } from '../components';
+import { Rating } from 'react-native-ratings';
 //CONTEXT
-import {LocalizationContext} from '../context/LocalizationProvider';
-import {APPContext} from '../context/AppProvider';
-import {changeUTCtoLocal} from '../context/CommonUtils';
+import { LocalizationContext } from '../context/LocalizationProvider';
+import { APPContext } from '../context/AppProvider';
+import { changeUTCtoLocal, changeMMMDateFormat } from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 const AdvertiseListItem = props => {
-  const {getTranslation} = useContext(LocalizationContext);
-  const {imageBaseUrl} = useContext(APPContext);
+  const { getTranslation } = useContext(LocalizationContext);
+  const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
   const setImages = prodImg => {
     var imageArray = ''
-    if(prodImg){
-       imageArray = prodImg.split(',');
+    if (prodImg) {
+      imageArray = prodImg.split(',');
     }
-    
-    return imageArray ? imageArray[0]: '' 
+    return imageArray ? imageArray[0] : ''
   };
-  
+
+  const getAllImages = (item) => {
+    const images = []
+    if (item.hasOwnProperty('products')) {
+      for (var i = 0; i < item.products.length; i++) {
+        images.push(imageBaseUrl + setImages(item.products[i].prod_img))
+      }
+    }
+    return images
+  };
+
+
   return (
     <TouchableOpacity
       style={[
@@ -44,7 +54,7 @@ const AdvertiseListItem = props => {
         props.onSummary();
       }}>
       <Text color={COLORS.textColor2} size="8" weight="bold" align={'right'}>
-        {getTranslation('publication_date') + ' : '+ item.ad_create_date}
+        {getTranslation('publication_date') + ' : ' + item.ad_create_date}
       </Text>
 
       <View>
@@ -54,12 +64,12 @@ const AdvertiseListItem = props => {
               {getTranslation('application_rate')}
             </Text>
             <Text style={{}} color={COLORS.textColor} size="8" weight="400">
-              {getTranslation('number_evaluation') + ' '+ (item.user_rating ? ''+parseFloat(item.user_rating).toFixed(2) : '0')}
+              {getTranslation('number_evaluation') + ' ' + (item.user_rating ? '' + parseFloat(item.user_rating).toFixed(2) : '0')}
             </Text>
           </View>
           <View style={styles.ratingView}>
             <Rating
-              readonly= {true}
+              readonly={true}
               type="custom"
               ratingColor="#04D9C5"
               startingValue={item.user_rating ? item.user_rating : 0}
@@ -67,20 +77,32 @@ const AdvertiseListItem = props => {
               ratingCount={5}
               imageSize={13}
               // onFinishRating={this.ratingCompleted}
-              style={{paddingVertical: 1}}
+              style={{ paddingVertical: 1 }}
             />
           </View>
         </View>
 
         <View style={styles.imageView}>
-          <Image style={styles.image} 
-          source={
-            props.item.hasOwnProperty('products') ?
-            setImages(props.item.products[0].prod_img)
-            ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
-            : IMAGES.circle_placeholder : IMAGES.circle_placeholder
-          } 
-            />
+          {/* <Image style={styles.image}
+            source={
+              props.item.hasOwnProperty('products') ?
+                setImages(props.item.products[0].prod_img)
+                  ? { uri: imageBaseUrl + setImages(props.item.products[0].prod_img) }
+                  : IMAGES.circle_placeholder : IMAGES.circle_placeholder
+            }
+          /> */}
+          <GroupImage
+            images={getAllImages(props.item)}
+            width={70}
+            // displayOnly={1}
+            background={IMAGES.circle_placeholder}
+            style={{
+              width: 70,
+              height: 70,
+              borderRadius: 35,
+              margin: 5,
+            }}
+          />
 
           <View
             style={{
@@ -117,7 +139,7 @@ const AdvertiseListItem = props => {
           </View>
         </View>
 
-        <View style={[styles.text_left, {marginTop: 5}]}>
+        <View style={[styles.text_left, { marginTop: 5 }]}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('acceptance_limit')}
           </Text>
@@ -127,11 +149,11 @@ const AdvertiseListItem = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {changeUTCtoLocal(item.ad_accept_limit)}
+            {changeMMMDateFormat(item.ad_accept_limit)}
           </Text>
         </View>
 
-        <View style={[styles.text_left, {marginTop: 5}]}>
+        <View style={[styles.text_left, { marginTop: 5 }]}>
           <Text style={{}} color={COLORS.textColor2} size="16" weight="500">
             {getTranslation('delivery_limit')}
           </Text>
@@ -141,7 +163,7 @@ const AdvertiseListItem = props => {
             color={COLORS.textColor3}
             size="16"
             weight="500">
-            {changeUTCtoLocal(item.ad_delivery_limit)}
+            {changeMMMDateFormat(item.ad_delivery_limit)}
           </Text>
         </View>
 
@@ -154,7 +176,7 @@ const AdvertiseListItem = props => {
           }}>
           <View
             style={{
-              flex:1,
+              flex: 1,
               flexDirection: 'row',
               alignItems: 'center',
             }}>
@@ -167,13 +189,13 @@ const AdvertiseListItem = props => {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+              {'€ ' + parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
             </Text>
           </View>
 
           <View
             style={{
-              flex:1,
+              flex: 1,
               flexDirection: 'row',
             }}>
             <Text style={{}} color={COLORS.black} size="16" weight="500">
@@ -181,11 +203,11 @@ const AdvertiseListItem = props => {
             </Text>
 
             <Text
-              style={[styles.text_right, {alignSelf: 'center'}]}
+              style={[styles.text_right, { alignSelf: 'center' }]}
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+              {'€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
             </Text>
           </View>
         </View>

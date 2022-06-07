@@ -24,7 +24,7 @@ import {
 
 const {height, width} = Dimensions.get('screen');
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext,changeUTCtoLocal, changeUTCtoLocalTime } from '../context/CommonUtils';
+import { CommonUtilsContext, changeUTCtoLocalTime ,changeMMMDateFormat} from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 function ExchangeSuccessSummary(props) {
@@ -173,6 +173,7 @@ function ExchangeSuccessSummary(props) {
               props.navigation.navigate('RatingReview', {
                 userName: item.user_y[0].user_f_name + ' ' + item.user_y[0].user_l_name,
                 rate_ad_id: item.ad_id,
+                rate_user_id: item.user_y[0].user_id,
                 onReturn: item => {
                   console.log('log_item ' + item);
                  // setRatingStatus(true);
@@ -283,7 +284,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_accept_limit)}
+                {changeMMMDateFormat(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -303,7 +304,7 @@ function ExchangeSuccessSummary(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_delivery_limit)}
+                {changeMMMDateFormat(item.ad_delivery_limit)}
               </Text>
             </View>
 
@@ -434,7 +435,7 @@ function ExchangeSuccessSummary(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.ad_delv_time)}
+              {changeMMMDateFormat(item.ad_delv_time)}
             </Text>
           </View>
 

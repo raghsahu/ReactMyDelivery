@@ -38,7 +38,7 @@ export const AppProvider = props => {
     published_ads: baseURL + 'fields/published_ads', 
     completed_ads: baseURL + 'fields/completed_ads',
     inprogress_ads: baseURL + 'fields/inprogress_ads',
-    getProductFilter: baseURL + 'fields/product',
+    getProductFilter: baseURL + 'fields/getProducts',
     ad_accept: baseURL + 'madd/ad_accept',
     change_date_time: baseURL + 'madd/change_date_time',
     change_request: baseURL + 'madd/change_request',
@@ -182,7 +182,7 @@ export const AppProvider = props => {
   };
 
   const change_request = async (loggedin_user_id, product_data, ad_id, ad_cmsn_price, ad_cmsn_delivery, ad_gender, ad_accept_limit, ad_delivery_limit,
-    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change, selectDate, selectTime) => {
+    ad_type, ad_pay_status, ad_pay_amount, ad_pay_info, ad_why_this_change, selectDate, selectTime, acpt_type) => {
     let params = {
       loggedin_user_id: loggedin_user_id,
       product_data: product_data,
@@ -199,6 +199,7 @@ export const AppProvider = props => {
       ad_why_this_change: ad_why_this_change,
       acpt_date: selectDate,
       acpt_time: selectTime,
+      acpt_type:acpt_type,
     };
 
     return await request(webServices.change_request, 'post', params);
@@ -236,8 +237,10 @@ export const AppProvider = props => {
     return await request(webServices.inprogress_ads, 'post', params);
   };
 
-  const getFilterProduct = async ( max_price, min_price,max_cmsn,min_cmsn,last_delv_date,user_lat, user_lon ) => {
+  const getFilterProduct = async (user_id, user_gender, max_price, min_price,max_cmsn,min_cmsn,last_delv_date,user_lat, user_lon ) => {
     let params = {
+      user_id: user_id,
+      user_gender: user_gender,
       max_price: max_price,
       min_price: min_price,
       max_cmsn: max_cmsn,
@@ -283,10 +286,10 @@ export const AppProvider = props => {
     return await request(webServices.del_ads, 'post', params);
   };
 
-  const putRating = async (rate_user_id, rate_rating, rate_comment, rate_ad_id, ratingForApp, commentForApp) => {
+  const putRating = async (rate_user_id, rate_create_by, rate_rating, rate_comment, rate_ad_id, ratingForApp, commentForApp) => {
     let params = {
       rate_user_id : rate_user_id,
-      rate_create_by: rate_user_id,
+      rate_create_by: rate_create_by,
       rate_rating: rate_rating,
       rate_comment: rate_comment,
       app_rating: ratingForApp,

@@ -59,9 +59,12 @@ export const changeUTCtoLocal = date => {
 }
 
 export const changeLocalToUTC = date => {
-  var utcChangeFormatDate = new Date(moment(date).format('YYYY/MM/DD HH:mm:ss'))
-  var utcTime =  moment.utc(utcChangeFormatDate).format('YYYY-MM-DD HH:mm')
-  return utcTime
+  if(date != '0000-00-00 00:00:00'){
+    var utcChangeFormatDate = new Date(moment(date).format('YYYY/MM/DD HH:mm:ss'))
+    var utcTime =  moment.utc(utcChangeFormatDate).format('YYYY-MM-DD HH:mm')
+    return utcTime
+  }
+  return ''
 }
 
 export const changeLocalToUTCTime = date => {
@@ -74,6 +77,14 @@ export const changeUTCtoLocalTime = date => {
   var utcChangeFormatDate = moment(date).format('YYYY-MM-DDTHH:mm:ss.000');
   var localDate = new Date(utcChangeFormatDate + 'Z');
   return moment(localDate).format('HH:mm')
+}
+
+export const changeMMMDateFormat= date => {
+  if(date != '0000-00-00 00:00:00'){
+    var newFormatDate = changeUTCtoLocal(date)
+    return moment(newFormatDate).format('DD-MMM-YYYY HH:mm')
+  }
+  return ''
 }
 
 export const CommonUtilsContext = createContext();

@@ -28,7 +28,7 @@ import {
 } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext,changeUTCtoLocal } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal,changeMMMDateFormat } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
 const { height, width } = Dimensions.get('screen');
@@ -272,7 +272,7 @@ function PublishedAdsDetails(props) {
                       color={COLORS.textColor4}
                       size="16"
                       weight="500">
-                      {changeUTCtoLocal(item.acpt_date + ' ' + item.acpt_time)}
+                      {changeMMMDateFormat(item.acpt_date + ' ' + item.acpt_time)}
                     </Text>
                   </View>
 
@@ -380,7 +380,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_accept_limit)}
+                {changeMMMDateFormat(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -400,7 +400,7 @@ function PublishedAdsDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_delivery_limit)}
+                {changeMMMDateFormat(item.ad_delivery_limit)}
               </Text>
             </View>
 

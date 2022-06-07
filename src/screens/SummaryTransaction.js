@@ -38,7 +38,7 @@ import Clipboard from '@react-native-community/clipboard';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import { CommonUtilsContext, changeUTCtoLocal, changeUTCtoLocalTime } from '../context/CommonUtils';
+import { CommonUtilsContext, changeUTCtoLocal, changeUTCtoLocalTime,changeMMMDateFormat } from '../context/CommonUtils';
 
 function SummaryTransaction(props) {
   const { status, subTabIndex } = props.route.params;
@@ -203,7 +203,7 @@ function SummaryTransaction(props) {
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
-      setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
+      setSelectDate(moment(currentDate).format('YYYY-MM-DD-MM-YYYY'));
     } else {
       setSelectTime(moment(selectedDate).format('HH:mm'));
     }
@@ -627,7 +627,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_accept_limit)}
+                {changeMMMDateFormat(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -647,7 +647,7 @@ function SummaryTransaction(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_delivery_limit)}
+                {changeMMMDateFormat(item.ad_delivery_limit)}
               </Text>
             </View>
 
@@ -736,7 +736,7 @@ function SummaryTransaction(props) {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {item.acpt_date}
+                {moment(item.acpt_date).format('DD-MMM-YYYY')}
               </Text>
             </View>
 
@@ -790,7 +790,7 @@ function SummaryTransaction(props) {
                   color={COLORS.primaryColor}
                   size="16"
                   weight="500">
-                  {changeUTCtoLocal(item.ad_delv_time)}
+                  {changeMMMDateFormat(item.ad_delv_time)}
                 </Text>
               </View>
 
@@ -832,6 +832,7 @@ function SummaryTransaction(props) {
                     props.navigation.navigate('RatingReview', {
                       userName: user_y.user_f_name + ' ' + user_y.user_l_name,
                       rate_ad_id: item.ad_id,
+                      rate_user_id: item.user_y[0].user_id,
                       onReturn: item => {
                         console.log('log_item ' + item);
                         setRatingStatus(true);
@@ -849,6 +850,7 @@ function SummaryTransaction(props) {
                     props.navigation.navigate('RatingReview', {
                       userName: user_x.user_f_name + ' ' + user_x.user_l_name,
                       rate_ad_id: item.ad_id,
+                      rate_user_id: item.user_x[0].user_id,
                       onReturn: item => {
                         console.log('log_item ' + item);
                         setRatingStatus(true);

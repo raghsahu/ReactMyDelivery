@@ -25,6 +25,7 @@ import DeleteModal from './DeleteModal';
 import SuggestionItemList from './SuggestionItemList';
 import ModificationProductList from './ModificationProductList';
 import OpenInfoModal from './OpenInfoModal';
+import GroupImage from './GroupImage';
 
 export {
   Text,
@@ -54,4 +55,5 @@ export {
   SuggestionItemList,
   ModificationProductList,
   OpenInfoModal,
+  GroupImage,
 };

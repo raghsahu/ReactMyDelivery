@@ -4,10 +4,10 @@ const { height, width } = Dimensions.get('screen');
 //ASSETS
 import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import { Text, Button } from '../components';
+import { Text, Button, GroupImage } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import {changeUTCtoLocal} from '../context/CommonUtils';
+import { changeUTCtoLocal, changeMMMDateFormat } from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 const PublishedItemList = props => {
@@ -15,17 +15,27 @@ const PublishedItemList = props => {
   const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
-  const dateA = new Date(moment(changeUTCtoLocal(props.item.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
-  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
+  const dateA = props.item.ad_accept_limit != '0000-00-00 00:00:00' ? new Date(moment(changeUTCtoLocal(props.item.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0] + ' UTC').toISOString() : 0;
+  const dateB = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString();
 
   const setImages = prodImg => {
     var imageArray = ''
-    if(prodImg){
-       imageArray = prodImg.split(',');
+    if (prodImg) {
+      imageArray = prodImg.split(',');
     }
-    return imageArray ? imageArray[0]: '' 
+    return imageArray ? imageArray[0] : ''
   };
-  
+
+  const getAllImages = (item) => {
+    const images = []
+    if (item.hasOwnProperty('products')) {
+      for (var i = 0; i < item.products.length; i++) {
+        images.push(imageBaseUrl + setImages(item.products[i].prod_img))
+      }
+    }
+    return images
+  };
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -48,7 +58,7 @@ const PublishedItemList = props => {
               flexDirection: 'row',
               marginTop: 20,
             }}>
-            <Image
+            {/* <Image
               style={{
                 width: 70,
                 height: 70,
@@ -61,6 +71,19 @@ const PublishedItemList = props => {
                 ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
                 : IMAGES.circle_placeholder : IMAGES.circle_placeholder
               }
+            /> */}
+
+            <GroupImage
+              images={getAllImages(props.item)}
+              width={70}
+              // displayOnly={1}
+              background={IMAGES.circle_placeholder}
+              style={{
+                width: 70,
+                height: 70,
+                borderRadius: 35,
+                margin: 5,
+              }}
             />
 
             <View
@@ -75,7 +98,7 @@ const PublishedItemList = props => {
                 size="18"
                 weight="500">
                 {/* {item.user_f_name + ' ' + item.user_l_name} */}
-                {props.item.hasOwnProperty('products') ? item.products[0].prod_name: item.user_f_name + ' ' + item.user_l_name}
+                {props.item.hasOwnProperty('products') ? item.products[0].prod_name : item.user_f_name + ' ' + item.user_l_name}
               </Text>
 
               <View
@@ -131,32 +154,32 @@ const PublishedItemList = props => {
                 ]}
                 title={getTranslation('expired')}
                 type={2}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               :
               null}
 
-        {dateB > dateA ?
-            <Button
-              style={[
-                {
-                  width: 93,
-                  height: 29,
-                  marginTop: 5,
-                  backgroundColor: COLORS.red,
-                  borderRadius: 0,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                },
-              ]}
-              title={getTranslation('delete')}
-              onPress={() => {
-                props.onDelete(item.ad_id);
-              }}
-            />
-            :
-            null}
-            
+            {dateB > dateA ?
+              <Button
+                style={[
+                  {
+                    width: 93,
+                    height: 29,
+                    marginTop: 5,
+                    backgroundColor: COLORS.red,
+                    borderRadius: 0,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
+                title={getTranslation('delete')}
+                onPress={() => {
+                  props.onDelete(item.ad_id);
+                }}
+              />
+              :
+              null}
+
           </View>
 
           <View
@@ -175,7 +198,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.ad_accept_limit)}
+              {changeMMMDateFormat(item.ad_accept_limit)}
             </Text>
           </View>
 
@@ -196,7 +219,7 @@ const PublishedItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.ad_delivery_limit)}
+              {changeMMMDateFormat(item.ad_delivery_limit)}
             </Text>
           </View>
 
@@ -224,7 +247,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                  {'€ '+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+                {'€ ' + parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -247,7 +270,7 @@ const PublishedItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'€ '+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+                {'€ ' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>

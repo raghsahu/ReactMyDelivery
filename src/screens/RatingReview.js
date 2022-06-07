@@ -89,6 +89,7 @@ function RatingReview(props) {
   const onNext = async () => {
     setLoading(true);
     const result = await putRating(
+      props.route.params.rate_user_id,
       user.user_id,
       ratingForUser,
       commentForUser,

@@ -33,7 +33,7 @@ import moment from 'moment'; // date format
 const { height, width } = Dimensions.get('screen');
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext,changeUTCtoLocal,changeLocalToUTCTime } from '../context/CommonUtils';
+import { CommonUtilsContext,changeUTCtoLocal,changeLocalToUTCTime,changeMMMDateFormat } from '../context/CommonUtils';
 import { APPContext } from '../context/AppProvider';
 //package
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -545,12 +545,13 @@ function AdSummaryDetails(props) {
         item.ad_accept_limit,
         item.ad_delivery_limit,
         '0',
-        '0',
+        '1',
         totalToPay,
         paymentResult,
         whyThisChange,
         selectDate,
         changeLocalToUTCTime(selectDate + ' '+ selectTime),
+        '3', //ad accept type == 1-Z Accepted Ad, 2-X Accepted Ad,3-Y Accepted Ad
       );
       setLoading(false);
       if (result.status == true) {
@@ -775,7 +776,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_accept_limit)}
+                {changeMMMDateFormat(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -795,7 +796,7 @@ function AdSummaryDetails(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(item.ad_delivery_limit)}
+                {changeMMMDateFormat(item.ad_delivery_limit)}
               </Text>
             </View>
 

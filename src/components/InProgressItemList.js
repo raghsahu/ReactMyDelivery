@@ -4,10 +4,10 @@ const { height, width } = Dimensions.get('screen');
 //ASSETS
 import { COLORS, IMAGES } from '../assets';
 //COMMON COMPONENT
-import { Text, Button } from '../components';
+import { Text, Button, GroupImage } from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import {changeUTCtoLocal} from '../context/CommonUtils';
+import { changeUTCtoLocal, changeMMMDateFormat } from '../context/CommonUtils';
 import moment from 'moment'; // date format
 
 const InProgressItemList = props => {
@@ -15,15 +15,25 @@ const InProgressItemList = props => {
   const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
-  const dateA = new Date(moment(changeUTCtoLocal(props.item.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
-  const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
+  const dateA = new Date(moment(changeUTCtoLocal(props.item.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0] + ' UTC').toISOString();
+  const dateB = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString();
 
   const setImages = prodImg => {
     var imageArray = ''
-    if(prodImg){
-       imageArray = prodImg.split(',');
+    if (prodImg) {
+      imageArray = prodImg.split(',');
     }
-    return imageArray ? imageArray[0]: '' 
+    return imageArray ? imageArray[0] : ''
+  };
+
+  const getAllImages = (item) => {
+    const images = []
+    if (item.hasOwnProperty('products')) {
+      for (var i = 0; i < item.products.length; i++) {
+        images.push(imageBaseUrl + setImages(item.products[i].prod_img))
+      }
+    }
+    return images
   };
 
   return (
@@ -47,7 +57,7 @@ const InProgressItemList = props => {
               flexDirection: 'row',
               marginTop: 20,
             }}>
-            <Image
+            {/* <Image
               style={{
                 width: 70,
                 height: 70,
@@ -60,6 +70,19 @@ const InProgressItemList = props => {
                 ? {uri: imageBaseUrl + setImages(props.item.products[0].prod_img)}
                 : IMAGES.circle_placeholder : IMAGES.circle_placeholder
               }
+            /> */}
+
+            <GroupImage
+              images={getAllImages(props.item)}
+              width={70}
+              // displayOnly={1}
+              background={IMAGES.circle_placeholder}
+              style={{
+                width: 70,
+                height: 70,
+                borderRadius: 35,
+                margin: 5,
+              }}
             />
 
             <View
@@ -74,7 +97,7 @@ const InProgressItemList = props => {
                 size="18"
                 weight="500">
                 {/* {item.user_f_name + ' ' + item.user_l_name} */}
-                {props.item.hasOwnProperty('products') ? item.products[0].prod_name: item.user_f_name + ' ' + item.user_l_name}
+                {props.item.hasOwnProperty('products') ? item.products[0].prod_name : item.user_f_name + ' ' + item.user_l_name}
               </Text>
 
               <View
@@ -129,61 +152,61 @@ const InProgressItemList = props => {
                 ]}
                 title={'Complaint'}
                 type={2}
-               onPress={() => {props.onComplaint()}}
+                onPress={() => { props.onComplaint() }}
               />
               :
-              props.subTabIndex ===1 &&  props.tabStatus != 'completed' ?
-              <Button
-              style={[
-                {
-                  width: 133,
-                  height: 36,
-                  marginTop: 5,
-                  backgroundColor: COLORS.primaryColor,
-                  borderRadius: 133/2,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                },
-              ]}
-              title={getTranslation('txn_code')}
-              onPress={() => {
-                props.onCodeExchange(item);
-              }}
-            />
-            :
-            null
+              props.subTabIndex === 1 && props.tabStatus != 'completed' ?
+                <Button
+                  style={[
+                    {
+                      width: 133,
+                      height: 36,
+                      marginTop: 5,
+                      backgroundColor: COLORS.primaryColor,
+                      borderRadius: 133 / 2,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                    },
+                  ]}
+                  title={getTranslation('txn_code')}
+                  onPress={() => {
+                    props.onCodeExchange(item);
+                  }}
+                />
+                :
+                null
             }
             {props.tabStatus === 'completed' ?
-              props.subTabIndex ===1 && item.user_y[0].rating_status == '0' ?
-              <Button
-                style={[
-                  styles.rating
-                ]}
-                title={getTranslation('rating')}
-                onPress={() => {
-                  props.onRating(item);
-                }}
-              />
-              :
-              
-              props.subTabIndex ===2 && item.user_x[0].rating_status == '0' ?
-              <Button
-                style={[styles.rating]}
-                title={getTranslation('rating')}
-                // type={1}
-                onPress={() => {
-                  props.onRating(item);
-                }}
-              />
-              :
-              <Button
-                style={[styles.rating, { width: 130, backgroundColor: COLORS.darkGray}]}
-                title={getTranslation('evaluation_done')}
-                type={2}
-                onPress={() => {
-                    //evalution done  
-                }}
-              />
+              props.subTabIndex === 1 && item.user_y[0].rating_status == '0' ?
+                <Button
+                  style={[
+                    styles.rating
+                  ]}
+                  title={getTranslation('rating')}
+                  onPress={() => {
+                    props.onRating(item);
+                  }}
+                />
+                :
+
+                props.subTabIndex === 2 && item.user_x[0].rating_status == '0' ?
+                  <Button
+                    style={[styles.rating]}
+                    title={getTranslation('rating')}
+                    // type={1}
+                    onPress={() => {
+                      props.onRating(item);
+                    }}
+                  />
+                  :
+                  <Button
+                    style={[styles.rating, { width: 130, backgroundColor: COLORS.darkGray }]}
+                    title={getTranslation('evaluation_done')}
+                    type={2}
+                    onPress={() => {
+                      //evalution done  
+                    }}
+                  />
               :
               null
             }
@@ -205,7 +228,7 @@ const InProgressItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.ad_accept_limit)}
+              {changeMMMDateFormat(item.ad_accept_limit)}
             </Text>
           </View>
 
@@ -226,7 +249,7 @@ const InProgressItemList = props => {
               color={COLORS.textColor4}
               size="16"
               weight="500">
-                {changeUTCtoLocal(item.ad_delivery_limit)}
+              {changeMMMDateFormat(item.ad_delivery_limit)}
             </Text>
           </View>
 
@@ -255,7 +278,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'€'+ parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
+                {'€' + parseFloat(item.ad_pay_amount - item.ad_cmsn_price).toFixed(2)}
               </Text>
             </View>
 
@@ -279,7 +302,7 @@ const InProgressItemList = props => {
                 color={COLORS.primaryColor}
                 size="16"
                 weight="500">
-                {'€'+ parseFloat(item.ad_cmsn_delivery).toFixed(2)}
+                {'€' + parseFloat(item.ad_cmsn_delivery).toFixed(2)}
               </Text>
             </View>
           </View>
@@ -295,7 +318,7 @@ const InProgressItemList = props => {
 };
 
 const styles = StyleSheet.create({
-rating: {
+  rating: {
     width: 93,
     height: 29,
     marginTop: 5,

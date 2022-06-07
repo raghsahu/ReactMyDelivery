@@ -243,6 +243,7 @@ function MyAccount(props) {
             onRating={(item) => {
               props.navigation.navigate('RatingReview', {
                 userName: item.user_y[0].user_f_name + ' ' + item.user_y[0].user_l_name,
+                rate_user_id: item.user_y[0].user_id,
                 rate_ad_id: item.ad_id,
                 onReturn: item => {
                   console.log('log_item ' + item);
@@ -293,6 +294,7 @@ function MyAccount(props) {
             onRating={(item) => {
               props.navigation.navigate('RatingReview', {
                 userName:  item.user_x[0].user_f_name + ' ' + item.user_x[0].user_l_name,
+                rate_user_id: item.user_x[0].user_id,
                 rate_ad_id: item.ad_id,
                 onReturn: item => {
                   console.log('log_item ' + item);

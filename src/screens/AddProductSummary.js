@@ -308,7 +308,8 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                  {moment(CommissionData.acceptanceDay + ' '+  CommissionData.acceptanceTime).format('YYYY-MM-DD HH:mm')}
+                  {moment(CommissionData.acceptanceDay + ' '+  CommissionData.acceptanceTime).format('DD-MMM-YYYY HH:mm')}
+                 
               </Text>
             </View>
 
@@ -328,7 +329,8 @@ function AddProductSummary(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {moment(CommissionData.limitDay + ' '+  CommissionData.deliveryTime).format('YYYY-MM-DD HH:mm')}
+                {moment(CommissionData.limitDay + ' '+  CommissionData.deliveryTime).format('DD-MMM-YYYY HH:mm')}
+             
               </Text>
             </View>
 

@@ -15,7 +15,7 @@ import {COLORS, IMAGES, DIMENSION} from '../assets';
 //COMMON COMPONENT
 import {Button, Text, ProgressView, Header} from '../components';
 import { LocalizationContext } from '../context/LocalizationProvider';
-import { CommonUtilsContext ,changeUTCtoLocal} from '../context/CommonUtils';
+import { CommonUtilsContext , changeMMMDateFormat} from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import { APPContext } from '../context/AppProvider';
 const { height, width } = Dimensions.get('screen');
@@ -162,7 +162,7 @@ function ProposalChangedDate(props) {
               color={COLORS.darkGray}
               size="16"
               weight="500">
-              {changeUTCtoLocal(item.acpt_date + ' ' + item.acpt_time)}
+              {changeMMMDateFormat(item.acpt_date + ' ' + item.acpt_time)}
             </Text>
           </View>
 
@@ -185,7 +185,7 @@ function ProposalChangedDate(props) {
               color={COLORS.primaryColor}
               size="16"
               weight="500">
-              {changeUTCtoLocal(date_change_history.change_date + ' '+ date_change_history.change_time)}
+              {changeMMMDateFormat(date_change_history.change_date + ' '+ date_change_history.change_time)}
             </Text>
           </View>
 
@@ -276,7 +276,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                 {changeUTCtoLocal(item.ad_accept_limit)}
+                 {changeMMMDateFormat(item.ad_accept_limit)}
               </Text>
             </View>
 
@@ -296,7 +296,7 @@ function ProposalChangedDate(props) {
                 color={COLORS.darkGray}
                 size="16"
                 weight="500">
-                 {changeUTCtoLocal(item.ad_delivery_limit)}
+                 {changeMMMDateFormat(item.ad_delivery_limit)}
               </Text>
             </View>
 

@@ -24,7 +24,7 @@ import {
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
-import { CommonUtilsContext, changeUTCtoLocal } from '../context/CommonUtils';
+import { CommonUtilsContext, changeMMMDateFormat } from '../context/CommonUtils';
 import Toast from 'react-native-simple-toast';
 import moment from 'moment'; // date format
 
@@ -232,7 +232,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(oldSummaryDetails.ad_accept_limit)}
+                {changeMMMDateFormat(oldSummaryDetails.ad_accept_limit)}
               </Text>
             </View>
 
@@ -252,7 +252,7 @@ function AdModificationProposal(props) {
                 color={COLORS.textColor4}
                 size="16"
                 weight="500">
-                {changeUTCtoLocal(oldSummaryDetails.ad_delivery_limit)}
+                {changeMMMDateFormat(oldSummaryDetails.ad_delivery_limit)}
               </Text>
             </View>
 
