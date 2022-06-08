@@ -94,7 +94,8 @@ function AdModificationProposal(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show(getTranslation('success'))
-      deleteCurrentNotification();
+     // deleteCurrentNotification();
+      props.navigation.goBack();
     } else {
       Toast.show(result.error);
     }

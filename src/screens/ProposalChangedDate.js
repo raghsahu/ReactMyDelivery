@@ -62,7 +62,8 @@ function ProposalChangedDate(props) {
     setLoading(false);
     if (result.status == true) {
       Toast.show('Success')
-      deleteCurrentNotification();
+     // deleteCurrentNotification();
+     props.navigation.goBack();
     } else {
       Toast.show(result.error);
     }

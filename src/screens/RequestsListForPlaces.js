@@ -81,9 +81,9 @@ function RequestsListForPlaces(props) {
     const result = await getFilterProduct(
       user.user_id,
       user.user_gender,
-      maxPrice ? maxPrice : '10000000',
+      maxPrice ? maxPrice : '100000000000',
       '0',
-      '10000000',
+      '100000000000',
       minCommission ? minCommission : '0',
       getCurrentDate(),
       lat,

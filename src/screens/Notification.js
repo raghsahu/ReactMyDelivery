@@ -116,7 +116,7 @@ function Notification(props) {
                 } else if (item.notn_type == '2') {
 
                 } else if (item.notn_type == '3') {//for date time change request accepted
-                  Toast.show('You have already taken action on this product')
+                  Toast.show('You have already taken action on this ads')
                 } else if (item.notn_type == '4') {
 
                 } else if (item.notn_type == '5') {//for accept ads by delivery man

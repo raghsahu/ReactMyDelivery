@@ -9,6 +9,7 @@ import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
 import { changeUTCtoLocal, changeMMMDateFormat } from '../context/CommonUtils';
 import moment from 'moment'; // date format
+import Toast from 'react-native-simple-toast';
 
 const InProgressItemList = props => {
   const { getTranslation } = useContext(LocalizationContext);
@@ -39,7 +40,19 @@ const InProgressItemList = props => {
   return (
     <TouchableOpacity
       onPress={() => {
-        props.onSummary(item);
+        if(props.subTabIndex == 2){
+          if(item.notn_acept_rejct == 0){
+            Toast.show('User not taken any action now for change request')
+          }else if(item.notn_acept_rejct == 1){
+            Toast.show('User has cancelled for change request')
+          }else{
+            props.onSummary(item);
+          }
+        }else{
+          props.onSummary(item);
+        }
+        
+     
       }}
     >
       <View style={{}}>

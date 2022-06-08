@@ -39,6 +39,7 @@ export const AppProvider = props => {
     completed_ads: baseURL + 'fields/completed_ads',
     inprogress_ads: baseURL + 'fields/inprogress_ads',
     getProductFilter: baseURL + 'fields/getProducts',
+    getProductData: baseURL + 'fields/product',
     ad_accept: baseURL + 'madd/ad_accept',
     change_date_time: baseURL + 'madd/change_date_time',
     change_request: baseURL + 'madd/change_request',
@@ -335,7 +336,7 @@ export const AppProvider = props => {
       ad_id : ad_id,
 
     };
-    return await request(webServices.getProductFilter, 'post', params);
+    return await request(webServices.getProductData, 'post', params);
   };
 
   

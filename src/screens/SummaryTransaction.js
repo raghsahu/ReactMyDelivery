@@ -203,7 +203,7 @@ function SummaryTransaction(props) {
     if (dateSelected) {
       const currentDate = selectedDate || date;
       setDate(currentDate);
-      setSelectDate(moment(currentDate).format('YYYY-MM-DD-MM-YYYY'));
+      setSelectDate(moment(currentDate).format('YYYY-MM-DD'));
     } else {
       setSelectTime(moment(selectedDate).format('HH:mm'));
     }
