@@ -15,7 +15,7 @@ const PublishedItemList = props => {
   const { imageBaseUrl } = useContext(APPContext);
   const item = props.item;
 
-  const dateA = props.item.ad_accept_limit != '0000-00-00 00:00:00' ? new Date(moment(changeUTCtoLocal(props.item.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0] + ' UTC').toISOString() : 0;
+  const dateA = props.item.ad_delivery_limit != '0000-00-00 00:00:00' ? new Date(moment(changeUTCtoLocal(props.item.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0] + ' UTC').toISOString() : 0;
   const dateB = new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString();
 
   const setImages = prodImg => {

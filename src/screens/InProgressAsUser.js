@@ -37,14 +37,24 @@ function InProgressAsUser(props) {
 
   useEffect(() => {
     if (props.tabStatus === 'inProgress') {
-      getInProgressItemList('1,2,3,4,5');
+      getInProgressItemList('1,2,3,4,5', true);
     } else {
-      getCompleteItemList('6');
+      getCompleteItemList('6', true);
     }
+
+    const interval = setInterval(() => {
+      if (props.tabStatus === 'inProgress') {
+        getInProgressItemList('1,2,3,4,5', false);
+      } else {
+        getCompleteItemList('6', false);
+      }
+    }, 1000 * 15);
+    return () => clearInterval(interval);
   }, [props]);
 
-  const getCompleteItemList = async (status) => {
-    setLoading(true);
+
+  const getCompleteItemList = async (status, isLoading) => {
+    setLoading(isLoading);
     var result = null;
     if (props.subTabIndex === 1) {
       result = await completededMyItem(user.user_id, 'user');
@@ -107,8 +117,8 @@ function InProgressAsUser(props) {
     }
   };
 
-  const getInProgressItemList = async (status) => {
-    setLoading(true);
+  const getInProgressItemList = async (status, isLoading) => {
+    setLoading(isLoading);
     var result = null;
     if (props.subTabIndex === 1) {
       result = await inProgressMyItem(user.user_id, 'user');
@@ -194,7 +204,7 @@ function InProgressAsUser(props) {
 
   const checkCodeApi = async () => {
     setLoading(true);
-    const result = await check_code(selectedAdId, otp, '3');
+    const result = await check_code(user.user_id, selectedAdId, otp, '3');
     setLoading(false);
     if (result.status == true) {
       Toast.show(result.error);

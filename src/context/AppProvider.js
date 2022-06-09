@@ -20,6 +20,8 @@ export const AppProvider = props => {
   const paypalClientId = 'Aa_Nr3jhlflL2vPjcLk85rgNnkk1jhcJKn6xUF1DkBHm6nPCNGqk82-AakrVdKEuN8JQuhFqVQjhCOGC'; //sandbox client credential
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
   const imageBaseUrl = 'http://mydelivery.prometteur.in/backend/application/webroot/';
+  const buy_and_deliver_to_other_video ='https://mydelivery.prometteur.in/assets/video/Buy_and_deliver_to_other.mp4';
+  const pickup_and_deliver ='https://mydelivery.prometteur.in/assets/video/Pick_and_deliver_1.mp4';
 
   const webServices = {
     login: baseURL + 'mLogin',
@@ -521,6 +523,8 @@ export const AppProvider = props => {
     <APPContext.Provider
       value={{
         imageBaseUrl,
+        buy_and_deliver_to_other_video,
+        pickup_and_deliver,
         webServices,
         oneTimePayment,
         getError,

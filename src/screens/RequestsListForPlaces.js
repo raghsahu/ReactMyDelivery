@@ -56,7 +56,7 @@ function RequestsListForPlaces(props) {
 
     const interval = setInterval(() => {
       getRequestList(false);
-    }, 1000 * 10);
+    }, 1000 * 5);
     return () => clearInterval(interval);
   }, [props, isRefresh]);
 

@@ -37,7 +37,7 @@ function Published(props) {
       getPublishedProduct(false);
     }, 1000 * 15);
     return () => clearInterval(interval);
-  }, []);
+  }, [props]);
 
   const getPublishedProduct = async (loading) => {
     setLoading(loading);
@@ -46,7 +46,7 @@ function Published(props) {
     if (result.status == true) {
       setPublishedItem(result.data);
     } else {
-      Toast.show(result.error);
+      //Toast.show(result.error);
     }
   };
 

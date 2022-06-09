@@ -48,7 +48,7 @@ function PublishedAdsDetails(props) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOpenInfoModal, setOpenInfoModal] = useState(false);
 
-  const dateA = new Date(moment(changeUTCtoLocal(props.route.params.ProdData.ad_accept_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
+  const dateA = new Date(moment(changeUTCtoLocal(props.route.params.ProdData.ad_delivery_limit), 'YYYY-MM-DDTHH:mm:ss.SSSZ').toString().split('GMT')[0]+ ' UTC').toISOString();
   const dateB = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext,} from 'react';
+import React, { useEffect, useContext, } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   Image,
   StatusBar,
-  Toast,
+  Linking,
   TouchableOpacity,
 } from 'react-native';
 
@@ -14,7 +14,7 @@ import {
 import { COLORS, IMAGES, DIMENSION } from '../assets';
 
 //COMMON COMPONENT
-import {Header, Text, BottomBackground } from '../components';
+import { Header, Text, BottomBackground } from '../components';
 //CONTEXT
 import { LocalizationContext } from '../context/LocalizationProvider';
 import { APPContext } from '../context/AppProvider';
@@ -22,11 +22,11 @@ import moment from 'moment'; // date format
 
 function Home(props) {
   const { getTranslation } = useContext(LocalizationContext);
-  const { user} = useContext(APPContext);
+  const { user, buy_and_deliver_to_other_video, pickup_and_deliver } = useContext(APPContext);
 
   useEffect(() => {
 
-   }, []);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -126,7 +126,7 @@ function Home(props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  
+
                 }}>
                 <View style={{}}>
                   <Image
@@ -152,8 +152,7 @@ function Home(props) {
 
             </View>
 
-            <Image
-              source={IMAGES.home_video_bg}
+            <TouchableOpacity
               style={[
                 styles.inputView,
                 {
@@ -165,10 +164,16 @@ function Home(props) {
                   marginTop: 30,
                 },
               ]}
-            />
+              onPress={() => {
+                Linking.openURL(buy_and_deliver_to_other_video);
+              }}>
+              <Image
+                source={IMAGES.home_video_bg}
 
-            <Image
-              source={IMAGES.home_video_bg_comming_soon}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={[
                 styles.inputView,
                 {
@@ -177,10 +182,18 @@ function Home(props) {
                   alignSelf: 'center',
                   justifyContent: 'center',
                   // position: 'absolute',
-                  margin: 20,
+                  marginTop: 30,
                 },
               ]}
-            />
+              onPress={() => {
+                Linking.openURL(pickup_and_deliver);
+              }}>
+              <Image
+                source={IMAGES.home_video_bg_comming_soon}
+
+              />
+            </TouchableOpacity>
+
           </View>
         </ScrollView>
       </SafeAreaView>
