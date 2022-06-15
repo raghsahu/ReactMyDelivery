@@ -77,12 +77,12 @@ function MobileOtp(props) {
       const result = await verification_update(null, otp, Mobile);
       setLoading(false);
       if (result.status == true) {
-        // Toast.show(result.error);
-        // props.navigation.navigate('SuccessScreen', {
-        //   Mobile: Mobile,
-        //   Email: Email,
-        // });
-        props.navigation.goBack();
+        Toast.show(result.error);
+        props.navigation.navigate('SuccessScreen', {
+          Mobile: Mobile,
+          Email: Email,
+        });
+       // props.navigation.goBack();
       } else {
         Toast.show(result.error);
       }

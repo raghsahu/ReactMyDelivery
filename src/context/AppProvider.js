@@ -1,12 +1,12 @@
-import React, {createContext, useEffect, useState, useContext} from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
 
 //PACKAGES
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import PayPal from 'react-native-paypal-wrapper';
 import Toast from 'react-native-simple-toast';
-import {changeLocalToUTCTime, changeLocalToUTC } from '../context/CommonUtils';
+import { changeLocalToUTCTime, changeLocalToUTC } from '../context/CommonUtils';
 
 export const APPContext = createContext();
 
@@ -20,8 +20,8 @@ export const AppProvider = props => {
   const paypalClientId = 'Aa_Nr3jhlflL2vPjcLk85rgNnkk1jhcJKn6xUF1DkBHm6nPCNGqk82-AakrVdKEuN8JQuhFqVQjhCOGC'; //sandbox client credential
   const baseURL = 'http://mydelivery.prometteur.in/backend/API/';
   const imageBaseUrl = 'http://mydelivery.prometteur.in/backend/application/webroot/';
-  const buy_and_deliver_to_other_video ='https://mydelivery.prometteur.in/assets/video/Buy_and_deliver_to_other.mp4';
-  const pickup_and_deliver ='https://mydelivery.prometteur.in/assets/video/Pick_and_deliver_1.mp4';
+  const buy_and_deliver_to_other_video = 'https://mydelivery.prometteur.in/assets/video/Buy_and_deliver_to_other.mp4';
+  const pickup_and_deliver = 'https://mydelivery.prometteur.in/assets/video/Pick_and_deliver_1.mp4';
 
   const webServices = {
     login: baseURL + 'mLogin',
@@ -37,7 +37,7 @@ export const AppProvider = props => {
     addProduct: baseURL + 'madd/product',
     upload_imgs: baseURL + 'upload_imgs',
     ads_by_status: baseURL + 'fields/ads_by_status',
-    published_ads: baseURL + 'fields/published_ads', 
+    published_ads: baseURL + 'fields/published_ads',
     completed_ads: baseURL + 'fields/completed_ads',
     inprogress_ads: baseURL + 'fields/inprogress_ads',
     getProductFilter: baseURL + 'fields/getProducts',
@@ -58,25 +58,25 @@ export const AppProvider = props => {
 
   const oneTimePayment = async (amount) => {
     // 3 env available: NO_NETWORK, SANDBOX, PRODUCTION
-      PayPal.initialize(PayPal.NO_NETWORK, paypalClientId);
-      const result=   PayPal.pay({
-          price: amount,
-          currency: 'EUR',
-          description: 'Product Ads Payment',
-        })
-        // .then(confirm => {
-        //   console.log("PaymentResponse: ", confirm)
-        //   return confirm ;
-        // }).catch(error => {
-        //     Toast.show(error)
-        //     console.log("PaymentError: ",error)
-        // });
-        
-        return result;
-        //result=== {"client": {"environment": "mock", "paypal_sdk_version": "2.15.1", "platform": "Android", "product_name": "PayPal-Android-SDK"}, 
-        // "response": {"create_time": "2014-07-18T18:46:55Z", "id": "PAY-18X32451H0459092JKO7KFUI", "intent": "sale", "state": "approved"},
-        //  "response_type": "payment"}
-    }
+    PayPal.initialize(PayPal.NO_NETWORK, paypalClientId);
+    const result = PayPal.pay({
+      price: amount,
+      currency: 'EUR',
+      description: 'Product Ads Payment',
+    })
+    // .then(confirm => {
+    //   console.log("PaymentResponse: ", confirm)
+    //   return confirm ;
+    // }).catch(error => {
+    //     Toast.show(error)
+    //     console.log("PaymentError: ",error)
+    // });
+
+    return result;
+    //result=== {"client": {"environment": "mock", "paypal_sdk_version": "2.15.1", "platform": "Android", "product_name": "PayPal-Android-SDK"}, 
+    // "response": {"create_time": "2014-07-18T18:46:55Z", "id": "PAY-18X32451H0459092JKO7KFUI", "intent": "sale", "state": "approved"},
+    //  "response_type": "payment"}
+  }
 
   const getLogin = async (email, pw, user_fcm_key) => {
     let params = {
@@ -87,6 +87,7 @@ export const AppProvider = props => {
 
     return await request(webServices.login, 'post', params);
   };
+
 
   const verification_update = async (email, otp, mobile) => {
     let params = {
@@ -99,16 +100,16 @@ export const AppProvider = props => {
   };
 
   const verification = async (email, mobile) => {
-    let params ;
-    if(email){
-       params = {
-       // user_mb_no: mobile,
-         user_email: email,
+    let params;
+    if (email) {
+      params = {
+        // user_mb_no: mobile,
+        user_email: email,
       };
-    }else{
-       params = {
+    } else {
+      params = {
         user_mb_no: mobile,
-       // user_email: email,
+        // user_email: email,
       };
     }
     return await request(webServices.verification, 'post', params);
@@ -202,7 +203,7 @@ export const AppProvider = props => {
       ad_why_this_change: ad_why_this_change,
       acpt_date: selectDate,
       acpt_time: selectTime,
-      acpt_type:acpt_type,
+      acpt_type: acpt_type,
     };
 
     return await request(webServices.change_request, 'post', params);
@@ -240,7 +241,7 @@ export const AppProvider = props => {
     return await request(webServices.inprogress_ads, 'post', params);
   };
 
-  const getFilterProduct = async (user_id, user_gender, max_price, min_price,max_cmsn,min_cmsn,last_delv_date,user_lat, user_lon ) => {
+  const getFilterProduct = async (user_id, user_gender, max_price, min_price, max_cmsn, min_cmsn, last_delv_date, user_lat, user_lon) => {
     let params = {
       user_id: user_id,
       user_gender: user_gender,
@@ -248,15 +249,15 @@ export const AppProvider = props => {
       min_price: min_price,
       max_cmsn: max_cmsn,
       min_cmsn: min_cmsn,
-     // last_delv_date: last_delv_date,
+      // last_delv_date: last_delv_date,
       user_lat: user_lat,
       user_lon: user_lon,
- 
+
     };
     return await request(webServices.getProductFilter, 'post', params);
   };
 
-  const getAdAccept = async (user_id, ad_id,selectDate, selectTime, ad_accept_type, acpt_pay_status,acpt_pay_amount,acpt_pay_info ) => {
+  const getAdAccept = async (user_id, ad_id, selectDate, selectTime, ad_accept_type, acpt_pay_status, acpt_pay_amount, acpt_pay_info) => {
     let params = {
       loggedin_user_id: user_id,
       acpt_user_id: user_id,
@@ -266,12 +267,12 @@ export const AppProvider = props => {
       acpt_pay_status: acpt_pay_status,
       acpt_pay_amount: acpt_pay_amount,
       acpt_pay_info: acpt_pay_info,
-      acpt_type: ad_accept_type, 
+      acpt_type: ad_accept_type,
     };
     return await request(webServices.ad_accept, 'post', params);
   };
 
-  const putDateTimeChangeRequest = async (loggedin_user_id, ad_id,selectDate, selectTime ) => {
+  const putDateTimeChangeRequest = async (loggedin_user_id, ad_id, selectDate, selectTime) => {
     let params = {
       loggedin_user_id: loggedin_user_id,
       ad_id: ad_id,
@@ -283,7 +284,7 @@ export const AppProvider = props => {
 
   const del_ads = async (ad_id) => {
     let params = {
-      delete : ad_id,
+      delete: ad_id,
 
     };
     return await request(webServices.del_ads, 'post', params);
@@ -291,7 +292,7 @@ export const AppProvider = props => {
 
   const putRating = async (rate_user_id, rate_create_by, rate_rating, rate_comment, rate_ad_id, ratingForApp, commentForApp) => {
     let params = {
-      rate_user_id : rate_user_id,
+      rate_user_id: rate_user_id,
       rate_create_by: rate_create_by,
       rate_rating: rate_rating,
       rate_comment: rate_comment,
@@ -305,7 +306,7 @@ export const AppProvider = props => {
   const check_code = async (user_id, acpt_ad_id, acpt_code, acpt_type) => {
     let params = {
       loggedin_user_id: user_id,
-      acpt_ad_id : acpt_ad_id,
+      acpt_ad_id: acpt_ad_id,
       acpt_code: acpt_code,
       acpt_type: acpt_type,
 
@@ -313,9 +314,9 @@ export const AppProvider = props => {
     return await request(webServices.check_code, 'post', params);
   };
 
-  const sendNotification = async (notn_id, notn_type, notn_create_date, ad_id,user_f_name, user_l_name , prod_name, senderIMG,senderID, receiverID,massage,nodeID, user_fcm_key) => {
+  const sendNotification = async (notn_id, notn_type, notn_create_date, ad_id, user_f_name, user_l_name, prod_name, senderIMG, senderID, receiverID, massage, nodeID, user_fcm_key) => {
     let params = {
-      notn_id : notn_id,
+      notn_id: notn_id,
       notn_type: notn_type,
       notn_create_date: notn_create_date,
       ad_id: ad_id,
@@ -335,16 +336,16 @@ export const AppProvider = props => {
 
   const getProducts = async (ad_id) => {
     let params = {
-      ad_id : ad_id,
+      ad_id: ad_id,
 
     };
     return await request(webServices.getProductData, 'post', params);
   };
 
-  
+
   const SendSuggession = async (sugsn_user_id, sugsn_type, sugsn_message) => {
     let params = {
-      sugsn_user_id : sugsn_user_id,
+      sugsn_user_id: sugsn_user_id,
       sugsn_type: sugsn_type,
       sugsn_message: sugsn_message,
     };
@@ -353,22 +354,22 @@ export const AppProvider = props => {
 
   const getSuggession = async (sugsn_user_id) => {
     let params = {
-      sugsn_user_id : sugsn_user_id,
+      sugsn_user_id: sugsn_user_id,
     };
     return await request(webServices.getSuggession, 'post', params);
   };
 
   const notiAcceptRefuseRequest = async (notn_id, notn_acept_rejct) => {
     let params = {
-      notn_id : notn_id,
-      notn_acept_rejct : notn_acept_rejct,
+      notn_id: notn_id,
+      notn_acept_rejct: notn_acept_rejct,
     };
     return await request(webServices.acceptNoti, 'post', params);
   };
 
   const getNewOldProductData = async (ads_id) => {
     let params = {
-      ad_id : ads_id,
+      ad_id: ads_id,
     };
     return await request(webServices.new_old_parms, 'post', params);
   };
@@ -377,7 +378,7 @@ export const AppProvider = props => {
     //let deleted_id = '[' + noti_id + ']'
     let params = {
       //delete_id : noti_id, // noti inactive 
-      delete : noti_id
+      delete: noti_id
     };
     return await request(webServices.del_notification, 'post', params);
   };
@@ -400,7 +401,7 @@ export const AppProvider = props => {
             user_session: user ? user.user_session : '',
             user_id: user ? user.user_id : '',
           },
-          
+
         });
 
         return getResponse(response);
@@ -415,14 +416,14 @@ export const AppProvider = props => {
 
         return getResponse(response);
       } else if (method == 'post') {
-        var response = await axios.post(url, params, {
-          headers: {
-            //'Authorization': user ? `Bearer ${user.user_session}` : ''
-            user_session: user ? user.user_session : '',
-            user_id: user ? user.user_id : '',
-          },
-        });
-
+        var response = await axios.post(url, params,
+          {
+            headers: {
+              user_session: user ? user.user_session : '',
+              user_id: user ? user.user_id : '',
+            },
+          }
+        );
         return getResponse(response);
       } else {
         var response = await axios({
